@@ -1,0 +1,9 @@
+{
+  "_comment": "Things the EL wiki gets wrong or leaves out. Player knowledge wins. Applied at the end of every import.",
+  "harvestable": {
+    "Hydrogenium Ore": {
+      "tool": "Pickaxe and a Steel Two Edged Sword in inventory",
+      "notes": "The wiki's HarvestInfo template lists only the pickaxe."
+    }
+  }
+}

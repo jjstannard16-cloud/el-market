@@ -114,6 +114,34 @@ def load(db_path):
             "slots": r["slots"], "emu": r["emu"],
         })
 
+    # Recipes are optional: the tables only exist once el_recipes.py has run.
+    tables = {r["name"] for r in
+              con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    recipes, harvestables = [], {}
+    if {"recipe", "recipe_ingredient"} <= tables:
+        ings = {}
+        for r in con.execute("""SELECT item, ingredient, amount
+                                FROM recipe_ingredient ORDER BY position"""):
+            ings.setdefault(r["item"], []).append(
+                {"n": r["ingredient"], "a": r["amount"]})
+        for r in con.execute("SELECT * FROM recipe"):
+            recipes.append({
+                "item": r["item"], "skill": r["skill"] or "?",
+                "level": r["level"], "exp": r["exp"] or 0,
+                "tool": r["tool"], "food": r["food"],
+                "vendor": r["vendor_pays"],
+                "ings": ings.get(r["item"], []),
+            })
+    if "harvestable" in tables:
+        hcols = {r["name"] for r in con.execute("PRAGMA table_info(harvestable)")}
+        extra = ", ".join(c if c in hcols else f"NULL AS {c}"
+                          for c in ("tool", "nexus_level"))
+        for r in con.execute(f"SELECT name, level, {extra} FROM harvestable"):
+            harvestables[r["name"].lower()] = {
+                "lvl": r["level"], "tool": r["tool"],
+                "nexus": r["nexus_level"],
+            }
+
     # price history, for a sparkline / "changed recently" flag later
     hist_count = con.execute("SELECT COUNT(*) FROM price_history").fetchone()[0]
     runs = con.execute("""SELECT COUNT(*) FROM run
@@ -129,6 +157,8 @@ def load(db_path):
     return {
         "items": sorted(items.values(), key=lambda x: x["name"].lower()),
         "bots": bots,
+        "recipes": sorted(recipes, key=lambda r: r["item"].lower()),
+        "harvestables": harvestables,
         "meta": {
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "lastScrape": last,
@@ -140,6 +170,7 @@ def load(db_path):
             "historyRows": hist_count,
             "imgBase": IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
+            "recipeCount": len(recipes),
         },
     }
 
@@ -241,6 +272,29 @@ HTML = r"""<!doctype html>
   .walk { display: none; gap: 7px; align-items: center; color: var(--muted);
           font-size: 13.5px; cursor: pointer; user-select: none; }
   .walk input { accent-color: var(--brass); }
+  .modes { display: none; align-items: center; gap: 0; font-size: 13px; }
+  .modes .lbl { color: var(--muted); margin-right: 10px; }
+  .modes button {
+    background: none; border: 1px solid var(--line-2); border-right: 0;
+    color: var(--muted); padding: 5px 11px; cursor: pointer;
+    font: 400 12.5px var(--ui);
+  }
+  .modes button:first-of-type { border-radius: 3px 0 0 3px; }
+  .modes button:last-of-type { border-right: 1px solid var(--line-2);
+                               border-radius: 0 3px 3px 0; }
+  .modes button:hover { color: var(--ink); }
+  .modes button.on { color: var(--ground); background: var(--brass);
+                     border-color: var(--brass); }
+  .gathered { color: var(--patina); }
+  .gate { font-size: 11.5px; color: var(--rust); border: 1px solid #4e2e26;
+          border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
+  .ing { display: grid; grid-template-columns: 2.4rem 1fr auto auto;
+         gap: 4px 14px; align-items: baseline; font-size: 13.5px;
+         max-width: 620px; }
+  .ing .amt { color: var(--muted); text-align: right; }
+  .ing .each, .ing .sub { text-align: right; font-variant-numeric: tabular-nums; }
+  .ing .rule { grid-column: 1 / -1; border-top: 1px solid var(--line-2);
+               margin: 5px 0 1px; }
 
   /* tables --------------------------------------------------------- */
   main .wrap { padding-top: 16px; padding-bottom: 56px; }
@@ -350,11 +404,18 @@ HTML = r"""<!doctype html>
   <nav>
     <button class="on" data-tab="market">Market</button>
     <button data-tab="profit">Profit</button>
+    <button data-tab="craft">Craft</button>
     <button data-tab="bots">Bots</button>
   </nav>
   <div class="spacer"></div>
   <label class="walk" id="walkwrap">
     <input type="checkbox" id="walk"> Hide boat trips</label>
+  <span class="modes" id="modewrap">
+    <span class="lbl">Gathered materials</span>
+    <button data-mode="value" class="on">worth what bots pay</button>
+    <button data-mode="free">free</button>
+    <button data-mode="buy">bought, not gathered</button>
+  </span>
   <input type="search" id="q" placeholder="Item, bot or map" autofocus>
 </div></div>
 
@@ -412,6 +473,61 @@ for (const it of DATA.items)
         .push({ item: it, qty: l.qty, price: l.price });
 
 const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
+
+/* crafting ------------------------------------------------------------
+   An ingredient you gather is not free: if a bot buys it, using one costs
+   you that sale. "value" prices gathered materials at what bots pay,
+   which is the number that says whether crafting beats selling the raw
+   materials. "free" ignores that, "buy" refuses to gather at all.        */
+let craftMode = "value";
+const PRICE = {};
+for (const it of DATA.items) {
+  const k = it.name.toLowerCase();
+  PRICE[k] = {
+    sell: (it.sell.filter(x => x.qty !== 0)[0] || {}).price ?? null,
+    sellBot: (it.sell.filter(x => x.qty !== 0)[0] || {}).bot ?? null,
+    buy: (it.buy.filter(x => x.qty !== 0)[0] || {}).price ?? null,
+    buyBot: (it.buy.filter(x => x.qty !== 0)[0] || {}).bot ?? null,
+  };
+}
+const HARVEST = DATA.harvestables || {};
+
+function cost(r, mode) {
+  let total = 0;
+  const lines = [], missing = [], tools = [];
+  let anyGathered = false, gate = 0;
+  for (const g of r.ings) {
+    const k = g.n.toLowerCase();
+    const p = PRICE[k] || {};
+    if (p.sell != null) {
+      total += p.sell * g.a;
+      lines.push({ ...g, each: p.sell, from: p.sellBot, how: "buy" });
+    } else if (k in HARVEST && mode !== "buy") {
+      anyGathered = true;
+      const worth = mode === "value" ? (p.buy || 0) : 0;
+      total += worth * g.a;
+      const h = HARVEST[k] || {};
+      lines.push({ ...g, each: worth, how: "gather",
+                   lvl: h.lvl, tool: h.tool, nexus: h.nexus });
+      if (h.nexus) gate = Math.max(gate, h.nexus);
+      if (h.tool && !tools.includes(h.tool)) tools.push(h.tool);
+    } else {
+      missing.push(g.n);
+      lines.push({ ...g, each: null, how: "none" });
+    }
+  }
+  const p = PRICE[r.item.toLowerCase()] || {};
+  let sells = p.buy, where = "bot", who = p.buyBot;
+  if (sells == null && r.vendor != null) { sells = r.vendor; where = "vendor"; who = null; }
+  if (sells == null) { sells = 0; where = "nobody"; }
+  const profit = sells - total;
+  return {
+    cost: total, lines, missing, gathered: anyGathered,
+    gate, tools, sells, where, who, profit,
+    margin: total > 0 ? profit / total * 100 : null,
+    perXp: r.exp > 0 ? -profit / r.exp : null,
+  };
+}
 const icon = it => it.img
   ? `<img src="${m.imgBase}${it.img}" loading="lazy" alt="">` : `<img alt="">`;
 
@@ -480,6 +596,11 @@ document.getElementById("q").oninput = () => { focusBot = null; render(); };
 document.getElementById("walk").onchange = e => {
   walkableOnly = e.target.checked; render();
 };
+document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".modes button").forEach(x =>
+    x.classList.remove("on"));
+  b.classList.add("on"); craftMode = b.dataset.mode; render();
+});
 
 function openBot(name) {
   focusBot = name; tab = "bots"; sortKey = null;
@@ -607,9 +728,12 @@ function render() {
   const count = document.getElementById("count");
   document.getElementById("walkwrap").style.display =
     tab === "profit" ? "flex" : "none";
+  document.getElementById("modewrap").style.display =
+    tab === "craft" ? "flex" : "none";
 
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
+  if (tab === "craft")  return renderCraft(view, count, q);
 
   let items = DATA.items.filter(it => matches(it, q));
   if (tab === "profit") {
@@ -688,6 +812,127 @@ function renderProfit(view, count, items, q) {
     </tr>${isOpen(it, items.length, q) ? detailRow(it, 9) : ""}`).join("")}
     </tbody></table></div>`;
   wireRows(); wireSort(); wireBotLinks();
+}
+
+function renderCraft(view, count, q) {
+  if (!DATA.recipes || !DATA.recipes.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No recipes imported yet.<br>
+      <span class="sm">Run <code>python el_recipes.py import</code>
+      and rebuild.</span></div>`;
+    return;
+  }
+  let rows = DATA.recipes
+    .filter(r => !q || r.item.toLowerCase().includes(q)
+              || (r.skill || "").toLowerCase().includes(q)
+              || r.ings.some(g => g.n.toLowerCase().includes(q)))
+    .map(r => ({ r, c: cost(r, craftMode) }))
+    .filter(x => !x.c.missing.length);
+
+  if (!rows.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">${q ? "Nothing matches that."
+      : "Nothing can be priced yet."}</div>`;
+    return;
+  }
+
+  const k = sortKey, dir = sortKey ? sortDir : 1;
+  const get = {
+    item: x => x.r.item, skill: x => x.r.skill, level: x => x.r.level,
+    cost: x => x.c.cost, sells: x => x.c.sells, profit: x => x.c.profit,
+    margin: x => x.c.margin, exp: x => x.r.exp, perXp: x => x.c.perXp,
+  }[k] || (x => x.c.profit);
+  rows.sort((a, b) => {
+    const x = get(a), y = get(b);
+    if (typeof x === "string" || typeof y === "string")
+      return dir * String(x ?? "").localeCompare(String(y ?? ""));
+    return dir * ((x ?? -Infinity) < (y ?? -Infinity) ? 1 : -1);
+  });
+
+  const inProfit = rows.filter(x => x.c.profit > 0).length;
+  count.textContent = `${rows.length} recipes priceable, ${inProfit} in profit`
+    + ` \u00b7 ${DATA.meta.recipeCount} known`;
+
+  view.innerHTML = `<div class="scroller"><table>${head([
+    { t: "Item", k: "item" }, { t: "Skill", k: "skill" },
+    { t: "Lvl", k: "level", num: 1, hide: 1 },
+    { t: "Cost", k: "cost", num: 1 },
+    { t: "Sells for", k: "sells", num: 1 },
+    { t: "Profit", k: "profit", num: 1 },
+    { t: "Margin", k: "margin", num: 1, hide: 1 },
+    { t: "Exp", k: "exp", num: 1, hide: 1 },
+    { t: "Gold per xp", k: "perXp", num: 1 },
+  ])}<tbody>${rows.map(({ r, c }, i) => `
+    <tr class="item ${openIds.has("c" + i) ? "open" : ""}" data-craft="${i}">
+      <td><div class="nm"><span>${esc(r.item)}${c.gathered
+        ? ` <span class="gathered" title="uses gathered materials">\u2726</span>`
+        : ""}${c.gate ? ` <span class="gate" title="needs nexus ${
+        c.gate} to gather the materials">nexus ${c.gate}</span>` : ""
+        }</span></div></td>
+      <td class="sm">${esc(r.skill)}</td>
+      <td class="num sm hide-sm">${r.level ?? "\u2013"}</td>
+      <td class="num">${fmt(c.cost)}</td>
+      <td class="num patina">${fmt(c.sells)}${c.where === "vendor"
+        ? ` <span class="sm">shop</span>` : ""}</td>
+      <td class="num ${c.profit > 0 ? "brass" : "sm"}">${fmt(c.profit)}</td>
+      <td class="num sm hide-sm">${c.margin == null ? "\u2013"
+        : c.margin.toFixed(0) + "%"}</td>
+      <td class="num sm hide-sm">${r.exp ? r.exp.toLocaleString("en-GB") : "\u2013"}</td>
+      <td class="num ${c.perXp != null && c.perXp < 0 ? "patina" : ""}">${
+        c.perXp == null ? "\u2013" : c.perXp.toFixed(2)}</td>
+    </tr>${openIds.has("c" + i) ? craftDetail(r, c) : ""}`).join("")}
+    </tbody></table></div>`;
+
+  document.querySelectorAll("tr[data-craft]").forEach(tr => tr.onclick = () => {
+    const id = "c" + tr.dataset.craft;
+    openIds.has(id) ? openIds.delete(id) : openIds.add(id);
+    render();
+  });
+  wireSort(); wireBotLinks();
+}
+
+function craftDetail(r, c) {
+  const rows = c.lines.map(l => {
+    let desc, each;
+    if (l.how === "buy") {
+      desc = `${esc(l.n)} <span class="sm">from ${botLink(l.from)}</span>`;
+      each = fmt(l.each);
+    } else if (l.how === "gather") {
+      const needs = [
+        l.lvl ? "level " + Math.round(l.lvl) : null,
+        l.tool || null,
+        l.nexus ? "nexus " + Math.round(l.nexus) : null,
+      ].filter(Boolean).join(", ");
+      desc = `${esc(l.n)} <span class="gathered">gather${
+        needs ? " \u2014 " + esc(needs) : ""}</span>`;
+      each = l.each ? fmt(l.each) : "\u2013";
+    } else {
+      desc = `${esc(l.n)} <span class="sm">nobody sells it, you cannot gather it</span>`;
+      each = "\u2013";
+    }
+    return `<div class="amt">${l.a}\u00d7</div><div>${desc}</div>
+      <div class="each sm">${each}</div>
+      <div class="sub">${l.each != null ? fmt(l.each * l.a) : "\u2013"}</div>`;
+  }).join("");
+  const sold = c.where === "bot" && c.who ? ` to ${botLink(c.who)}`
+    : c.where === "vendor" ? " to a shop" : "";
+  return `<tr class="detail"><td colspan="9"><div class="dwrap">
+    <div class="ing">
+      ${rows}
+      <div class="rule"></div>
+      <div></div><div class="sm">cost to make one</div>
+      <div></div><div class="sub">${fmt(c.cost)}</div>
+      <div></div><div class="sm">sells for${sold}</div>
+      <div></div><div class="sub patina">${fmt(c.sells)}</div>
+      <div></div><div>profit</div>
+      <div></div><div class="sub ${c.profit > 0 ? "brass" : ""}">${fmt(c.profit)}</div>
+      ${r.exp ? `<div></div><div class="sm">${r.exp.toLocaleString("en-GB")}
+        experience, so ${c.perXp < 0 ? "you earn" : "it costs"}
+        ${fmt(Math.abs(c.perXp))} a point</div><div></div><div></div>` : ""}
+    </div>
+    ${r.tool ? `<div class="sm" style="margin-top:12px">Needs ${esc(r.tool)}${
+      r.food ? `, ${Math.round(r.food)} food` : ""}</div>` : ""}
+  </div></td></tr>`;
 }
 
 function renderBotList(view, count, q) {

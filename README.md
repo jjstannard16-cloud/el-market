@@ -16,9 +16,12 @@ last week's. This does, once it has been running a while.
 | --- | --- |
 | `el_bots.py` | Reads every bot page and stores the results in `el_bots.db` |
 | `el_site.py` | Turns that database into `public/index.html` |
+| `el_recipes.py` | Imports crafting recipes and harvestables from the EL wiki |
+| `overrides.json` | Corrections to wiki data, from people who actually play |
 | `el_bots.db` | SQLite database — current listings plus price history |
 | `public/index.html` | The page itself, rebuilt on every scrape |
 | `.github/workflows/scrape.yml` | Runs the scrape hourly |
+| `.github/workflows/recipes.yml` | Refreshes recipes from the wiki weekly |
 
 ## Running it yourself
 
@@ -37,6 +40,30 @@ python el_bots.py report spread            # trades currently in profit
 python el_bots.py report item "silver ore" # one item, every bot
 python el_bots.py report bots              # every bot, with free capacity
 ```
+
+Recipes come from the wiki separately:
+
+```bash
+python el_recipes.py import                # 469 recipes, 67 harvestables
+python el_recipes.py profit                # what is worth making right now
+python el_recipes.py xp                    # cheapest experience per skill
+python el_recipes.py recipe "steel bar"    # one recipe, fully costed
+```
+
+## What a craft actually costs
+
+An ingredient you gather is not free. If a bot pays 1,100 for an ore, using
+one in a craft costs you that sale. So by default gathered materials are
+valued at what bots pay for them, which is the number that tells you whether
+crafting beats selling the raw materials. `--mode free` ignores that and
+`--mode buy` refuses to count gathered materials at all.
+
+Some materials cannot be gathered without a tool, a nexus level, or both.
+Those are shown against the recipe, because a 2,000% margin means little if
+it needs nexus 6.
+
+The wiki is the source for all of this, and it has gaps. `overrides.json`
+is where corrections go, and they win over whatever the wiki says.
 
 ## How the data is stored
 
