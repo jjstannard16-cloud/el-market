@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
-index.html
+# only the local build at the repo root, not the published public/index.html
+/index.html
