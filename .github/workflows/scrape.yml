@@ -1,0 +1,51 @@
+name: Scrape the market
+
+# Hourly at :37 rather than :00 — GitHub's scheduler is busiest on the hour
+# and runs get delayed. You can also start one by hand from the Actions tab.
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never let two scrapes run at once; they would fight over the same commit.
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Read every bot
+        run: python el_bots.py scrape
+
+      - name: Rebuild the page
+        run: python el_site.py --out public/index.html
+
+      - name: Save the reading
+        run: |
+          git config user.name  "el-market"
+          git config user.email "actions@users.noreply.github.com"
+          git add el_bots.db public/index.html
+          if git diff --staged --quiet; then
+            echo "Nothing changed since the last reading."
+            exit 0
+          fi
+          git commit -m "Market reading $(date -u '+%Y-%m-%d %H:%M UTC')"
+          # Another run may have landed while this one was scraping.
+          git pull --rebase --autostash
+          git push

@@ -1,0 +1,17 @@
+# Netlify publishes the folder GitHub Actions writes the page into.
+# There is nothing to build: the page is already a finished HTML file.
+[build]
+  publish = "public"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# The page is regenerated every hour, so don't let browsers hold an old copy.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
