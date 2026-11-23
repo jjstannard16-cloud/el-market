@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
-"""One-off: why does the online page have more links than it claims?"""
-import re, requests
+"""One-off: does the wiki say what each god rank costs?"""
+import re, requests, time
+API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-html = requests.get("http://game.eternal-lands.com/online_players.htm",
-                    headers=UA, timeout=30).text
-print(f"{len(html)} bytes")
-for m in re.finditer(r"There are\s+(\d+)\s+([^<:]+)", html, re.I):
-    print(f"  header: {m.group(0).strip()!r} at offset {m.start()}")
-links = [(m.start(), m.group(1)) for m in
-         re.finditer(r"view_user\.php\?user=([^\"'&<>\s]+)", html)]
-print(f"  {len(links)} links, {len(set(n for _, n in links))} distinct")
-print(f"  first at {links[0][0]}, last at {links[-1][0]}")
 
-# Anything between the links that is not another link marks a new block.
-print("\n--- text that is not a player link, through the body:")
-body = html[html.lower().find("<body"):]
-plain = re.sub(r'<a [^>]*view_user[^>]*>[^<]*</a>', "", body)
-plain = " ".join(re.sub(r"<[^>]+>", " ", plain).split())
-print(f"  {plain[:700]}")
+def api(**kw):
+    kw.setdefault("format", "json"); kw.setdefault("formatversion", 2)
+    return requests.get(API, params=kw, headers=UA, timeout=30).json()
 
-# Where exactly does the second block start?
-chunks = re.split(r"(There are\s+\d+[^<:]*:?)", html, flags=re.I)
-print(f"\n--- {len(chunks)} chunks split on 'There are N ...'")
-for i, c in enumerate(chunks):
-    n = len(re.findall(r"view_user", c))
-    head = " ".join(re.sub(r"<[^>]+>", " ", c).split())[:90]
-    print(f"  [{i}] {n:>4} links  {head!r}")
+print("=== Category:Gods")
+body = api(action="query", list="categorymembers",
+           cmtitle="Category:Gods", cmlimit=500)
+titles = [m["title"] for m in body.get("query", {}).get("categorymembers", [])]
+print(f"  {len(titles)}: {titles}")
+
+for title in ["Mortos", "Aluwen"]:
+    print(f"\n=== {title}")
+    b = api(action="query", prop="revisions", titles=title,
+            rvprop="content", rvslots="main", redirects=1)
+    for pg in b.get("query", {}).get("pages", []):
+        revs = pg.get("revisions") or [{}]
+        text = revs[0].get("slots", {}).get("main", {}).get("content") or ""
+        if not text:
+            print(f"  {pg.get('title')}: missing or empty")
+            continue
+        print(f"  {pg.get('title')}: {len(text)} chars")
+        print("  " + "\n  ".join(text.splitlines()[:60]))
+    time.sleep(0.4)
+
+print("\n=== anything about ranks and items")
+for term in ["god rank items", "worship rank", "Dirhyan"]:
+    b = api(action="query", list="search", srsearch=term, srlimit=6)
+    hits = [h["title"] for h in b.get("query", {}).get("search", [])]
+    print(f"  {term!r}: {hits}")
+    time.sleep(0.4)
