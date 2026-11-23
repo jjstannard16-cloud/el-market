@@ -21,7 +21,8 @@ last week's. This does, once it has been running a while.
 | `guild.txt` | Extra players to follow, beyond the top 200 |
 | `overrides.json` | Corrections to wiki data, from people who actually play |
 | `el_bots.db` | SQLite database — current listings plus price history |
-| `public/index.html` | The page itself, rebuilt on every scrape |
+| `public/index.html` | The page itself: markup and code, about 50 KB |
+| `public/data.js` | Everything the page displays, rebuilt on every scrape |
 | `.github/workflows/scrape.yml` | Runs the scrape hourly |
 | `.github/workflows/recipes.yml` | Refreshes recipes from the wiki weekly |
 | `.github/workflows/players.yml` | Reads player stats daily |

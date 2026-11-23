@@ -49,7 +49,7 @@ jobs:
           git config user.name  "el-market"
           git config user.email "actions@users.noreply.github.com"
           for attempt in 1 2 3 4 5; do
-            git add el_bots.db public/index.html
+            git add el_bots.db public/index.html public/data.js
             if git diff --staged --quiet; then
               echo "Nothing changed."
               exit 0

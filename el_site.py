@@ -510,8 +510,15 @@ HTML = r"""<!doctype html>
 
 <footer><div class="wrap" id="foot"></div></footer>
 
+<script src="data.js"></script>
 <script>
-const DATA = __DATA__;
+if (typeof DATA === "undefined") {
+  document.getElementById("view").innerHTML =
+    `<div class="empty">Could not load data.js.<br>
+     <span class="sm">It must sit next to index.html. Rebuild with
+     <code>python el_site.py</code>.</span></div>`;
+  throw new Error("data.js missing");
+}
 const m = DATA.meta;
 let tab = "market", sortKey = null, sortDir = 1, focusBot = null;
 let walkableOnly = false;
@@ -1424,15 +1431,25 @@ def main():
     a = p.parse_args()
 
     data = load(a.db)
-    html = HTML.replace("__DATA__", json.dumps(data, separators=(",", ":")))
 
     out_dir = os.path.dirname(os.path.abspath(a.out))
     os.makedirs(out_dir, exist_ok=True)
+
+    # Data goes in its own file beside the page. The page itself then
+    # barely changes between builds, so browsers and the CDN can keep it
+    # cached and only the data is fetched again.
+    data_path = os.path.join(out_dir, "data.js")
+    with open(data_path, "w", encoding="utf-8") as f:
+        f.write("const DATA = ")
+        json.dump(data, f, separators=(",", ":"))
+        f.write(";\n")
+
     with open(a.out, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(HTML)
 
     m = data["meta"]
-    print(f"wrote {a.out} ({os.path.getsize(a.out)/1024:.0f} KB)")
+    print(f"wrote {a.out} ({os.path.getsize(a.out)/1024:.0f} KB) "
+          f"and {data_path} ({os.path.getsize(data_path)/1024:.0f} KB)")
     print(f"  {m['botCount']} bots, {m['itemCount']} items, "
           f"{m['listingCount']} offers, {m['runs']} scrapes so far")
     if m["unknownMaps"]:

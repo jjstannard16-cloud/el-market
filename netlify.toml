@@ -1,4 +1,4 @@
-# Netlify publishes the folder GitHub Actions writes the page into.
+# Netlify publishes the folder the workflows write into.
 # There is nothing to build: the page is already a finished HTML file.
 [build]
   publish = "public"
@@ -10,8 +10,16 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# The page is regenerated every hour, so don't let browsers hold an old copy.
+# The page itself rarely changes, but it must be revalidated so a new
+# build is picked up straight away rather than after a cache expires.
 [[headers]]
   for = "/index.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# The data is rewritten every hour, so it must never be served stale.
+[[headers]]
+  for = "/data.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/javascript; charset=utf-8"
