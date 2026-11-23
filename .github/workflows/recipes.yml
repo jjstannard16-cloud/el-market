@@ -37,6 +37,11 @@ jobs:
         run: python el_gods.py
         continue-on-error: true
 
+      # Creature stats and drop tables, which the market prices join on.
+      - name: Read the creatures
+        run: python el_creatures.py
+        continue-on-error: true
+
       # Any item we have never seen before needs its icon copying over,
       # so the page never asks bots.el-services.net for one.
       - name: Fetch any new item artwork
@@ -55,8 +60,8 @@ jobs:
           # take theirs, and redo the work on top. Both jobs are
           # idempotent, so redoing is always safe and always correct.
           for attempt in 1 2 3 4 5; do
-            git add el_bots.db gods.json public/index.html public/data.js \
-                    public/img
+            git add el_bots.db gods.json creatures.json public/index.html \
+                    public/data.js public/img
             if git diff --staged --quiet; then
               echo "Nothing changed."
               exit 0
@@ -71,6 +76,7 @@ jobs:
             git reset --hard origin/main
             python el_recipes.py import
             python el_gods.py || true
+            python el_creatures.py || true
             python el_site.py --out public/index.html
           done
           echo "Could not land the change after 5 attempts."
