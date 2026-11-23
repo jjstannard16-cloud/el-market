@@ -129,7 +129,7 @@
    "god": "Galienne",
    "title": "Tailoring Goddess",
    "priest": "Tyra - Tyra is not (yet?) in the game.",
-   "where": "Glacmor Mountain Range - Entrances are at [216,45] (temple) and [276,121] (fashion runway).",
+   "where": "Glacmor Mountain Range - Entrances are at 216,45 (temple) and 276,121 (fashion runway).",
    "ranks": [
     {
      "Rank": "-2",
@@ -139,38 +139,45 @@
     },
     {
      "Rank": "-1",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "-4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "-4%"
     },
     {
      "Rank": "0",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "-0%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "-0%"
     },
     {
      "Rank": "1",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "+4%"
     },
     {
      "Rank": "2",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+8%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "+8%"
     },
     {
      "Rank": "3",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+12%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "+12%"
     },
     {
      "Rank": "4",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+16%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "+16%"
     },
     {
      "Rank": "5",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+20%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Tailoring experience": "+20%"
     }
    ],
    "columns": [
@@ -184,7 +191,7 @@
    "god": "Glilin",
    "title": "Manufacturing God",
    "priest": "* Baostas",
-   "where": "* Nordcarn at [10,150]",
+   "where": "* Nordcarn at 10,150",
    "ranks": [
     {
      "Rank": "-2",
@@ -380,31 +387,45 @@
     },
     {
      "Rank": "-1",
-     "Items needed for this rank": "-4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "-4%"
     },
     {
      "Rank": "0",
-     "Items needed for this rank": "-0%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "-0%"
     },
     {
      "Rank": "1",
-     "Items needed for this rank": "+4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "+4%"
     },
     {
      "Rank": "2",
-     "Items needed for this rank": "+8%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "+8%"
     },
     {
      "Rank": "3",
-     "Items needed for this rank": "+12%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "+12%"
     },
     {
      "Rank": "4",
-     "Items needed for this rank": "+16%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "+16%"
     },
     {
      "Rank": "5",
-     "Items needed for this rank": "+20%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Harvesting experience": "+20%"
     }
    ],
    "columns": [
@@ -614,38 +635,45 @@
     },
     {
      "Rank": "-1",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "-4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "-4%"
     },
     {
      "Rank": "0",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "-0%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "-0%"
     },
     {
      "Rank": "1",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+4%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "+4%"
     },
     {
      "Rank": "2",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+8%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "+8%"
     },
     {
      "Rank": "3",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+12%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "+12%"
     },
     {
      "Rank": "4",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+16%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "+16%"
     },
     {
      "Rank": "5",
-     "Items needed for this rank": "? [[]]",
-     "Where to put items": "+20%"
+     "Items needed for this rank": "",
+     "Where to put items": "",
+     "Ranging experience": "+20%"
     }
    ],
    "columns": [
@@ -659,7 +687,7 @@
    "god": "Zarin",
    "title": "Crafting Goddess",
    "priest": "Durnam",
-   "where": "Tarsengaard, near the exit by land to Forest of the Fall, White Stone - The entrance to the temple is a [secret.",
+   "where": "Tarsengaard, near the exit by land to Forest of the Fall, White Stone - The entrance to the temple is a secret.",
    "ranks": [
     {
      "Rank": "-2",
