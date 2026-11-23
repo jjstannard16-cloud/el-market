@@ -205,6 +205,50 @@ def load(db_path):
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
 
+    # The things that happen to everyone: pears and jokers found,
+    # invasions, treasure, donations. Aggregates only - 51,000 broadcasts
+    # are not going into the page.
+    finders, invasions, event_log, event_totals = [], [], [], None
+    if "event_log" in tables:
+        for r in con.execute("""
+                SELECT who name,
+                  SUM(CASE WHEN what='pear'  THEN IFNULL(amount,1) ELSE 0 END) pears,
+                  SUM(CASE WHEN what='joker' THEN IFNULL(amount,1) ELSE 0 END) jokers,
+                  SUM(IFNULL(amount,1)) n, MIN(at) first, MAX(at) last
+                FROM event_log
+                WHERE what IN ('pear','joker') AND who IS NOT NULL
+                GROUP BY LOWER(who)
+                ORDER BY n DESC, LOWER(who)"""):
+            finders.append({"name": r["name"], "pears": r["pears"],
+                            "jokers": r["jokers"], "n": r["n"],
+                            "first": (r["first"] or "")[:10],
+                            "last": (r["last"] or "")[:10]})
+        for r in con.execute("""
+                SELECT who place, COUNT(*) n, MAX(at) last FROM event_log
+                WHERE what = 'invasion' AND who IS NOT NULL
+                GROUP BY LOWER(who) ORDER BY n DESC LIMIT 20"""):
+            invasions.append({"place": r["place"], "n": r["n"],
+                              "last": (r["last"] or "")[:10]})
+        for r in con.execute("""SELECT what, who, amount, message, at
+                                FROM event_log WHERE what IS NOT NULL
+                                ORDER BY at DESC LIMIT 50"""):
+            event_log.append({"what": r["what"], "who": r["who"],
+                              "amount": r["amount"],
+                              "message": r["message"][:200],
+                              "at": (r["at"] or "")[:16].replace("T", " ")})
+        kinds = {r["what"]: r["n"] for r in con.execute(
+            """SELECT what, COUNT(*) n FROM event_log
+               WHERE what IS NOT NULL GROUP BY what""")}
+        read, total = con.execute("""SELECT SUM(what IS NOT NULL), COUNT(*)
+                                     FROM event_log""").fetchone()
+        since = con.execute("SELECT MIN(at) FROM event_log").fetchone()[0]
+        gold = con.execute("""SELECT SUM(amount) FROM event_log
+                              WHERE what='donation'""").fetchone()[0]
+        event_totals = {"kinds": kinds, "read": read, "all": total,
+                        "since": (since or "")[:4], "finders": len(finders),
+                        "donated": gold or 0}
+        print(f"  {total} broadcasts, {read} read, {len(finders)} finders")
+
     # The quest guide, already parsed by el_quests.py. Missing is fine:
     # the tab simply does not appear.
     quests, quest_sections = [], []
@@ -488,6 +532,10 @@ def load(db_path):
         "summoners": summoners,
         "dayTotals": day_totals,
         "clock": clock,
+        "finders": finders,
+        "invasions": invasions,
+        "eventLog": event_log,
+        "eventTotals": event_totals,
         "quests": quests,
         "questSections": quest_sections,
         "dayRanks": day_ranks,
@@ -632,6 +680,9 @@ HTML = r"""<!doctype html>
   .pills .pill:hover { color: var(--ink); border-color: var(--brass); }
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
+  .evkind { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
+            color: var(--muted); border: 1px solid var(--line-2);
+            border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
   .qnpc { font-size: 14.5px; margin: 2px 0 12px; }
   .qnpc b { color: var(--brass); font-weight: 500; }
   .coord { font-family: var(--mono, monospace); font-size: 12.5px;
@@ -658,6 +709,9 @@ HTML = r"""<!doctype html>
   table.quests { table-layout: fixed; width: 100%; }
   table.quests td, table.quests th { overflow-wrap: anywhere; }
   @media (max-width: 620px) {
+    /* Six columns do not fit a phone, so the dates go and the counts stay. */
+    table.finders td:nth-child(n+5), table.finders th:nth-child(n+5) {
+      display: none; }
     table.quests td:nth-child(4), table.quests th:nth-child(4) { display: none; }
     table.quests td:nth-child(3), table.quests th:nth-child(3) {
       font-size: 12px; }
@@ -905,6 +959,7 @@ HTML = r"""<!doctype html>
     <button data-tab="craft">Craft</button>
     <button data-tab="players">Players</button>
     <button data-tab="quests">Quests</button>
+    <button data-tab="events">Events</button>
     <button data-tab="days">Days</button>
     <button data-tab="bots">Bots</button>
   </nav>
@@ -998,6 +1053,7 @@ const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
 let craftMode = "value";
 let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 let focusQuest = null, qsection = "";                    // "" = every section
+let findersShown = 25;
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -1108,6 +1164,9 @@ const SECTIONS = [
   { id: "quests", name: "Quests",
     what: "Every quest written up: who starts it, what it needs, what it pays",
     n: () => `${(DATA.quests || []).length} quests` },
+  { id: "events", name: "Events",
+    what: "Who finds the pears and jokers, and where the invasions land",
+    n: () => `${fmt((DATA.eventTotals || {}).all || 0)} broadcasts` },
   { id: "days", name: "Days",
     what: "What today's special day does, and every day the game can throw",
     n: () => `${Object.keys(DATA.dayRef || {}).length} special days` },
@@ -1324,7 +1383,7 @@ function renderHome(view, count) {
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
 const TABS = ["home", "market", "profit", "craft", "players", "quests",
-              "days", "bots"];
+              "events", "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -1500,6 +1559,7 @@ function render() {
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "home")   return renderHome(view, count);
+  if (tab === "events") return renderEvents(view, count, q);
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
@@ -1671,6 +1731,81 @@ const caveat = `<div class="caveat">${
 
 // The leaderboard runs to several hundred names, so it opens short.
 let summonersShown = 25;
+
+/* events --------------------------------------------------------------
+   Mercator relays what the game broadcasts to everyone. Pears and jokers
+   are found by players; invasions happen to places. The same column
+   carries both, because that is how the broadcasts are written.       */
+
+function renderEvents(view, count, q) {
+  const t = DATA.eventTotals;
+  const all = DATA.finders || [];
+  const place = new Map(all.map((f, i) => [f.name, i + 1]));
+  const hits = q ? all.filter(f => f.name.toLowerCase().includes(q)) : all;
+  const shown = hits.slice(0, findersShown);
+
+  count.textContent = t
+    ? `${fmt(t.all)} broadcasts, ${fmt(t.finders)} finders` : "";
+
+  const k = (t && t.kinds) || {};
+  const headline = !t ? "" : `
+    <div class="grouphint">Everything the game has shouted at everyone
+      since ${esc(t.since)}: ${fmt(k.pear || 0)} pears and ${
+      fmt(k.joker || 0)} jokers found, ${fmt(k.invasion || 0)} invasion
+      warnings, ${fmt(k.treasure || 0)} treasures and ${
+      fmt(k.donation || 0)} donations worth ${fmt(t.donated)} gold.
+      ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
+      yet and are left out of the counts.</div>`;
+
+  const finders = !all.length ? "" : `
+    <h2 class="group">Who finds things</h2>
+    ${headline}
+    <table class="daylog sortable finders"><thead><tr><th>Player</th>
+      <th class="stonecell">Found</th><th class="stonecell">Pears</th>
+      <th class="stonecell">Jokers</th><th>First</th><th>Last</th></tr></thead>
+    <tbody>${shown.map(f => {
+      const pos = place.get(f.name);
+      return `<tr>
+        <td class="nowrap"><span class="rank${pos <= 3 ? " medal" : ""}">${
+          pos}</span>${playerLink(f.name)}</td>
+        <td class="num brass">${fmt(f.n)}</td>
+        <td class="num sm">${f.pears ? fmt(f.pears) : ""}</td>
+        <td class="num sm">${f.jokers ? fmt(f.jokers) : ""}</td>
+        <td class="sm">${esc(f.first)}</td>
+        <td class="sm">${esc(f.last)}</td></tr>`; }).join("")}</tbody></table>
+    ${hits.length > shown.length ? `<button class="more" id="morefinders">
+      Show the other ${fmt(hits.length - shown.length)}</button>` : ""}
+    ${hits.length ? "" : `<div class="caveat">Nobody by that name has
+      found a pear or a joker.</div>`}`;
+
+  const inv = (DATA.invasions || []).slice(0, 12);
+  const invMax = Math.max(...inv.map(i => i.n), 1);
+  const places = (!inv.length || q) ? "" : `
+    <h2 class="group">Where the invasions land</h2>
+    <div class="grouphint">Warnings the invasion system has sent for each
+      place. One invasion sends several, so read these against each other
+      rather than as a count of invasions.</div>
+    <table class="ranks">${inv.map(i => `<tr>
+      <td>${esc(i.place)}</td>
+      <td class="barcell"><span class="bar"><i style="width:${
+        Math.max(2, Math.round(100 * i.n / invMax))}%"></i></span></td>
+      <td class="num">${fmt(i.n)}</td></tr>`).join("")}</table>`;
+
+  const log = (DATA.eventLog || []).filter(e =>
+    !q || (e.message || "").toLowerCase().includes(q));
+  const recent = !log.length ? "" : `
+    <h2 class="group">Lately</h2>
+    <table class="daylog"><tbody>${log.slice(0, 30).map(e => `<tr>
+      <td class="sm nowrap">${esc(e.at)}</td>
+      <td class="sm"><span class="evkind">${esc(e.what)}</span></td>
+      <td class="sm">${esc(e.message)}</td></tr>`).join("")}</tbody></table>`;
+
+  view.innerHTML = finders + places + recent
+    + (finders || recent ? "" : `<div class="empty">Nothing matches that.</div>`);
+  wirePlayerLinks();
+  const more = document.getElementById("morefinders");
+  if (more) more.onclick = () => { findersShown += 200; render(); };
+}
 
 /* quests --------------------------------------------------------------
    Parsed out of the community quest guide by el_quests.py. The guide is
