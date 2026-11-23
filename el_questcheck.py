@@ -125,29 +125,67 @@ HOSTS = ["https://el-wiki.holy-eternalland.de/api.php",
          "https://www.el-wiki.net/api.php"]
 
 
-def npc_check(s, ours_npcs):
+# Pages in those categories that are not a person.
+NOT_A_PERSON = re.compile(r"^(Gods|Priest NPCs|Quest NPCs|NPCs|List\b)", re.I)
+
+
+def quest_corpus(quests):
     """
-    This wiki has no quest write-ups, but it does keep a Quest NPCs
-    category. Every quest starts with someone, so an NPC there that no
-    quest of ours starts with is a quest we may be missing.
+    Everything the guide says, as one lump of text. An NPC named in a
+    step is already covered by a quest we have, even when no quest
+    starts with them, so the whole write-up is what matters - not just
+    the start NPC.
+    """
+    bits = []
+    for q in quests:
+        bits += [q.get("name") or "", q.get("npc") or "", q.get("where") or ""]
+        bits += [r.get("what") or "" for r in q.get("reward") or []]
+        bits += q.get("items") or []
+        bits += q.get("intro") or []
+        bits += q.get("notes") or []
+        bits += q.get("requirements") or []
+        bits += q.get("noteLines") or []
+        for st in q.get("steps") or []:
+            bits.append(st.get("text") or "")
+            bits += [sb.get("text") or "" for sb in st.get("sub") or []]
+    return " \u00b7 ".join(bits).lower()
+
+
+def npc_check(s, quests):
+    """
+    The wiki has no quest write-ups, but it keeps a Quest NPCs category.
+    An NPC there who appears nowhere in the whole guide is the signal
+    worth having: a quest we may not know about.
     """
     listed = {}
     for cat in ("Quest NPCs", "Gods"):
         for t in category_members(s, cat):
-            listed.setdefault(norm(t), t)
+            if not NOT_A_PERSON.match(t):
+                listed.setdefault(norm(t), t)
         time.sleep(PAUSE)
     if not listed:
-        print("  the wiki listed no quest NPCs; treat this as not run")
-        return
-    mine = {norm(n) for n in ours_npcs if n}
-    # An NPC may be written "Haidir" by us and "Haidir the Hunter" there.
-    unmatched = sorted(t for k, t in listed.items()
-                       if not any(k == m or k in m or m in k for m in mine))
+        print("  the wiki listed no quest NPCs; treat this check as not run")
+        return []
+
+    corpus = quest_corpus(quests)
+    starters = {norm(q.get("npc")) for q in quests if q.get("npc")}
+
+    nowhere, mentioned = [], 0
+    for k, t in sorted(listed.items(), key=lambda kv: kv[1]):
+        if any(k == m or k in m or m in k for m in starters if m):
+            continue
+        if re.search(r"\b" + re.escape(t.lower().split(",")[0]) + r"\b", corpus):
+            mentioned += 1          # turns up inside a quest we do have
+            continue
+        nowhere.append(t)
+
     print(f"\n  {len(listed)} quest NPCs and gods on the wiki, "
-          f"{len(mine)} distinct starters in our guide")
-    print(f"  {len(unmatched)} wiki NPCs no quest of ours starts with:")
-    for t in unmatched:
+          f"{len(starters)} start NPCs in our guide")
+    print(f"  {mentioned} more appear inside quests we already have")
+    print(f"  {len(nowhere)} appear nowhere in the guide at all:")
+    for t in nowhere:
         print(f"     ? {t}")
+    return nowhere
 
 
 def discover(s):
@@ -244,8 +282,8 @@ def main():
             theirs.setdefault(norm(t), t)
         time.sleep(PAUSE)
 
-    npc_check(s, [q.get("npc") for q in
-                  json.load(open(a.quests, encoding="utf-8"))["quests"]])
+    with open(a.quests, encoding="utf-8") as f:
+        npc_check(s, json.load(f)["quests"])
 
     if not theirs:
         print("\nThe wiki has no quest write-ups to compare against, so the "
