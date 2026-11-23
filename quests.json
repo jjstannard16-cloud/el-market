@@ -1,0 +1,6383 @@
+{
+ "_comment": "Built by el_quests.py from the community quest guide. Edit the guide, not this file.",
+ "sections": [
+  "Daily Quests",
+  "Low Level Quests",
+  "High Level Quests",
+  "Tutorial Quests",
+  "Break Quests",
+  "God Quests"
+ ],
+ "quests": [
+  {
+   "name": "Armor and Weapon Supply Daily",
+   "section": "Daily Quests",
+   "npc": "Daritha",
+   "where": "Tarsengaard barracks",
+   "at": [
+    177,
+    189
+   ],
+   "intro": [
+    "Provide a certain number of random armors and weapons for attack and defense experience (and in certain cases other rewards)."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Your manufacturing levels affect how good of a daily you can get from Daritha:"
+   ],
+   "noteLines": [
+    "Your manufacturing levels affect how good of a daily you can get from Daritha:"
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Clothes Breaking Daily",
+   "section": "Daily Quests",
+   "npc": "Lord Luxin",
+   "where": "White Stone",
+   "at": [
+    39,
+    714
+   ],
+   "intro": [
+    "You must break a specific tailoring clothes item in Desert Pines arena (without using a BROD) for tailoring experience and gc."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Combat Daily",
+   "section": "Daily Quests",
+   "npc": "Haidir",
+   "where": "White Stone",
+   "at": [
+    380,
+    311
+   ],
+   "intro": [
+    "Fight a specific number of a creature on a specific map for attack and defense experience."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "1.    Ways of killing that work: Melee weapon, item while in combat, spell while in combat, ranged weapon. 2.    Ways of killing that don't work: Spell while not in combat or somebody else in combat. 3.    When you've killed enough of them, you will get a message telling you so. 4.    Then return to the NPC that told you what you needed to kill (not to Haidir!).",
+    "NPC                                     Target                      XP/Level   GC Kane in a ship at Desert Pines docks   30 Rats inside the ship                           130      400 Reca in Isla Prima tavern              30 Small Spiders in the tavern back room          250      400 Laura in Portland tavern               30 Boars in Portland                              300      300 Corina in WS graham’s village tavern   30 Green Snakes Upstairs                          300      300 Jandir in VOTD                         30 Beavers VOTD                                   300      450 Megera in VOTD in mine second cave     30 Goblins in VOTD mine                           340      2000 Serpa in Naralik                       30 Large Spiders in Naralik                       400      300 Oana in Nordcarn Tavern                30 Wolves in Nordcarn                             400      500 Kalana in Desert Pines                 30 Rabbits in Desert Pines                        500      600 Druppel in Nordcarn                    30 Armed Skeletons in Nordcarn South cave         540      500 Vaesura in White Stone Tirnwood Vale   5 Skunks in White Stone                           600      600 Ghita in Tarsengaard Tavern            30 Orcs in Tarsengaard secret orc cave            600      500 Thom in Palon Vertas tavern            30 Hawks in Palon Vertas                          600      500 Nyeald in Portland                     30 Skeletons in Portland Cave                     600      600 Gazhanar in SKF                        30 Trolls in SKF                                  600      500 Jacinta in Irsis Tavern                30 Ferans in Irsis                                650      500 Vixen in MM cave                       30 Female Goblins in MM cave                      650      550 Gallyanne in Hurquin tavern            30 Leopards in Hurquin                            700      600 Gallyanne in Hurquin tavern            30 Falcons in Hurquin                             700      600 Winston in Sedicolis                   30 Black Panthers in Sedicolis                    700      600 Morton in Palon Vertas                 30 Ogres in Palon Vertas blacksmith cave          740      800 Xaquelina in Portland                  20 Foxes in Portland                              750      600 Talon in WS insides                    20 Hobgoblins in WS underground                   750      550 Aliester in Portland Magic shop        30 Imps in White Stone City Sewers                800      500 Thorron in Ruins of Tirnym             30 Phantom Warriors in Ruins of Tirnym            800      400 Daritha in Transegaard                 30 Armed Goblins in Tarsengaard                   800      600 Elevy in Votd mine second cave         30 Female Orcs in Votd mine second cave           800      400 Wert in South Redmoon                  30 Tigers in South Redmoon                        840      500 Cagdas in Aeth Aelfan Tavern           30 Cyclops in Egratia Point                       840      1000 Vesine in MM                           20 Grizzly Bears in MM                            850      600 Roua in Desert Pines tavern            10 Raccoons in Desert Pines                       900      300 Poco in Arius second tavern            30 Pandas in Arius                                900      600 Zenith in Naralik Catacombs            30 Armed Male Orcs in Naralik Catacombs           900      600",
+    "Bertan in Desert Pines                     20 Wood Spirits in Desert Pines                   1000      500 Gingirel in Zirakinbar tavern              30 Bears in Zirakinbar                            1100      800 Shantir in Glacmor Magic Shop              30 Polar Bears in Glacmor                         1,200     700 Lehha in Tahraji Desert                    20 Female Orcs in Tahraji Desert                  1,500     700 Rocky in North Redmoon tavern              30 Feros in North Redmoon                         1,600     1200 Closca in Melinis                          30 Fluffy Rabbits in Melinis                      2,000     1200 Dragburn in GP                             20 Mountain Chimerans in GP                       2,000     1000 Luvela in Irinveron tavern                 30 Frost Trolls in Irinveron                      2,000     1000 Vulca in EVTR tavern                       30 Forest Chimerans in WVF                        2,100     1000 Gynmor in Bethel Tavern                    30 Desert Chimerans in Bethel                     2,200     1000 Kerlyn in Iscalrith tavern                 30 Yetis in Iscalrith                             2,400     1200 Vulca in EVTR tavern                       30 Cockatrice in WVF                              2,500     1600 Termopan in Idaloran tavern                15 Lions in Idaloran                              3,500     1500 Luvela in Irinveron tavern                 20 White Tigers in Irinveron                      3,600     1500",
+    "White Tigers = Haidir: The person who needs help today is Luvela. She usually spends most of the time in the Irinveron Frost Trolls = Haidir: The person who needs help today is Luvela. She is in the tavern in Irinveron. But I guess you knew that already..",
+    "Cockatrice = Haidir: The person who needs help today is Vulca. She is the taverner from EVTR, as you already know. Forest Chims =Haidir: The person who needs help today is Vulca. She is the taverner from EVTR.",
+    "Pissing Leopards: Haidir: The person who needs help today is Gallyanne. She is the taverner in Hurquin.. Shitting Falcons: Haidir: The person who needs help today is Gallyanne. You will find her in Hurquin.."
+   ],
+   "noteLines": [
+    "1.    Ways of killing that work: Melee weapon, item while in combat, spell while in combat, ranged weapon.",
+    "2.    Ways of killing that don't work: Spell while not in combat or somebody else in combat.",
+    "3.    When you've killed enough of them, you will get a message telling you so.",
+    "4.    Then return to the NPC that told you what you needed to kill (not to Haidir!).",
+    "",
+    "                         NPC                                     Target                      XP/Level   GC",
+    "      Kane in a ship at Desert Pines docks   30 Rats inside the ship                           130      400",
+    "      Reca in Isla Prima tavern              30 Small Spiders in the tavern back room          250      400",
+    "      Laura in Portland tavern               30 Boars in Portland                              300      300",
+    "      Corina in WS graham’s village tavern   30 Green Snakes Upstairs                          300      300",
+    "      Jandir in VOTD                         30 Beavers VOTD                                   300      450",
+    "      Megera in VOTD in mine second cave     30 Goblins in VOTD mine                           340      2000",
+    "      Serpa in Naralik                       30 Large Spiders in Naralik                       400      300",
+    "      Oana in Nordcarn Tavern                30 Wolves in Nordcarn                             400      500",
+    "      Kalana in Desert Pines                 30 Rabbits in Desert Pines                        500      600",
+    "      Druppel in Nordcarn                    30 Armed Skeletons in Nordcarn South cave         540      500",
+    "      Vaesura in White Stone Tirnwood Vale   5 Skunks in White Stone                           600      600",
+    "      Ghita in Tarsengaard Tavern            30 Orcs in Tarsengaard secret orc cave            600      500",
+    "      Thom in Palon Vertas tavern            30 Hawks in Palon Vertas                          600      500",
+    "      Nyeald in Portland                     30 Skeletons in Portland Cave                     600      600",
+    "      Gazhanar in SKF                        30 Trolls in SKF                                  600      500",
+    "      Jacinta in Irsis Tavern                30 Ferans in Irsis                                650      500",
+    "      Vixen in MM cave                       30 Female Goblins in MM cave                      650      550",
+    "      Gallyanne in Hurquin tavern            30 Leopards in Hurquin                            700      600",
+    "      Gallyanne in Hurquin tavern            30 Falcons in Hurquin                             700      600",
+    "      Winston in Sedicolis                   30 Black Panthers in Sedicolis                    700      600",
+    "      Morton in Palon Vertas                 30 Ogres in Palon Vertas blacksmith cave          740      800",
+    "      Xaquelina in Portland                  20 Foxes in Portland                              750      600",
+    "      Talon in WS insides                    20 Hobgoblins in WS underground                   750      550",
+    "      Aliester in Portland Magic shop        30 Imps in White Stone City Sewers                800      500",
+    "      Thorron in Ruins of Tirnym             30 Phantom Warriors in Ruins of Tirnym            800      400",
+    "      Daritha in Transegaard                 30 Armed Goblins in Tarsengaard                   800      600",
+    "      Elevy in Votd mine second cave         30 Female Orcs in Votd mine second cave           800      400",
+    "      Wert in South Redmoon                  30 Tigers in South Redmoon                        840      500",
+    "      Cagdas in Aeth Aelfan Tavern           30 Cyclops in Egratia Point                       840      1000",
+    "      Vesine in MM                           20 Grizzly Bears in MM                            850      600",
+    "      Roua in Desert Pines tavern            10 Raccoons in Desert Pines                       900      300",
+    "      Poco in Arius second tavern            30 Pandas in Arius                                900      600",
+    "      Zenith in Naralik Catacombs            30 Armed Male Orcs in Naralik Catacombs           900      600",
+    "",
+    "      Bertan in Desert Pines                     20 Wood Spirits in Desert Pines                   1000      500",
+    "      Gingirel in Zirakinbar tavern              30 Bears in Zirakinbar                            1100      800",
+    "      Shantir in Glacmor Magic Shop              30 Polar Bears in Glacmor                         1,200     700",
+    "      Lehha in Tahraji Desert                    20 Female Orcs in Tahraji Desert                  1,500     700",
+    "      Rocky in North Redmoon tavern              30 Feros in North Redmoon                         1,600     1200",
+    "      Closca in Melinis                          30 Fluffy Rabbits in Melinis                      2,000     1200",
+    "      Dragburn in GP                             20 Mountain Chimerans in GP                       2,000     1000",
+    "      Luvela in Irinveron tavern                 30 Frost Trolls in Irinveron                      2,000     1000",
+    "      Vulca in EVTR tavern                       30 Forest Chimerans in WVF                        2,100     1000",
+    "      Gynmor in Bethel Tavern                    30 Desert Chimerans in Bethel                     2,200     1000",
+    "      Kerlyn in Iscalrith tavern                 30 Yetis in Iscalrith                             2,400     1200",
+    "      Vulca in EVTR tavern                       30 Cockatrice in WVF                              2,500     1600",
+    "      Termopan in Idaloran tavern                15 Lions in Idaloran                              3,500     1500",
+    "      Luvela in Irinveron tavern                 20 White Tigers in Irinveron                      3,600     1500",
+    "",
+    "White Tigers = Haidir: The person who needs help today is Luvela. She usually spends most of the time in the Irinveron",
+    "Frost Trolls = Haidir: The person who needs help today is Luvela. She is in the tavern in Irinveron. But I guess you knew",
+    "that already..",
+    "",
+    "Cockatrice = Haidir: The person who needs help today is Vulca. She is the taverner from EVTR, as you already know.",
+    "Forest Chims =Haidir: The person who needs help today is Vulca. She is the taverner from EVTR.",
+    "",
+    "Pissing Leopards: Haidir: The person who needs help today is Gallyanne. She is the taverner in Hurquin..",
+    "Shitting Falcons: Haidir: The person who needs help today is Gallyanne. You will find her in Hurquin.."
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Dung Harvesting Quest",
+   "section": "Daily Quests",
+   "npc": "Kaleb",
+   "where": "Tarsengaard",
+   "at": [
+    135,
+    148
+   ],
+   "intro": [
+    "A lot of dung is needed, every day. Harvesting experience received depends on harvesting level."
+   ],
+   "reward": [
+    {
+     "amount": "8,000",
+     "what": "Harvesting (this is the maximum reward, it varies based on harvesting level)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Deliver 100 dung to Kaleb.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Engineering Daily",
+   "section": "Daily Quests",
+   "npc": "Minel",
+   "where": "Nordcarn house",
+   "at": [
+    142,
+    69
+   ],
+   "intro": [
+    "Place engineering items at certain locations for engineering experience."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "1.    You must be level 25 engineering in order to do this daily. 2.    To place the mines/caltrops/wards, stand in the right area, use the items in your inventory while moving a step per item in the area. 3.    You don't necessarily have to place all the mines at once, say if you needed 10 and placed 9 in the right place and one too far, you can go back later to place one in the right place to complete the quest."
+   ],
+   "noteLines": [
+    "1.    You must be level 25 engineering in order to do this daily.",
+    "2.    To place the mines/caltrops/wards, stand in the right area, use the items in your inventory while moving",
+    "      a step per item in the area.",
+    "3.    You don't necessarily have to place all the mines at once, say if you needed 10 and placed 9 in the right",
+    "      place and one too far, you can go back later to place one in the right place to complete the quest."
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Harvesting Daily",
+   "section": "Daily Quests",
+   "npc": "Xaquelina",
+   "where": "Portland",
+   "at": [
+    199,
+    52
+   ],
+   "intro": [
+    "Harvest flowers from specific locations on specific maps for a perfume."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "1.    The amount is amount of harvests, not amount of the item, so if you wear excavator cloak you'll have to harvest twice the amount."
+   ],
+   "noteLines": [
+    "1.    The amount is amount of harvests, not amount of the item, so if you wear excavator cloak you'll have to",
+    "      harvest twice the amount."
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Mule Daily",
+   "section": "Daily Quests",
+   "npc": "Tatu",
+   "where": "Desert Pines Crystal Caves",
+   "at": [
+    108,
+    16
+   ],
+   "intro": [
+    "Shapeshift into a mule to carry a high amount of something to an NPC. Reward depends on which random NPC you're sent to."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Shantir (Glacmor) : 4k alc xp + 500gc"
+    },
+    {
+     "amount": null,
+     "what": "Derzelas (Irsis) : 4k pot xp + 60 vials"
+    },
+    {
+     "amount": null,
+     "what": "Crusher (Arius) : 4k eng xp + 300gc"
+    },
+    {
+     "amount": null,
+     "what": "Random rare items (vial molds)"
+    }
+   ],
+   "items": [
+    "1.     2 Mule Glyphs and mule level for at least 1,200 EMU.",
+    "2.     1 set of essences for Teleport to Portals Room spell",
+    "3.     1 C2 ring",
+    "4.     Creature Food (5-10)"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Go to Tatu in Desert Pines Crystal Caverns [108,16] and choose option \"Need help?\"",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You will need to have 1,200 EMU available. Shapeshift to mule form before accepting the package.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You will get 600 quartz in inventory and will need to deliver it to an NPC",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Easiest way to move to the NPC in mule form (mules can't use magic):",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Shapeshift to mule form and get the package."
+      },
+      {
+       "n": "b",
+       "text": "Use any c2 ring."
+      },
+      {
+       "n": "c",
+       "text": "Shapeshift back (use yourself)."
+      },
+      {
+       "n": "d",
+       "text": "Cast teleport to portals room spell."
+      },
+      {
+       "n": "e",
+       "text": "Shapeshift to mule form again and walk to the portal of the map you're going to."
+      },
+      {
+       "n": "f",
+       "text": "Walk to the NPC and deliver the package."
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "text": "Talk to the NPC and give them the quartz for the reward.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Summoning Daily",
+   "section": "Daily Quests",
+   "npc": "Maia",
+   "where": "White Stone",
+   "at": [
+    171,
+    102
+   ],
+   "intro": [
+    "Provide a number of furs, skins, and other creature parts for summoning experience."
+   ],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "1.      Items should be in your storage, not inventory."
+   ],
+   "noteLines": [
+    "1.      Items should be in your storage, not inventory."
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Temps R Us Daily",
+   "section": "Daily Quests",
+   "npc": "Dorel",
+   "where": "White Stone",
+   "at": [
+    132,
+    580
+   ],
+   "intro": [
+    "A varied random quest that gives varied rewards."
+   ],
+   "reward": [
+    {
+     "amount": "4000",
+     "what": "Summoning"
+    },
+    {
+     "amount": "3000",
+     "what": "Attack"
+    },
+    {
+     "amount": "3000",
+     "what": "Crafting"
+    },
+    {
+     "amount": "5000",
+     "what": "Crafting"
+    },
+    {
+     "amount": "2000",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": "3000",
+     "what": "Manufacturing"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Maia (WS Summon Arena) asks for Furs gives 4k summon exp and 3000 gc.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "150 Tiger furs"
+      },
+      {
+       "n": "b",
+       "text": "150 leopard fur"
+      },
+      {
+       "n": "c",
+       "text": "150 Black Panther fur"
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "text": "Arona, the librarian of the secret library(fast reading room) in [283,113] Desert Pines. Different Book gathering quests give 3k att exp +1kgc",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Gustav in Carmien Manor, South Kiliran Field. He is in the first room of the Manor."
+      },
+      {
+       "n": "b",
+       "text": "Arona wants newspaper from Avyia in PL [247,151]."
+      },
+      {
+       "n": "c",
+       "text": "Silvars in the Tarsengaard Magic School library[ 87,42]."
+      },
+      {
+       "n": "d",
+       "text": "Omri Tarsengaard Engineering School"
+      },
+      {
+       "n": "e",
+       "text": "Nhala Morcraven Marsh [136,260]"
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "text": "Zhena in GP [165,135]. C1 Rings She pays 100 gc each. Reward - 3k crafting exp.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Deliver 100 Rings of Portland"
+      },
+      {
+       "n": "b",
+       "text": "Deliver 100 Rings of Isla Prima"
+      },
+      {
+       "n": "c",
+       "text": "Deliver 100 Rings of VOTD"
+      },
+      {
+       "n": "d",
+       "text": "Deliver 100 Rings of Desert Pines"
+      },
+      {
+       "n": "e",
+       "text": "Deliver 100 Ring of White Stone"
+      },
+      {
+       "n": "f",
+       "text": "Deliver 100 Ring of Naralik"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "Give a steel helm to Apala (116,23)(Palon Vertas gold mine entrance) for 28K and 2K manu exp.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Rodica MM tavern 2k honey comb pays 4kgc",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Gerund blacksmith in the Valley of the Dwarves 6k gold 3k manu exp",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Book of titanium short of magic"
+      },
+      {
+       "n": "b",
+       "text": "Book of titanium short of fire"
+      },
+      {
+       "n": "c",
+       "text": "Book of titanium short of ice"
+      },
+      {
+       "n": "d",
+       "text": "Book of titanium short of thermal"
+      },
+      {
+       "n": "e",
+       "text": "Book of Titanium Long Sword of Fire"
+      },
+      {
+       "n": "f",
+       "text": "Book of Titanium Long Sword of thermal"
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "text": "Barnes (PV tunnels 180,156) — 5k craft xp — 50k gc",
+     "sub": [
+      {
+       "n": "a",
+       "text": "100 Port Anitora rings"
+      },
+      {
+       "n": "b",
+       "text": "100 Bethel rings"
+      },
+      {
+       "n": "c",
+       "text": "100 Egratia rings"
+      },
+      {
+       "n": "d",
+       "text": "100 Emerald Valley rings"
+      },
+      {
+       "n": "e",
+       "text": "100 Glacmor rings"
+      },
+      {
+       "n": "f",
+       "text": "100 Hulda rings"
+      },
+      {
+       "n": "g",
+       "text": "100 Hurquin rings"
+      },
+      {
+       "n": "h",
+       "text": "100 Idaloran rings"
+      },
+      {
+       "n": "i",
+       "text": "100 Imbroglio Islands rings"
+      },
+      {
+       "n": "j",
+       "text": "100 IotF rings"
+      },
+      {
+       "n": "k",
+       "text": "100 Irinveron rings"
+      },
+      {
+       "n": "l",
+       "text": "100 Iscalrith rings"
+      },
+      {
+       "n": "m",
+       "text": "100 Kusamura rings"
+      },
+      {
+       "n": "n",
+       "text": "100 Palon Vertas rings"
+      },
+      {
+       "n": "o",
+       "text": "100 Sedicolis rings"
+      },
+      {
+       "n": "p",
+       "text": "100 Trassian rings Low Level Quests"
+      }
+     ]
+    }
+   ],
+   "notes": [
+    "If you can't or don't want to complete the quest you can cancel it, however you will have to wait for 48 hours (6 EL days) to get another task."
+   ],
+   "noteLines": [
+    "If you can't or don't want to complete the quest you can cancel it, however you will have to wait for 48 hours (6",
+    "EL days) to get another task."
+   ],
+   "requirements": [],
+   "varies": true
+  },
+  {
+   "name": "Beginner Tutorial",
+   "section": "Low Level Quests",
+   "npc": "Tutorial NPC",
+   "where": "Isla Prima",
+   "at": [
+    161,
+    139
+   ],
+   "intro": [
+    "It all starts here, learn the basics of how Eternal Lands works."
+   ],
+   "reward": [
+    {
+     "amount": "4,200",
+     "what": "Attack"
+    },
+    {
+     "amount": "2,200",
+     "what": "Defense"
+    },
+    {
+     "amount": "2,700",
+     "what": "Harvesting"
+    },
+    {
+     "amount": "1,400",
+     "what": "Alchemy"
+    },
+    {
+     "amount": "3,000",
+     "what": "Magic"
+    },
+    {
+     "amount": "2,000",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": "1,500",
+     "what": "gc"
+    },
+    {
+     "amount": "1",
+     "what": "Leather Pants"
+    },
+    {
+     "amount": "1",
+     "what": "Padded Leather Armor"
+    },
+    {
+     "amount": "1",
+     "what": "Leather Helm"
+    },
+    {
+     "amount": "1",
+     "what": "Iron Sword"
+    },
+    {
+     "amount": "10",
+     "what": "Red Rose"
+    },
+    {
+     "amount": "10",
+     "what": "Red Snapdragons"
+    },
+    {
+     "amount": "10",
+     "what": "Sulfur"
+    }
+   ],
+   "items": [
+    "1 Impatiens                                                1 Swamp Candles",
+    "1 Lilacs                                                   2 Red Snapdragons",
+    "1 Tiger Lilly                                              1 Blue Star Flower",
+    "1 Chrysanthemum                                            1 Blue Lupine",
+    "1 White Asiatic Lilly                                      Food to get your food level to at least 35",
+    "1 Red Rose                                                 101 Sulfur (you get to keep 100)",
+    "1,000 gold coins (you get to keep them)                    Increase and Health sigils",
+    "Book of Biology (or have read it already)                  3 Brown Rabbit Furs",
+    "2 Thread"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Start the tutorial quest by talking to Tutorial NPC in Isla Prima, near the Wraith.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "The tutorial consists of many parts that you must complete in order.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Scouting tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Go to the Isla Prima tavern and talk to Reca, the tavern keeper."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 400 Attack and Defense experience"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "Harvesting tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Harvest (or have already in your storage) one of each the flowers on Isla Prima:"
+      },
+      {
+       "n": "b",
+       "text": "Impatiens [84,134] (reward 400 Harvesting experience)"
+      },
+      {
+       "n": "c",
+       "text": "Swamp Candles [90,66]"
+      },
+      {
+       "n": "d",
+       "text": "Lilacs [66,56]"
+      },
+      {
+       "n": "e",
+       "text": "Red Snapdragons [65,32]"
+      },
+      {
+       "n": "f",
+       "text": "Tiger Lilly [88,101]"
+      },
+      {
+       "n": "g",
+       "text": "Blue Star Flower [23,145]"
+      },
+      {
+       "n": "h",
+       "text": "Chrysanthemum [13,159]"
+      },
+      {
+       "n": "i",
+       "text": "Blue Lupine [134,70]"
+      },
+      {
+       "n": "j",
+       "text": "White Asiatic Lilly [152,53]"
+      },
+      {
+       "n": "k",
+       "text": "Store the items in a storage (if your overall level is low enough you can use the Newbie Storage, otherwise just use any storage NPC)"
+      },
+      {
+       "n": "l",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "m",
+       "text": "Reward: a pair of Leather Pants (in your storage)"
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "text": "Fighting tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Go to the Isla Prima Rat cave at [42,67]."
+      },
+      {
+       "n": "b",
+       "text": "Kill 10 Rats."
+      },
+      {
+       "n": "c",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "d",
+       "text": "Reward: an Iron Sword, a Leather Torso and a Leather Helm"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "Eating tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Eat until your food level is at least 35."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 300 Attack, Defense, and Harvesting experience."
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "text": "Item making tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Go to Tutorial NPC with ingredients to make 1 Fire Essence."
+      },
+      {
+       "n": "b",
+       "text": "Make the Fire Essence."
+      },
+      {
+       "n": "c",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "d",
+       "text": "Reward: 400 Alchemy experience, 10 Red Roses, 10 Red Snapdragons, 10 Sulfur in your storage."
+      }
+     ]
+    },
+    {
+     "n": 8,
+     "text": "Finding Kane tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Go to Desert Pines docks at [357,357] and enter the ship."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Kane."
+      },
+      {
+       "n": "c",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "d",
+       "text": "Reward: 500 Attack and Defense experience."
+      }
+     ]
+    },
+    {
+     "n": 9,
+     "text": "Sulfur harvesting tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Harvest (or have already in your storage) 100 Sulfur."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Harvesting experience."
+      }
+     ]
+    },
+    {
+     "n": 10,
+     "text": "Increasing attributes tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Get from the Wraith (or already have) at least 6 Physique and 6 Coordination."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      }
+     ]
+    },
+    {
+     "n": 11,
+     "text": "Novac's quest tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Finish (or have already finished) the first two objectives of Novac's combat tutorial quest."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      }
+     ]
+    },
+    {
+     "n": 12,
+     "text": "Xaquelina's daily harvesting quest tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Obtain (or have obtained before) a daily harvesting quest from Xaquelina at Portland docks."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Harvesting experience."
+      }
+     ]
+    },
+    {
+     "n": 13,
+     "text": "Haidir's daily combat quest tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Obtain (or have obtained before) a daily combat quest from Haidir in White Stone Tirnwood Vale."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Attack and Defense experience."
+      }
+     ]
+    },
+    {
+     "n": 14,
+     "text": "Ayenne's alchemy quest tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Finish the first objective of Ayenne's alchemy tutorial quest in Desert Pines Desert Tropics."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Alchemy experience."
+      }
+     ]
+    },
+    {
+     "n": 15,
+     "text": "Moneymaking tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Have 1,000 gold coins in your storage."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 500 gold coins."
+      }
+     ]
+    },
+    {
+     "n": 16,
+     "text": "Magic tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Get (or already have) the Increase and Health sigils."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Magic experience."
+      }
+     ]
+    },
+    {
+     "n": 17,
+     "text": "Reading tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Read (or have already read) the Biology book."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Attack experience."
+      }
+     ]
+    },
+    {
+     "n": 18,
+     "text": "Fast reading area tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Talk to Aurora in the Desert Pines secret fast reading room."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Attack experience."
+      }
+     ]
+    },
+    {
+     "n": 19,
+     "text": "Encyclopedia tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Make a pair of warm fur gloves."
+      },
+      {
+       "n": "b",
+       "text": "Talk to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Manufacturing experience."
+      }
+     ]
+    },
+    {
+     "n": 20,
+     "text": "Past tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Finish (or have finished before) Lasud's past quest."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Magic experience."
+      }
+     ]
+    },
+    {
+     "n": 21,
+     "text": "Seridian Journey tutorial",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Finish (or have finished before) the Wraith's Seridian Journey quest."
+      },
+      {
+       "n": "b",
+       "text": "Return to Tutorial NPC."
+      },
+      {
+       "n": "c",
+       "text": "Reward: 1,000 Magic and Manufacturing experience, 1,000 gold coins"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Blast From the Past",
+   "section": "Low Level Quests",
+   "npc": "Lasud",
+   "where": "Isla Prima",
+   "at": [
+    63,
+    136
+   ],
+   "intro": [
+    "Learn about your past and some magic basics."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "None, but a prerequisite for Seridia Journey."
+    }
+   ],
+   "items": [
+    "10 Rose Quartz"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Lasud in Isla Prima, in front of the tavern.",
+     "sub": []
+    },
+    {
+     "n": 1,
+     "text": "Talk to Atekel in Nordcarn Magic Shop and give her 10 rose quartz to hear your past.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Bow-Legged",
+   "section": "Low Level Quests",
+   "npc": "Kyra",
+   "where": "Isla Prima",
+   "at": [
+    153,
+    105
+   ],
+   "intro": [
+    "Help is needed with supplies to make a new bow."
+   ],
+   "reward": [
+    {
+     "amount": "1",
+     "what": "Short Bow"
+    },
+    {
+     "amount": "100",
+     "what": "Training arrows"
+    }
+   ],
+   "items": [
+    "10 leather",
+    "20 thread",
+    "2 rope"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Kyra IP 153,104",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Marcel WSC General Store 169,625",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Palmer WS Graham’s Village 186,142",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Zarian WS Cra School 48,360",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Expila WSC Library 48,627",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Neru Aluwen Temple WS Forrest of the Fall 641,688",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "WS Sto 465,430 use crate",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Marcel WSC General Store 169,625 Finally, the knife! :)",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Palmer WS Grahm's Village 186,142",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Kyra IP 153,104 - bring her 10 leather, 20 thread, 2 rope",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Elven Party",
+   "section": "Low Level Quests",
+   "npc": "Vaesura",
+   "where": "White Stone",
+   "at": [
+    301,
+    319
+   ],
+   "intro": [
+    "Find a list of elves throughout Seridia to invite to a council party."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Ranging"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Vaesura in White Stone at (301,319). She'll tell you to contact a list of Elves for a party.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "When you talk to each person, there will be an option that reads \"Vaesura\". Click this, and the person should give you some confirmation. This should also show up in your quest log.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Order does not matter.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "In Isla Prima",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Lasud: At (62,137)"
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "text": "In Desert Pines",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Kane: Inside boat from Desert Pines to White Stone, \"use\" the little silver thing behind the wheel."
+      },
+      {
+       "n": "b",
+       "text": "Astra: At (307, 235), house in Corren"
+      },
+      {
+       "n": "c",
+       "text": "Isabella: At (341, 38)."
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "In Portland",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Aliester: At (198, 258), magic shop back room"
+      },
+      {
+       "n": "b",
+       "text": "Avyia: At (247 , 151), on the road from Portland to White Stone"
+      },
+      {
+       "n": "c",
+       "text": "Xaquelina: At (186, 56), on a boat"
+      },
+      {
+       "n": "d",
+       "text": "Drial: At (197, 105), library"
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "text": "In Tarsengaard",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Moonflower: At (325, 60), Zarin's Temple"
+      },
+      {
+       "n": "b",
+       "text": "Silvars: Enter the magic school, take the door at the top right. Then take the last door on that hall, and then the north door. Silvars will be in that room (library)."
+      },
+      {
+       "n": "c",
+       "text": "Donegal: At (188, 316), Room 7. Enter the Magic School and pass through the Sewers."
+      }
+     ]
+    },
+    {
+     "n": 8,
+     "text": "In Nordcarn",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Hawkins: At (86, 108), near Nordcarn arena."
+      }
+     ]
+    },
+    {
+     "n": 9,
+     "text": "In White Stone",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Adnama: At (611, 709)"
+      }
+     ]
+    },
+    {
+     "n": 10,
+     "text": "In Morcraven Marsh",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Kahlen: At (151, 356), Jayden's Temple"
+      }
+     ]
+    },
+    {
+     "n": 11,
+     "text": "After talking to everyone, return to Vaesura to finish the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Kelcha's Dream",
+   "section": "Low Level Quests",
+   "npc": "Kelcha",
+   "where": "Morcraven Marsh Kelcha’s Tannery House",
+   "at": [
+    284,
+    253
+   ],
+   "intro": [
+    "Find a flower from Kelcha's dream."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Kelcha will sell you bulk leather cheap, 75 leathers for 350gc."
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Kelcha in Morcraven Marsh at [284,253] about her dream and she will tell you about a flower",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Edlera in Morcraven Marsh at [141,164] first, she will tell you about the flower.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Find the flower in White Stone at [634,204] and use it. You will get a message about it - it’s a quest item but not visible in inventory.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Go back to Kelcha and talk to her.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "She will now sell leather to you and the quest is finished.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Repair Quest"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Manufacturing Beginner's Quest",
+   "section": "Low Level Quests",
+   "npc": "Granny Lorpak",
+   "where": "Isla Prima Granny Lorpak’s House",
+   "at": [
+    74,
+    149
+   ],
+   "intro": [
+    "Help Granny with some manufacturing stuff."
+   ],
+   "reward": [
+    {
+     "amount": "1,000",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": "1",
+     "what": "Leather Boots"
+    }
+   ],
+   "items": [
+    "3 Potions of Minor Healing",
+    "2 Needles",
+    "1 Fox fur",
+    "1 Threads"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to the Granny Lorpak and give her the three healing pots. She sends you to Adnama in Forest of the Fall in White Stone.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Adnama is in the building just north and west of the defense goddess' temple. You give her the needle.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Go back to Isla Prima and the old woman.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "She sends you to Victor in WSC (the cloak seller, opposite the flower shop on the market place).",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Go back to Isla Prima and the old woman. Now make a fox scarf (one fox fur, one thread, and one needle in inventory).",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Go to the Adnama in Forest of the Fall.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Go back to Isla Prima and the old woman. You get 1,000 manufacturing exp and a pair of leather boots.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Master and Apprentice",
+   "section": "Low Level Quests",
+   "npc": "Christopher",
+   "where": "White Stone",
+   "at": [
+    555,
+    190
+   ],
+   "intro": [
+    "Apprentice Christopher needs assistance finding his Master."
+   ],
+   "reward": [
+    {
+     "amount": "1,500",
+     "what": "Crafting"
+    },
+    {
+     "amount": "2",
+     "what": "Ring of Valley of the Dwarves"
+    },
+    {
+     "amount": "1",
+     "what": "Ring of Portland"
+    },
+    {
+     "amount": "2",
+     "what": "Ring of Disengagement"
+    }
+   ],
+   "items": [
+    "Book of Silver Smelting (sold by Ardur in Naralik for 500 Gold coins).",
+    "5 Silver Rings"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Christopher in White Stone at [556,190]",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Itilli in Tarsengaard Magic School, he wants a silver smelting book.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Christopher again.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Talk to Drial in Portland Library",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Go in a \"magic shop\" tent in Morcraven Marsh at [288,44] and use the open book",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk to Drial in again.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Talk to Fortan in Portland at [163,231], he wants 5 silver rings.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Talk to Cristopher again.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Talk to Fortan again.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Talk to Cristopher to end the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Mixture Mayhem",
+   "section": "Low Level Quests",
+   "npc": "Reca",
+   "where": "Isla Prima Pula’s Tavern",
+   "at": [
+    66,
+    134
+   ],
+   "intro": [
+    "Reca needs help getting potions to others."
+   ],
+   "reward": [
+    {
+     "amount": "10,000",
+     "what": "Potion"
+    },
+    {
+     "amount": "1",
+     "what": "Potion of Extra Mana"
+    },
+    {
+     "amount": "1",
+     "what": "Potion of Great Healing"
+    }
+   ],
+   "items": [
+    "10 Potions of Mana",
+    "15 Potions of Minor Healing"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Reca in Isla Prima tavern after doing several other quests.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Reportedly you can start Reca's quest at least after finishing Tutorial quest, Wraith's Seridia Journey quest, Past quest, Crafter's Apprentice quest, Tankel's Daughter quest, Leather quest, Wine quest, Treasure of Nordcarn quest."
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "text": "Talk to Christopher at White Stone, Lakeside Village. Give him 10 Potions of Minor Healing.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Michael in Valley of the Dwarves General Store.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Talk to Erokin in Valley of the Dwarves, near the Gold Mine entrance.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Talk to Lilliana in Nordcarn General Store. Give her 15 Potions of Mana.",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk to Brogan in Portland (near the Desert Pines flag)",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Talk to Erokin in Valley of the Dwarves again.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Return to Reca for your reward of 10,000 Potions experience, 1 Potion of Extra Mana, 1 Potion of Great Healing.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Seridia Journey"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Repair Quest",
+   "section": "Low Level Quests",
+   "npc": "Tankel",
+   "where": "Morcraven Marsh",
+   "at": [
+    292,
+    242
+   ],
+   "intro": [
+    "Run some errands for Tankel."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Tankel will attempt to repair your damaged items."
+    }
+   ],
+   "items": [
+    "10 Yellow Roses",
+    "30 Potions of Minor Healing"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Tankel in Morcraven Marsh at [292,242].",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Edlera in Morcraven Marsh at [141,164].",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Tankel again.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Talk to Edlera again.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Get 10 yellow roses and drop roses in front of Kelcha (in the house next to Tankel) and she will tell you about her diary.",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk with Edlera again and she asks you to find the diary.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Talk with Tankel again and he tells you he found Kelcha in Naralik.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Go to Naralik and enter the catacombs at [106,164]. You will find 4 books close to the entrance - use them all until you find the diary which tells you Kelcha has been cursed by Mortos.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Talk to Edlera again and she tells you need 30 minor healing potions.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Go to Naralik and locate the statue above ground next to entrance of the catacombs.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Put the 30 minor healing potions into a bag in front of statue.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Use the statue and you will get a message that Kelcha is well again.",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "Talk with Edlera and Tankel.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Seridia Journey",
+   "section": "Low Level Quests",
+   "npc": "The Wraith",
+   "where": "Isla Prima",
+   "at": [
+    161,
+    152
+   ],
+   "intro": [
+    "The Wraith sends you on journeys around Seridia to learn about the various locations. You only get experience in ONE of the listed skills, which you get to choose."
+   ],
+   "reward": [
+    {
+     "amount": "1,000",
+     "what": "Experience in the skill of your choice"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Finish Lasud's past Quest.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to the following NPCs in this order:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Wraith"
+      },
+      {
+       "n": "b",
+       "text": "Tobias, Tirnwood Vale in White Stone, a little west of Selain's Temple"
+      },
+      {
+       "n": "c",
+       "text": "Kalana, Desert Pines, Corren Village"
+      },
+      {
+       "n": "d",
+       "text": "Nyeald, Portland"
+      },
+      {
+       "n": "e",
+       "text": "Erokin, Mynadar, Valley of the Dwarves"
+      },
+      {
+       "n": "f",
+       "text": "Koki, Nordcarn"
+      },
+      {
+       "n": "g",
+       "text": "Rosalyn, Tarsengaard Magic School"
+      },
+      {
+       "n": "h",
+       "text": "Tankel, Morcraven Marsh"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Blast From the Past"
+   ],
+   "varies": false
+  },
+  {
+   "name": "The Need for Armor",
+   "section": "Low Level Quests",
+   "npc": "Daritha",
+   "where": "Tarsengaard barracks entered from",
+   "at": [
+    177,
+    189
+   ],
+   "intro": [
+    "Assist Daritha by providing leather armor. (This is not the Daily quest.)"
+   ],
+   "reward": [
+    {
+     "amount": "60,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "60,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [
+    "40 Padded Leather Armors"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Daritha, inside the house in Tarsengaard (177,189).",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Give him 40 Padded Leather Armors.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Wine Quest",
+   "section": "Low Level Quests",
+   "npc": "Latis",
+   "where": "Morcraven Marsh Winery",
+   "at": [
+    288,
+    60
+   ],
+   "intro": [
+    "Provide some assistance for the winery."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Vesine in Morcraven Marsh [287,69] will sell you bulk wine cheap, batches of 20 bottles for 15gc."
+    }
+   ],
+   "items": [
+    "30 Coal",
+    "80 Sulphur",
+    "20 Silver Bars"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Latis about his parents’ death in Morcraven Marsh [290, 60].",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Nyeald, Portland's mayor in Portland [95, 56].",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Bais in Portland storage back rooms [229, 78].",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Talk to Latis again.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Talk to Drial, the librarian in the Portland library [198, 106].",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk to Morumi in Nordcarn [112, 70].",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Talk to Drial in the Portland library again.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Talk to Nyeald again.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Go to the Dragon Cave in Tahraji Desert [369, 21] and inside find the remains of Ertal at [102, 95]. \"Use\" the book he's holding.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Return and talk to Morumi.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Once you have the items in the list above in your storage, talk to Morumi again.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Return to Latis and talk to him about the rain.",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "Talk to Bais again.",
+     "sub": []
+    },
+    {
+     "n": 14,
+     "text": "Talk to Latis yet again, this ends the quest. High Level Quests",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "All Oiled Up",
+   "section": "High Level Quests",
+   "npc": "Strajer",
+   "where": "Portland",
+   "at": [
+    217,
+    122
+   ],
+   "intro": [
+    "Strajer needs help getting his oil supply for the city lamps."
+   ],
+   "reward": [
+    {
+     "amount": "75,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "75,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "100",
+     "what": "Treasure finders"
+    }
+   ],
+   "items": [
+    "RC Mine",
+    "RC Mine Detonator",
+    "50 Wheat",
+    "50 Mugwort",
+    "50 Nightshade",
+    "50 Valerian"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Go to Strajer PL [217, 121] and talk with him.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Go to Arius and speak with Kinder [225, 42].",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Speak again with Strajer PL [217, 121].",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "You need speak with Kane, at Desert Pines (inside boat which are at [357, 357]. He asks you twice for 3k gcs, or will not say something.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Travel to GP, Gretch [235, 359] ask you put a RC mine around the stone arch (212, 364) - you will se a windows - and give her a RC Mine Detonator.",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Go to VOTD [34, 162] and talk with Nolida.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Enter on Gold Mine at VOTD and down to second level. Enter in house which are at [177, 31]. Megera ask you find a healer, because she is ill.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "The healer is at TG's Magic School [184, 315]. When you enter use door at [13, 96] and after the door at [110, 181]. Aurora is at [174, 345] (healer). She asks you some Plants. 50 wheat, 50 mugwort and 50 most potent Nightshade and Valerian (50 each). Wheat and Mugwort can be at sto and don’t harv it.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "All flowers are needed in your inventory when you head back to Aurora."
+      },
+      {
+       "n": "b",
+       "text": "Nightshade and Valerian are the only flowers you have to harvest as a mission for the quest."
+      },
+      {
+       "n": "c",
+       "text": "Mugwort and Wheat can be prepared before the quest is started."
+      }
+     ]
+    },
+    {
+     "n": 9,
+     "text": "Valerian and Nightshade were very difficult to find.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Go to Rot and use the Door on floor at [99,51]."
+      },
+      {
+       "n": "b",
+       "text": "You will enter at cave and walk until [688, 631] and use the door. Now you are at other cave, walk to end and use the torch holder at [23, 302]."
+      },
+      {
+       "n": "c",
+       "text": "Use door at [220,189] and now you can harv special Nightshade and Valerian (you can see a windows which said \"This seems to be the right spot for Nightshade, now harvest 50 pieces.\"), the same for Valerian ;). You see other Windows when finish (if you use harv cape you will do fast, because when you will have 52 at inv windows appears)."
+      }
+     ]
+    },
+    {
+     "n": 10,
+     "text": "Return to Aurora and give her the plants. She gives you something for Megera (you will not see something at inv).",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Talk with Megera VotD 2nd Level House H [176,30]",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Talk with Strajer PL [217, 121] to end the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Blacksmith's Dvarium",
+   "section": "High Level Quests",
+   "npc": "Jandir",
+   "where": "Valley of the Dwarves Flower Shop & Blacksmith",
+   "at": [
+    33,
+    138
+   ],
+   "intro": [
+    "Provide Dvarium."
+   ],
+   "reward": [
+    {
+     "amount": "35,000",
+     "what": "Manufacturing"
+    }
+   ],
+   "items": [
+    "15 Dvarium Ore"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Jandir, the Valley of the Dwarves blacksmith in the flower shop house and give the dvarium ores to end the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Borrowed Books",
+   "section": "High Level Quests",
+   "npc": "Shayna",
+   "where": "Palon Vertas Library",
+   "at": [
+    24,
+    135
+   ],
+   "intro": [
+    "Shayna needs help getting some borrowed books returned. Nothing's ever that simple."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "20,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "30,000",
+     "what": "Magic"
+    },
+    {
+     "amount": "10,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [
+    "10,000 gc",
+    "1,000 Polished Rubies",
+    "1,000 Titanium Bars"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Shayna in Palon Vertas library.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Mayor Morton in Palon Vertas.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Nyeald in Portland about the books.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Ask Laura in Portland tavern.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Use the nightstand in the first room upstairs",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Go back to Nyeald in Portland.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Talk Osold in Port Anitora.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Pay Osold 10kgc for the information about the book.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Talk to Arbella in Tarsengaard Magic School Library.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Kill some rats in Tarsengaard Magic School. Some of them are invisible, so True Sight will be needed for them.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "visible in secret passage from the library (it sometimes wanders to the teleport to the passage to the garden though)"
+      },
+      {
+       "n": "b",
+       "text": "invisible in garden"
+      },
+      {
+       "n": "c",
+       "text": "visible in garden"
+      },
+      {
+       "n": "d",
+       "text": "invisible dining room"
+      },
+      {
+       "n": "e",
+       "text": "invisible in sewers"
+      },
+      {
+       "n": "f",
+       "text": "visible in headmaster chambers"
+      },
+      {
+       "n": "g",
+       "text": "invisible in Library"
+      },
+      {
+       "n": "h",
+       "text": "visible in cave in the water around the garden"
+      }
+     ]
+    },
+    {
+     "n": 11,
+     "text": "Talk to Silvars in Tarsengaard Magic School Library, next to Arbella.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Talk to Crusher in Arius at [142,122].",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "Give the 1,000 polished rubies and 1,000 titanium bars to Crusher.",
+     "sub": []
+    },
+    {
+     "n": 14,
+     "text": "Return to Silvars for 10,000 engineering experience.",
+     "sub": []
+    },
+    {
+     "n": 15,
+     "text": "Speak to Arbella again for 30,000 magic experience.",
+     "sub": []
+    },
+    {
+     "n": 16,
+     "text": "Talk to Shayna for 20,000 attack and defense experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Church Builder",
+   "section": "High Level Quests",
+   "npc": "Caton",
+   "where": "Palon Vertas",
+   "at": [
+    99,
+    187
+   ],
+   "intro": [
+    "A donation is needed to rebuild a church in Palon Vertas."
+   ],
+   "reward": [
+    {
+     "amount": "10,000",
+     "what": "Alchemy"
+    },
+    {
+     "amount": "10,000",
+     "what": "Magic"
+    },
+    {
+     "amount": "8,000",
+     "what": "Tailoring"
+    },
+    {
+     "amount": "8,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [
+    "1 Rostogol Stone"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Caton in Palon Vertas [99,190] and give him a rostogol stone (to help him build the church) to complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Clogged Sewers",
+   "section": "High Level Quests",
+   "npc": "Lord Luxin",
+   "where": "White Stone",
+   "at": [
+    39,
+    714
+   ],
+   "intro": [
+    "Lord Luxin needs you to clear the drains in the sewers using wooden staves."
+   ],
+   "reward": [
+    {
+     "amount": "10,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "10,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "3,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [
+    "5 Wooden Staves"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Lord Luxin after finishing Tankel's Daughter quest.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Go down to White Stone City sewers.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Use the staves to unclog sewer drains (in any order):",
+     "sub": [
+      {
+       "n": "a",
+       "text": "[238,224]"
+      },
+      {
+       "n": "b",
+       "text": "[188,264]"
+      },
+      {
+       "n": "c",
+       "text": "[362,276]"
+      },
+      {
+       "n": "d",
+       "text": "[300,358]"
+      },
+      {
+       "n": "e",
+       "text": "[354,314]"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "Talk to Lord Luxin again to complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Kelcha's Dream"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Dagger Training",
+   "section": "High Level Quests",
+   "npc": "Patrick",
+   "where": "Nordcarn South Cave",
+   "at": [
+    182,
+    85
+   ],
+   "intro": [
+    "For a fee, you get some training with daggers."
+   ],
+   "reward": [
+    {
+     "amount": "40,000",
+     "what": "Attack"
+    }
+   ],
+   "items": [
+    "8,000 gold coins"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Patrick in Nordcarn ruby cave.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "He will offer you dagger training for 8,000gc (you can do it once only).",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Finding Irilium",
+   "section": "High Level Quests",
+   "npc": "Yinta",
+   "where": "Palon Vertas Treesoar House H",
+   "at": [
+    312,
+    65
+   ],
+   "intro": [
+    "Yinta needs you to find Irilium from various locations."
+   ],
+   "reward": [
+    {
+     "amount": "50,000",
+     "what": "Harvesting"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Yinta in Palon Vertas, Treesoar Village.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Find (look at) irilium ore in each of the following places:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Idaloran Mine (PK Arena)"
+      },
+      {
+       "n": "b",
+       "text": "Aeth Aelfan cave"
+      },
+      {
+       "n": "c",
+       "text": "North Redmoon Volcano, red dragon cave"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Haidir's Pest Extermination",
+   "section": "High Level Quests",
+   "npc": "Haidir",
+   "where": "White Stone",
+   "at": [
+    380,
+    311
+   ],
+   "intro": [
+    "Haidir needs you to kill several creatures for him. (This is not the Daily quest.)"
+   ],
+   "reward": [
+    {
+     "amount": "40,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "40,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Haidir in Tirnwood Vale, White Stone.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Kill the following creatures for him:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "4 Rats (White Stone City sewers)."
+      },
+      {
+       "n": "b",
+       "text": "2 Deer (Desert Pines)."
+      },
+      {
+       "n": "c",
+       "text": "1 White Rabbit (Morcraven Marsh)."
+      },
+      {
+       "n": "d",
+       "text": "3 Imps (Crystal Cavern in Desert Pines)."
+      },
+      {
+       "n": "e",
+       "text": "2 Black Bear (South Cave in Nordcarn)."
+      },
+      {
+       "n": "f",
+       "text": "1 Feran (Palon Vertas or Melinis, you need to check both)."
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Lost Axe",
+   "section": "High Level Quests",
+   "npc": "Henk",
+   "where": "Palon Vertas",
+   "at": [
+    120,
+    302
+   ],
+   "intro": [
+    "Henk needs help finding his special axe."
+   ],
+   "reward": [
+    {
+     "amount": "100,000",
+     "what": "Harvesting"
+    },
+    {
+     "amount": "80,000",
+     "what": "Attack"
+    }
+   ],
+   "items": [
+    "1 Enriched Water Essence",
+    "1 Iron Axe or Steel Axe"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Henk in Palon Vertas [120,302] to start the quest.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "His axe is missing, so look around for it. Looking at the grass at [93,281] will give you a clue... At this point you must have started the Shayna's Borrowed Books quest and talked to at least Shayna and Morton in Palon Vertas.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Follow the path to the town and talk to Brittani at the village's north gate.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Brittani will tell you to talk to the Mayor, Morton.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Morton tells you that you should go south to a blacksmith, Heavybeard in Zirakinbar.",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Asking Heavybeard in Zirakinbar [28,179] if he has had any problems with thieves, he will tell you to talk to Seth, a guard in Sedicolis [49,69].",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Seth will send you to Nordcarn to talk to Buni at [6,29].",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Buni will tell you to go to Port Anitora and talk to Osold at [252,184].",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Osold will send you to find a specific spell in a book in Palon Vertas magic school.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "The spell book is located in the Auditorium, it is a yellow book under a black book on the desk in front of the blackboard. Look at it. DO NOT use it.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Next you need to go to Nordcarn magic shop at [108,81] and talk to Atekel. You might have to have finished Lasud's past quest before Atekel will talk to you about this quest.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Atekel will tell you to harvest a special cactus at [262,259] in Tahraji Desert around 1:20-1:40 EL time.",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "After harvesting the cactus, you will need to return to Atekel.",
+     "sub": []
+    },
+    {
+     "n": 14,
+     "text": "She will tell you to use with an Enriched Water Essence at the book in Palon Vertas magic school auditorium. (You will lose it.)",
+     "sub": []
+    },
+    {
+     "n": 15,
+     "text": "When you have copied the spell, go back to Osold in Port Anitora.",
+     "sub": []
+    },
+    {
+     "n": 16,
+     "text": "Return to Palon Vertas, look at the pile of logs near Henk at [104,309], and after getting the hint use with your Iron Axe or Steel Axe at it to free Henk's axe.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Iron axe will disappear if you use it at the logs, but at the moment Steel axe does not seem to disappear. Might be a bug though."
+      }
+     ]
+    },
+    {
+     "n": 17,
+     "text": "Talk to Henk to get complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Lost Scroll",
+   "section": "High Level Quests",
+   "npc": "Osold",
+   "where": "Port Anitora",
+   "at": [
+    253,
+    185
+   ],
+   "intro": [
+    "Osold needs help finding a scroll."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "10,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "15,000",
+     "what": "Ranging"
+    }
+   ],
+   "items": [
+    "1 Serpent Stone"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Osold in Port Anitora",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Nyeald in Portland",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Go to the Barren Wastelands in Emerald Valley Trade Route and use the brown bottle in the water near [186, 68].",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Go to Irinveron, use the sunflower at [456, 638]",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Go to Palon Vertas and use the statue at [174, 143]",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Go to Glacmor Ssai Woods and use the grave with the rose at [32, 183]",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Go back to Palon Vertas and use the bush at the statues at [162, 260]",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Return to Osold, then head to Shantir, the shopkeeper of Glacmor magic shop, bring along the Serpent Stone",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Return to the bush and use it again (it'll say you found the scroll, but won't get it in your inventory)",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Finally, return to Osold to complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Master of Rings",
+   "section": "High Level Quests",
+   "npc": "Lustra",
+   "where": "Tarsengaard Magic School Meeting Hall",
+   "at": [
+    59,
+    166
+   ],
+   "intro": [
+    "Most every teleport ring needs to be tested."
+   ],
+   "reward": [
+    {
+     "amount": "40,000",
+     "what": "Magic"
+    },
+    {
+     "amount": "30,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "30,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [
+    "C1 & C2 rings listed below"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Lustra. She tells you to test hyperspace with rings.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You have to use the rings in front of Lustra in the following order for C1:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Naralik"
+      },
+      {
+       "n": "b",
+       "text": "WS"
+      },
+      {
+       "n": "c",
+       "text": "IP"
+      },
+      {
+       "n": "d",
+       "text": "DP"
+      },
+      {
+       "n": "e",
+       "text": "PL"
+      },
+      {
+       "n": "f",
+       "text": "VotD"
+      },
+      {
+       "n": "g",
+       "text": "MM"
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "text": "C2 rings must be used in the same order as in encyclopedia:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "anitora"
+      },
+      {
+       "n": "b",
+       "text": "idaloran"
+      },
+      {
+       "n": "c",
+       "text": "bethel"
+      },
+      {
+       "n": "d",
+       "text": "sedicolis"
+      },
+      {
+       "n": "e",
+       "text": "palon vertas"
+      },
+      {
+       "n": "f",
+       "text": "kusamura"
+      },
+      {
+       "n": "g",
+       "text": "egratia"
+      },
+      {
+       "n": "h",
+       "text": "iscalrith"
+      },
+      {
+       "n": "i",
+       "text": "Irinveron"
+      },
+      {
+       "n": "j",
+       "text": "hulda"
+      },
+      {
+       "n": "k",
+       "text": "trassian"
+      },
+      {
+       "n": "l",
+       "text": "isle of the forgotten"
+      },
+      {
+       "n": "m",
+       "text": "imbroglio islands"
+      },
+      {
+       "n": "n",
+       "text": "hurquin"
+      },
+      {
+       "n": "o",
+       "text": "glacmor"
+      },
+      {
+       "n": "p",
+       "text": "emerald valley)"
+      },
+      {
+       "n": "q",
+       "text": "srm"
+      },
+      {
+       "n": "r",
+       "text": "melinis."
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "You must return to Lustra every time you use a ring, and she tells you next ring to use.",
+     "sub": []
+    }
+   ],
+   "notes": [
+    "Do this quest BEFORE you kill Scotty."
+   ],
+   "noteLines": [
+    "Do this quest BEFORE you kill Scotty."
+   ],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Medallion Quest 1",
+   "section": "High Level Quests",
+   "npc": "Bob the Gob, Portland [wandering]",
+   "where": null,
+   "at": null,
+   "intro": [
+    "A magical medallion found while battling a creature leads to an unexpected journey."
+   ],
+   "reward": [
+    {
+     "amount": "80,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [
+    "60 White Rabbit furs",
+    "20 Puma furs"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Kill Bob the Goblin in Portland (there are two, you have to find the right one).",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You will get a message saying you found a broken medallion.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Go to Nhala in a hut in Morcraven Marsh [136,260] with the furs with you.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Go speak to Throvnc in Grubani Peninsula in a hut at [289,87].",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Talk to Zhena in Grubani Peninsula [166,133].",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Go to Portland Library and talk to the librarian, Drial.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Drial will send you to the fast reading library in Desert Pines [283,113]. Talk to Arona inside.",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Go to White Stone [237,347] outside Selain's temple and harvest 20 \"corrupted\" Tiger Lillies there.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Return to Zhena, who will tell you to talk to Throvnc, who will tell you to talk to Soquela in Grubani Peninsula [69,306].",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Soquela tells you to harvest a Poppy in Irinveron at [476,121].",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "You need to take the poppy to Ruins of Tirnym and use with it at the tombstone at [103,53] close to EL midnight around 4:40-5:20 EL time.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "After that, you need to return to Irinveron and kill George the Skeleton with a diamond in your inventory close to EL midday 1:40-2:20 EL time (he spawns around [379,515]).",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "Return to Soquela.",
+     "sub": []
+    },
+    {
+     "n": 14,
+     "text": "Go to Portland Titanium mine and talk to Glont the Skeleton there.",
+     "sub": []
+    },
+    {
+     "n": 15,
+     "text": "He will send you to Palon Vertas. Talk to Apala in Palon Vertas.",
+     "sub": []
+    },
+    {
+     "n": 16,
+     "text": "Apala will send you to Cedric also in Palon Vertas.",
+     "sub": []
+    },
+    {
+     "n": 17,
+     "text": "Cedric will send you to Idaloran mine to look for an office area within the mines. When you get to the office area, use an open scroll on the table.",
+     "sub": []
+    },
+    {
+     "n": 18,
+     "text": "Return to Glont in Portland Titanium Mine with the information.",
+     "sub": []
+    },
+    {
+     "n": 19,
+     "text": "Then go back to Soquela.",
+     "sub": []
+    },
+    {
+     "n": 20,
+     "text": "Go talk to Throvnc again.",
+     "sub": []
+    },
+    {
+     "n": 21,
+     "text": "Talk to the gnome Elevy in Valley of the Dwarves gold mine second level at [342,54] to complete the quest and obtain your experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Medallion Quest 2: Highway to Heaven",
+   "section": "High Level Quests",
+   "npc": "Elevy",
+   "where": "Valley of the Dwarves Gold Cave Level 2",
+   "at": [
+    342,
+    54
+   ],
+   "intro": [
+    "The medallion leads to further adventures."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "1.    [INCOMPLETE - EXPENSIVE WITH NO REWARD - NOT RECOMMENDED]"
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Medallion Quest 1"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Novac's Potion 1",
+   "section": "High Level Quests",
+   "npc": "Novac",
+   "where": "Isla Prima",
+   "at": [
+    100,
+    120
+   ],
+   "intro": [
+    "You are needed to kill very specific creatures for a potion. (Not normal spawns, can appear on many maps, including where creature is not normally seen.) You must kill the fox in the Combat tutorial before this quest appears."
+   ],
+   "reward": [
+    {
+     "amount": "100,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "100,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "After getting to the Fox part in Novac's Combat Tutorial, he will give you another quest. This time he needs specific animals for a potion.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "These animals can spawn in one of many spawn points on both continents (at least one of them is portals rooms).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The listed \"known possible spawn locations\" are places where the creature has been found, but there probably are more possible places than are listed here.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Locations underlined are places where this creature does NOT occur natively (at least to my knowledge).",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Killing works the same way as in Novac Combat Tutorial.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Brown Rabbit"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: Seridia Portals Room (can go to any outside map in Seridia), Irilion Portals Room (can go to any outside map in Irilion), White Stone Tirnwood Vale Underground ii. it spawns in both portals rooms, so it could be free in ANY map-Several found on irin near glac exit, EVTR near the red currant bush, Idaloran, Sedicolis,"
+      },
+      {
+       "n": "b",
+       "text": "Raccoon"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: inside a small cave in southern Zirakinbar next to a waterfall, outside in Zirakinbar, Valley of the Dwarves Gold Mine second level, Arius, Palon Vertas, Emerald Valley Trade Route ii. inside the little south cave in Zirakinbar (next to a waterfall), free in Zirakinbar, in VOTD gold mine (second level), Arius, Ida near PV exit"
+      },
+      {
+       "n": "c",
+       "text": "Green Snake (20,000 Attack and Defense experience)"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: White Stone City Sewers, White Stone Tirnwood Vale Underground, Idaloran Mines, Sedicolis, Willowvine Forest, Idaloran ii. WS sewers, IDA mines, frequents outside Sedicolis, Willow forest, Zirakinbar, Tyrnwood Underground"
+      },
+      {
+       "n": "d",
+       "text": "Red Snake (20,000 Attack and Defense experience)"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: Kusamura Jungle, Azâghal Castle in Zirakinbar, Palon Vertas Coal/Gold mine in southern part of the map, North Redmoon, Aeth Aelfan Wyrmgoth Underground, Egratia Point, Seridia Portals Room (can go to any outside map in Seridia) ii. free in Kusamura, inside the castle in Zirakinbar, Zirak cave, free in Nordcarn, pv gold cave, NRM, Hurquin Crypt, free in Zirak"
+      },
+      {
+       "n": "e",
+       "text": "Wolf"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: Aeth Aelfan, Hurquin, Isles of the Forgotten, Nordcarn South (Ruby) Cave, Iscalrith, White Stone ii. free in AA, free in Hurquin. Summoner killed in iotf"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "After you have killed everything, you will receive an additional 60,000 Attack and Defense experience from Novac.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Combat Tutorial"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Novac's Potion 2",
+   "section": "High Level Quests",
+   "npc": "Novac",
+   "where": "Isla Prima",
+   "at": [
+    100,
+    120
+   ],
+   "intro": [
+    "You're needed to kill even more creatures for another potion. Like the first, these are not normal spawns and can appear on any of multiple maps."
+   ],
+   "reward": [
+    {
+     "amount": "100,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "100,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "After finishing Novac's Potion 1, he will give you another quest. He needs more specific animals for another potion.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "These animals can spawn in one of many spawn points on both continents (at least one of them is portals rooms).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The listed \"known possible spawn locations\" are places where the creature has been found, but there probably are more possible places than are listed here.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Locations underlined are places where this creature does NOT occur naturally (at least to my knowledge).",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Killing works the same way as in Novac 1.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Brownie"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: WS, Grubani Peninsula, Morcraven Marsh, TD, Tarsengaard"
+      },
+      {
+       "n": "b",
+       "text": "Wood Sprite"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: Glacmor, Sedicolis, Tahraji Desert, Tarsengaard (Roanof Island), Nordcarn"
+      },
+      {
+       "n": "c",
+       "text": "Boar"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: WS, Arius, Palon Vertas, Tarsengaard"
+      },
+      {
+       "n": "d",
+       "text": "Brown Snake"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: DP, Naralik, Zirakinbar, Hurquin"
+      },
+      {
+       "n": "e",
+       "text": "Rat"
+      },
+      {
+       "n": "i",
+       "text": "Known possible spawn locations: Ida, Emerald Valley Trade Route, Naralik Magic School"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "After you have killed everything, you will receive 100,000 Attack and Defense experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Novac's Potion 1"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Oranges for My Big Belly",
+   "section": "High Level Quests",
+   "npc": "Logan",
+   "where": "Tarsengaard House L",
+   "at": [
+    143,
+    231
+   ],
+   "intro": [
+    "Provide oranges to get the ability to eat more."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Big Belly Perk (maximum food level increases to 100)"
+    }
+   ],
+   "items": [
+    "30 Oranges"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Give Logan the oranges.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Perfume Ingredient Search",
+   "section": "High Level Quests",
+   "npc": "Xaquelina",
+   "where": "Portland",
+   "at": [
+    199,
+    52
+   ],
+   "intro": [
+    "Some very specific items need to be harvested for a perfume in particular locations, and sometimes at specific times. (Inorganic 4 nexus required to harvest everything.)"
+   ],
+   "reward": [
+    {
+     "amount": "100,000",
+     "what": "Harvesting"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Xaquelina.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Yinta in Palon Vertas Treesoar Greenhouse.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Harvest ogre toes in Palon Vertas (60,36) - between 3:00-3:30",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Harvest nightshade in Arius (on top of the limestone mnt. next to the track) - between 4:15-4:45",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Harvest dandelions in North Redmoon (77,173) - between 2:40-3:10",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Harvest cactus in Grubani Peninsula (183,101) - between 0:00-0:30",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Harvest yellow rose in Tahraji Desert (233,217) - between 1:30-2:00",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Harvest turquoise in Trassian PK cave in Dra Syn, entrance at (20,59) then walk to (644,88) - between 5:40-0:10",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Pie-Eating Contest",
+   "section": "High Level Quests",
+   "npc": "Hyutan",
+   "where": "Tarsengaard Magic School Kitchen",
+   "at": [
+    225,
+    254
+   ],
+   "intro": [
+    "A huge number of pies need to be made for a contest. You're needed to gather ingredients."
+   ],
+   "reward": [
+    {
+     "amount": "40,000",
+     "what": "Potion"
+    },
+    {
+     "amount": "40,000",
+     "what": "Magic"
+    }
+   ],
+   "items": [
+    "10,000 wheat",
+    "10,000 fruits",
+    "5,000 honeycomb",
+    "5,000 blueberries"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Hyutan in Tarsengaard Magic School kitchen.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Harvest 10,000 wheat, 10,000 fruits, 5,000 honeycomb and 5,000 blueberries.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Return to Hyutan.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Portia's Debt",
+   "section": "High Level Quests",
+   "npc": "Portia",
+   "where": "Portland Portia’s Potion School",
+   "at": [
+    282,
+    269
+   ],
+   "intro": [
+    "Portia needs money, but doesn't want to get it from Sloan at the bank due to his bad reputation."
+   ],
+   "reward": [
+    {
+     "amount": "10,000",
+     "what": "Potion"
+    }
+   ],
+   "items": [
+    "12,000 gc"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Portia in Portland potion school.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "If you give her the 12,000gc she gives you 10,000 potion experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Serpa's Sslessars",
+   "section": "High Level Quests",
+   "npc": "Serpa",
+   "where": "Naralik",
+   "at": [
+    135,
+    160
+   ],
+   "intro": [
+    "Serpa needs some Sslessar stones."
+   ],
+   "reward": [
+    {
+     "amount": "40,000",
+     "what": "Summoning"
+    }
+   ],
+   "items": [
+    "2 Sslessar Summoning stones (7,000gc each from Mariana in Aeth Aelfan potion shop)"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Serpa in Naralik [133,159] and give the Sslessar Summoning Stones for the summoning experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Special Sword",
+   "section": "High Level Quests",
+   "npc": "Ellia",
+   "where": "Palon Vertas",
+   "at": [
+    57,
+    33
+   ],
+   "intro": [
+    "Ellia needs you to get her a special sword to give to her brother."
+   ],
+   "reward": [
+    {
+     "amount": "50,000",
+     "what": "Summoning"
+    }
+   ],
+   "items": [
+    "1 Enriched Magic Essence",
+    "1 Binding Stone",
+    "1 Gold Ring"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Ellia in Palon Vertas (57,33).",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Talk to Barnes in Palon Vertas underground",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Talk to Shayna in Palon Vertas library",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Talk to Barnes again",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Talk to Ashata in Portland",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk to Barnes",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Go to the silver spot in Iscalrith City: Iscalrith Insides [306,84]",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Look at the tit serp sword:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "\"An inscription on the orb reads 'Warlord Tsentas.' This must be his sword. A magic spell protects the sword from being removed - you'll have to find a way to overpower the spell.\""
+      }
+     ]
+    },
+    {
+     "n": 9,
+     "text": "Talk to Barnes again",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Talk to Ringa in Isle of the Forgotten [84,94] and give her the EME, binding stone and gold ring.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Go back to the sword in Iscalrith City and retrieve it.",
+     "sub": []
+    },
+    {
+     "n": 12,
+     "text": "Talk to Barnes.",
+     "sub": []
+    },
+    {
+     "n": 13,
+     "text": "Talk to Meer at Glacmor docks.",
+     "sub": []
+    },
+    {
+     "n": 14,
+     "text": "Go to Irinveron (120,250), pass through the cave, and enter another cave at (85,100). Find the sword at (210,100).",
+     "sub": []
+    },
+    {
+     "n": 15,
+     "text": "Talk to Barnes.",
+     "sub": []
+    },
+    {
+     "n": 16,
+     "text": "Talk to Ellia to complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "The Wizard's Passage",
+   "section": "High Level Quests",
+   "npc": "Quello",
+   "where": "Trassian Wizard’s Passage",
+   "at": [
+    130,
+    168
+   ],
+   "intro": [
+    "Help a native of Dra Syn with a translation."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Magic"
+    },
+    {
+     "amount": "10,000",
+     "what": "Alchemy"
+    },
+    {
+     "amount": "10,000",
+     "what": "Crafting"
+    },
+    {
+     "amount": "10,000",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": null,
+     "what": "Quello will transport you across to Dra Syn in the cave on request."
+    },
+    {
+     "amount": "20,000",
+     "what": "extra magic experience from Estilo later if you give Kalana 10,000gc."
+    }
+   ],
+   "items": [
+    "3 Water Essences",
+    "3 Fire Essences",
+    "2 Honeycombs",
+    "150 gc",
+    "3,000 gc (or 13,000 gc if you want the 20,000 extra Magic experience from Estilo)",
+    "4,000 Cotton",
+    "2,000 Thread",
+    "40 Needles",
+    "50 Mana Potions",
+    "50 Minor Healing Potions",
+    "30 SRs",
+    "30 BRs",
+    "125 HEs",
+    "40 Empty Vials",
+    "20 Mercury",
+    "90 Poison Antidotes"
+   ],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Quello in the Wizard's passage in Dra Syn, Trassian. He wants something translated and will send to you to his daughter Aurora.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You can find Aurora in the healer’s chambers in Tarsengaard Magic School. Aurora will send you to Palon Vertas Magic School to find a vial.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Use the green vial in the storage room next to the classrooms in Palon Vertas Magic School.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Go back to Tarsengaard and give the potion to Aurora. She will then send you to find Christina in White Stone.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "You can find Christina in the tavern in Lakeside Village, White Stone. She will ask you to bring her 3 Water Essences, 3 Fire Essences, 2 Honeycombs, 150 gc and permission from Governor Kalana.",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Governor Kalana is in Desert Pines. She asks you to give her 3,000 gc so she can fill out the form. Once you will give her the gc she will tell you she can't find the form and it will take her a month to get it as she's so busy.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "At this stage you can find the form for her or you can pay her 10,000 gc to do it quicker. Paying the 10,000 gc will also let you get an extra 20,000 magic experience from Estilo.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "To find the form go into her house and use an energy essence on the paw print on the left above the fireplace. Then go to the shelves to the left of the door and click on the light brown book to get the form. Take the form back to the governor and she will give you the permission you need."
+      }
+     ]
+    },
+    {
+     "n": 8,
+     "text": "Go back to Christina with all the things she asks for. She will tell you you need a written translation and send you back to Aurora.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Aurora is very busy collecting supplies so can't help you unless you get ingredients for her. Once you have them in your storage, you have to go to Palon Vertas.",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Find Yinta in the green house in Treesoar Village, Palon Vertas. She will take the note and put it in her pocket but you now have the written translation so go back to Quello.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Give Quello the translation. Quest over, lots of lovely experience and he will also give you free access to Dra Syn.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "If you bribed Kalana for the permission, you can now go to Estilo and tell him about the bribery for extra 20,000 magic experience."
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Treasure of Nordcarn",
+   "section": "High Level Quests",
+   "npc": "Koki",
+   "where": "Nordcarn",
+   "at": [
+    130,
+    73
+   ],
+   "intro": [
+    "Koki needs your help with finding a treasure."
+   ],
+   "reward": [
+    {
+     "amount": "10,000",
+     "what": "Summoning"
+    },
+    {
+     "amount": "1",
+     "what": "Fox Scarf"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Koki in Nordcarn market square, he tells you about a song.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Visit the Valley of the Dwarves graveyard during the night (3:30 to 0:30), look at the tombstone at [27,115] using the \"eye\".",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Take a long walk on a short plank, i.e. deposit all your stuff in a storage and visit the underworld, fastest way would be to type #suicide. Go to [153, 49] and 'use' the book under the bush.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Go to the Portland library and talk to Drial.",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "Go to Tahraji Desert and there to the Dragon Cave. 'Use' the chest at [128,78]",
+     "sub": []
+    },
+    {
+     "n": 6,
+     "text": "Talk to Frukas in Grahm's Village, White Stone.",
+     "sub": []
+    },
+    {
+     "n": 7,
+     "text": "Head to the Elavro Mountains in White Stone and 'use' the bones at [467,745].",
+     "sub": []
+    },
+    {
+     "n": 8,
+     "text": "Talk to Frukas again.",
+     "sub": []
+    },
+    {
+     "n": 9,
+     "text": "Read the scroll on the barrels behind him (next to the stable)",
+     "sub": []
+    },
+    {
+     "n": 10,
+     "text": "Head back to Nordcarn, 'use' the well at [73,32], then the bucket next to it.",
+     "sub": []
+    },
+    {
+     "n": 11,
+     "text": "Talk to Koki again.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Underground Resistance 1",
+   "section": "High Level Quests",
+   "npc": "Bertan",
+   "where": "Desert Pines",
+   "at": [
+    246,
+    67
+   ],
+   "intro": [
+    "Your help is needed in finding some relay locations."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Bertan in Kamara Desert, Desert Pines.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Look at the following trees/building:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "A tree in Tarsengaard magic school gardens (119,108)."
+      },
+      {
+       "n": "b",
+       "text": "A tree at the top of a hill in Idaloran (687,77)"
+      },
+      {
+       "n": "c",
+       "text": "A tower in South Redmoon, north of the bridge"
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "text": "Talk to Bertan again to get your experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Underground Resistance 2: Ground Detectors",
+   "section": "High Level Quests",
+   "npc": "Bertan",
+   "where": "Desert Pines",
+   "at": [
+    246,
+    67
+   ],
+   "intro": [
+    "Stalagmites make for good ground detectors? You have to find them in specific places throughout Draia."
+   ],
+   "reward": [
+    {
+     "amount": "20,000",
+     "what": "Engineering"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Bertan in Kamara Desert, Desert Pines about ground detectors.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Look at some stalagmites in the following places in any order (the coordinates are for the inside map):",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Isla Prima tavern secret room (54, 34)"
+      },
+      {
+       "n": "b",
+       "text": "Naralik Catacombs (155, 24)"
+      },
+      {
+       "n": "c",
+       "text": "Tarsengaard Magic School garden Spider cave (82, 64)"
+      },
+      {
+       "n": "d",
+       "text": "Southern Kilaran Carmien Manor fluffy cave (160, 155)"
+      },
+      {
+       "n": "e",
+       "text": "Portland titanium mine (176, 36)"
+      },
+      {
+       "n": "f",
+       "text": "Hurquin Crypt (143, 51) Use the statue at (76,73) to get in, then the statue in the water to get back."
+      },
+      {
+       "n": "g",
+       "text": "Willowvine Cave (22, 80)"
+      },
+      {
+       "n": "h",
+       "text": "Idaloran Mine (234, 266)"
+      },
+      {
+       "n": "i",
+       "text": "Emerald Valley iron cave (145, 16) Needs teleport to range."
+      },
+      {
+       "n": "j",
+       "text": "Aeth Aelfan cave (189, 36)"
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "text": "Talk to Bertan again for your experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Underground Resistance 1"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Wimmip's Diseased Creatures",
+   "section": "High Level Quests",
+   "npc": "Wimmip",
+   "where": "Tarsengaard Magic School Animal Study Room",
+   "at": [
+    270,
+    190
+   ],
+   "intro": [
+    "5 creatures around Draia are diseased and need to be killed."
+   ],
+   "reward": [
+    {
+     "amount": "35,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "35,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "10,000",
+     "what": "Summoning"
+    },
+    {
+     "amount": "10,000",
+     "what": "Ranging"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Wimmip in Tarsengaard magic school's Animal Study room [270,190]",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "She will send you to find creatures that are diseased, as a hint she says that the creatures will be in places where there are other creatures like them.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You will need to kill (in no particular order):",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Rat (found in the Rat Cave in Isla Prima, near the entrance)"
+      },
+      {
+       "n": "b",
+       "text": "Male Goblin (found in Naralik, near the center of the map)"
+      },
+      {
+       "n": "c",
+       "text": "Puma (found in White Stone, Elavro Mountains)"
+      },
+      {
+       "n": "d",
+       "text": "Ogre (found in Palon Vertas, in the front of the blacksmith cave)"
+      },
+      {
+       "n": "e",
+       "text": "Cyclops (found in Egratia Point, near the temple in the grassy area of the map)"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "When you kill the creature relevant to the quest, you will get a message",
+     "sub": []
+    },
+    {
+     "n": 5,
+     "text": "After killing the last creature you get another, additional message, return to Wimmip to collect the experience. Tutorial Quests In addition to the listed bonus experience, for the mixing tutorials you will also get your normal school experience when mixing items.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Alchemy Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Ayelle",
+   "where": "Desert Pines Alchemical Academy",
+   "at": [
+    28,
+    119
+   ],
+   "intro": [
+    "Mix essentially every alchemy item from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "445,400",
+     "what": "Alchemy"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Ayelle in Desert Pines Desert Tropics alchemy school.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Make one of each the following items in the alchemy school to poof them and get the experience:",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You must talk to Ayelle again after making each item to get to the next one!",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Fire Essence                      300 xp"
+      },
+      {
+       "n": "b",
+       "text": "Water Essence                     600 xp"
+      },
+      {
+       "n": "c",
+       "text": "Earth Essence                     1,000 xp"
+      },
+      {
+       "n": "d",
+       "text": "Air Essence                       1,400 xp"
+      },
+      {
+       "n": "e",
+       "text": "Spirit Essence                    1,700 xp"
+      },
+      {
+       "n": "f",
+       "text": "Matter Essence                    2,200 xp"
+      },
+      {
+       "n": "g",
+       "text": "Energy Essence                    2,500 xp"
+      },
+      {
+       "n": "h",
+       "text": "Life Essence                      3,000 xp"
+      },
+      {
+       "n": "i",
+       "text": "Death Essence                     3,500 xp"
+      },
+      {
+       "n": "j",
+       "text": "Health Essence                    4,000 xp"
+      },
+      {
+       "n": "k",
+       "text": "Magic Essence                     4,500 xp"
+      },
+      {
+       "n": "l",
+       "text": "Iron Bar                          5,000 xp"
+      },
+      {
+       "n": "m",
+       "text": "Matter Conglomerate               5,500 xp"
+      },
+      {
+       "n": "n",
+       "text": "Steel Bar                         6,000 xp"
+      },
+      {
+       "n": "o",
+       "text": "Mercury                           7,000 xp"
+      },
+      {
+       "n": "p",
+       "text": "Silver Bar                        7,500 xp"
+      },
+      {
+       "n": "q",
+       "text": "Gold Bar                          8,500 xp"
+      },
+      {
+       "n": "r",
+       "text": "Titanium Bar                      9,500 xp"
+      },
+      {
+       "n": "s",
+       "text": "Tin Bar                           10,700 xp"
+      },
+      {
+       "n": "t",
+       "text": "Copper Bar                        12,000 xp"
+      },
+      {
+       "n": "u",
+       "text": "Bronze Bar                        13,700 xp"
+      },
+      {
+       "n": "v",
+       "text": "Enriched Life Essence             15,000 xp"
+      },
+      {
+       "n": "w",
+       "text": "Hydrogenium Bar                   16,000 xp"
+      },
+      {
+       "n": "x",
+       "text": "Seridium Bar                      17,000 xp"
+      },
+      {
+       "n": "y",
+       "text": "Enriched Magic Essence            18,000 xp"
+      },
+      {
+       "n": "z",
+       "text": "Enriched Fire Essence             19,000 xp aa.    Wolfram Bar                       20,000 xp bb.    Dvarium Bar                       221,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Combat Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Novac",
+   "where": "Isla Prima",
+   "at": [
+    100,
+    120
+   ],
+   "intro": [
+    "Kill a specific spawn of each of the majority of creatures in the game, from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Total of 281,900 Attack"
+    },
+    {
+     "amount": null,
+     "what": "Total of 281,900 Defense"
+    },
+    {
+     "amount": null,
+     "what": "Vanquisher perk (+1 a/d in combat)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Novac in Isla Prima, south from the campfire. He will tell you to kill specific creatures one by one. You must do them in this order, and after each kill you must return to Novac to get your experience and the next creature.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Tested ways of killing the creature include: fighting it normally, fighting it while someone harms, fighting it and using an item like ring of power, shooting it with a bow.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "Casting harm or similar spell that kills the creature without you being in combat with it will not work.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "When you kill the right creature, you will get a message. If it wasn't the right one, keep looking around. The given locations are only spawn points, they often wander pretty far from their spawns.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Rat                       IP house [85,106]                                     400 xp"
+      },
+      {
+       "n": "b",
+       "text": "Brownie                   IP [ 32,171]                                          600 xp"
+      },
+      {
+       "n": "c",
+       "text": "Deer                      DP between Aluwen temple and tele                     800 xp"
+      },
+      {
+       "n": "d",
+       "text": "Green Snake               Desert Pines close to Harvy                           1,000 xp"
+      },
+      {
+       "n": "e",
+       "text": "Talk-Kalana & kill Fox Portland west of manu school                             1,500 xp"
+      },
+      {
+       "n": "f",
+       "text": "Small Spider              CC in DP near rose quartz                             1,800 xp"
+      },
+      {
+       "n": "g",
+       "text": "Boar                      VotD near ancient temple                              2,000 xp"
+      },
+      {
+       "n": "h",
+       "text": "Wolf                      NC near SKF exit                                      2,200 xp"
+      },
+      {
+       "n": "i",
+       "text": "Male Goblin               NL, near haz storage                                  2,400 xp"
+      },
+      {
+       "n": "j",
+       "text": "Large Spider              NL, dark brown, near mag school                       2,500 xp"
+      },
+      {
+       "n": "k",
+       "text": "Skeleton                  PL Ti Mine where you enter the cave                   3,000 xp"
+      },
+      {
+       "n": "l",
+       "text": "Chinstrap Penguin         Isc between exit to Glacmor and tavern                4,000 xp"
+      },
+      {
+       "n": "m",
+       "text": "Puma                      WS, Forest and Elavro                                 4,000 xp"
+      },
+      {
+       "n": "n",
+       "text": "Tall Gargoyle             TG, Gargoyle Cave                                     4,000 xp"
+      },
+      {
+       "n": "o",
+       "text": "Armed Skeleton            NC S. Cave, over the bridge on the way to rubies 4,200 xp"
+      },
+      {
+       "n": "p",
+       "text": "Hobgoblin                 WS Underground, where old haz sto was                 4,500 xp"
+      },
+      {
+       "n": "q",
+       "text": "Female Orc                Glac Skill Academy sewers                             5,000 xp"
+      },
+      {
+       "n": "r",
+       "text": "Male Orc                  NL catacombs (160, 70)                                5,000 xp"
+      },
+      {
+       "n": "s",
+       "text": "Troll                     Idaloran mines, near Tin ore                          5,000 xp"
+      },
+      {
+       "n": "t",
+       "text": "Grizzly Bear              WS south of Northern Woods, west of teleport          6,000 xp"
+      },
+      {
+       "n": "u",
+       "text": "Ogre                      SKF CM right at the door on the 2nd level             6,000 xp"
+      },
+      {
+       "n": "v",
+       "text": "Polar Bear                Irin, southeast                                       7,000 xp"
+      },
+      {
+       "n": "w",
+       "text": "Armed Female Orc          GP near Grahm's Village entrance                      7,000 xp"
+      },
+      {
+       "n": "x",
+       "text": "Armed Male Orc            II, fire maze before hydro cave                       8,000 xp"
+      },
+      {
+       "n": "y",
+       "text": "Cyclops                   EP lower sandy area                                   8,000 xp"
+      },
+      {
+       "n": "z",
+       "text": "Fluffy Rabbit             Mel (310,150)                                         8,000 xp aa.      Phantom Warrior           RoT                                                   8,000 xp bb.      Feros                     NRM                                                   8,000 xp cc.      Desert Chimeran           Thel                                                  9,000 xp dd.      Forest Chimeran           WVF                                                   9,000 xp ee.      Mountain Chimeran         RoT                                                   9,000 xp ff.      Yeti                      Irin Yeti Cave                                        9,000 xp gg.     Cockatrice                WVF                                                10,000 xp hh.     Arctic chimeran           Trass (Dra Syn, entrance around 15,85)             15,000 xp ii.     Giant                     AA (PK area)                                       20,000 xp jj.     Red Dragon                NRM volcano                                        25,000 xp kk.     Black Dragon              AA                                                 30,000 xp ll.     Ice Dragon                Hulda                                              30,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Crafting Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Azra",
+   "where": "Tarsengaard Jewel Academy",
+   "at": [
+    260,
+    204
+   ],
+   "intro": [
+    "Mix essentially every crafting item from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "600,500",
+     "what": "Crafting"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Azra in Tarsengaard crafting school entered at [261,205].",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You have to make one of each of the following items in the right order in the crafting school (you will lose the product but get double experience and an exp bonus from Azra after each item).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You will have to talk to Azra again after making each item to get to the next one.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Thread                                  300 xp"
+      },
+      {
+       "n": "b",
+       "text": "Gold Ring                               400 xp"
+      },
+      {
+       "n": "c",
+       "text": "Silver Ring                             600 xp"
+      },
+      {
+       "n": "d",
+       "text": "Silver Medallion                        800 xp"
+      },
+      {
+       "n": "e",
+       "text": "Gold Medallion                          900 xp"
+      },
+      {
+       "n": "f",
+       "text": "Polished Ruby                           1,100 xp"
+      },
+      {
+       "n": "g",
+       "text": "Polished Emerald                        1,200 xp"
+      },
+      {
+       "n": "h",
+       "text": "Polished Sapphire                       1,400 xp"
+      },
+      {
+       "n": "i",
+       "text": "Polished Diamond                        1,600 xp"
+      },
+      {
+       "n": "j",
+       "text": "Ring of Isla Prima                      1,700 xp"
+      },
+      {
+       "n": "k",
+       "text": "Ring of Valley of the Dwarves           1,900 xp"
+      },
+      {
+       "n": "l",
+       "text": "Ring of Naralik                         2,100 xp"
+      },
+      {
+       "n": "m",
+       "text": "Ring of White Stone                     2,400 xp"
+      },
+      {
+       "n": "n",
+       "text": "Ring of Portland                        2,700 xp"
+      },
+      {
+       "n": "o",
+       "text": "Ring of Desert Pines                    2,900 xp"
+      },
+      {
+       "n": "p",
+       "text": "Unicorn Medallion                       3,100 xp"
+      },
+      {
+       "n": "q",
+       "text": "Sun Medallion                           3,400 xp"
+      },
+      {
+       "n": "r",
+       "text": "Moon Medallion                          3,800 xp"
+      },
+      {
+       "n": "s",
+       "text": "Stars Medallion                         4,100 xp"
+      },
+      {
+       "n": "t",
+       "text": "Ring of Damage                          4,500 xp"
+      },
+      {
+       "n": "u",
+       "text": "Ring of Disengagement                   4,900 xp"
+      },
+      {
+       "n": "v",
+       "text": "Ring of Idaloran                        5,300 xp"
+      },
+      {
+       "n": "w",
+       "text": "Ring of Bethel                          5,700 xp"
+      },
+      {
+       "n": "x",
+       "text": "Ring of Palon Vertas                    6,200 xp"
+      },
+      {
+       "n": "y",
+       "text": "Ring of Power                           6,700 xp"
+      },
+      {
+       "n": "z",
+       "text": "Ring of Kusamura                        7,100 xp aa.     Ring of Egratia                         7,600 xp bb.     Ring of Iscarlith                       8,200 xp cc.     Ring of Irinveron                       8,700 xp dd.     Heavenspawn Medallion                   9,300 xp ee.     Ring of Hulda                           9,700 xp ff.    Ring of Mana Destruction                  10,200 xp gg.    Ring of Trassian                          10,800 xp hh.    Medallion of Life                         11,200 xp ii.    Ring of Isle of the Forgotten             11,800 xp jj.    Enhanced Iron Plate Mail                  12,500 xp kk.    Ring of Imbroglio                         13,000 xp ll.    Ring of Hurquin                           13,600 xp mm.    Ring of Massive Mana Destruction          14,200 xp nn.    Crown of Mana                             14,800 xp oo.    Crown of Life                             15,600 xp pp.    Saving Stone                              16,500 xp qq.    Gatherer Medallion                        17,500 xp rr.    Arrow/bolt head mold                      18,500 xp ss.    Medallion of Mana                         300,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Engineering Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Eva",
+   "where": "Arius Magic School Main Hall",
+   "at": [
+    168,
+    74
+   ],
+   "intro": [
+    "Mix the majority of engineering items, from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "532,700",
+     "what": "Engineering"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Make the following items in front of Eva:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Ashes                                       300 xp"
+      },
+      {
+       "n": "b",
+       "text": "Rope                                        500 xp"
+      },
+      {
+       "n": "c",
+       "text": "Nail                                        800 xp"
+      },
+      {
+       "n": "d",
+       "text": "Saltpeter                                   1,100 xp"
+      },
+      {
+       "n": "e",
+       "text": "Blackpowder                                 1,400 xp"
+      },
+      {
+       "n": "f",
+       "text": "Caltrop                                     1,800 xp"
+      },
+      {
+       "n": "g",
+       "text": "Poisoned Caltrop                            2,200 xp"
+      },
+      {
+       "n": "h",
+       "text": "Snare                                       2,600 xp"
+      },
+      {
+       "n": "i",
+       "text": "A/D Indicator                               3,000 xp"
+      },
+      {
+       "n": "j",
+       "text": "Criticals Indicator                         3,400 xp"
+      },
+      {
+       "n": "k",
+       "text": "Arrow/bolt head                             3,800 xp"
+      },
+      {
+       "n": "l",
+       "text": "Accuracy/Magic Indicator                    4,200 xp"
+      },
+      {
+       "n": "m",
+       "text": "Pking arrows                                4,600 xp"
+      },
+      {
+       "n": "n",
+       "text": "Harvest/Degrade Indicator                   5,000 xp"
+      },
+      {
+       "n": "o",
+       "text": "Pking bolts                                 5,400 xp"
+      },
+      {
+       "n": "p",
+       "text": "Make Rare/Fail Indicator                    5,800 xp"
+      },
+      {
+       "n": "q",
+       "text": "Magic arrows                                6,200 xp"
+      },
+      {
+       "n": "r",
+       "text": "Lightmeter                                  6,600 xp"
+      },
+      {
+       "n": "s",
+       "text": "Ice arrows                                  7,000 xp"
+      },
+      {
+       "n": "t",
+       "text": "Fire arrows                                 7,400 xp"
+      },
+      {
+       "n": "u",
+       "text": "Small Mine                                  7,800 xp"
+      },
+      {
+       "n": "v",
+       "text": "Medium Mine                                 8,200 xp"
+      },
+      {
+       "n": "w",
+       "text": "Invasionmeter                               8,600 xp"
+      },
+      {
+       "n": "x",
+       "text": "Magic bolts                                 9,000 xp"
+      },
+      {
+       "n": "y",
+       "text": "Fire bolts                                  9,400 xp"
+      },
+      {
+       "n": "z",
+       "text": "Ice bolts                                   9,800 xp aa.    High Explosive Mine                       10,200 xp bb.    RC Mine                                   10,600 xp cc.    Mana Drain Ward                           11,000 xp dd.    Mana Burn Ward                            11,500 xp ee.    Night Visor                               12,000 xp ff.    RC Mine Detonator                         12,500 xp gg.    Invisibility Removal Ward                 13,000 xp hh.    Magic Immunity Removal Ward               13,500 xp ii.    Point Defense                             14,000 xp jj.    Attack predictor                          14,500 xp kk.    Defense predictor                         15,000 xp ll.    To Hit predictor                          15,500 xp mm.    To Damage predictor                       16,000 xp nn.    Accuracy predictor                        16,500 xp oo.    Magic predictor                           xp pp.    Harvest predictor                         17,000 xp qq.    Degrade predictor                         17,500 xp rr.    Make Rare predictor                       18,000 xp ss.    Failure predictor                         150,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Harvesting Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Elle, Valley of the Dwarves",
+   "where": null,
+   "at": null,
+   "intro": [
+    "Harvest every flower, mineral, and ore at specific locations, from lowest level to highest. Some must be done during specific game times."
+   ],
+   "reward": [
+    {
+     "amount": "442,500",
+     "what": "Harvesting"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": null,
+     "text": "50 Snapdragons     VOTD [152,152](x2 bush)",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Blue Lupines    NC [156,107](x2 bush)",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "40 Cactuses        DP [19,65]                         4:00 - 4:45 Maybe until 4:55 but its strange, see the post           600 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Yellow Roses    TG Magic School Garden             Me harv 5:28. Viper 4:18.                                            700 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "[114:135]",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Red Roses       VOTD [149,173]                     Viper 4:21 Me 0:12                                                   800 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Black Roses     MM [149,121]                       Viper 4:26 Me 0:19                                                   900 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "40 White Lillies   PL [78,75]                         Viper 4:31 Me 0:24                                                   1000 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "40 Swamp Candles   WS [515, 348]                      Viper 4:36 Me 0:36                                                   1100 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "45 sunflower       Naralik [86,75]                    Viper 4:40 Me 0:42                                                   1200 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "35 Wheat           Ruins of Tirnym [21,162]           Viper 4:48 Me 0:49                                                   1300 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Sulfur          MM Cave [142,129]                  Viper 4:55 Me 0:55                                                   1400 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "55 Honeycomb       PL [76,139]                        Me 1:05                                                              1500 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "25 Quartz          IP Spider Cave [42,38]             Me 1:15                                                              1600 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "25 Blue Quartz     CC [33,49]                         Me 1:22                                                              1700 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "25 Rose Quartz     WS Coal Cave [83,83](exactly!)     Me 1:46                                                              1800 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "10 Gypsum          Arius [247,250]                    Me 1:59                                                              1900 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Daffodils       Irsis [212,205]                    Lalaith 00:00-00:30                                                  2000 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "30 Iron Ore        Nara catacombs [47,153]                                                                                 2100 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "35 Silver Ore      WS Vermor Castle [15,122] (enter                                                                        2200 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "through coffin at 19,54)",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Mugwort         Melinis Cave (to Thelinor)",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "[191,418]",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "2300 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Valerian        TG [50,140]                        Lalaith 2:20 - 2:59                                                  2400 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "65 Poppies         GP [87,215]                                                                                             2500 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "55 Poison Ivy      KJ [220,190]                                                                                            2600 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "40 Gold Ore        VotD [134,218]                                                                                          2700 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "65 Tulips          PV [333,55]                        Lalaith 1:00 - 1:20 but worked also at 0:23! Malogre 02:50 Me 4:53   2800 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "-> maybe don't have hour",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "70 Red Currents    NRM [67,222]                       Lalaith 4:20 - 4:40                                                  2900 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "80 Blue Berries    IotF [137,47]                                                                                           3000 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "45 sapphires       NC north cave [50,21] PK!                                                                               3100 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "45 emeralds        Bethel Caverns [172,42] PK!                                                                             3200 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "45 rubies          Zirakgunda [161,338]                                                                                    3300 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "100 titanium ore       KJ cave to WVF [90,143]                                                                     3400 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "70 Henbane             Sedicolis [106,130]           (3:05 - 3:35)                                                 3500 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "45 Diamonds            Tirnym Past [107,132]                                                                       3600 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "75 Nightshade          Bethel Cave [27,135]                                                                        3700 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "70 Yarrow              TG [147, 218]                 (1:15 - 1:35)                                                 3800 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "70 Wormwood            SKF [176,173]                 (5:45 - 5:59)                                                 3800 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 White Chanterelle   Hurquin [78,87]               Me 3:45 Saxum 5:45                                            4000 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Ogre Toes           Glacmor [222,140]             xanthus 0:15 Me 5:02                                          4100 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "75 Tree Mushrooms      Ida [343,541]                 xanthus 0:20 (0:15 - 0:26)                                    4200 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Hydrogenium Ore      Imbroglio Islands [47,96]     xanthus 2:50 - 3:00 ghio 2:30 Maybe 2:00 - 3:00 (2:00 - ??)   4300 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Tin Ore              Ida mine [142,315]            Me 1:05                                                       4400 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Wolframite Ores      AA caves [53,188]             Me 1:36 Saxum 3:10                                            4500 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Copper Ore           Arius Copper Cave [269,256]   Me 2:36                                                       4600 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "40 Turquoise           Melinis Caves [104,388]       Me 3:06 Saxum 1:10                                            4700 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Seridium ore         Grubani Peninsula [256,364]   Cabman 1:50 Rabbitman 1:15 Me 1:24 wigbolt 1:05NO 2:01",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "75 Cinnabar            Trassian Caves[692,658]                                                                     4900 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "100 Yew                Kusamura Jungle [44,374]      (1:10 - 1:50)                                                 5000 xp",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "5 Dvarium              Thelinor [228,122]",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "50 Dung                Irinveron [339,352]           (3:15 - 3:45)",
+     "sub": []
+    },
+    {
+     "n": null,
+     "text": "20 Amber               Nordcarn Cavern [129,70]      5:35 -0:00",
+     "sub": []
+    }
+   ],
+   "notes": [
+    "Elle asks you to harvest some at certain hours of the day. When you find the correct harvest you will receive a message. You’ll also receive a message when you complete the quest."
+   ],
+   "noteLines": [
+    "Elle asks you to harvest some at certain hours of the day. When you find the correct harvest you will receive a",
+    "message. You’ll also receive a message when you complete the quest."
+   ],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Manufacturing Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Bruno",
+   "where": "White Stone Militia Supplies Blacksmithing School",
+   "at": [
+    567,
+    121
+   ],
+   "intro": [
+    "Mix a good majority of all manufacturing items from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "567,700",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": "1",
+     "what": "Bad Day Removal"
+    },
+    {
+     "amount": null,
+     "what": "Child of Stars Perk (no negative make rare/fail or harv astro)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "The quest begins in White Stone Manufacture school.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You have to make one of each the following items in this order in the school (the item will poof and you will get double experience, plus bonus experience from the NPC).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You have to talk to the NPC again after making each item to get to the next one.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Fox scarf                        300 xp"
+      },
+      {
+       "n": "b",
+       "text": "Fur cloak                        400 xp"
+      },
+      {
+       "n": "c",
+       "text": "Skunk hat                        600 xp"
+      },
+      {
+       "n": "d",
+       "text": "Leather boots                    800 xp"
+      },
+      {
+       "n": "e",
+       "text": "Leather gloves                   1,100 xp"
+      },
+      {
+       "n": "f",
+       "text": "Leather helmet                   1,400 xp"
+      },
+      {
+       "n": "g",
+       "text": "Padded leather armor             1,700 xp"
+      },
+      {
+       "n": "h",
+       "text": "Iron shield                      2,000 xp"
+      },
+      {
+       "n": "i",
+       "text": "Augmented leather pants          2,400 xp"
+      },
+      {
+       "n": "j",
+       "text": "Augmented leather armor          2,800 xp"
+      },
+      {
+       "n": "k",
+       "text": "Steel shield                     3,300 xp"
+      },
+      {
+       "n": "l",
+       "text": "Iron sword                       3,900 xp"
+      },
+      {
+       "n": "m",
+       "text": "Steel long sword                 4,700 xp"
+      },
+      {
+       "n": "n",
+       "text": "Iron chain mail                  5,600 xp"
+      },
+      {
+       "n": "o",
+       "text": "Frying pan                       6,600 xp"
+      },
+      {
+       "n": "p",
+       "text": "Iron helmet                      7,700 xp"
+      },
+      {
+       "n": "q",
+       "text": "Steel chain mail                 8,900 xp"
+      },
+      {
+       "n": "r",
+       "text": "Titanium short sword             10,000 xp"
+      },
+      {
+       "n": "s",
+       "text": "Titanium serpent sword           11,400 xp"
+      },
+      {
+       "n": "t",
+       "text": "Iron Plate Armor                 12,800 xp"
+      },
+      {
+       "n": "u",
+       "text": "Iron Axe                         15,000 xp"
+      },
+      {
+       "n": "v",
+       "text": "Emerald Claymore                 16,400 xp"
+      },
+      {
+       "n": "w",
+       "text": "Spear                            16,900 xp"
+      },
+      {
+       "n": "x",
+       "text": "Titanium Shield                  17,000 xp"
+      },
+      {
+       "n": "y",
+       "text": "Eagle Wing                       18,000 xp"
+      },
+      {
+       "n": "z",
+       "text": "Titanium Greaves                 19,000 xp aa.    Bronze Helm                      19,500 xp bb.    Bronze Shield                    20,000 xp cc.    Steel Plate                      20,500 xp dd.    Bronze Greaves                   21,000 xp ee.    Titanium Plate                   21,000 xp ff.    Bronze Cuisses                   21,500 xp gg.    Bronze Plate                     22,000 xp hh.    Red Dragon Greaves               23,000 xp ii.    Red Dragon Mail                  23,500 xp jj.    Black Dragon Helm                25,000 xp kk.     Bronze Sword                      26,000 xp ll.     Ice Dragon Cuisses                27,000 xp mm.     Black Dragon Mail                 28,000 xp nn.     Ice Dragon Mail                   100,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Potion Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Portia",
+   "where": "Portland Portia’s Potion School",
+   "at": [
+    282,
+    269
+   ],
+   "intro": [
+    "Mix essentially every potion item from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "477,700",
+     "what": "Potion"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Talk to Portia in Portland Potion school about teaching you. She wants you to make one of each the following items next to herself in the correct order (it's a potion school so you will get double exp but no product, as well as an extra exp bonus once per item).",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You must talk to Portia again after making each item to get to the next one!",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Minor Healing                                                       300 xp"
+      },
+      {
+       "n": "b",
+       "text": "Reasoning                                                           400 xp"
+      },
+      {
+       "n": "c",
+       "text": "Physique                                                            600 xp"
+      },
+      {
+       "n": "d",
+       "text": "Defense                                                             800 xp"
+      },
+      {
+       "n": "e",
+       "text": "Coordination                                                        1,000 xp"
+      },
+      {
+       "n": "f",
+       "text": "Wildness                                                            1,300 xp"
+      },
+      {
+       "n": "g",
+       "text": "Will                                                                1,500 xp"
+      },
+      {
+       "n": "h",
+       "text": "Attack                                                              1,700 xp"
+      },
+      {
+       "n": "i",
+       "text": "Spirit Restoration                                                  1,900 xp"
+      },
+      {
+       "n": "j",
+       "text": "Feasting                                                            2,100 xp"
+      },
+      {
+       "n": "k",
+       "text": "Body Restoration                                                    2,300 xp"
+      },
+      {
+       "n": "l",
+       "text": "Harvesting                                                          2,600 xp"
+      },
+      {
+       "n": "m",
+       "text": "Manufacturing                                                       2,900 xp"
+      },
+      {
+       "n": "n",
+       "text": "Summoning                                                           3,300 xp"
+      },
+      {
+       "n": "o",
+       "text": "Crafting                                                            3,600 xp"
+      },
+      {
+       "n": "p",
+       "text": "Magic                                                               3,900 xp"
+      },
+      {
+       "n": "q",
+       "text": "Extra Mana                                                          4,300 xp"
+      },
+      {
+       "n": "r",
+       "text": "Great Healing                                                       4,600 xp"
+      },
+      {
+       "n": "s",
+       "text": "Yarrow - Wormwood - Tulips Extract                                  4,900 xp"
+      },
+      {
+       "n": "t",
+       "text": "Nightshade - Mullein - Dandelion Extract                            5,200 xp"
+      },
+      {
+       "n": "u",
+       "text": "Poison Ivy - Henbane - Poppies Extract                              5,500 xp"
+      },
+      {
+       "n": "v",
+       "text": "Poison Antidote                                                     5,800 xp"
+      },
+      {
+       "n": "w",
+       "text": "Red Currents - Blue Berries - Rue Extract                           6,100 xp"
+      },
+      {
+       "n": "x",
+       "text": "True Sight                                                          6,400 xp"
+      },
+      {
+       "n": "y",
+       "text": "White Chanterelle - Ogre Toes - Tree Mushroom Extract               6,700 xp"
+      },
+      {
+       "n": "z",
+       "text": "Invisibility                                                        7,000 xp aa.    Wheat - Valerian - Mugwort Extract                                  7,300 xp bb.    Accuracy                                                            7,600 xp cc.    Wheat - Daffodils - Feran Horn Extract                              7,900 xp dd.    Evasion                                                             8,200 xp ee.    Alchemy                                                             8,500 xp ff.    Refined Vegetal Mixture                                             8,800 xp gg.    Potion of Potion                                                    9,100 xp hh.     Mixture of Power                                              9,400 xp ii.     Heat Protection                                               9,700 xp jj.     Cold Protection                                               10,000 xp kk.     Engineering                                                   10,300 xp ll.     Radiation Protection                                          10,600 xp mm.     Creature food                                                 10,900 xp nn.     Speed Hax                                                     11,200 xp oo.     Attack Reduction                                              11,500 xp pp.     Defense Reduction                                             250,000 xp"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Summoning Supplies",
+   "section": "Tutorial Quests",
+   "npc": "Ios",
+   "where": "Isla Prima",
+   "at": [
+    26,
+    30
+   ],
+   "intro": [
+    "Gather amounts of various furs, skins, and other creature parts from low to high level. Closest to a summoning tutorial that we'll get. (This is not the Summon Daily.)"
+   ],
+   "reward": [
+    {
+     "amount": "100,300",
+     "what": "Summoning"
+    },
+    {
+     "amount": "56,100",
+     "what": "gc"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Go to Ios on IP at docks (26,31). He will ask you to bring him some summoning ingredients to help him with his transport business.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "Each item will give you some summoning xp and some gc.",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "You need to have the following items in your storage (not inventory).",
+     "sub": [
+      {
+       "n": "a",
+       "text": "100 rat tails                   300xp            400gc"
+      },
+      {
+       "n": "b",
+       "text": "150 brown rabbit furs           1000xp           800gc"
+      },
+      {
+       "n": "c",
+       "text": "150 beaver furs                 1300xp           600gc"
+      },
+      {
+       "n": "d",
+       "text": "150 deer furs                   1500xp           800gc"
+      },
+      {
+       "n": "e",
+       "text": "150 antlers                     1800xp           1400gc"
+      },
+      {
+       "n": "f",
+       "text": "150 red snake skins             1800xp           1200gc"
+      },
+      {
+       "n": "g",
+       "text": "150 fox furs                    2000xp           1200gc"
+      },
+      {
+       "n": "h",
+       "text": "150 green snake skins           2000xp           1200gc"
+      },
+      {
+       "n": "i",
+       "text": "150 brown snake skins           2000xp           1200gc"
+      },
+      {
+       "n": "j",
+       "text": "150 wolf furs                   2400xp           1200gc"
+      },
+      {
+       "n": "k",
+       "text": "1000 raw meat                   5000xp           4000gc"
+      },
+      {
+       "n": "l",
+       "text": "1400 bones                      5000xp           4000gc"
+      },
+      {
+       "n": "m",
+       "text": "200 raccoon furs                3000xp           1600gc"
+      },
+      {
+       "n": "n",
+       "text": "200 skunk furs                  3200xp           1600gc"
+      },
+      {
+       "n": "o",
+       "text": "200 puma furs                   3400xp           1600gc"
+      },
+      {
+       "n": "p",
+       "text": "200 feran horns                 3600xp           1800gc"
+      },
+      {
+       "n": "q",
+       "text": "200 bear furs                   3800xp           1800gc"
+      },
+      {
+       "n": "r",
+       "text": "200 black panther furs          4000xp           2400gc"
+      },
+      {
+       "n": "s",
+       "text": "200 leopard furs                4200xp           2600gc"
+      },
+      {
+       "n": "t",
+       "text": "200 snow leopard furs           4400xp           3000gc"
+      },
+      {
+       "n": "u",
+       "text": "200 tiger furs                  4600xp           3200gc"
+      },
+      {
+       "n": "v",
+       "text": "200 white tiger furs            4800xp           3500gc"
+      },
+      {
+       "n": "w",
+       "text": "200 polar bear furs             35000xp          15000gc"
+      }
+     ]
+    }
+   ],
+   "notes": [
+    "This is not really a “tutorial” but similar and so resides in this section."
+   ],
+   "noteLines": [
+    "This is not really a “tutorial” but similar and so resides in this section."
+   ],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Tailoring Tutorial",
+   "section": "Tutorial Quests",
+   "npc": "Kiyana",
+   "where": "Glacmor Galienne’s Fashion Runway",
+   "at": [
+    277,
+    120
+   ],
+   "intro": [
+    "Mix a large selection of tailor-made items, from lowest to highest."
+   ],
+   "reward": [
+    {
+     "amount": "532,700",
+     "what": "Tailoring"
+    },
+    {
+     "amount": "1",
+     "what": "Santa Hat"
+    },
+    {
+     "amount": "1",
+     "what": "Joules Stone"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Mix the following items in front of Kiyana:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "white fabric                     300 xp (*I had to do it twice*)"
+      },
+      {
+       "n": "b",
+       "text": "red dye                          500 xp"
+      },
+      {
+       "n": "c",
+       "text": "orange dye                       800 xp"
+      },
+      {
+       "n": "d",
+       "text": "yellow dye                       1100 xp"
+      },
+      {
+       "n": "e",
+       "text": "green dye                        1400 xp"
+      },
+      {
+       "n": "f",
+       "text": "blue dye                         1800 xp"
+      },
+      {
+       "n": "g",
+       "text": "purple dye                       2100 xp"
+      },
+      {
+       "n": "h",
+       "text": "black dye                        2500 xp"
+      },
+      {
+       "n": "i",
+       "text": "orange fabric                    2900 xp"
+      },
+      {
+       "n": "j",
+       "text": "blue fabric                      3400 xp"
+      },
+      {
+       "n": "k",
+       "text": "black fabric                     3800 xp"
+      },
+      {
+       "n": "l",
+       "text": "brown fabric                     4400 xp"
+      },
+      {
+       "n": "m",
+       "text": "grey fabric                      4900 xp"
+      },
+      {
+       "n": "n",
+       "text": "black scarf                      5400 xp"
+      },
+      {
+       "n": "o",
+       "text": "red scarf                        5700 xp"
+      },
+      {
+       "n": "p",
+       "text": "pirate scarf                     5900 xp"
+      },
+      {
+       "n": "q",
+       "text": "black tricorn hat                6400 xp"
+      },
+      {
+       "n": "r",
+       "text": "brown buccaneer hat              6900 xp"
+      },
+      {
+       "n": "s",
+       "text": "black buccaneer hat              7400 xp"
+      },
+      {
+       "n": "t",
+       "text": "blue cavalier peacock hat        7900 xp (*wrong name*)"
+      },
+      {
+       "n": "u",
+       "text": "black red striped pants          8400 xp"
+      },
+      {
+       "n": "v",
+       "text": "black purple baggy pants         8900 xp"
+      },
+      {
+       "n": "w",
+       "text": "black blue baggy pants           9400 xp"
+      },
+      {
+       "n": "x",
+       "text": "black pants                      9900 xp"
+      },
+      {
+       "n": "y",
+       "text": "brown pants                      10400 xp"
+      },
+      {
+       "n": "z",
+       "text": "brown shirt                      10900 xp aa.     brown skirt                      11400 xp bb.     elandria top (Labelle)           11900 xp cc.     light blue skirt                 12400 xp dd.     Lavender tunic                   12900 xp ee.     green tunic                      13400 xp ff.     black tunic                      13900 xp gg.     red tunic                        14500 xp hh.     blue tunic                       14900 xp ii.     white tunic                      15100 xp jj.     red tunic/white shirt            15400 xp kk.     black tunic/purple shirt         15700 xp ll.     mage robe skirt                  15900 xp mm. mage robe                            16100 xp nn.   tunic of the ninja       16200 xp oo.   universal hood           16300 xp pp.   blue green vest          16400 xp qq.   black vest               17000 xp Break Quests Items must be broken while being worn in battle with a creature or other player. Acid Rain will not count."
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Alone I Break 1",
+   "section": "Break Quests",
+   "npc": "Gerund",
+   "where": "Valley of the Dwarves",
+   "at": [
+    167,
+    31
+   ],
+   "intro": [
+    "You need to break multiple weapons, most but not all being great swords."
+   ],
+   "reward": [
+    {
+     "amount": "200,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "200,000",
+     "what": "Defense"
+    },
+    {
+     "amount": "100,000",
+     "what": "Manufacturing"
+    },
+    {
+     "amount": null,
+     "what": "Never Gonna Miss You Perk (permanent +2 accuracy)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Start the quest by talking to Gerund in Valley of the Dwarves smithery in southeast corner of the map.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You need to break the following weapons in combat (acid rain or branch of destruction only counts to degrade a new item into the damaged/used one).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The order in which you break the weapons doesn't matter.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "1 Scythe"
+      },
+      {
+       "n": "b",
+       "text": "1 Halberd"
+      },
+      {
+       "n": "c",
+       "text": "1 Dragon Blade"
+      },
+      {
+       "n": "d",
+       "text": "1 Used Emerald Claymore"
+      },
+      {
+       "n": "e",
+       "text": "1 Used Cutlass"
+      },
+      {
+       "n": "f",
+       "text": "1 Used Sun Breaker"
+      },
+      {
+       "n": "g",
+       "text": "1 Used Orc Slayer"
+      },
+      {
+       "n": "h",
+       "text": "1 Used Eagle Wing"
+      },
+      {
+       "n": "i",
+       "text": "1 Used Rapier"
+      },
+      {
+       "n": "j",
+       "text": "1 Used Jagged Saber"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "text": "After breaking all the sets, talk to Gerund again for the experience.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Alone I Break 2",
+   "section": "Break Quests",
+   "npc": "Gerund",
+   "where": "Valley of the Dwarves",
+   "at": [
+    167,
+    31
+   ],
+   "intro": [
+    "Another round of weapon breaking, including various staves, axes, and more."
+   ],
+   "reward": [
+    {
+     "amount": "200,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "200,000",
+     "what": "Defense"
+    },
+    {
+     "amount": null,
+     "what": "Deadly Accuracy Perk (removes negative accuracy astrology)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Start the quest by talking to Gerund in Valley of the Dwarves smithery in southeast corner of the map.",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You need to break the following weapons in combat (acid rain or branch of destruction only counts to degrade a new item into the damaged/used one).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The order in which you break the weapons doesn't matter.",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Iron Axe"
+      },
+      {
+       "n": "b",
+       "text": "Steel Axe"
+      },
+      {
+       "n": "c",
+       "text": "Titanium Axe"
+      },
+      {
+       "n": "d",
+       "text": "Spear"
+      },
+      {
+       "n": "e",
+       "text": "Bronze Sword"
+      },
+      {
+       "n": "f",
+       "text": "Staff of Protection"
+      },
+      {
+       "n": "g",
+       "text": "Staff of the Mage"
+      },
+      {
+       "n": "h",
+       "text": "Golden Star Mace"
+      },
+      {
+       "n": "i",
+       "text": "Titanium Serpent Sword"
+      },
+      {
+       "n": "j",
+       "text": "Titanium Long Sword"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [
+    "Alone I Break 1"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Broken Armors 1",
+   "section": "Break Quests",
+   "npc": "Vixen",
+   "where": "Morcraven Marsh Gold Cave, inside at [137,38]",
+   "at": [
+    225,
+    14
+   ],
+   "intro": [
+    "Break iron, steel, and titanium armors in battle."
+   ],
+   "reward": [
+    {
+     "amount": "45,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "45,000",
+     "what": "Defense"
+    },
+    {
+     "amount": null,
+     "what": "Armor Master Perk (permanent +1 armor)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Start the quest by talking to Vixen in Morcraven Marsh southern part of the mine [136,39].",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You need to break the following items in combat (acid rain or branch of destruction only counts to degrade a new item into the damaged/used one).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The items must be broken per set, i.e. it doesn't matter in which order you break the iron items, but you must break all of them before you can start breaking steel.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Iron set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "1 Damaged Iron Plate Mail"
+      },
+      {
+       "n": "b",
+       "text": "1 Damaged Iron Cuisses"
+      },
+      {
+       "n": "c",
+       "text": "1 Damaged Iron Greave"
+      },
+      {
+       "n": "d",
+       "text": "1 Iron Helm"
+      },
+      {
+       "n": "e",
+       "text": "1 Iron Shield"
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "text": "Steel set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "1 Used Steel Plate Mail"
+      },
+      {
+       "n": "b",
+       "text": "1 Used Steel Cuisses"
+      },
+      {
+       "n": "c",
+       "text": "1 Used Steel Greave"
+      },
+      {
+       "n": "d",
+       "text": "1 Steel Shield"
+      },
+      {
+       "n": "e",
+       "text": "1 Used Steel Helm"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "Titanium set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "1 Used Titanium Plate Mail"
+      },
+      {
+       "n": "b",
+       "text": "1 Used Titanium Cuisses"
+      },
+      {
+       "n": "c",
+       "text": "1 Used Titanium Greave"
+      },
+      {
+       "n": "d",
+       "text": "1 Used Titanium Shield"
+      },
+      {
+       "n": "e",
+       "text": "1 Used Titanium Helm"
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "text": "After breaking all the sets, talk to Vixen again to complete the quest.",
+     "sub": []
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Broken Armors 2",
+   "section": "Break Quests",
+   "npc": "Vixen",
+   "where": "Morcraven Marsh Gold Cave, inside at [137,38]",
+   "at": [
+    225,
+    14
+   ],
+   "intro": [
+    "Break full sets of red, black, and ice dragon armors."
+   ],
+   "reward": [
+    {
+     "amount": "60,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "60,000",
+     "what": "Defense"
+    },
+    {
+     "amount": null,
+     "what": "Armor Master Pro Perk (permanent +1 armor)"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "After finishing the first quest, start this quest by talking to Vixen in Morcraven Marsh southern part of the mine [136,39].",
+     "sub": []
+    },
+    {
+     "n": 2,
+     "text": "You need to break the following items in combat (acid rain or branch of destruction only counts to degrade a new item into the damaged/used one).",
+     "sub": []
+    },
+    {
+     "n": 3,
+     "text": "The items must be broken per set, i.e. it doesn't matter in which order you break the red dragon items, but you must break all of them before you can start breaking black dragon.",
+     "sub": []
+    },
+    {
+     "n": 4,
+     "text": "Red Dragon Set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Helm"
+      },
+      {
+       "n": "b",
+       "text": "Plate"
+      },
+      {
+       "n": "c",
+       "text": "Cuisses"
+      },
+      {
+       "n": "d",
+       "text": "Greaves"
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "text": "Black Dragon Set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Helm"
+      },
+      {
+       "n": "b",
+       "text": "Plate"
+      },
+      {
+       "n": "c",
+       "text": "Cuisses"
+      },
+      {
+       "n": "d",
+       "text": "Greaves"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "text": "Ice Dragon Set:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Helm"
+      },
+      {
+       "n": "b",
+       "text": "Plate"
+      },
+      {
+       "n": "c",
+       "text": "Cuisses"
+      },
+      {
+       "n": "d",
+       "text": "Greaves"
+      }
+     ]
+    }
+   ],
+   "notes": [
+    "No need to save for Sun Tzu. There is no a/d experience reward for the final step."
+   ],
+   "noteLines": [
+    "No need to save for Sun Tzu. There is no a/d experience reward for the final step."
+   ],
+   "requirements": [
+    "Broken Armors 1"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Buni's Armor Breaking",
+   "section": "Break Quests",
+   "npc": "Buni",
+   "where": "Nordcarn",
+   "at": [
+    5,
+    29
+   ],
+   "intro": [
+    "Buni asks you to break a number of low-level armors."
+   ],
+   "reward": [
+    {
+     "amount": "80,000",
+     "what": "Attack"
+    },
+    {
+     "amount": "80,000",
+     "what": "Defense"
+    }
+   ],
+   "items": [],
+   "steps": [
+    {
+     "n": 1,
+     "text": "Break the following armor in no particular order:",
+     "sub": [
+      {
+       "n": "a",
+       "text": "Leather Helm"
+      },
+      {
+       "n": "b",
+       "text": "Padded Leather Armor"
+      },
+      {
+       "n": "c",
+       "text": "Leather Pants"
+      },
+      {
+       "n": "d",
+       "text": "Augmented Leather Pants"
+      },
+      {
+       "n": "e",
+       "text": "Augmented Leather Torso,"
+      },
+      {
+       "n": "f",
+       "text": "Wooden Shield"
+      },
+      {
+       "n": "g",
+       "text": "Enhanced Wooden Shield"
+      },
+      {
+       "n": "h",
+       "text": "Iron Chain"
+      },
+      {
+       "n": "i",
+       "text": "Steel Chain"
+      },
+      {
+       "n": "j",
+       "text": "Second Hand Titanium Chain Mail. God Quests"
+      }
+     ]
+    }
+   ],
+   "notes": [],
+   "noteLines": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Attack (Mortos)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Dirhyan",
+   "where": "Naralik Catacombs, inside at [20,80]",
+   "at": [
+    105,
+    162
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of attack experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Dirhyan. If you wish to renounce the god and return to your base experience amount, talk to Dirhyan. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more attack experience."
+    },
+    {
+     "amount": null,
+     "what": "At rank 3 of worshipping, you receive 22,400 attack experience (20,000 +12% god bonus)."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +15 attack levels for 25 gc. Dirhyan will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your attack level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% attack experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Mortos:",
+    "Aluwen - Defense Goddess",
+    "Elandria - Alchemy Goddess"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Defense (Aluwen)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Noria",
+   "where": "White Stone Forrest of the Fall, inside at [26,290]",
+   "at": [
+    643,
+    687
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of defense experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Noria. If you wish to renounce the god and return to your base experience amount, talk to Noria. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more defense experience."
+    },
+    {
+     "amount": null,
+     "what": "At rank 1 Free healing from Noria. She will not offer if you already have full HP."
+    },
+    {
+     "amount": null,
+     "what": "At rank 5 of worshipping (maximum), you can buy a Titanium Chain Mail for 5,000 gold coins from Noria, the"
+    },
+    {
+     "amount": null,
+     "what": "high priest."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 defense levels for 25 gc. Noria will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your defense level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% defense experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Aluwen:",
+    "Mortos - Attack God",
+    "Selain - Summoning God"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Magic (Unolas)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Adrian",
+   "where": "White Stone Vermor Castle, inside at [119,215].",
+   "at": [
+    647,
+    416
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of magic experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Adrian. If you wish to renounce the god and return to your base experience amount, talk to Adrian. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more magic experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 magic levels for 25 gc. Adrian will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your magic level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% magic experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Unolas:",
+    "Lucaa - Harvesting Goddess",
+    "Zarin - Crafting Goddess"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Alchemy (Elandria)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Romira",
+   "where": "Desert Pines Evergreen Woods, inside and up the ladder at [145,175]",
+   "at": [
+    75,
+    329
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of alchemy experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Romira. If you wish to renounce the god and return to your base experience amount, talk to Romira. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more alchemy experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 alchemy levels for 500 gc. Romira will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your alchemy level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% alchemy experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Elandria:",
+    "Mortos - Attack God",
+    "Zarin - Crafting Goddess"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Potions (Jayden)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Iazurn",
+   "where": "Morcraven Marsh, inside at [358,43]",
+   "at": [
+    151,
+    358
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of potion experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Iazurn. If you wish to renounce the god and return to your base experience amount, talk to Iazurn. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more potion experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 potion levels for 1,000 gc. Iazurn will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your potion level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% potion experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Jayden:",
+    "LaForge - Engineering God",
+    "Xiao - Ranging God"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Summoning (Selain)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Sylpho",
+   "where": "White Stone Tirnwood Vale, inside at [353,333]",
+   "at": [
+    245,
+    341
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of summoning experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Sylpho. If you wish to renounce the god and return to your base experience amount, talk to Sylpho. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more summoning experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 summoning levels for 25 gc. Sylpho will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your summoning level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% summoning experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Selain:",
+    "Aluwen - Defense Goddess",
+    "Glilin - Manufacturing God"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Manufacturing (Glilin)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Baostas",
+   "where": "Nordcarn, inside at [132,68]",
+   "at": [
+    9,
+    151
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of manufacturing experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Baostas. If you wish to renounce the god and return to your base experience amount, talk to Baostas. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more manufacturing experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +8 manufacturing levels for 25 gc. Baostas will only offer the blessing if you are at rank 5 (maximum) of worship. Once blessed, your manufacturing level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% manufacturing experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Glilin:",
+    "Lucaa - Harvesting Goddess",
+    "Selain - Summoning God"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Crafting (Zarin)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Durnam",
+   "where": "Tarsengaard, inside at [27,185]",
+   "at": [
+    324,
+    60
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of crafting experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Durnam. If you wish to renounce the god and return to your base experience amount, talk to Durnam. If you later wish to worship the god again, you will restart at rank -2.",
+    "Note: Unlike the other gods, Zarin has a maximum rank of 4 and offers only up to +16% experience."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more crafting experience."
+    },
+    {
+     "amount": null,
+     "what": "At rank 3 of worshipping, you receive 2,240 crafting experience (2,000 +12% god bonus)."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +10 crafting levels for 25 gc. Durnam will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your crafting level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% crafting experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping Zarin:",
+    "Elandria - Alchemy Goddess",
+    "Unolas - Magic God"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Engineering (LaForge)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Diesel",
+   "where": "Arius Western Kyr Woodlands, (use night visor on orb to enter), inside at [341,251]",
+   "at": [
+    84,
+    44
+   ],
+   "intro": [
+    "Each rank of worship grants you a 4% increase in the amount of engineering experience you receive as long as you remain a worshipper. To advance to the next rank, you must retrieve a batch of a specific item and talk to Diesel. If you wish to renounce the god and return to your base experience amount, talk to Diesel. If you later wish to worship the god again, you will restart at rank -2."
+   ],
+   "reward": [
+    {
+     "amount": null,
+     "what": "Followers get more engineering experience."
+    }
+   ],
+   "items": [],
+   "steps": [],
+   "notes": [
+    "Blessing: Temporary +5 engineering levels for 500 gc. Diesel will only offer the blessing if you are at least at rank 3 of worship. Once blessed, your engineering level will reduce by 1 each minute until it returns to normal.",
+    "Starting rank: -2 (-8% engineering experience)"
+   ],
+   "requirements": [
+    "You cannot worship these gods while worshipping LaForge:",
+    "Jayden - Potion Goddess",
+    "Galienne - Tailoring Goddess"
+   ],
+   "varies": false
+  },
+  {
+   "name": "Harvesting (Lucaa)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": null,
+   "where": null,
+   "at": null,
+   "status": "not in game",
+   "intro": [],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Tailoring (Galienne)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": null,
+   "where": null,
+   "at": null,
+   "status": "not in game",
+   "intro": [],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [],
+   "requirements": [],
+   "varies": false
+  },
+  {
+   "name": "Ranging (Xiao)",
+   "section": "God Quests",
+   "kind": "god",
+   "npc": "Not yet in game",
+   "where": null,
+   "at": null,
+   "intro": [],
+   "reward": [],
+   "items": [],
+   "steps": [],
+   "notes": [],
+   "requirements": [],
+   "varies": false
+  }
+ ]
+}

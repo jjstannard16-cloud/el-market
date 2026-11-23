@@ -48,6 +48,7 @@ MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 
 
 SPECIAL_DAYS_FILE = "specialdays.json"
+QUESTS_FILE = "quests.json"
 
 
 def load_special_days():
@@ -203,6 +204,16 @@ def load(db_path):
                 movers.append({"name": r["name"], "stat": r["stat"],
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
+
+    # The quest guide, already parsed by el_quests.py. Missing is fine:
+    # the tab simply does not appear.
+    quests, quest_sections = [], []
+    if os.path.exists(QUESTS_FILE):
+        with open(QUESTS_FILE, encoding="utf-8") as f:
+            qd = json.load(f)
+        quests = qd.get("quests", [])
+        quest_sections = qd.get("sections", [])
+        print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
     # A day you can summon is only useful if you know the price, so the
@@ -477,6 +488,8 @@ def load(db_path):
         "summoners": summoners,
         "dayTotals": day_totals,
         "clock": clock,
+        "quests": quests,
+        "questSections": quest_sections,
         "dayRanks": day_ranks,
         "dayRef": effects,
         "harvestables": harvestables,
@@ -612,6 +625,45 @@ HTML = r"""<!doctype html>
   .modes button.on { color: var(--ground); background: var(--brass);
                      border-color: var(--brass); }
   .gathered { color: var(--patina); }
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 18px; }
+  .pills .pill { background: none; border: 1px solid var(--line-2);
+    color: var(--muted); padding: 5px 12px; border-radius: 3px;
+    cursor: pointer; font: 400 12.5px var(--ui); }
+  .pills .pill:hover { color: var(--ink); border-color: var(--brass); }
+  .pills .pill.on { color: var(--ground); background: var(--brass);
+                    border-color: var(--brass); }
+  .qnpc { font-size: 14.5px; margin: 2px 0 12px; }
+  .qnpc b { color: var(--brass); font-weight: 500; }
+  .coord { font-family: var(--mono, monospace); font-size: 12.5px;
+           color: var(--muted); }
+  .qintro { font-size: 14.5px; max-width: 70ch; color: var(--ink);
+            margin: 0 0 14px; }
+  .qblock { margin-bottom: 26px; }
+  .qblock h3 { font-family: var(--display); font-weight: 400; font-size: 15px;
+               margin: 0 0 8px; color: var(--ink); }
+  ul.plain { margin: 0; padding-left: 18px; font-size: 13.5px; }
+  ul.plain li { padding: 3px 0; }
+  ol.steps { margin: 0; padding-left: 20px; font-size: 14px;
+             max-width: 78ch; }
+  ol.steps > li { padding: 5px 0; line-height: 1.55; }
+  ol.sub { list-style: lower-alpha; margin: 6px 0 2px; padding-left: 20px;
+           font-size: 13.5px; color: var(--muted); }
+  /* The guide's tables are set in spaces and some are very wide, so the
+     block scrolls on its own rather than stretching the page. */
+  .qblock { min-width: 0; }
+  pre.guide { font: 12px/1.5 var(--mono, ui-monospace, monospace);
+    color: var(--ink); background: var(--panel, rgba(255,255,255,.02));
+    border: 1px solid var(--line); border-radius: 3px; padding: 12px 14px;
+    overflow-x: auto; white-space: pre; max-width: 100%; }
+  table.quests { table-layout: fixed; width: 100%; }
+  table.quests td, table.quests th { overflow-wrap: anywhere; }
+  @media (max-width: 620px) {
+    table.quests td:nth-child(4), table.quests th:nth-child(4) { display: none; }
+    table.quests td:nth-child(3), table.quests th:nth-child(3) {
+      font-size: 12px; }
+    pre.guide { font-size: 10.5px; }
+    ol.steps { padding-left: 16px; }
+  }
   .pick { display: none; padding: 5px 9px; border-radius: 3px;
           border: 1px solid var(--line-2); background: var(--ground);
           color: var(--ink); font: 400 13px var(--ui); }
@@ -852,6 +904,7 @@ HTML = r"""<!doctype html>
     <button data-tab="profit">Profit</button>
     <button data-tab="craft">Craft</button>
     <button data-tab="players">Players</button>
+    <button data-tab="quests">Quests</button>
     <button data-tab="days">Days</button>
     <button data-tab="bots">Bots</button>
   </nav>
@@ -944,6 +997,7 @@ const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
    materials. "free" ignores that, "buy" refuses to gather at all.        */
 let craftMode = "value";
 let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
+let focusQuest = null, qsection = "";                    // "" = every section
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -1051,6 +1105,9 @@ const SECTIONS = [
   { id: "players", name: "Players",
     what: "Skill rankings with real levels, PK records and level-ups",
     n: () => `${DATA.meta.playerCount} players` },
+  { id: "quests", name: "Quests",
+    what: "Every quest written up: who starts it, what it needs, what it pays",
+    n: () => `${(DATA.quests || []).length} quests` },
   { id: "days", name: "Days",
     what: "What today's special day does, and every day the game can throw",
     n: () => `${Object.keys(DATA.dayRef || {}).length} special days` },
@@ -1266,7 +1323,8 @@ function renderHome(view, count) {
 /* navigation ----------------------------------------------------------
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
-const TABS = ["home", "market", "profit", "craft", "players", "days", "bots"];
+const TABS = ["home", "market", "profit", "craft", "players", "quests",
+              "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -1280,6 +1338,7 @@ function applyRoute() {
   tab = TABS.includes(t) ? t : "home";
   focusBot = tab === "bots" && sub ? sub : null;
   focusPlayer = tab === "players" && sub ? sub : null;
+  focusQuest = tab === "quests" && sub ? sub : null;
   sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === tab));
@@ -1296,7 +1355,7 @@ document.querySelectorAll("nav button").forEach(btn =>
     go(btn.dataset.tab);
   });
 document.getElementById("q").oninput = () => {
-  focusBot = null; focusPlayer = null; render();
+  focusBot = null; focusPlayer = null; focusQuest = null; render();
 };
 document.getElementById("walk").onchange = e => {
   walkableOnly = e.target.checked; render();
@@ -1441,6 +1500,8 @@ function render() {
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "home")   return renderHome(view, count);
+  if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
+  if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
@@ -1610,6 +1671,139 @@ const caveat = `<div class="caveat">${
 
 // The leaderboard runs to several hundred names, so it opens short.
 let summonersShown = 25;
+
+/* quests --------------------------------------------------------------
+   Parsed out of the community quest guide by el_quests.py. The guide is
+   a player's work, so the write-ups are shown as written.              */
+
+const questBy = name => (DATA.quests || []).find(x =>
+  x.name.toLowerCase() === String(name || "").toLowerCase());
+
+const questLink = name =>
+  `<a class="lnk qlnk" href="#quests/${encodeURIComponent(name)}">${
+    esc(name)}</a>`;
+
+// What a quest pays, in one line: "75,000 Attack · 75,000 Defense".
+function questPay(qu) {
+  const paid = (qu.reward || []).filter(r => r.amount);
+  // The guide's own cross-reference does not say reliably which skill a
+  // daily pays, so a daily says only that it varies.
+  if (!paid.length) {
+    return qu.varies ? `<span class="muted">varies with your level</span>` : "";
+  }
+  return paid.slice(0, 3).map(r => `${esc(r.amount)} ${esc(r.what)}`)
+    .join(" \u00b7 ") + (paid.length > 3 ? " \u2026" : "");
+}
+
+function questMatches(qu, q) {
+  if (!q) return true;
+  const hay = [qu.name, qu.npc, qu.where, qu.section,
+               (qu.items || []).join(" "),
+               (qu.reward || []).map(r => r.what).join(" "),
+               (qu.requirements || []).join(" ")].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+function renderQuests(view, count, q) {
+  const all = DATA.quests || [];
+  const secs = DATA.questSections || [];
+  let list = all.filter(qu => questMatches(qu, q));
+  if (qsection) list = list.filter(qu => qu.section === qsection);
+
+  count.textContent = `${fmt(list.length)} quest${list.length === 1 ? "" : "s"}`
+    + (qsection ? ` in ${qsection.toLowerCase()}` : "");
+
+  const picker = `<div class="pills">
+    <button class="pill${qsection ? "" : " on"}" data-qsec="">Everything</button>
+    ${secs.map(sec => `<button class="pill${qsection === sec ? " on" : ""}"
+      data-qsec="${esc(sec)}">${esc(sec.replace(/ Quests$/, ""))}</button>`)
+      .join("")}</div>`;
+
+  const rows = list.map(qu => `<tr>
+    <td>${questLink(qu.name)}${qu.status
+      ? ` <span class="unsure">${esc(qu.status)}</span>` : ""}
+      <div class="seen">${esc(qu.section.replace(/ Quests$/, ""))}</div></td>
+    <td class="sm">${qu.npc
+      ? `${esc(qu.npc)}${qu.where ? `<div class="seen">${esc(qu.where)}${
+          qu.at ? ` [${qu.at[0]},${qu.at[1]}]` : ""}</div>` : ""}`
+      : ""}</td>
+    <td class="sm brass">${questPay(qu)}</td>
+    <td class="num sm">${qu.steps && qu.steps.length
+      ? `${qu.steps.length} step${qu.steps.length === 1 ? "" : "s"}` : ""}</td>
+  </tr>`).join("");
+
+  view.innerHTML = picker + (list.length ? `
+    <table class="daylog quests"><thead><tr><th>Quest</th><th>Starts with</th>
+      <th>Pays</th><th></th></tr></thead><tbody>${rows}</tbody></table>`
+    : `<div class="empty">No quest matches that.</div>`);
+
+  view.querySelectorAll("[data-qsec]").forEach(b => b.onclick = () => {
+    qsection = b.dataset.qsec; render();
+  });
+}
+
+function renderOneQuest(view, count) {
+  const qu = questBy(focusQuest);
+  count.textContent = "";
+  if (!qu) { view.innerHTML = `<div class="empty">No such quest.</div>`; return; }
+
+  // The guide lays its tables out with spaces. Folding those into prose
+  // would destroy them, so anything that looks like a table is left
+  // exactly as the guide set it.
+  const lines = qu.noteLines || [];
+  const tabular = lines.filter(l => /\S {2,}\S/.test(l)).length >= 3;
+  const notes = !lines.length ? "" : (tabular
+    ? `<pre class="guide">${esc(lines.join("\n"))}</pre>`
+    : (qu.notes || []).map(p => `<p>${esc(p)}</p>`).join(""));
+
+  const block = (title, html) => html
+    ? `<div class="qblock"><h3>${title}</h3>${html}</div>` : "";
+
+  // A daily has no reward list and nothing to bring, so the side column
+  // would be an empty third of the page. Then the steps get the width.
+  const twoCol = (qu.reward || []).length || (qu.items || []).length
+                 || (qu.requirements || []).length;
+
+  const steps = (qu.steps || []).map(st => `<li>${esc(st.text)}${
+    st.sub && st.sub.length ? `<ol class="sub">${st.sub.map(sb =>
+      `<li>${esc(sb.text)}</li>`).join("")}</ol>` : ""}</li>`).join("");
+
+  const right = block("Steps", steps ? `<ol class="steps">${steps}</ol>` : "")
+              + block("Notes", notes);
+
+  view.innerHTML = `
+    <div class="bothead">
+      <button class="back">All quests</button>
+      <h2>${esc(qu.name)}</h2>
+      <span class="where">${esc(qu.section)}${qu.status
+        ? ` \u00b7 ${esc(qu.status)}` : ""}</span>
+    </div>
+    ${qu.npc ? `<div class="qnpc">Start with <b>${esc(qu.npc)}</b>${
+      qu.where ? ` at ${esc(qu.where)}` : ""}${
+      qu.at ? ` <span class="coord">[${qu.at[0]},${qu.at[1]}]</span>` : ""}
+      </div>` : ""}
+    ${(qu.intro || []).map(p => `<p class="qintro">${esc(p)}</p>`).join("")}
+    ${twoCol ? `<div class="cols">
+      <div>
+        ${block("Pays", (qu.reward || []).length
+          ? `<table>${qu.reward.map(r => `<tr><td>${esc(r.what)}</td>
+             <td class="num brass">${r.amount ? esc(r.amount) : ""}</td></tr>`)
+             .join("")}</table>` : "")}
+        ${block("You will need", (qu.items || []).length
+          ? `<ul class="plain">${qu.items.map(i => `<li>${esc(i)}</li>`)
+             .join("")}</ul>` : "")}
+        ${block("First", (qu.requirements || []).length
+          ? `<ul class="plain">${qu.requirements.map(i => `<li>${esc(i)}</li>`)
+             .join("")}</ul>` : "")}
+      </div>
+      <div style="flex: 2 1 480px">${right}</div>
+    </div>` : right}
+    <div class="caveat">Written up by the Eternal Lands community in the
+      quest guide, and shown here as written.</div>`;
+
+  const back = view.querySelector(".back");
+  if (back) back.onclick = () => go("quests");
+}
 
 function renderDays(view, count, q) {
   const ref = DATA.dayRef || {};
