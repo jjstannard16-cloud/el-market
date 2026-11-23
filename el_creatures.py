@@ -159,18 +159,27 @@ def read_creature(s, title):
         else:
             places += [{"where": c, "region": label} for c in cells]
 
-    drops = []
+    # The drops section holds a table per kind - "Normal Drops" and
+    # "Rare Drops" - and only the heading tells them apart. A rare drop
+    # listed as a normal one would be badly misleading, so the heading
+    # is read rather than assumed.
+    drops, rare_here = [], []
     for m in TABLE.finditer(section_of(body, "Drops")):
-        for cell in CELL.findall(m.group()):
+        chunk = m.group()
+        header = re.search(r"^\s*!\s*(?:colspan=\"\d+\"\s*\|)?\s*(.+?)\s*$",
+                           chunk, re.M)
+        label = clean_cell(header.group(1)) if header else ""
+        into = rare_here if "rare" in label.lower() else drops
+        for cell in CELL.findall(chunk):
             clean = clean_cell(cell)
             if not clean or clean == "}" or clean.lower().startswith("style"):
                 continue
             n, what = split_amount(clean)
             if what:
-                drops.append({"n": n, "item": what})
+                into.append({"n": n, "item": what})
 
     return {"stats": stats, "places": places, "instances": instances,
-            "drops": drops}
+            "drops": drops, "rareOnPage": rare_here}
 
 
 def read_rare(s, creature):
@@ -240,8 +249,14 @@ def main():
             page = None
         if page is None:
             no_page.append(title)
-            page = {"stats": {}, "places": [], "instances": [], "drops": []}
+            page = {"stats": {}, "places": [], "instances": [],
+                    "drops": [], "rareOnPage": []}
         rare, _ = read_rare(s, title)
+        # A creature page can list its rare drops itself; both sources
+        # are kept, without listing the same item twice.
+        seen = {(r.get("n"), r["item"]) for r in rare}
+        rare += [r for r in page.get("rareOnPage", [])
+                 if (r.get("n"), r["item"]) not in seen]
         base = master.get(title.lower(), {})
         out.append({
             "name": title,
