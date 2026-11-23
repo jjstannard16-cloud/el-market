@@ -347,6 +347,18 @@ HTML = r"""<!doctype html>
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .chip { font-size: 11.5px; border: 1px solid var(--line-2);
           border-radius: 10px; padding: 1px 8px; color: var(--muted); }
+  .skillgrid { display: grid; gap: 26px 30px;
+               grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
+  .skillcol h3 { font-family: var(--display); font-weight: 400; font-size: 16px;
+                 margin: 0 0 6px; color: var(--brass); }
+  .skillcol table { font-size: 13.5px; }
+  .skillcol td { padding: 3px 10px 3px 0; border-bottom: 1px solid var(--line); }
+  .skillcol td:first-child { width: 2rem; }
+  .skillcol td:last-child { text-align: right; padding-right: 0; }
+  button.more { margin-top: 8px; background: none; border: 0; padding: 0;
+                color: var(--muted); font: 400 12.5px var(--ui);
+                cursor: pointer; border-bottom: 1px solid var(--line-2); }
+  button.more:hover { color: var(--brass); border-bottom-color: var(--brass); }
   .gate { font-size: 11.5px; color: var(--rust); border: 1px solid #4e2e26;
           border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
   .ing { display: grid; grid-template-columns: 2.4rem 1fr auto auto;
@@ -548,7 +560,7 @@ const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
    which is the number that says whether crafting beats selling the raw
    materials. "free" ignores that, "buy" refuses to gather at all.        */
 let craftMode = "value";
-let pview = "skills", pskill = null, focusPlayer = null;
+let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -899,12 +911,10 @@ const PLAYERS = DATA.players || [];
 const PUBLIC = PLAYERS.filter(p => !p.private);
 const SKILLS = (DATA.skills || []).slice().sort((a, b) =>
   a === "Overall" ? -1 : b === "Overall" ? 1 : a.localeCompare(b));
-if (!pskill) pskill = SKILLS.includes("Overall") ? "Overall" : SKILLS[0];
-
 const pickEl = document.getElementById("skillpick");
 if (pickEl && SKILLS.length) {
-  pickEl.innerHTML = SKILLS.map(s =>
-    `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  pickEl.innerHTML = `<option value="">Every skill</option>`
+    + SKILLS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
   pickEl.value = pskill;
   pickEl.onchange = () => { pskill = pickEl.value; render(); };
 }
@@ -938,6 +948,7 @@ function renderPlayers(view, count, q) {
   if (focusPlayer) return renderOnePlayer(view, count);
   if (pview === "pk") return renderPk(view, count, q);
   if (pview === "movers") return renderMovers(view, count, q);
+  if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
     .filter(p => p.stats[pskill] != null)
@@ -968,6 +979,47 @@ function renderPlayers(view, count, q) {
         <td class="sm hide-sm">${best ? esc(best[0]) + " " + best[1].v : ""}</td>
       </tr>`;
     }).join("")}</tbody></table></div>`;
+  wirePlayerLinks();
+}
+
+function renderAllSkills(view, count, q) {
+  // Every skill at once, the way the official rankings page does it, but
+  // with the levels it leaves out. Pick a skill above for the full table.
+  const per = 10;
+  const cols = SKILLS.map(skill => {
+    const rows = PUBLIC
+      .filter(p => p.stats[skill] != null)
+      .filter(p => !q || p.name.toLowerCase().includes(q))
+      .sort((a, b) => b.stats[skill].v - a.stats[skill].v
+                   || a.name.localeCompare(b.name))
+      .slice(0, per);
+    if (!rows.length) return "";
+    let rank = 0, last = null;
+    return `<div class="skillcol"><h3>${esc(skill)}</h3><table>
+      ${rows.map((p, i) => {
+        const lvl = p.stats[skill].v;
+        if (lvl !== last) { rank = i + 1; last = lvl; }
+        return `<tr><td class="num rank">${rank}</td>
+          <td>${playerLink(p.name)}</td>
+          <td class="num brass">${lvl}</td></tr>`;
+      }).join("")}</table>
+      <button class="more" data-skill="${esc(skill)}">All ${esc(skill)}</button>
+      </div>`;
+  }).filter(Boolean).join("");
+
+  if (!cols) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">Nothing matches that.</div>`;
+    return;
+  }
+  count.textContent = `top ${per} in each of ${SKILLS.length} skills`;
+  view.innerHTML = caveat + `<div class="skillgrid">${cols}</div>`;
+  view.querySelectorAll("button.more").forEach(b => b.onclick = () => {
+    pskill = b.dataset.skill;
+    document.getElementById("skillpick").value = pskill;
+    window.scrollTo({ top: 0 });
+    render();
+  });
   wirePlayerLinks();
 }
 
