@@ -211,6 +211,7 @@ def load(db_path):
     # invasions, treasure, donations. Aggregates only - 51,000 broadcasts
     # are not going into the page.
     finders, invasions, event_log, event_totals = [], [], [], None
+    invasion_total = 0
     donors, speakers = [], []
     if "event_log" in tables:
         for r in con.execute("""
@@ -252,12 +253,37 @@ def load(db_path):
             speakers.append({"name": r["name"], "n": r["n"],
                              "first": (r["first"] or "")[:10],
                              "last": (r["last"] or "")[:10]})
-        for r in con.execute("""
-                SELECT who place, COUNT(*) n, MAX(at) last FROM event_log
-                WHERE what = 'invasion' AND who IS NOT NULL
-                GROUP BY LOWER(who) ORDER BY n DESC LIMIT 20"""):
-            invasions.append({"place": r["place"], "n": r["n"],
-                              "last": (r["last"] or "")[:10]})
+        # One invasion sends several warnings, a minute or so apart,
+        # while separate invasions at the same place are days apart.
+        # The gap between those two is enormous, so grouping anything
+        # inside half an hour turns warnings into invasions safely.
+        inv, warn, last_of = {}, {}, {}
+        prev_place, prev_at = None, None
+        for r in con.execute("""SELECT who place, at FROM event_log
+                                WHERE what = 'invasion' AND who IS NOT NULL
+                                  AND at IS NOT NULL
+                                ORDER BY LOWER(who), at"""):
+            place = r["place"]
+            key = place.lower()
+            warn[key] = warn.get(key, 0) + 1
+            last_of[key] = max(last_of.get(key, ""), r["at"] or "")
+            try:
+                at = datetime.fromisoformat(r["at"])
+            except (TypeError, ValueError):
+                continue
+            fresh = not (prev_place == key and prev_at
+                         and (at - prev_at).total_seconds() < 1800)
+            if fresh:
+                inv[key] = inv.get(key, 0) + 1
+                inv.setdefault("_names", {})
+            inv.setdefault("_names", {})[key] = place
+            prev_place, prev_at = key, at
+        names = inv.pop("_names", {})
+        for key, n in sorted(inv.items(), key=lambda kv: -kv[1])[:20]:
+            invasions.append({"place": names.get(key, key), "n": n,
+                              "warnings": warn.get(key, 0),
+                              "last": (last_of.get(key) or "")[:10]})
+        invasion_total = sum(inv.values())
         for r in con.execute("""SELECT what, who, amount, message, at
                                 FROM event_log WHERE what IS NOT NULL
                                 ORDER BY at DESC LIMIT 50"""):
@@ -274,6 +300,7 @@ def load(db_path):
         gold = con.execute("""SELECT SUM(amount) FROM event_log
                               WHERE what='donation'""").fetchone()[0]
         event_totals = {"kinds": kinds, "read": read, "all": total,
+                        "invasions": invasion_total,
                         "since": (since or "")[:4], "finders": len(finders),
                         "donated": gold or 0}
         print(f"  {total} broadcasts, {read} read, {len(finders)} finders")
@@ -2063,6 +2090,8 @@ function renderEvents(view, count, q) {
       fmt(k.joker || 0)} jokers found, ${fmt(k.invasion || 0)} invasion
       warnings, ${fmt(k.treasure || 0)} treasures and ${
       fmt(k.donation || 0)} donations worth ${fmt(t.donated)} gold.
+      ${t.invasions ? `Those warnings work out at ${
+        fmt(t.invasions)} invasions.` : ""}
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 

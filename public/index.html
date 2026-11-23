@@ -1387,6 +1387,8 @@ function renderEvents(view, count, q) {
       fmt(k.joker || 0)} jokers found, ${fmt(k.invasion || 0)} invasion
       warnings, ${fmt(k.treasure || 0)} treasures and ${
       fmt(k.donation || 0)} donations worth ${fmt(t.donated)} gold.
+      ${t.invasions ? `Those warnings work out at ${
+        fmt(t.invasions)} invasions.` : ""}
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 

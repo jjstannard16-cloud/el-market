@@ -166,7 +166,13 @@ def parse_message(kind, text):
         if GIWS_OVER.search(text):
             return "invasion over", None, None
         if GIWS_WARN.search(text) or "invasion advanced warning" in text.lower():
-            m = INVADE.search(text) or INSIDE.search(text)
+            # A second-wave warning names two places: where the monsters
+            # are and where they are heading. "A second wave is spawning
+            # inside the Portland Cave ... in 6 minutes they will invade
+            # Portland!" Where they are is the invasion; where they are
+            # heading is a threat. Taking the threat made the cave and
+            # the town look like two different invasions.
+            m = INSIDE.search(text) or INVADE.search(text)
             return "invasion", (m.group("map").strip() if m else None), None
         if text.lstrip().startswith("#Message from"):
             return "message", None, None
