@@ -819,18 +819,23 @@ HTML = r"""<!doctype html>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ground:  #0d1210;
-    --panel:   #151c17;
-    --raised:  #1b241d;
-    --line:    #273227;
-    --line-2:  #35422f;
-    --ink:     #e6dfcb;
-    --muted:   #8d8a76;
-    --brass:   #d0a63c;
+    --ground:  #0f1512;
+    --panel:   #172019;
+    --raised:  #1e2922;
+    --line:    #2e3a31;
+    --line-2:  #42513f;
+    --ink:     #ece7d8;
+    --muted:   #a3a08c;
+    --dim:     #7f7d6c;
+    --brass:   #dcb04a;
     --brass-d: #6b5420;
     --patina:  #6fa79b;
     --patina-d:#2c4a45;
     --rust:    #b4603f;
+    --t-xs: 11.5px;   /* column labels, chips          */
+    --t-sm: 13px;     /* secondary lines under a value */
+    --t-md: 14.5px;   /* tables and body               */
+    --t-lg: 16px;     /* section headings              */
     --display: "Fraunces", Georgia, serif;
     --ui: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
@@ -845,9 +850,11 @@ HTML = r"""<!doctype html>
 
   /* masthead ------------------------------------------------------- */
   .mast { border-bottom: 1px solid var(--line); }
+  .mast { background: linear-gradient(180deg,
+            rgba(220, 176, 74, .045), transparent 70%); }
   .mast .wrap {
     display: flex; align-items: flex-end; justify-content: space-between;
-    gap: 24px; flex-wrap: wrap; padding-top: 26px; padding-bottom: 18px;
+    gap: 24px; flex-wrap: wrap; padding-top: 28px; padding-bottom: 20px;
   }
   .mark { font-family: var(--display); font-size: 34px; font-weight: 600;
           line-height: 1; letter-spacing: -.015em; color: var(--ink);
@@ -863,8 +870,8 @@ HTML = r"""<!doctype html>
   /* the floor ------------------------------------------------------ */
   .floor { border-bottom: 1px solid var(--line); background: var(--panel); }
   .floor .wrap { padding-top: 18px; padding-bottom: 20px; }
-  .floor h2 { font-family: var(--display); font-weight: 400; font-size: 16px;
-              margin: 0 0 12px; color: var(--muted); }
+  .floor h2 { font-family: var(--display); font-weight: 400;
+              font-size: var(--t-lg); margin: 0 0 12px; color: var(--muted); }
 
   /* controls ------------------------------------------------------- */
   .bar { border-bottom: 1px solid var(--line); }
@@ -873,12 +880,24 @@ HTML = r"""<!doctype html>
   nav { display: flex; }
   nav button {
     background: none; border: 0; border-bottom: 2px solid transparent;
-    color: var(--muted); padding: 13px 0; margin-right: 22px; cursor: pointer;
-    font: 500 14.5px var(--ui);
+    color: var(--muted); padding: 14px 0; margin-right: 22px; cursor: pointer;
+    font: 500 var(--t-md) var(--ui); transition: color .12s;
   }
   nav button:hover { color: var(--ink); }
   nav button.on { color: var(--brass); border-bottom-color: var(--brass); }
   .spacer { flex: 1; }
+  /* Eleven tabs do not fit a phone. They scroll sideways rather than
+     wrapping into two rows, and the search box drops below them. */
+  @media (max-width: 860px) {
+    .bar .wrap { gap: 10px; }
+    nav { flex: 1 1 100%; overflow-x: auto; scrollbar-width: none;
+          -webkit-overflow-scrolling: touch; }
+    nav::-webkit-scrollbar { display: none; }
+    nav button { margin-right: 18px; white-space: nowrap; padding: 12px 0; }
+    nav button:last-child { margin-right: 2px; }
+    input[type=search] { width: 100%; }
+    .spacer { display: none; }
+  }
   input[type=search] {
     width: 260px; padding: 7px 11px; border-radius: 3px;
     border: 1px solid var(--line-2); background: var(--ground);
@@ -945,8 +964,8 @@ HTML = r"""<!doctype html>
   .qintro { font-size: 14.5px; max-width: 70ch; color: var(--ink);
             margin: 0 0 14px; }
   .qblock { margin-bottom: 26px; }
-  .qblock h3 { font-family: var(--display); font-weight: 400; font-size: 15px;
-               margin: 0 0 8px; color: var(--ink); }
+  .qblock h3 { font-family: var(--display); font-weight: 500;
+               font-size: var(--t-lg); margin: 0 0 10px; color: var(--ink); }
   ul.plain { margin: 0; padding-left: 18px; font-size: 13.5px; }
   ul.plain li { padding: 3px 0; }
   ol.steps { margin: 0; padding-left: 20px; font-size: 14px;
@@ -982,10 +1001,10 @@ HTML = r"""<!doctype html>
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .chip { font-size: 11.5px; border: 1px solid var(--line-2);
           border-radius: 10px; padding: 1px 8px; color: var(--muted); }
-  h2.group { font-family: var(--display); font-weight: 400; font-size: 15px;
-             color: var(--muted); margin: 26px 0 12px;
-             border-bottom: 1px solid var(--line); padding-bottom: 6px; }
-  h2.group:first-child { margin-top: 2px; }
+  h2.group { font-family: var(--display); font-weight: 500; font-size: 19px;
+             color: var(--ink); margin: 34px 0 12px; letter-spacing: -.01em;
+             border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  h2.group:first-child { margin-top: 6px; }
   .today { border: 1px solid var(--line-2); border-left-width: 3px;
            border-radius: 3px; padding: 15px 18px; margin: 2px 0 6px;
            background: var(--panel); }
@@ -1014,7 +1033,8 @@ HTML = r"""<!doctype html>
     font-weight: 500; letter-spacing: .05em; color: var(--muted);
     text-align: left; padding-bottom: 6px; border-bottom: 1px solid var(--line);}
   .daylog thead th.stonecell { text-align: right; }
-  .grouphint { font-size: 13.5px; color: var(--muted); margin: -6px 0 14px; }
+  .grouphint { font-size: var(--t-md); color: var(--muted);
+               margin: -4px 0 16px; max-width: 78ch; line-height: 1.55; }
   .seen { font-family: var(--sans); font-size: 11.5px; color: var(--muted);
           margin-top: 3px; }
   .rank { display: inline-block; min-width: 24px; color: var(--muted);
@@ -1030,11 +1050,15 @@ HTML = r"""<!doctype html>
   table.ranks td { padding: 5px 8px 5px 0; font-size: 13.5px; }
   table.ranks td:first-child { width: 45%; }
   .barcell { width: 40%; }
-  .bar { display: block; height: 7px; background: var(--line);
-         border-radius: 1px; overflow: hidden; }
-  .bar i { display: block; height: 100%; background: var(--brass);
-           opacity: .55; }
-  .years { margin-top: 26px; }
+  /* Named meter, not bar: ".bar" is the navigation strip, and sharing
+     the name clipped the whole navigation to seven pixels. */
+  .meter { display: block; height: 7px; background: var(--line);
+           border-radius: 1px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--brass);
+             opacity: .62; }
+  .years { margin-top: 30px; }
+  .years h3, .ranks + h3 { font-family: var(--display); font-weight: 500;
+                           font-size: 17px; color: var(--ink); margin: 0 0 4px; }
   @media (max-width: 620px) {
     .yearbars { height: 84px; gap: 3px; }
     .yb b { font-size: 9.5px; }
@@ -1105,26 +1129,41 @@ HTML = r"""<!doctype html>
 
   /* tables --------------------------------------------------------- */
   main .wrap { padding-top: 16px; padding-bottom: 56px; }
-  .meta-line { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+  .meta-line { color: var(--muted); font-size: var(--t-sm);
+               margin-bottom: 10px; }
   .scroller { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse;
+          font-size: var(--t-md); line-height: 1.45; }
   th {
-    text-align: left; padding: 7px 11px; color: var(--muted);
-    font-weight: 500; font-size: 13px; border-bottom: 1px solid var(--line-2);
+    text-align: left; padding: 9px 12px; color: var(--dim);
+    font-weight: 500; font-size: var(--t-sm);
+    border-bottom: 1px solid var(--line-2);
     position: sticky; top: 0; background: var(--ground); cursor: pointer;
     white-space: nowrap;
   }
   th:hover { color: var(--ink); }
   th.num, td.num { text-align: right; }
-  td { padding: 7px 11px; border-bottom: 1px solid var(--line);
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line);
        vertical-align: top; }
+  /* The roomier rows are for a desk. On a phone the same padding pushes
+     every wide table off the side of the screen. */
+  @media (max-width: 620px) {
+    table { font-size: var(--t-sm); }
+    th, td { padding: 8px 7px; }
+    th:first-child, td:first-child { padding-left: 0; }
+    th:last-child, td:last-child { padding-right: 0; }
+  }
+  /* Long tables are easier to track across with a faint banding than
+     with a border alone, which at this contrast all but disappears. */
+  tbody tr:nth-child(even) > td { background: rgba(255, 255, 255, .017); }
+  tbody tr:hover > td { background: var(--panel); }
   tr.item { cursor: pointer; }
-  tr.item:hover > td { background: var(--panel); }
-  tr.item.open > td { background: var(--panel); }
+  tr.item.open > td { background: var(--raised); }
   .nm { display: flex; align-items: center; gap: 10px; }
   .nm img { width: 20px; height: 20px; object-fit: contain; flex: none;
             image-rendering: pixelated; }
-  .sm { color: var(--muted); font-size: 12.5px; }
+  .sm { color: var(--muted); font-size: var(--t-sm); }
+  .muted { color: var(--muted); }
   .brass { color: var(--brass); }
   .patina { color: var(--patina); }
   a.lnk { color: var(--ink); text-decoration: none;
@@ -1159,10 +1198,11 @@ HTML = r"""<!doctype html>
 
   .cols { display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap; }
   .cols > div { flex: 1 1 320px; min-width: 0; }
-  .cols h3 { font-family: var(--display); font-weight: 400; font-size: 15px;
+  .cols h3 { font-family: var(--display); font-weight: 500; font-size: 17px;
              margin: 0 0 7px; color: var(--ink); }
-  .cols h3 span { color: var(--muted); font-size: 13px; font-family: var(--ui); }
-  .cols table { font-size: 13.5px; }
+  .cols h3 span { color: var(--muted); font-size: var(--t-sm);
+                  font-family: var(--ui); font-weight: 400; }
+  .cols table { font-size: var(--t-md); }
   .nowrap { white-space: nowrap; }
   .seeall { display: inline-block; margin-top: 10px; font-family: var(--sans);
             font-size: 12.5px; color: var(--muted); text-decoration: none; }
@@ -1502,7 +1542,8 @@ function gameNow() {
     readAt: read,
     // Shown only while it is still news: Mercator keeps the text up long
     // after the invasion, so the clock goes by when it first appeared.
-    warning: (Date.now() - Date.parse(c.warnSince || c.at) < 25 * 60 * 1000)
+    warning: (Date.now() - Date.parse(c.warnSince || c.at) < 25 * 60 * 1000
+              && !/invasion is over/i.test(c.warning || ""))
       ? c.warning : null,
     monsters: c.monsters,
   };
@@ -2098,7 +2139,7 @@ function renderGuilds(view, count) {
     <div class="grouphint">Guild membership is not published anywhere we
       could find, so these rosters are kept by hand. To have a guild
       added, send its member list.</div>
-    <table class="daylog"><thead><tr><th>Guild</th><th>Tag</th>
+    <div class="scroller"><table class="daylog"><thead><tr><th>Guild</th><th>Tag</th>
       <th class="stonecell">Members</th>
       <th class="stonecell">With stats</th></tr></thead>
     <tbody>${gs.map(g => {
@@ -2110,7 +2151,7 @@ function renderGuilds(view, count) {
         <td class="sm">${esc(g.tag)}</td>
         <td class="num">${fmt(g.members.length)}</td>
         <td class="num sm">${fmt(open)}</td></tr>`;
-    }).join("")}</tbody></table>`;
+    }).join("")}</tbody></table></div>`;
 }
 
 function renderOneGuild(view, count, q) {
@@ -2252,7 +2293,7 @@ function renderEvents(view, count, q) {
     ${headline}
     <h2 class="group">${esc(board.label)}</h2>
     <div class="grouphint">${esc(board.hint)}</div>
-    <table class="daylog sortable finders"><thead><tr><th>Player</th>
+    <div class="scroller"><table class="daylog sortable finders"><thead><tr><th>Player</th>
       <th class="stonecell">${esc(board.unit)}</th>
       ${eboard === "found" ? `<th class="stonecell">Pears</th>
         <th class="stonecell">Jokers</th>` : ""}
@@ -2269,7 +2310,7 @@ function renderEvents(view, count, q) {
           <td class="num sm">${r.jokers ? fmt(r.jokers) : ""}</td>` : ""}
         ${eboard === "gold" ? `<td class="num sm">${fmt(r.n)}</td>` : ""}
         <td class="sm">${esc(board.first(r))}</td>
-        <td class="sm">${esc(board.last(r))}</td></tr>`; }).join("")}</tbody></table>
+        <td class="sm">${esc(board.last(r))}</td></tr>`; }).join("")}</tbody></table></div>
     ${hits.length > shown.length ? `<button class="more" id="morefinders">
       Show the other ${fmt(hits.length - shown.length)}</button>` : ""}
     ${hits.length ? "" : `<div class="caveat">Nobody by that name is on
@@ -2289,7 +2330,7 @@ function renderEvents(view, count, q) {
       : "Invasions by place."}</div>
     <table class="ranks">${inv.map(i => `<tr>
       <td>${esc(i.place)}</td>
-      <td class="barcell"><span class="bar"><i style="width:${
+      <td class="barcell"><span class="meter"><i style="width:${
         Math.max(2, Math.round(100 * i.n / invMax))}%"></i></span></td>
       <td class="num">${fmt(i.n)}</td>
       <td class="num sm muted">${i.warnings
@@ -2299,10 +2340,10 @@ function renderEvents(view, count, q) {
     !q || (e.message || "").toLowerCase().includes(q));
   const recent = !log.length ? "" : `
     <h2 class="group">Lately</h2>
-    <table class="daylog"><tbody>${log.slice(0, 30).map(e => `<tr>
+    <div class="scroller"><table class="daylog"><tbody>${log.slice(0, 30).map(e => `<tr>
       <td class="sm nowrap">${esc(e.at)}</td>
       <td class="sm"><span class="evkind">${esc(e.what)}</span></td>
-      <td class="sm">${esc(e.message)}</td></tr>`).join("")}</tbody></table>`;
+      <td class="sm">${esc(e.message)}</td></tr>`).join("")}</tbody></table></div>`;
 
   view.innerHTML = finders + places + recent
     + (finders || recent ? "" : `<div class="empty">Nothing matches that.</div>`);
@@ -2375,8 +2416,8 @@ function renderQuests(view, count, q) {
   </tr>`).join("");
 
   view.innerHTML = picker + (list.length ? `
-    <table class="daylog quests"><thead><tr><th>Quest</th><th>Starts with</th>
-      <th>Pays</th><th></th></tr></thead><tbody>${rows}</tbody></table>`
+    <div class="scroller"><table class="daylog quests"><thead><tr><th>Quest</th><th>Starts with</th>
+      <th>Pays</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
     : `<div class="empty">No quest matches that.</div>`);
 
   view.querySelectorAll("[data-qsec]").forEach(b => b.onclick = () => {
@@ -2499,7 +2540,7 @@ function renderDays(view, count, q) {
          botLink(removal.bot)}.</div>` : "";
     const summonable = kind !== "bad";
     return `<h2 class="group">${title}</h2>${note}
-      <table class="daylog"><thead><tr><th>Day</th><th>What it does</th>
+      <div class="scroller"><table class="daylog"><thead><tr><th>Day</th><th>What it does</th>
         ${summonable ? `<th class="stonecell">Stone to start it</th>` : ""}
       </tr></thead>
       <tbody>${rows.map(([name, v]) => `<tr>
@@ -2507,14 +2548,14 @@ function renderDays(view, count, q) {
           ${seenLine(v)}</td>
         <td class="sm">${esc(v.what || "")}</td>
         ${summonable ? `<td class="stonecell">${stoneLine(v)}</td>` : ""}
-      </tr>`).join("")}</tbody></table>`;
+      </tr>`).join("")}</tbody></table></div>`;
   }).join("");
 
   // Fifteen years of records, read three ways: which days come round
   // most, which ones players reach into their pockets for, and whether
   // the game has been getting busier or quieter.
   const R = DATA.dayRanks;
-  const bar = (v, max) => `<span class="bar"><i style="width:${
+  const bar = (v, max) => `<span class="meter"><i style="width:${
     Math.max(2, Math.round(100 * v / (max || 1)))}%"></i></span>`;
   const rankPanel = (title, hint, rows, key) => {
     const max = Math.max(...rows.map(r => r[key]));
@@ -2561,7 +2602,7 @@ function renderDays(view, count, q) {
   const mlog = (DATA.dayLog || []).filter(d => match(d.name, ""));
   const logTable = mlog.length ? `
     <h2 class="group">What has actually been running</h2>
-    <table class="daylog"><thead><tr><th>When</th><th>Day</th>
+    <div class="scroller"><table class="daylog"><thead><tr><th>When</th><th>Day</th>
       <th>Game date</th><th>Started by</th></tr></thead>
     <tbody>${mlog.map(d => `<tr>
         <td class="sm">${esc(d.at)}</td>
@@ -2572,7 +2613,7 @@ function renderDays(view, count, q) {
         <td class="sm">${d.by
           ? `<span class="brass">${esc(d.by)}</span>`
           : `came round on its own`}</td>
-      </tr>`).join("")}</tbody></table>` : "";
+      </tr>`).join("")}</tbody></table></div>` : "";
 
   // Everyone who has ever paid for a day, ranked. Positions are worked
   // out from the whole list so a search does not renumber it.
@@ -2591,7 +2632,7 @@ function renderDays(view, count, q) {
       rather than the game coming round to them. ${fmt(t.players)} people
       have done it${t.centurions === 1
         ? `, and one has passed a hundred` : ""}.</div>` : ""}
-    <table class="daylog sortable"><thead><tr>
+    <div class="scroller"><table class="daylog sortable"><thead><tr>
       <th>Player</th>
       <th class="stonecell" data-sort="n">Days started</th>
       <th>Reaches for</th>
@@ -2606,7 +2647,7 @@ function renderDays(view, count, q) {
         fmt(p.favN)}</span>` : ""}</td>
       <td class="sm">${esc(p.first || "")}</td>
       <td class="sm">${esc(p.last || "")}</td>
-    </tr>`; }).join("")}</tbody></table>
+    </tr>`; }).join("")}</tbody></table></div>
     ${hits.length > shown.length ? `<button class="more" id="moresummoners">
       Show the other ${fmt(hits.length - shown.length)}</button>` : ""}
     ${hits.length ? "" : `<div class="caveat">Nobody by that name has
@@ -2953,7 +2994,7 @@ function renderAchievements(view, count, q) {
       </div>
     <table class="ranks">${rarest.map(k => `<tr>
       <td>${esc(k.name)}</td>
-      <td class="barcell"><span class="bar"><i style="width:${
+      <td class="barcell"><span class="meter"><i style="width:${
         Math.max(2, Math.round(k.share))}%"></i></span></td>
       <td class="num">${fmt(k.n)}</td>
       <td class="num sm muted">${k.share}%</td></tr>`).join("")}</table>`;
