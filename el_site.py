@@ -18,7 +18,7 @@ import os
 import sqlite3
 import sys
 import webbrowser
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 DB_PATH = "el_bots.db"
 OUT_PATH = "index.html"
@@ -189,6 +189,39 @@ def load(db_path):
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
 
+    # What has moved since yesterday, worked out here so the page gets a
+    # short answer rather than the whole history.
+    movements, span_hours = [], None
+    first_run = con.execute("""SELECT MIN(started_at) FROM run
+                               WHERE finished_at IS NOT NULL""").fetchone()[0]
+    if first_run:
+        day_ago = (datetime.now(timezone.utc)
+                   - timedelta(hours=24)).isoformat(timespec="seconds")
+        ref = max(day_ago, first_run)
+        span_hours = round((datetime.now(timezone.utc)
+                            - datetime.fromisoformat(ref)).total_seconds()
+                           / 3600, 1)
+        then = {r["item_id"]: r["p"] for r in con.execute("""
+            SELECT item_id, MIN(price) p FROM price_history
+            WHERE side='sell' AND first_seen <= ? AND last_seen >= ?
+            GROUP BY item_id""", (ref, ref))}
+        now_cheapest = {r["item_id"]: r["p"] for r in con.execute("""
+            SELECT item_id, MIN(price) p FROM listing
+            WHERE side='sell' AND IFNULL(quantity,0) <> 0
+            GROUP BY item_id""")}
+        iname = {r["item_id"]: r["name"]
+                 for r in con.execute("SELECT item_id, name FROM item")}
+        for iid, was in then.items():
+            now_p = now_cheapest.get(iid)
+            if now_p is None or not was or now_p == was:
+                continue
+            pct = (now_p - was) / was * 100
+            if abs(pct) >= 1:
+                movements.append({"item": iname.get(iid, "?"), "was": was,
+                                  "now": now_p, "pct": pct})
+        movements.sort(key=lambda mv: -abs(mv["pct"]))
+        movements = movements[:40]
+
     # price history, for a sparkline / "changed recently" flag later
     hist_count = con.execute("SELECT COUNT(*) FROM price_history").fetchone()[0]
     runs = con.execute("""SELECT COUNT(*) FROM run
@@ -208,6 +241,7 @@ def load(db_path):
         "players": sorted(players, key=lambda p: p["name"].lower()),
         "skills": skills,
         "movers": movers,
+        "moves": movements,
         "harvestables": harvestables,
         "meta": {
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -223,6 +257,7 @@ def load(db_path):
             "recipeCount": len(recipes),
             "playerCount": sum(1 for p in players if not p["private"]),
             "privateCount": sum(1 for p in players if p["private"]),
+            "moveSpanHours": span_hours,
         },
     }
 
@@ -232,7 +267,7 @@ HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EL Market</title>
+<title>EL Headquarters</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
@@ -269,7 +304,9 @@ HTML = r"""<!doctype html>
     gap: 24px; flex-wrap: wrap; padding-top: 26px; padding-bottom: 18px;
   }
   .mark { font-family: var(--display); font-size: 34px; font-weight: 600;
-          line-height: 1; letter-spacing: -.015em; color: var(--ink); }
+          line-height: 1; letter-spacing: -.015em; color: var(--ink);
+          text-decoration: none; display: inline-block; }
+  .mark:hover em { color: var(--ink); }
   .mark em { font-style: normal; color: var(--brass); }
   .ledger { display: flex; gap: 26px; }
   .ledger div { text-align: right; }
@@ -351,6 +388,17 @@ HTML = r"""<!doctype html>
              color: var(--muted); margin: 26px 0 12px;
              border-bottom: 1px solid var(--line); padding-bottom: 6px; }
   h2.group:first-child { margin-top: 2px; }
+  .sections { display: grid; gap: 12px;
+              grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .sec { display: block; padding: 15px 17px; border: 1px solid var(--line);
+         border-radius: 3px; background: var(--panel); text-decoration: none;
+         color: inherit; }
+  .sec:hover { border-color: var(--line-2); }
+  .sec .nm2 { display: block; font-family: var(--display); font-size: 18px;
+              color: var(--brass); margin-bottom: 3px; }
+  .sec .sm { display: block; line-height: 1.45; }
+  .sec .tally2 { display: block; margin-top: 9px; font-size: 12.5px;
+                 color: var(--muted); font-variant-numeric: tabular-nums; }
   .skillgrid { display: grid; gap: 26px 30px;
                grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
   .skillcol h3 { font-family: var(--display); font-weight: 400; font-size: 16px;
@@ -468,18 +516,14 @@ HTML = r"""<!doctype html>
 <body>
 
 <div class="mast"><div class="wrap">
-  <div class="mark">Eternal Lands <em>Market</em></div>
+  <a class="mark" href="#home">EL <em>Headquarters</em></a>
   <div class="ledger" id="ledger"></div>
-</div></div>
-
-<div class="floor"><div class="wrap">
-  <h2>On the floor right now</h2>
-  <div id="deals"></div>
 </div></div>
 
 <div class="bar"><div class="wrap">
   <nav>
-    <button class="on" data-tab="market">Market</button>
+    <button class="on" data-tab="home">Home</button>
+    <button data-tab="market">Market</button>
     <button data-tab="profit">Profit</button>
     <button data-tab="craft">Craft</button>
     <button data-tab="players">Players</button>
@@ -500,7 +544,9 @@ HTML = r"""<!doctype html>
     <button data-mode="free">free</button>
     <button data-mode="buy">bought, not gathered</button>
   </span>
-  <input type="search" id="q" placeholder="Item, bot or map" autofocus>
+  <span id="toolbar" style="display:contents">
+    <input type="search" id="q" placeholder="Item, bot, map or player">
+  </span>
 </div></div>
 
 <main><div class="wrap">
@@ -645,46 +691,121 @@ document.getElementById("foot").innerHTML =
    before putting this online.`;
 
 /* the floor ---------------------------------------------------------- */
-(function floor() {
-  const top = DATA.items
+/* home ---------------------------------------------------------------
+   What has changed since you last looked, then a way into each section.
+   Everything on this page links somewhere.                             */
+const SECTIONS = [
+  { id: "market", name: "Market",
+    what: "Every item, who sells it cheapest and who pays most",
+    n: () => `${DATA.items.length} items` },
+  { id: "profit", name: "Profit",
+    what: "Buy from one bot, sell to another, and whether the walk is worth it",
+    n: () => `${DATA.items.filter(i => i.total > 0).length} trades in profit` },
+  { id: "craft", name: "Craft",
+    what: "What a craft costs at today's prices, and what a level costs",
+    n: () => `${DATA.meta.recipeCount} recipes` },
+  { id: "players", name: "Players",
+    what: "Skill rankings with real levels, PK records and level-ups",
+    n: () => `${DATA.meta.playerCount} players` },
+  { id: "bots", name: "Bots",
+    what: "Every trade bot, where it stands and what room it has left",
+    n: () => `${DATA.bots.length} bots` },
+];
+
+function bestDeals(n) {
+  return DATA.items
     .filter(it => it.total > 0 && it.trip !== "sea")
     .sort((a, b) => (b.total === Infinity ? 1e15 : b.total)
                   - (a.total === Infinity ? 1e15 : a.total))
-    .slice(0, 3);
-  const el = document.getElementById("deals");
-  if (!top.length) {
-    el.className = "nodeals";
-    el.textContent =
-      "No gaps worth walking for in this reading. Scrape again later.";
-    return;
-  }
-  el.className = "deals";
-  el.innerHTML = top.map(it => `
-    <button class="deal" data-item="${esc(it.name)}">
-      ${icon(it)}
-      <span>
-        <span class="amt">${fmt(it.total)}</span>
-        <span class="what">${esc(it.name)}</span>
-        <span class="route">${esc(it.best.sell.map || "?")} → ${
-          esc(it.best.buy.map || "?")} &middot; ${
-          it.units === Infinity ? "no limit" : qty(it.units)} to move</span>
-      </span>
-    </button>`).join("");
-  el.querySelectorAll(".deal").forEach(btn => btn.onclick = () => {
-    document.getElementById("q").value = btn.dataset.item;
-    setTab("profit");
-  });
-})();
+    .slice(0, n);
+}
 
-/* navigation --------------------------------------------------------- */
-function setTab(t) {
-  tab = t; sortKey = null; focusBot = null; focusPlayer = null;
+function renderHome(view, count) {
+  count.textContent = "";
+  const deals = bestDeals(3);
+  const moves = (DATA.moves || []).slice(0, 8);
+  const ups = (DATA.movers || []).slice(0, 8);
+  const span = DATA.meta.moveSpanHours;
+
+  const top = `<h2 class="group">Worth a trip right now</h2>` + (deals.length
+    ? `<div class="deals">${deals.map(it => `
+        <button class="deal" data-item="${esc(it.name)}">
+          ${icon(it)}
+          <span>
+            <span class="amt">${fmt(it.total)}</span>
+            <span class="what">${esc(it.name)}</span>
+            <span class="route">${esc(it.best.sell.map || "?")} \u2192 ${
+              esc(it.best.buy.map || "?")} &middot; ${
+              it.units === Infinity ? "no limit" : qty(it.units)} to move</span>
+          </span></button>`).join("")}</div>`
+    : `<div class="caveat">No gaps worth walking for in this reading.</div>`);
+
+  const movesPanel = `<div><h3>Prices that moved${
+    span ? ` <span class="sm">in the last ${
+      span < 24 ? span + " hours" : "day"}</span>` : ""}</h3>
+    ${moves.length ? `<table>${moves.map(mv => `<tr>
+      <td>${esc(mv.item)}</td>
+      <td class="num sm">${fmt(mv.was)} \u2192 ${fmt(mv.now)}</td>
+      <td class="num ${mv.pct > 0 ? "t-sea" : "patina"}">${
+        mv.pct > 0 ? "+" : ""}${mv.pct.toFixed(0)}%</td></tr>`).join("")}</table>`
+      : `<div class="caveat">Nothing has shifted by more than 1%.</div>`}</div>`;
+
+  const upsPanel = `<div><h3>Levelled up <span class="sm">recently</span></h3>
+    ${ups.length ? `<table>${ups.map(u => `<tr>
+      <td>${playerLink(u.name)}</td><td>${esc(u.stat)}</td>
+      <td class="num brass">${u.now}</td>
+      <td class="num sm">${esc(u.at.slice(5))}</td></tr>`).join("")}</table>`
+      : `<div class="caveat">No level-ups yet. They appear once players have
+         been read on two different days.</div>`}</div>`;
+
+  view.innerHTML = top
+    + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}</div>`
+    + `<h2 class="group">Everything here</h2>
+       <div class="sections">${SECTIONS.map(sec => `
+         <a class="sec" href="#${sec.id}">
+           <span class="nm2">${sec.name}</span>
+           <span class="sm">${sec.what}</span>
+           <span class="tally2">${sec.n()}</span></a>`).join("")}</div>`;
+
+  view.querySelectorAll(".deal").forEach(btn => btn.onclick = () => {
+    document.getElementById("q").value = btn.dataset.item;
+    go("profit");
+  });
+  wirePlayerLinks();
+}
+
+/* navigation ----------------------------------------------------------
+   The address bar carries where you are, so a page can be pasted into
+   game chat: #craft, #players/stann, #bots/Keruma.                     */
+const TABS = ["home", "market", "profit", "craft", "players", "bots"];
+
+function go(tab, sub) {
+  const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
+  if (location.hash === want) applyRoute(); else location.hash = want;
+}
+
+function applyRoute() {
+  const raw = decodeURIComponent(location.hash.replace(/^#/, ""));
+  const [t, ...rest] = raw.split("/");
+  const sub = rest.join("/");
+  tab = TABS.includes(t) ? t : "home";
+  focusBot = tab === "bots" && sub ? sub : null;
+  focusPlayer = tab === "players" && sub ? sub : null;
+  sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
-    b.classList.toggle("on", b.dataset.tab === t));
+    b.classList.toggle("on", b.dataset.tab === tab));
+  window.scrollTo({ top: 0 });
   render();
 }
+
+const setTab = t => go(t);
+window.addEventListener("hashchange", applyRoute);
+
 document.querySelectorAll("nav button").forEach(btn =>
-  btn.onclick = () => { document.getElementById("q").value = ""; setTab(btn.dataset.tab); });
+  btn.onclick = () => {
+    document.getElementById("q").value = "";
+    go(btn.dataset.tab);
+  });
 document.getElementById("q").oninput = () => {
   focusBot = null; focusPlayer = null; render();
 };
@@ -697,13 +818,8 @@ document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
   b.classList.add("on"); craftMode = b.dataset.mode; render();
 });
 
-function openBot(name) {
-  focusBot = name; tab = "bots"; sortKey = null;
-  document.querySelectorAll("nav button").forEach(b =>
-    b.classList.toggle("on", b.dataset.tab === "bots"));
-  window.scrollTo({ top: 0 });
-  render();
-}
+function openBot(name) { go("bots", name); }
+
 const wireBotLinks = () =>
   document.querySelectorAll("a.lnk[data-bot]").forEach(a =>
     a.onclick = e => { e.stopPropagation(); openBot(a.dataset.bot); });
@@ -821,6 +937,8 @@ function render() {
   const q = document.getElementById("q").value.trim().toLowerCase();
   const view = document.getElementById("view");
   const count = document.getElementById("count");
+  document.getElementById("toolbar").style.visibility =
+    tab === "home" ? "hidden" : "visible";
   document.getElementById("walkwrap").style.display =
     tab === "profit" ? "flex" : "none";
   document.getElementById("modewrap").style.display =
@@ -833,6 +951,7 @@ function render() {
 
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
+  if (tab === "home")   return renderHome(view, count);
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
 
@@ -992,10 +1111,7 @@ const playerLink = n =>
   `<a class="lnk" data-player="${esc(n)}">${esc(n)}</a>`;
 const wirePlayerLinks = () =>
   document.querySelectorAll("a.lnk[data-player]").forEach(a =>
-    a.onclick = e => {
-      e.stopPropagation(); focusPlayer = a.dataset.player;
-      tab = "players"; window.scrollTo({ top: 0 }); render();
-    });
+    a.onclick = e => { e.stopPropagation(); go("players", a.dataset.player); });
 
 const caveat = `<div class="caveat">${
   DATA.meta.playerCount} players with public stats. ${
@@ -1221,7 +1337,7 @@ function renderOnePlayer(view, count) {
       <div class="chips">${p.ach.split(/\s{2,}/).filter(Boolean)
         .map(a => `<span class="chip">${esc(a.trim())}</span>`).join("")}</div>`
       : ""}`;
-  view.querySelector(".back").onclick = () => { focusPlayer = null; render(); };
+  view.querySelector(".back").onclick = () => go("players");
 }
 
 function renderCraft(view, count, q) {
@@ -1412,11 +1528,11 @@ function renderBot(view, count) {
       ${col(B.buy, "Wanted", "patina", "sell")}
     </div>`;
   count.textContent = "";
-  view.querySelector(".back").onclick = () => { focusBot = null; render(); };
+  view.querySelector(".back").onclick = () => go("bots");
   wireBotLinks();
 }
 
-render();
+applyRoute();
 </script>
 </body>
 </html>
