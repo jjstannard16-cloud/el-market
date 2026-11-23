@@ -101,19 +101,40 @@ def number(v):
     return int(m.group()) if m else None
 
 
-def split_day(text):
-    """
-    'Leonard's day, when Leonard is considerably stronger ...'
-    -> ("Leonard's day", "when Leonard is considerably stronger ...")
+# Mercator passes the game's own announcement through unchanged, so a
+# record looks like three lines:
+#
+#     Today is a special day:
+#     Day of Joule
+#     English: Half the food for manufacturing/potion/etc. skills.
+#     Role Playing: Today we celebrate James Prescott Joule. ...
+#
+# An ordinary day is a single line, 'Just an ordinary day'.
+HEADING = re.compile(r"^today is a special day", re.I)
+LABEL = re.compile(r"\b(english|role playing)\s*:\s*", re.I)
 
-    The name is always the part before the first comma; everything after
-    is prose. A day with no comma is all name.
-    """
-    text = (text or "").strip()
-    if "," not in text:
-        return text, None
-    name, rest = text.split(",", 1)
-    return name.strip(), rest.strip() or None
+# The game has spelled a few of these differently over fifteen years.
+# Everything else differs from our reference only in capitals, which is
+# matched without case, so this list stays short on purpose.
+ALIASES = {
+    "just an ordinary day": "Ordinary Day",
+    "solare flares": "Solar Flares Day",
+    "solar flares": "Solar Flares Day",
+}
+
+
+def split_day(text):
+    """The announcement into (name, what it does)."""
+    lines = [ln.strip() for ln in str(text or "").replace("\r", "").split("\n")]
+    lines = [ln for ln in lines if ln]
+    if lines and HEADING.match(lines[0]):
+        lines = lines[1:]
+    if not lines:
+        return "", None
+    name = lines[0].strip().rstrip(".").strip()
+    name = ALIASES.get(name.lower(), name)
+    rest = LABEL.sub("", " ".join(lines[1:])).strip()
+    return name, rest or None
 
 
 def split_gamedate(text):
@@ -151,8 +172,30 @@ def parse_record(rec):
 
 # ----------------------------------------------------------------- store
 
+def needs_reread(con):
+    """
+    An earlier version of this script stored the whole announcement as the
+    day's name. If any of those are still here, the history is re-read so
+    they get rewritten properly - no one has to remember to do it.
+    """
+    try:
+        bad = con.execute("""SELECT COUNT(*) FROM special_day_log
+                             WHERE name LIKE 'Today is a special day%'
+                                OR name LIKE '%' || char(10) || '%'
+                                OR name LIKE 'Just an ordinary day%'
+                          """).fetchone()[0]
+    except sqlite3.Error:
+        return False
+    if bad:
+        print(f"  {bad} records were stored under the wrong name; "
+              f"re-reading the history to fix them")
+    return bool(bad)
+
+
 def ensure(con):
     con.executescript(SCHEMA)
+    con.execute("""DELETE FROM game_day
+                   WHERE special LIKE 'Today is a special day%'""")
     have = {r[1] for r in con.execute("PRAGMA table_info(game_day)")}
     if have:                                   # table exists already
         for col, kind in GAME_DAY_COLUMNS.items():
@@ -190,6 +233,25 @@ def store_history(con, rows):
     return after - before
 
 
+# A day runs about six hours, so the newest entry in the log is the one
+# running now - unless it is older than that, in which case we do not
+# know, and say so rather than guess.
+CURRENT_FOR = 8 * 3600
+
+
+def current_day(con):
+    row = con.execute("""SELECT name, at FROM special_day_log
+                         ORDER BY at DESC, id DESC LIMIT 1""").fetchone()
+    if not row or not row[1]:
+        return None
+    try:
+        age = (datetime.now(timezone.utc)
+               - datetime.fromisoformat(row[1])).total_seconds()
+    except ValueError:
+        return None
+    return row[0] if age < CURRENT_FOR else None
+
+
 def store_today(con, info, ts):
     """Keep game_day fed, so the rest of the site needs no changes."""
     if not info or not info.get("special"):
@@ -222,20 +284,21 @@ def read_clock(s):
         if isinstance(raw.get(wrapper), dict):
             d = raw[wrapper]
             break
-    name, desc = split_day(pick(d, "GameDayName", "dayname", "specialday"))
-    if not name:
-        return None, raw
+    # GameDayName is a heading on Mercator's own page ("Today is a special
+    # day:"), not the day itself. The name of the day comes from the log,
+    # which is the same source that page reads. Here we want only the date.
     hour = number(pick(d, "GameHour", "hour"))
     minute = number(pick(d, "GameMinute", "minute"))
     clock = (f"{hour}:{minute:02d}" if hour is not None and minute is not None
              else pick(d, "GameTime", "time", "clock"))
     month = number(pick(d, "GameMonth", "month"))
+    day = number(pick(d, "GameDay", "day"))
+    if day is None:
+        return None, raw
     return {
-        "day": number(pick(d, "GameDay", "day")),
+        "day": day,
         "month": f"{month:02d}" if month else None,
         "year": number(pick(d, "GameYear", "year")),
-        "special": name,
-        "description": desc or pick(d, "GameDayDescription", "description"),
         "clock": clock,
         "warning": pick(d, "GIWS_Text"),
         "monsters": number(pick(d, "GIWS_Monsters")),
@@ -322,17 +385,22 @@ def main():
     except Exception as e:
         today = None
         print(f"  clock unavailable: {e}")
+    # The log is read first, so the newest entry is in hand before we
+    # decide which day is running.
+    print("reading the special day log...")
+    seen, added = walk_history(s, con, a.full or needs_reread(con))
+    print(f"  read {seen}, {added} new")
+
     if today:
+        today["special"] = current_day(con)
         store_today(con, today, ts)
         when = (f"{today['day']}-{today['month']}-"
                 f"{str(today['year'] or 0).zfill(4)}")
         print(f"  in game: {when}"
               f"{', ' + today['clock'] if today['clock'] else ''}"
-              f" — {today['special']}")
-
-    print("reading the special day log...")
-    seen, added = walk_history(s, con, a.full)
-    print(f"  read {seen}, {added} new")
+              f" — {today['special'] or 'day unknown, the log is behind'}")
+        if today.get("warning"):
+            print(f"  heads up: {today['warning']}")
     report(con)
     con.close()
 
