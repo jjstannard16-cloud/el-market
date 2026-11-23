@@ -9,8 +9,8 @@
    "attack": "130",
    "defense": "130",
    "material": "300",
-   "respawn": "100 sec.",
-   "hostile": "Yes (ignores MM)",
+   "respawn": "100 seconds",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "130/130",
     "Health Points": "300",
@@ -88,7 +88,7 @@
    "attack": "72",
    "defense": "63",
    "material": "110",
-   "respawn": "024 sec.",
+   "respawn": "24 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "72/63",
@@ -195,8 +195,8 @@
    ],
    "attack": "36",
    "defense": "40",
-   "material": "60",
-   "respawn": "042 sec.",
+   "material": "65",
+   "respawn": "42 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "36/40",
@@ -347,7 +347,7 @@
    "attack": "75",
    "defense": "70",
    "material": "120",
-   "respawn": "025 sec.",
+   "respawn": "25 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "75/70",
@@ -451,7 +451,7 @@
    "attack": "40",
    "defense": "35",
    "material": "35",
-   "respawn": "062 sec.",
+   "respawn": "62 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "40/35",
@@ -557,8 +557,8 @@
     "animal"
    ],
    "attack": "150",
-   "defense": null,
-   "material": null,
+   "defense": "120",
+   "material": "6000",
    "respawn": "298 minutes and 16 seconds",
    "hostile": null,
    "stats": {
@@ -582,7 +582,7 @@
    "attack": "6",
    "defense": "6",
    "material": "15",
-   "respawn": "21 sec.",
+   "respawn": "21 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "6/6",
@@ -644,8 +644,8 @@
     "animal"
    ],
    "attack": "60",
-   "defense": null,
-   "material": null,
+   "defense": "30",
+   "material": "120",
    "respawn": "31 seconds",
    "hostile": null,
    "stats": {
@@ -718,8 +718,8 @@
    "attack": "160",
    "defense": "160",
    "material": "4000",
-   "respawn": "523 sec.",
-   "hostile": "Yes (ignores MM)",
+   "respawn": "523 seconds or 8 minutes and 43 seconds",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "160/160",
     "Health Points": "4000",
@@ -789,10 +789,10 @@
    "kinds": [
     "animal"
    ],
-   "attack": "42",
-   "defense": "42",
+   "attack": "45",
+   "defense": "45",
    "material": "60",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "45/45",
@@ -850,10 +850,10 @@
     "monster"
    ],
    "attack": "180",
-   "defense": "",
-   "material": "179",
+   "defense": "180",
+   "material": "9000",
    "respawn": "179",
-   "hostile": "9000",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "180/180",
     "Health Points": "9000",
@@ -923,7 +923,7 @@
    "attack": "20",
    "defense": "20",
    "material": "45",
-   "respawn": "48 sec.",
+   "respawn": "48 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "20/20",
@@ -981,7 +981,7 @@
    "attack": "160",
    "defense": "135",
    "material": "900",
-   "respawn": "060 sec.",
+   "respawn": "60 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "160/135",
@@ -1021,8 +1021,8 @@
     "invasion"
    ],
    "attack": "170",
-   "defense": null,
-   "material": null,
+   "defense": "130",
+   "material": "32000 (~72000 total)",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1050,7 +1050,7 @@
    "attack": "2",
    "defense": "2",
    "material": "10",
-   "respawn": "24 sec.",
+   "respawn": "24 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "2/2",
@@ -1130,7 +1130,7 @@
    "attack": "22",
    "defense": "14",
    "material": "40",
-   "respawn": "52 sec.",
+   "respawn": "52 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "22/14",
@@ -1193,7 +1193,7 @@
    "attack": "8",
    "defense": "8",
    "material": "18",
-   "respawn": "22 sec.",
+   "respawn": "22 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "8/8",
@@ -1271,8 +1271,8 @@
     "invasion"
    ],
    "attack": "145",
-   "defense": null,
-   "material": null,
+   "defense": "145",
+   "material": "22000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1302,8 +1302,8 @@
     "invasion"
    ],
    "attack": "170",
-   "defense": null,
-   "material": null,
+   "defense": "110",
+   "material": "32000 (~72000 total)",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1334,7 +1334,7 @@
    "attack": "32",
    "defense": "32",
    "material": "35",
-   "respawn": "23 sec.",
+   "respawn": "23 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "32/32",
@@ -1371,8 +1371,8 @@
     "invasion"
    ],
    "attack": "120",
-   "defense": null,
-   "material": null,
+   "defense": "80",
+   "material": "1000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1420,8 +1420,8 @@
     "invasion"
    ],
    "attack": "120",
-   "defense": null,
-   "material": null,
+   "defense": "112",
+   "material": "30000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1482,7 +1482,7 @@
    "attack": "140",
    "defense": "140",
    "material": "350",
-   "respawn": "045 sec.",
+   "respawn": "45 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "140/140",
@@ -1547,7 +1547,7 @@
    "attack": "80",
    "defense": "80",
    "material": "200",
-   "respawn": "037 sec.",
+   "respawn": "37 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "80/80",
@@ -1746,7 +1746,7 @@
    "attack": "12",
    "defense": "9",
    "material": "45",
-   "respawn": "46 sec.",
+   "respawn": "46 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "12/9",
@@ -1813,7 +1813,7 @@
    "attack": "100",
    "defense": "100",
    "material": "250",
-   "respawn": "028 sec.",
+   "respawn": "28 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "100/100",
@@ -1881,8 +1881,8 @@
     "invasion"
    ],
    "attack": "100",
-   "defense": null,
-   "material": null,
+   "defense": "80",
+   "material": "20000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -1940,10 +1940,10 @@
    "kinds": [
     "animal"
    ],
-   "attack": "70",
+   "attack": "80",
    "defense": "30",
    "material": "15",
-   "respawn": "41 sec.",
+   "respawn": "41 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "80/30",
@@ -2005,7 +2005,7 @@
    "attack": "32",
    "defense": "35",
    "material": "55",
-   "respawn": "042 sec.",
+   "respawn": "42 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "32/35",
@@ -2160,7 +2160,7 @@
    "attack": "50",
    "defense": "30",
    "material": "70",
-   "respawn": "060 sec.",
+   "respawn": "60 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "50/30",
@@ -2295,7 +2295,7 @@
    "attack": "39",
    "defense": "39",
    "material": "55",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "39/39",
@@ -2363,7 +2363,7 @@
    "attack": "105",
    "defense": "90",
    "material": "300",
-   "respawn": "026 sec.",
+   "respawn": "26 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "105/90",
@@ -2480,7 +2480,7 @@
    "attack": "95",
    "defense": "95",
    "material": "250",
-   "respawn": "026 sec.",
+   "respawn": "26 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "95/95",
@@ -2643,7 +2643,7 @@
    "attack": "110",
    "defense": "100",
    "material": "250",
-   "respawn": "037 sec.",
+   "respawn": "37 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "110/100",
@@ -2767,8 +2767,8 @@
    ],
    "attack": "12",
    "defense": "16",
-   "material": "20",
-   "respawn": "62 sec.",
+   "material": "25",
+   "respawn": "62 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "12/16",
@@ -2826,9 +2826,9 @@
    ],
    "attack": "120",
    "defense": "120",
-   "material": "120",
-   "respawn": "380",
-   "hostile": "060 sec.",
+   "material": "380",
+   "respawn": "60 seconds",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "120/120",
     "Health Points": "380",
@@ -2903,9 +2903,9 @@
    "kinds": [
     "invasion"
    ],
-   "attack": "",
+   "attack": null,
    "defense": null,
-   "material": null,
+   "material": "32000 (~72000 total)",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -2933,7 +2933,7 @@
    "attack": "25",
    "defense": "25",
    "material": "25",
-   "respawn": "22 sec.",
+   "respawn": "22 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "25/25",
@@ -2970,8 +2970,8 @@
    ],
    "attack": "145",
    "defense": "145",
-   "material": "600",
-   "respawn": "100 sec.",
+   "material": "650",
+   "respawn": "100 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "145/145",
@@ -3061,7 +3061,7 @@
    "attack": "18",
    "defense": "9",
    "material": "20",
-   "respawn": "52 sec.",
+   "respawn": "52 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "18/9",
@@ -3138,8 +3138,8 @@
     "animal"
    ],
    "attack": "65",
-   "defense": null,
-   "material": null,
+   "defense": "30",
+   "material": "130",
    "respawn": "22 seconds",
    "hostile": null,
    "stats": {
@@ -3222,8 +3222,8 @@
     "animal"
    ],
    "attack": "90",
-   "defense": null,
-   "material": null,
+   "defense": "20",
+   "material": "40",
    "respawn": "39 seconds",
    "hostile": null,
    "stats": {
@@ -3301,7 +3301,7 @@
    "attack": "36",
    "defense": "40",
    "material": "70",
-   "respawn": "042 sec.",
+   "respawn": "42 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "36/40",
@@ -3464,8 +3464,8 @@
    "attack": "170",
    "defense": "170",
    "material": "7000",
-   "respawn": "500 sec.",
-   "hostile": "Yes (ignores MM)",
+   "respawn": "520 seconds",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "170/170",
     "Health Points": "7000",
@@ -3540,8 +3540,8 @@
     "other"
    ],
    "attack": "12",
-   "defense": null,
-   "material": null,
+   "defense": "12",
+   "material": "24",
    "respawn": "47 seconds",
    "hostile": null,
    "stats": {
@@ -3637,10 +3637,10 @@
     "animal"
    ],
    "attack": "160",
-   "defense": "",
-   "material": "157",
-   "respawn": "157",
-   "hostile": "1200",
+   "defense": "160",
+   "material": "1200",
+   "respawn": "Estimated at 1 hour",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "160/160",
     "Health Points": "1200",
@@ -3673,8 +3673,8 @@
     "invasion"
    ],
    "attack": "2",
-   "defense": null,
-   "material": null,
+   "defense": "3",
+   "material": "15",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -3763,8 +3763,8 @@
     "invasion"
    ],
    "attack": "120",
-   "defense": null,
-   "material": null,
+   "defense": "70",
+   "material": "10000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -3812,8 +3812,8 @@
     "invasion"
    ],
    "attack": "110",
-   "defense": null,
-   "material": null,
+   "defense": "110",
+   "material": "15000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -3861,7 +3861,7 @@
    "attack": "28",
    "defense": "28",
    "material": "30",
-   "respawn": "22 sec.",
+   "respawn": "22 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "28/28",
@@ -3898,8 +3898,8 @@
     "invasion"
    ],
    "attack": "110",
-   "defense": null,
-   "material": null,
+   "defense": "102",
+   "material": "20000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -3958,8 +3958,8 @@
     "animal"
    ],
    "attack": "28",
-   "defense": null,
-   "material": null,
+   "defense": "30",
+   "material": "50",
    "respawn": "53 seconds",
    "hostile": null,
    "stats": {
@@ -4065,7 +4065,7 @@
    "attack": "135",
    "defense": "135",
    "material": "500",
-   "respawn": "039 sec.",
+   "respawn": "39 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "135/135",
@@ -4103,10 +4103,10 @@
     "monster"
    ],
    "attack": "143",
-   "defense": "142",
-   "material": "142",
-   "respawn": "600",
-   "hostile": "040 sec.",
+   "defense": "143",
+   "material": "600",
+   "respawn": "40 seconds",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "143/143",
     "Health Points": "600",
@@ -4136,9 +4136,9 @@
    "kinds": [
     "monster"
    ],
-   "attack": ">100 ",
+   "attack": ">100",
    "defense": null,
-   "material": null,
+   "material": "225",
    "respawn": "41 seconds",
    "hostile": null,
    "stats": {
@@ -4163,7 +4163,7 @@
    "attack": "60",
    "defense": "60",
    "material": "45",
-   "respawn": "41 sec.",
+   "respawn": "41 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "60/60",
@@ -4304,7 +4304,7 @@
    "attack": "80",
    "defense": "80",
    "material": "140",
-   "respawn": "42 sec.",
+   "respawn": "23 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "80/80",
@@ -4344,8 +4344,8 @@
     "monster"
    ],
    "attack": "150",
-   "defense": null,
-   "material": null,
+   "defense": "150",
+   "material": "400",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -4383,8 +4383,8 @@
     "invasion"
    ],
    "attack": "150",
-   "defense": null,
-   "material": null,
+   "defense": "150",
+   "material": "600",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -4426,7 +4426,7 @@
    "attack": "28",
    "defense": "25",
    "material": "45",
-   "respawn": "043 sec.",
+   "respawn": "43 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "28/25",
@@ -4573,7 +4573,7 @@
    "attack": "70",
    "defense": "50",
    "material": "105",
-   "respawn": "031 sec.",
+   "respawn": "31 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "70/50",
@@ -4740,7 +4740,7 @@
    "attack": "60",
    "defense": "40",
    "material": "80",
-   "respawn": "060 sec.",
+   "respawn": "60 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "60/40",
@@ -4855,8 +4855,8 @@
     "invasion"
    ],
    "attack": "160",
-   "defense": null,
-   "material": null,
+   "defense": "150",
+   "material": "32000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -4914,7 +4914,7 @@
    "attack": "34",
    "defense": "34",
    "material": "35",
-   "respawn": "062 sec.",
+   "respawn": "62 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "34/34",
@@ -5020,8 +5020,8 @@
     "instance"
    ],
    "attack": "95",
-   "defense": null,
-   "material": null,
+   "defense": "85",
+   "material": "1200",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5065,7 +5065,7 @@
    "attack": "115",
    "defense": "115",
    "material": "270",
-   "respawn": "039 sec.",
+   "respawn": "39 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "115/115",
@@ -5163,8 +5163,8 @@
     "invasion"
    ],
    "attack": "165",
-   "defense": null,
-   "material": null,
+   "defense": "155",
+   "material": "32000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5212,8 +5212,8 @@
     "invasion"
    ],
    "attack": "145",
-   "defense": null,
-   "material": null,
+   "defense": "80",
+   "material": "1200",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5267,8 +5267,8 @@
     "invasion"
    ],
    "attack": "145",
-   "defense": null,
-   "material": null,
+   "defense": "145",
+   "material": "650",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5313,8 +5313,8 @@
     "animal"
    ],
    "attack": "120",
-   "defense": null,
-   "material": null,
+   "defense": "120",
+   "material": "5000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5349,9 +5349,9 @@
     "animal"
    ],
    "attack": "58",
-   "defense": "30",
+   "defense": "40",
    "material": "160",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "58/40",
@@ -5401,8 +5401,8 @@
     "monster"
    ],
    "attack": "42",
-   "defense": null,
-   "material": null,
+   "defense": "55",
+   "material": "60",
    "respawn": "62 seconds",
    "hostile": null,
    "stats": {
@@ -5493,7 +5493,7 @@
    "attack": "70",
    "defense": "70",
    "material": "140",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "70/70",
@@ -5553,8 +5553,8 @@
     "invasion"
    ],
    "attack": "55",
-   "defense": null,
-   "material": null,
+   "defense": "55",
+   "material": "15000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -5599,7 +5599,7 @@
    "attack": "34",
    "defense": "30",
    "material": "45",
-   "respawn": "62 sec.",
+   "respawn": "62 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "34/30",
@@ -5653,8 +5653,8 @@
    ],
    "attack": "8",
    "defense": "8",
-   "material": "18",
-   "respawn": "22 sec.",
+   "material": "20",
+   "respawn": "22 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "8/8",
@@ -5721,7 +5721,7 @@
    "attack": "2",
    "defense": "3",
    "material": "15",
-   "respawn": "22 sec.",
+   "respawn": "22 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "2/3",
@@ -5816,8 +5816,8 @@
    "attack": "150",
    "defense": "150",
    "material": "3500",
-   "respawn": "500 sec.",
-   "hostile": "Yes (ignores MM)",
+   "respawn": "Random",
+   "hostile": null,
    "stats": {
     "Attack/Defense": "150/150",
     "Health Points": "3500",
@@ -5887,8 +5887,8 @@
     "animal"
    ],
    "attack": "18",
-   "defense": null,
-   "material": null,
+   "defense": "9",
+   "material": "20",
    "respawn": "53 seconds",
    "hostile": null,
    "stats": {
@@ -5977,8 +5977,8 @@
     "invasion"
    ],
    "attack": "90",
-   "defense": null,
-   "material": null,
+   "defense": "65",
+   "material": "12000",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -6020,8 +6020,8 @@
     "invasion"
    ],
    "attack": "2",
-   "defense": null,
-   "material": null,
+   "defense": "3",
+   "material": "15",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -6049,7 +6049,7 @@
    "attack": "33",
    "defense": "28",
    "material": "25",
-   "respawn": "063 sec.",
+   "respawn": "63 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "33/28",
@@ -6223,8 +6223,8 @@
     "animal"
    ],
    "attack": "7",
-   "defense": null,
-   "material": null,
+   "defense": "7",
+   "material": "18",
    "respawn": "22 seconds",
    "hostile": null,
    "stats": {
@@ -6298,7 +6298,7 @@
    "attack": "30",
    "defense": "30",
    "material": "25",
-   "respawn": "062 sec.",
+   "respawn": "62 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "30/30",
@@ -6426,7 +6426,7 @@
    "attack": "18",
    "defense": "18",
    "material": "20",
-   "respawn": "52 sec.",
+   "respawn": "52 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "18/18",
@@ -6491,7 +6491,7 @@
     "monster",
     "invasion"
    ],
-   "attack": "",
+   "attack": null,
    "defense": null,
    "material": null,
    "respawn": null,
@@ -6510,7 +6510,7 @@
    "attack": "65",
    "defense": "65",
    "material": "35",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "65/65",
@@ -6566,8 +6566,8 @@
     "invasion"
    ],
    "attack": "110",
-   "defense": null,
-   "material": null,
+   "defense": "110",
+   "material": "300",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -6590,7 +6590,7 @@
    "attack": "36",
    "defense": "36",
    "material": "35",
-   "respawn": "062 sec.",
+   "respawn": "62 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "36/36",
@@ -6715,9 +6715,9 @@
    "kinds": [
     "animal"
    ],
-   "attack": "",
+   "attack": null,
    "defense": null,
-   "material": null,
+   "material": "150",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -6740,7 +6740,7 @@
    "attack": "55",
    "defense": "55",
    "material": "75",
-   "respawn": "42 sec.",
+   "respawn": "42 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "55/55",
@@ -6800,7 +6800,7 @@
    "attack": "60",
    "defense": "25",
    "material": "85",
-   "respawn": "027 sec.",
+   "respawn": "27 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "60/25",
@@ -6984,9 +6984,9 @@
    "kinds": [
     "animal"
    ],
-   "attack": "",
+   "attack": null,
    "defense": null,
-   "material": null,
+   "material": "200",
    "respawn": null,
    "hostile": null,
    "stats": {
@@ -7087,8 +7087,8 @@
     "animal"
    ],
    "attack": "75",
-   "defense": null,
-   "material": null,
+   "defense": "75",
+   "material": "75",
    "respawn": "41 seconds",
    "hostile": null,
    "stats": {
@@ -7162,7 +7162,7 @@
    "attack": "26",
    "defense": "20",
    "material": "35",
-   "respawn": "62 sec.",
+   "respawn": "62 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "26/20",
@@ -7237,7 +7237,7 @@
    "attack": "10",
    "defense": "30",
    "material": "20",
-   "respawn": "47 sec.",
+   "respawn": "47 seconds",
    "hostile": "No",
    "stats": {
     "Attack/Defense": "10/30",
@@ -7316,7 +7316,7 @@
    "attack": "125",
    "defense": "125",
    "material": "400",
-   "respawn": "060 sec.",
+   "respawn": "60 seconds",
    "hostile": "Yes",
    "stats": {
     "Attack/Defense": "125/125",
