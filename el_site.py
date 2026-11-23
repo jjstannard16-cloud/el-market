@@ -235,6 +235,7 @@ def load(db_path):
     # what turns the reference table into a record of how the game actually
     # behaves.
     day_log, day_stats, summoners = [], {}, []
+    day_totals, day_ranks = None, None
     if "special_day_log" in tables:
         # Mercator records the same announcement more than once - twice at
         # the same minute, or a minute apart - so a run of the same day
@@ -275,14 +276,63 @@ def load(db_path):
                 "summoned": r["times"] - r["natural_times"],
                 "last": (r["last"] or "")[:10],
             }
+        # Everyone who has ever put a day stone down, with the day they
+        # reach for most often.
+        favourite = {}
         for r in con.execute("""
-                SELECT donated_by name, COUNT(*) c, MAX(at) last
+                SELECT LOWER(donated_by) who, name, COUNT(*) c
+                FROM special_day_log
+                WHERE LOWER(IFNULL(donated_by,'')) NOT IN ('natural','')
+                GROUP BY LOWER(donated_by), LOWER(name)
+                ORDER BY c DESC"""):
+            favourite.setdefault(r["who"], {"day": r["name"], "n": r["c"]})
+        for r in con.execute("""
+                SELECT donated_by name, LOWER(donated_by) who, COUNT(*) c,
+                       MIN(at) first, MAX(at) last
                 FROM special_day_log
                 WHERE LOWER(IFNULL(donated_by,'')) NOT IN ('natural','')
                 GROUP BY LOWER(donated_by)
-                ORDER BY c DESC, LOWER(donated_by) LIMIT 25"""):
+                ORDER BY c DESC, LOWER(donated_by)"""):
+            fav = favourite.get(r["who"], {})
             summoners.append({"name": r["name"], "n": r["c"],
+                              "fav": fav.get("day"), "favN": fav.get("n"),
+                              "first": (r["first"] or "")[:10],
                               "last": (r["last"] or "")[:10]})
+
+        # Which days turn up most, which get paid for most, and how the
+        # whole thing has gone year by year.
+        day_ranks = {"common": [], "paid": [], "years": []}
+        for r in con.execute("""
+                SELECT name, COUNT(*) c,
+                       SUM(CASE WHEN LOWER(IFNULL(donated_by,'')) = 'natural'
+                                THEN 0 ELSE 1 END) paid
+                FROM special_day_log GROUP BY LOWER(name)"""):
+            row = {"name": r["name"], "n": r["c"], "paid": r["paid"]}
+            day_ranks["common"].append(row)
+        day_ranks["paid"] = sorted(day_ranks["common"],
+                                   key=lambda x: -x["paid"])[:8]
+        day_ranks["common"] = sorted(day_ranks["common"],
+                                     key=lambda x: -x["n"])[:8]
+        for r in con.execute("""
+                SELECT substr(at, 1, 4) y, COUNT(*) c,
+                       SUM(CASE WHEN LOWER(IFNULL(donated_by,'')) = 'natural'
+                                THEN 0 ELSE 1 END) paid
+                FROM special_day_log WHERE at IS NOT NULL
+                GROUP BY y ORDER BY y"""):
+            if r["y"] and r["y"].isdigit():
+                day_ranks["years"].append({"y": r["y"], "n": r["c"],
+                                           "paid": r["paid"]})
+
+        # Headline numbers for the panel above the table.
+        tot, nat = con.execute("""
+            SELECT COUNT(*), SUM(CASE WHEN LOWER(IFNULL(donated_by,''))
+                 = 'natural' THEN 1 ELSE 0 END) FROM special_day_log""").fetchone()
+        since = con.execute(
+            "SELECT MIN(at) FROM special_day_log").fetchone()[0]
+        day_totals = {"all": tot, "paid": tot - (nat or 0),
+                      "players": len(summoners),
+                      "since": (since or "")[:4],
+                      "centurions": sum(1 for x in summoners if x["n"] >= 100)}
         for name, v in effects.items():
             st = day_stats.get(name.lower())
             if st:
@@ -398,6 +448,8 @@ def load(db_path):
         "days": recent_days,
         "dayLog": day_log,
         "summoners": summoners,
+        "dayTotals": day_totals,
+        "dayRanks": day_ranks,
         "dayRef": effects,
         "harvestables": harvestables,
         "meta": {
@@ -576,8 +628,43 @@ HTML = r"""<!doctype html>
   .grouphint { font-size: 13.5px; color: var(--muted); margin: -6px 0 14px; }
   .seen { font-family: var(--sans); font-size: 11.5px; color: var(--muted);
           margin-top: 3px; }
-  .rank { display: inline-block; min-width: 20px; color: var(--muted);
+  .rank { display: inline-block; min-width: 24px; color: var(--muted);
           font-size: 12px; font-variant-numeric: tabular-nums; }
+  .rank.medal { color: var(--brass); font-weight: 600; }
+  .more { font-family: var(--sans); font-size: 13px; color: var(--muted);
+          background: none; border: 1px solid var(--line-2);
+          border-radius: 3px; padding: 7px 14px; margin-top: 14px;
+          cursor: pointer; }
+  .more:hover { color: var(--ink); border-color: var(--brass); }
+  .panelhint { font-family: var(--sans); font-size: 11.5px;
+               color: var(--muted); margin: -8px 0 10px; }
+  table.ranks td { padding: 5px 8px 5px 0; font-size: 13.5px; }
+  table.ranks td:first-child { width: 45%; }
+  .barcell { width: 40%; }
+  .bar { display: block; height: 7px; background: var(--line);
+         border-radius: 1px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--brass);
+           opacity: .55; }
+  .years { margin-top: 26px; }
+  @media (max-width: 620px) {
+    .yearbars { height: 84px; gap: 3px; }
+    .yb b { font-size: 9.5px; }
+    .yb span { font-size: 9px; }
+    table.ranks td:first-child { width: auto; }
+    .barcell { display: none; }
+  }
+  .yearbars { display: flex; align-items: flex-end; gap: 6px; height: 110px;
+              margin-top: 10px; }
+  .yb { flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-end; height: 100%; }
+  .ybstack { width: 100%; max-width: 46px; background: var(--brass);
+             opacity: .62; border-radius: 2px 2px 0 0; min-height: 2px; }
+  .yb.partial .ybstack { opacity: .3; }
+  .yb b { font-family: var(--sans); font-size: 11px; font-weight: 500;
+          color: var(--muted); margin-bottom: 4px;
+          font-variant-numeric: tabular-nums; }
+  .yb span { font-family: var(--sans); font-size: 10.5px;
+             color: var(--muted); margin-top: 6px; }
   .stone { display: inline-block; font-size: 12.5px; color: var(--brass); }
   .stone.sm { color: var(--muted); }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
@@ -1408,6 +1495,9 @@ const caveat = `<div class="caveat">${
   DATA.meta.privateCount} have privacy mode on, so they are not shown
   here \u2014 any of them could be top of this table.</div>`;
 
+// The leaderboard runs to several hundred names, so it opens short.
+let summonersShown = 25;
+
 function renderDays(view, count, q) {
   const ref = DATA.dayRef || {};
   const log = DATA.days || [];
@@ -1446,6 +1536,54 @@ function renderDays(view, count, q) {
       </tr>`).join("")}</tbody></table>`;
   }).join("");
 
+  // Fifteen years of records, read three ways: which days come round
+  // most, which ones players reach into their pockets for, and whether
+  // the game has been getting busier or quieter.
+  const R = DATA.dayRanks;
+  const bar = (v, max) => `<span class="bar"><i style="width:${
+    Math.max(2, Math.round(100 * v / (max || 1)))}%"></i></span>`;
+  const rankPanel = (title, hint, rows, key) => {
+    const max = Math.max(...rows.map(r => r[key]));
+    return `<div><h3>${title}</h3>
+      <div class="panelhint">${hint}</div>
+      <table class="ranks">${rows.map(r => `<tr>
+        <td>${esc(r.name)}</td>
+        <td class="barcell">${bar(r[key], max)}</td>
+        <td class="num">${fmt(r[key])}</td>
+      </tr>`).join("")}</table></div>`;
+  };
+  // The number of days a year barely moves - the game sends roughly the
+  // same number every year. What moves is how many players paid for, so
+  // that is what the chart shows.
+  const years = (R && R.years || []).slice(-10);
+  const yearMax = Math.max(...years.map(y => y.paid), 1);
+  const statsPanel = (!R || q) ? "" : `
+    <h2 class="group">Fifteen years of days</h2>
+    <div class="cols">
+      ${rankPanel("Comes round most", "Times recorded since 2011",
+                  R.common, "n")}
+      ${rankPanel("Players pay for most", "Times someone put the stone down",
+                  R.paid, "paid")}
+    </div>
+    ${years.length > 2 ? `<div class="years">
+      <h3>Days players paid for, by year</h3>
+      <div class="panelhint">The game sends roughly ${
+        fmt(Math.round(years.reduce((a, y) => a + y.n, 0) / years.length))
+        } days a year whatever happens, so this is the part that moves.</div>
+      <div class="yearbars">${years.map(y => {
+        const partial = Number(y.y) === new Date().getFullYear();
+        return `<div class="yb${partial ? " partial" : ""}" title="${
+          esc(y.y)}: ${fmt(y.paid)} of ${fmt(y.n)} paid for${
+          partial ? ", year not finished" : ""}">
+          <b>${fmt(y.paid)}</b>
+          <div class="ybstack" style="height:${
+            Math.round(100 * y.paid / yearMax)}%"></div>
+          <span>${esc(y.y)}${partial ? "*" : ""}</span>
+        </div>`; }).join("")}</div>
+      ${years.some(y => Number(y.y) === new Date().getFullYear())
+        ? `<div class="panelhint" style="margin-top:8px">* this year is
+           not over yet.</div>` : ""}</div>` : ""}`;
+
   const mlog = (DATA.dayLog || []).filter(d => match(d.name, ""));
   const logTable = mlog.length ? `
     <h2 class="group">What has actually been running</h2>
@@ -1462,26 +1600,54 @@ function renderDays(view, count, q) {
           : `came round on its own`}</td>
       </tr>`).join("")}</tbody></table>` : "";
 
-  const top = (DATA.summoners || []).slice(0, 12);
-  const summonerTable = top.length ? `
-    <h2 class="group">Who pays for everyone else</h2>
-    <div class="grouphint">Players who have put a day stone down, by how
-      many times they have done it.</div>
-    <table class="daylog"><thead><tr><th>Player</th>
-      <th class="stonecell">Days started</th><th>Last one</th></tr></thead>
-    <tbody>${top.map((p, i) => `<tr>
-      <td><span class="rank">${i + 1}</span>${playerLink(p.name)}</td>
+  // Everyone who has ever paid for a day, ranked. Positions are worked
+  // out from the whole list so a search does not renumber it.
+  const all = DATA.summoners || [];
+  const place = new Map(all.map((p, i) => [p.name, i + 1]));
+  const hits = q ? all.filter(p =>
+    p.name.toLowerCase().includes(q)
+    || (p.fav || "").toLowerCase().includes(q)) : all;
+  const shown = hits.slice(0, summonersShown);
+  const t = DATA.dayTotals;
+
+  const summonerTable = !all.length ? "" : `
+    <h2 class="group">Who starts the days</h2>
+    ${t ? `<div class="grouphint">Of ${fmt(t.all)} days since ${esc(t.since)},
+      <b>${fmt(t.paid)}</b> were started by a player putting a stone down
+      rather than the game coming round to them. ${fmt(t.players)} people
+      have done it${t.centurions === 1
+        ? `, and one has passed a hundred` : ""}.</div>` : ""}
+    <table class="daylog sortable"><thead><tr>
+      <th>Player</th>
+      <th class="stonecell" data-sort="n">Days started</th>
+      <th>Reaches for</th>
+      <th>First</th><th>Last</th></tr></thead>
+    <tbody>${shown.map(p => {
+      const pos = place.get(p.name);
+      return `<tr>
+      <td><span class="rank${pos <= 3 ? " medal" : ""}">${pos}</span>${
+        playerLink(p.name)}</td>
       <td class="num brass">${fmt(p.n)}</td>
+      <td class="sm">${p.fav ? `${esc(p.fav)} <span class="muted">\u00d7${
+        fmt(p.favN)}</span>` : ""}</td>
+      <td class="sm">${esc(p.first || "")}</td>
       <td class="sm">${esc(p.last || "")}</td>
-    </tr>`).join("")}</tbody></table>` : "";
+    </tr>`; }).join("")}</tbody></table>
+    ${hits.length > shown.length ? `<button class="more" id="moresummoners">
+      Show the other ${fmt(hits.length - shown.length)}</button>` : ""}
+    ${hits.length ? "" : `<div class="caveat">Nobody by that name has
+      started a day.</div>`}`;
 
   const buyable = Object.values(ref).filter(v => v.stonePrice).length;
   count.textContent = `${Object.keys(ref).length} special days, `
     + `${buyable} you can summon yourself`;
-  view.innerHTML = todayBanner() + logTable + reference + summonerTable
-    + (reference || logTable ? ""
+  view.innerHTML = todayBanner() + statsPanel + logTable + reference
+    + summonerTable
+    + (reference || logTable || summonerTable ? ""
        : `<div class="empty">Nothing matches that.</div>`);
   wireBotLinks(); wirePlayerLinks();
+  const more = document.getElementById("moresummoners");
+  if (more) more.onclick = () => { summonersShown += 200; render(); };
 }
 
 function renderPlayers(view, count, q) {
@@ -1648,10 +1814,49 @@ function renderMovers(view, count, q) {
   wirePlayerLinks();
 }
 
+// Most of the people on the day leaderboard are not among the players we
+// follow for stats, so a name there still has to lead somewhere useful.
+const summonerFor = name => (DATA.summoners || []).find(x =>
+  x.name.toLowerCase() === String(name || "").toLowerCase());
+
+function daysPanel(name) {
+  const sm = summonerFor(name);
+  const place = (DATA.summoners || []).findIndex(x => x === sm) + 1;
+  if (!sm) return "";
+  return `<div><h3>Special days</h3><table>
+    <tr><td>Days started</td><td class="num brass">${fmt(sm.n)}</td>
+      <td class="num sm">#${place}</td></tr>
+    ${sm.fav ? `<tr><td>Reaches for</td><td class="sm" colspan="2">${
+      esc(sm.fav)} <span class="muted">\u00d7${fmt(sm.favN)}</span></td></tr>`
+      : ""}
+    <tr><td>First</td><td class="sm" colspan="2">${esc(sm.first)}</td></tr>
+    <tr><td>Last</td><td class="sm" colspan="2">${esc(sm.last)}</td></tr>
+    </table></div>`;
+}
+
 function renderOnePlayer(view, count) {
-  const p = PLAYERS.find(x => x.name === focusPlayer);
+  // The game's own capitalisation of a name is not consistent between
+  // the stats list and the day log, so "stann" and "StAnN" are one person.
+  const want = String(focusPlayer || "").toLowerCase();
+  const p = PLAYERS.find(x => x.name === focusPlayer)
+         || PLAYERS.find(x => x.name.toLowerCase() === want);
   count.textContent = "";
-  if (!p) { view.innerHTML = `<div class="empty">Not followed.</div>`; return; }
+  if (!p) {
+    const sm = summonerFor(focusPlayer);
+    view.innerHTML = sm ? `
+      <div class="bothead">
+        <button class="back">All players</button>
+        <h2>${esc(sm.name)}</h2>
+        <span class="where">not on the stats list</span>
+      </div>
+      <div class="caveat">We do not follow this player's skills \u2014 they
+        are here because of the special days they have started.</div>
+      <div class="cols">${daysPanel(sm.name)}<div></div></div>`
+      : `<div class="empty">Not followed.</div>`;
+    const back = view.querySelector(".back");
+    if (back) back.onclick = () => go("players");
+    return;
+  }
 
   const group = kind => Object.entries(p.stats)
     .filter(([, v]) => v.k === kind)
@@ -1685,6 +1890,7 @@ function renderOnePlayer(view, count) {
       <div>
         ${table(group("attribute"), "Attributes", false)
           .replace("<div>", "").replace(/<\/div>$/, "")}
+        ${daysPanel(p.name).replace("<div>", "").replace(/<\/div>$/, "")}
         ${p.pk ? `<h3 style="margin-top:18px">PK</h3><table>
           <tr><td>Score</td><td class="num brass">${p.pk.score.toFixed(2)}</td></tr>
           <tr><td>Fights</td><td class="num">${p.pk.f}</td></tr>
