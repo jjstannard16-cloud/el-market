@@ -799,6 +799,10 @@ HTML = r"""<!doctype html>
              margin: 0 0 7px; color: var(--ink); }
   .cols h3 span { color: var(--muted); font-size: 13px; font-family: var(--ui); }
   .cols table { font-size: 13.5px; }
+  .nowrap { white-space: nowrap; }
+  .seeall { display: inline-block; margin-top: 10px; font-family: var(--sans);
+            font-size: 12.5px; color: var(--muted); text-decoration: none; }
+  .seeall:hover { color: var(--brass); }
   .cols td { padding: 4px 12px 4px 0; border-bottom: 1px solid var(--line); }
 
   /* bot page ------------------------------------------------------- */
@@ -1228,8 +1232,23 @@ function renderHome(view, count) {
       : `<div class="caveat">No level-ups yet. They appear once players have
          been read on two different days.</div>`}</div>`;
 
+  // The day-stone board belongs on the front page: it is the one ranking
+  // here that measures what someone has given the server rather than what
+  // they have taken out of it.
+  const stones = (DATA.summoners || []).slice(0, 10);
+  const stonesPanel = !stones.length ? "" : `<div>
+    <h3>Most day stones used <span class="sm">all time</span></h3>
+    <table>${stones.map((pl, i) => `<tr>
+      <td class="nowrap"><span class="rank${i < 3 ? " medal" : ""}">${
+        i + 1}</span>${playerLink(pl.name)}</td>
+      <td class="num brass">${fmt(pl.n)}</td>
+    </tr>`).join("")}</table>
+    <a class="seeall" href="#days">All ${
+      fmt((DATA.summoners || []).length)} of them \u2192</a></div>`;
+
   view.innerHTML = todayBanner() + top
-    + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}</div>`
+    + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}${
+        stonesPanel}</div>`
     + `<h2 class="group">Everything here</h2>
        <div class="sections">${SECTIONS.map(sec => `
          <a class="sec" href="#${sec.id}">
