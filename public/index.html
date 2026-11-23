@@ -491,7 +491,7 @@ const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
 let craftMode = "value";
 let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 let focusQuest = null, qsection = "";                    // "" = every section
-let findersShown = 25;
+let findersShown = 25, eboard = "found";
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -1178,12 +1178,41 @@ let summonersShown = 25;
 function renderEvents(view, count, q) {
   const t = DATA.eventTotals;
   const all = DATA.finders || [];
-  const place = new Map(all.map((f, i) => [f.name, i + 1]));
-  const hits = q ? all.filter(f => f.name.toLowerCase().includes(q)) : all;
+
+  // Five ways of being first at something. Each board is the same shape
+  // - a name, a number, and when they started and last managed it - so
+  // switching between them does not rearrange the page.
+  const BOARDS = {
+    found:  { label: "Most found", unit: "Found", who: "finders",
+              hint: "Pears and jokers together.",
+              rows: all, value: f => f.n,
+              first: f => f.first, last: f => f.last },
+    pears:  { label: "Most pears", unit: "Pears", who: "have found one",
+              hint: "Pears alone.",
+              rows: all.filter(f => f.pears), value: f => f.pears,
+              first: f => f.pearFirst, last: f => f.pearLast },
+    jokers: { label: "Most jokers", unit: "Jokers", who: "have found one",
+              hint: "Jokers alone. Some players have found hundreds of "
+                    + "these and never a single pear.",
+              rows: all.filter(f => f.jokers), value: f => f.jokers,
+              first: f => f.jokerFirst, last: f => f.jokerLast },
+    gold:   { label: "Most generous", unit: "Gold given", who: "donors",
+              hint: "Gold given to keep the project running.",
+              rows: DATA.donors || [], value: d => d.gold,
+              first: d => d.first, last: d => d.last },
+    said:   { label: "Most broadcasts", unit: "Broadcasts", who: "speakers",
+              hint: "Whose name the game's own announcements come from.",
+              rows: DATA.speakers || [], value: m => m.n,
+              first: m => m.first, last: m => m.last },
+  };
+  const board = BOARDS[eboard] || BOARDS.found;
+  const ranked = [...board.rows].sort((a, b) => board.value(b) - board.value(a));
+  const place = new Map(ranked.map((r, i) => [r.name, i + 1]));
+  const hits = q ? ranked.filter(r => r.name.toLowerCase().includes(q)) : ranked;
   const shown = hits.slice(0, findersShown);
 
   count.textContent = t
-    ? `${fmt(t.all)} broadcasts, ${fmt(t.finders)} finders` : "";
+    ? `${fmt(t.all)} broadcasts, ${fmt(ranked.length)} ${board.who}` : "";
 
   const k = (t && t.kinds) || {};
   const headline = !t ? "" : `
@@ -1195,26 +1224,37 @@ function renderEvents(view, count, q) {
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 
-  const finders = !all.length ? "" : `
-    <h2 class="group">Who finds things</h2>
+  const picker = `<div class="pills">${Object.entries(BOARDS).map(
+    ([key, b]) => `<button class="pill${eboard === key ? " on" : ""}"
+      data-board="${key}">${esc(b.label)}</button>`).join("")}</div>`;
+
+  const finders = !ranked.length ? "" : `
+    ${picker}
     ${headline}
+    <h2 class="group">${esc(board.label)}</h2>
+    <div class="grouphint">${esc(board.hint)}</div>
     <table class="daylog sortable finders"><thead><tr><th>Player</th>
-      <th class="stonecell">Found</th><th class="stonecell">Pears</th>
-      <th class="stonecell">Jokers</th><th>First</th><th>Last</th></tr></thead>
-    <tbody>${shown.map(f => {
-      const pos = place.get(f.name);
+      <th class="stonecell">${esc(board.unit)}</th>
+      ${eboard === "found" ? `<th class="stonecell">Pears</th>
+        <th class="stonecell">Jokers</th>` : ""}
+      ${eboard === "gold" ? `<th class="stonecell">Gifts</th>` : ""}
+      <th>First</th><th>Last</th></tr></thead>
+    <tbody>${shown.map(r => {
+      const pos = place.get(r.name);
       return `<tr>
         <td class="nowrap"><span class="rank${pos <= 3 ? " medal" : ""}">${
-          pos}</span>${playerLink(f.name)}</td>
-        <td class="num brass">${fmt(f.n)}</td>
-        <td class="num sm">${f.pears ? fmt(f.pears) : ""}</td>
-        <td class="num sm">${f.jokers ? fmt(f.jokers) : ""}</td>
-        <td class="sm">${esc(f.first)}</td>
-        <td class="sm">${esc(f.last)}</td></tr>`; }).join("")}</tbody></table>
+          pos}</span>${playerLink(r.name)}</td>
+        <td class="num brass">${fmt(board.value(r))}</td>
+        ${eboard === "found" ? `<td class="num sm">${
+            r.pears ? fmt(r.pears) : ""}</td>
+          <td class="num sm">${r.jokers ? fmt(r.jokers) : ""}</td>` : ""}
+        ${eboard === "gold" ? `<td class="num sm">${fmt(r.n)}</td>` : ""}
+        <td class="sm">${esc(board.first(r))}</td>
+        <td class="sm">${esc(board.last(r))}</td></tr>`; }).join("")}</tbody></table>
     ${hits.length > shown.length ? `<button class="more" id="morefinders">
       Show the other ${fmt(hits.length - shown.length)}</button>` : ""}
-    ${hits.length ? "" : `<div class="caveat">Nobody by that name has
-      found a pear or a joker.</div>`}`;
+    ${hits.length ? "" : `<div class="caveat">Nobody by that name is on
+      this board.</div>`}`;
 
   const inv = (DATA.invasions || []).slice(0, 12);
   const invMax = Math.max(...inv.map(i => i.n), 1);
@@ -1243,6 +1283,9 @@ function renderEvents(view, count, q) {
   wirePlayerLinks();
   const more = document.getElementById("morefinders");
   if (more) more.onclick = () => { findersShown += 200; render(); };
+  view.querySelectorAll("[data-board]").forEach(b => b.onclick = () => {
+    eboard = b.dataset.board; findersShown = 25; render();
+  });
 }
 
 /* quests --------------------------------------------------------------
