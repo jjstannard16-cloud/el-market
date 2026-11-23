@@ -852,7 +852,7 @@
    "attack": "180",
    "defense": "180",
    "material": "9000",
-   "respawn": "179",
+   "respawn": null,
    "hostile": null,
    "stats": {
     "Attack/Defense": "180/180",
