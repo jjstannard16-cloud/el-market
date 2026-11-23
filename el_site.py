@@ -276,6 +276,33 @@ def load(db_path):
                         "donated": gold or 0}
         print(f"  {total} broadcasts, {read} read, {len(finders)} finders")
 
+    # Who is in the game. Read hourly, so the figure is a recent reading
+    # rather than a live one, and the page says so.
+    online = None
+    if "online_count" in tables:
+        last = con.execute("""SELECT at, n, bots FROM online_count
+                              ORDER BY at DESC LIMIT 1""").fetchone()
+        if last:
+            by_hour = [{"h": r["hour"], "avg": round(r["avg"]),
+                        "peak": r["peak"], "n": r["seen"]}
+                       for r in con.execute("""
+                SELECT hour, AVG(n) avg, MAX(n) peak, COUNT(*) seen
+                FROM online_count GROUP BY hour ORDER BY hour""")]
+            regulars = [{"name": r["name"], "n": r["readings"],
+                         "last": (r["last_seen"] or "")[:16].replace("T", " ")}
+                        for r in con.execute("""
+                SELECT name, readings, last_seen FROM online_player
+                ORDER BY readings DESC, LOWER(name) LIMIT 400""")]
+            readings, lo, hi = con.execute(
+                "SELECT COUNT(*), MIN(n), MAX(n) FROM online_count").fetchone()
+            online = {"at": last["at"], "n": last["n"], "bots": last["bots"],
+                      "readings": readings, "lo": lo, "hi": hi,
+                      "seen": con.execute(
+                          "SELECT COUNT(*) FROM online_player").fetchone()[0],
+                      "byHour": by_hour, "regulars": regulars}
+            print(f"  {last['n']} players and {last['bots']} bots online at "
+                  f"the last reading, {readings} readings so far")
+
     # Guild rosters. Who is in which guild is not published anywhere, so
     # this comes from guild.txt, which someone keeps by hand.
     guilds = []
@@ -581,6 +608,7 @@ def load(db_path):
         "invasions": invasions,
         "eventLog": event_log,
         "eventTotals": event_totals,
+        "online": online,
         "guilds": guilds,
         "quests": quests,
         "questSections": quest_sections,
@@ -1017,6 +1045,7 @@ HTML = r"""<!doctype html>
     <button data-pview="skills" class="on">Skills</button>
     <button data-pview="pk">PK</button>
     <button data-pview="movers">Level-ups</button>
+    <button data-pview="online">Online</button>
   </span>
   <select id="skillpick" class="pick"></select>
   <span class="modes" id="modewrap">
@@ -1157,6 +1186,7 @@ const icon = it => it.img
 document.getElementById("ledger").innerHTML = [
   [m.botCount, "bots"], [m.itemCount, "items"], [m.listingCount, "offers"],
   ...(m.playerCount ? [[m.playerCount, "players"]] : []),
+  ...(DATA.online ? [[DATA.online.n, "online"]] : []),
   [m.lastScrape ? new Date(m.lastScrape).toLocaleTimeString("en-GB",
      { hour: "2-digit", minute: "2-digit" }) : "–", "last read"],
 ].map(([n, k]) => `<div><div class="n">${
@@ -2324,6 +2354,7 @@ function renderPlayers(view, count, q) {
   if (focusPlayer) return renderOnePlayer(view, count);
   if (pview === "pk") return renderPk(view, count, q);
   if (pview === "movers") return renderMovers(view, count, q);
+  if (pview === "online") return renderOnline(view, count, q);
   if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
@@ -2495,6 +2526,75 @@ function daysPanel(name) {
     <tr><td>First</td><td class="sm" colspan="2">${esc(sm.first)}</td></tr>
     <tr><td>Last</td><td class="sm" colspan="2">${esc(sm.last)}</td></tr>
     </table></div>`;
+}
+
+/* who is in the game ---------------------------------------------------
+   Read once an hour from the official list. That makes the figure a
+   recent reading rather than a live one, which the page says plainly
+   rather than implying otherwise.                                     */
+
+function renderOnline(view, count, q) {
+  const o = DATA.online;
+  if (!o) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">Nobody has been read yet.</div>`;
+    return;
+  }
+  const when = new Date(o.at);
+  const mins = Math.max(0, Math.round((Date.now() - when) / 60000));
+  const regs = (o.regulars || []).filter(r =>
+    !q || r.name.toLowerCase().includes(q));
+  count.textContent = `${fmt(o.n)} online, read ${
+    mins < 90 ? `${mins} minutes ago` : when.toLocaleString("en-GB")}`;
+
+  const hours = (o.byHour || []).filter(h => h.n);
+  const peak = Math.max(...hours.map(h => h.peak), 1);
+  const chart = hours.length < 6 ? `
+    <div class="caveat">The busiest hours need a day's readings before
+      they mean anything. ${fmt(o.readings)} reading${
+      o.readings === 1 ? "" : "s"} so far.</div>`
+    : `<h2 class="group">When the game is busy</h2>
+      <div class="grouphint">Average players online by hour, UTC, across
+        ${fmt(o.readings)} readings. The tallest bar is the busiest hour.
+        </div>
+      <div class="yearbars">${hours.map(h => `
+        <div class="yb" title="${h.h}:00 UTC — ${fmt(h.avg)} on average, ${
+          fmt(h.peak)} at best, from ${fmt(h.n)} readings">
+          <b>${fmt(h.avg)}</b>
+          <div class="ybstack" style="height:${
+            Math.round(100 * h.avg / peak)}%"></div>
+          <span>${String(h.h).padStart(2, "0")}</span>
+        </div>`).join("")}</div>`;
+
+  view.innerHTML = `
+    <div class="grouphint">At the last reading there were
+      <b>${fmt(o.n)}</b> players and ${fmt(o.bots)} bots in the game.
+      The list is read once an hour, so this is a recent reading and not
+      a live one${o.readings > 1
+        ? `; we have seen between ${fmt(o.lo)} and ${fmt(o.hi)} players on`
+        : ""}. ${fmt(o.seen)} different players have turned up so far.</div>
+    ${chart}
+    ${o.readings < 12 ? `
+      <h2 class="group">On most often</h2>
+      <div class="caveat">This needs a day of readings before it ranks
+        anybody: with ${fmt(o.readings)} so far, everyone who has been
+        seen is tied. It fills in on its own.</div>` : `
+      <h2 class="group">On most often</h2>
+      <div class="grouphint">How many of our ${fmt(o.readings)} readings
+        each player was in the game for. It measures turning up rather
+        than grinding, but it is the closest thing anyone publishes.</div>
+      ${regs.length ? `<div class="scroller"><table>
+      <thead><tr><th class="num">#</th><th>Player</th>
+        <th class="num">Readings</th><th class="hide-sm">Last seen</th>
+      </tr></thead><tbody>${regs.slice(0, 200).map((r, i) => `<tr>
+        <td class="num sm">${i + 1}</td>
+        <td>${playerLink(r.name)}</td>
+        <td class="num brass">${fmt(r.n)}</td>
+        <td class="sm hide-sm">${esc(r.last)}</td>
+        </tr>`).join("")}</tbody></table></div>`
+        : `<div class="empty">Nobody by that name has been seen online.
+           </div>`}`}`;
+  wirePlayerLinks();
 }
 
 function renderOnePlayer(view, count) {
