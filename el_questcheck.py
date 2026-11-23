@@ -12,6 +12,24 @@ in one and not the other, so gaps are found rather than assumed away.
 
 Nothing is written to the site: this only reports. Deciding what to do
 about a gap is a judgement call, not something to automate.
+
+What the run of 23 November 2026 found, so the next run has something to
+compare against:
+
+  * The wiki has no quest write-ups at all. Of its 225 categories only
+    "Quest NPCs" and "Gods" touch quests, and All Oiled Up, Treasure of
+    Nordcarn and Beginner Tutorial are all missing pages. So the guide
+    cannot be checked quest against quest, only sideways through the
+    NPCs.
+  * www.el-wiki.net serves a certificate for another hostname, so the
+    holy-eternalland mirror is the only one reachable.
+  * Of 68 quest NPCs and gods listed there, 61 start a quest in the
+    guide, 32 more turn up inside one, and the 7 left over are six lore
+    gods out of the Almanac - Centau, Dvar, Glydoc, Iringold, Varyssa,
+    Vias - who cannot be worshipped and give no quest, plus Jerun, who
+    only talks to you about magic. None of them is a missing quest.
+
+So the guide's 73 quests are complete as far as the wiki can show.
 """
 
 import argparse
