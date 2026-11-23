@@ -269,7 +269,12 @@ def main():
         defense = (ad[1].strip() if len(ad) > 1 and ad[1].strip()
                    else base.get("defense"))
         health = stats.get("Health Points") or base.get("material")
-        respawn = stats.get("Respawn Time") or base.get("respawn")
+        # A respawn is a time, so the master table's value is taken only
+        # when it says so. It had the Blue Dragon respawning in "179".
+        respawn = stats.get("Respawn Time")
+        if not respawn and re.search(r"sec|min|hour",
+                                     str(base.get("respawn") or ""), re.I):
+            respawn = base.get("respawn")
         hostile = base.get("hostile")
         if hostile not in ("Yes", "No"):
             hostile = None
