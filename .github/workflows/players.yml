@@ -41,6 +41,11 @@ jobs:
         if: github.event.schedule == '41 5 * * 0' || github.event_name == 'workflow_dispatch'
         run: python el_players.py scrape --include-private
 
+      # Any item we have never seen before needs its icon copying over,
+      # so the page never asks bots.el-services.net for one.
+      - name: Fetch any new item artwork
+        run: python el_images.py
+
       - name: Rebuild the page
         run: python el_site.py --out public/index.html
 
@@ -49,7 +54,7 @@ jobs:
           git config user.name  "el-market"
           git config user.email "actions@users.noreply.github.com"
           for attempt in 1 2 3 4 5; do
-            git add el_bots.db public/index.html public/data.js
+            git add el_bots.db public/index.html public/data.js public/img
             if git diff --staged --quiet; then
               echo "Nothing changed."
               exit 0

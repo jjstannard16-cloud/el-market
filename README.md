@@ -18,6 +18,7 @@ last week's. This does, once it has been running a while.
 | `el_site.py` | Turns that database into `public/index.html` |
 | `el_recipes.py` | Imports crafting recipes and harvestables from the EL wiki |
 | `el_players.py` | Reads player levels and PK figures from the official site |
+| `el_images.py` | Keeps a local copy of the item artwork |
 | `guild.txt` | Extra players to follow, beyond the top 200 |
 | `overrides.json` | Corrections to wiki data, from people who actually play |
 | `el_bots.db` | SQLite database — current listings plus price history |
@@ -103,7 +104,8 @@ Quantities of `-1` mean the bot printed "NO LIMIT".
 The scraper waits a second between bot pages and identifies itself in its
 user agent. Please keep both if you fork this.
 
-Item artwork is currently loaded from bots.el-services.net. If this becomes
-widely used, those images should be mirrored rather than hotlinked.
+Item artwork is copied into `public/img/` by `el_images.py` and served from
+here, so a visitor to this site costs bots.el-services.net nothing. Each
+image is fetched once and never again.
 
 Not affiliated with Eternal Lands or with EL Services.

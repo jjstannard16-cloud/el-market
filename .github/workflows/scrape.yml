@@ -33,6 +33,11 @@ jobs:
       - name: Read every bot
         run: python el_bots.py scrape
 
+      # Any item we have never seen before needs its icon copying over,
+      # so the page never asks bots.el-services.net for one.
+      - name: Fetch any new item artwork
+        run: python el_images.py
+
       - name: Rebuild the page
         run: python el_site.py --out public/index.html
 
@@ -46,7 +51,7 @@ jobs:
           # take theirs, and redo the work on top. Both jobs are
           # idempotent, so redoing is always safe and always correct.
           for attempt in 1 2 3 4 5; do
-            git add el_bots.db public/index.html public/data.js
+            git add el_bots.db public/index.html public/data.js public/img
             if git diff --staged --quiet; then
               echo "Nothing changed."
               exit 0

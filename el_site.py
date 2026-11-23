@@ -22,7 +22,7 @@ from datetime import datetime, timedelta, timezone
 
 DB_PATH = "el_bots.db"
 OUT_PATH = "index.html"
-IMG_BASE = "https://bots.el-services.net/images/"
+IMG_BASE = "img/"   # our own copies; see el_images.py
 
 # Which landmass each map sits on. Bots report locations like
 # "White Stone - Tirnwood Vale", so we match on the part before the dash.
@@ -694,7 +694,8 @@ document.getElementById("foot").innerHTML = `
       Recipes and harvestables from the
       <a href="https://el-wiki.holy-eternalland.de/">EL wiki</a>.
       Player stats from <a href="https://www.eternal-lands.com/">eternal-lands.com</a>.
-      Thanks to everyone who maintains them.
+      Item artwork is from Eternal Lands, copied here so visiting this
+      site costs them nothing. Thanks to everyone who maintains them.
     </div>
     <div>
       Prices last read ${m.lastScrape
