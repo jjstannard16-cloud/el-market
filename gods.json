@@ -1,0 +1,715 @@
+{
+ "_comment": "Rank tables from the EL wiki, by el_gods.py.",
+ "gods": [
+  {
+   "god": "Aluwen",
+   "title": "Defense Goddess",
+   "priest": "Noria",
+   "where": "Two maps connect to the temple. All of the entrances and exits to those maps except the exit to Forest of the Fall are secrets. * Corren, Desert Pines * Forest of the Fall, White Stone",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Defense experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "20 Wooden Shields",
+     "Where to put items": "Storage",
+     "Defense experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "120 Potions of Body Restoration",
+     "Where to put items": "Storage",
+     "Defense experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "500 Gold Coins",
+     "Where to put items": "Inventory",
+     "Defense experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "60 Red Snake Skins",
+     "Where to put items": "Storage",
+     "Defense experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "40 Titanium Bars",
+     "Where to put items": "Inventory",
+     "Defense experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "1 Titanium Short Sword",
+     "Where to put items": "Inventory",
+     "Defense experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "500 Coal",
+     "Where to put items": "Storage",
+     "Defense experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Defense experience"
+   ]
+  },
+  {
+   "god": "Elandria",
+   "title": "Alchemy Goddess",
+   "priest": "Romira",
+   "where": "Evergreen Woods, Desert Pines",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Alchemy experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "250 Wood Logs",
+     "Where to put items": "Storage",
+     "Alchemy experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "300 Silver Bars",
+     "Where to put items": "Storage",
+     "Alchemy experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "50 Steel Chain Mails",
+     "Where to put items": "Storage",
+     "Alchemy experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "500 each: Fire, Water, Air, Earth Essences",
+     "Where to put items": "Storage",
+     "Alchemy experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "1 Enriched Magic Essence",
+     "Where to put items": "Inventory",
+     "Alchemy experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "1,000 Polished Emeralds",
+     "Where to put items": "Storage",
+     "Alchemy experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "5 Wolfram Bars",
+     "Where to put items": "Inventory",
+     "Alchemy experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Alchemy experience"
+   ]
+  },
+  {
+   "god": "Galienne",
+   "title": "Tailoring Goddess",
+   "priest": "Tyra - Tyra is not (yet?) in the game.",
+   "where": "Glacmor Mountain Range - Entrances are at [216,45] (temple) and [276,121] (fashion runway).",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Tailoring experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Tailoring experience"
+   ]
+  },
+  {
+   "god": "Glilin",
+   "title": "Manufacturing God",
+   "priest": "* Baostas",
+   "where": "* Nordcarn at [10,150]",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Manufacturing experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "150 Rat Tails",
+     "Where to put items": "Storage",
+     "Manufacturing experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "100 Beaver Furs",
+     "Where to put items": "Storage",
+     "Manufacturing experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "30 Leather Pants",
+     "Where to put items": "Storage",
+     "Manufacturing experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "300 Rubies",
+     "Where to put items": "Storage",
+     "Manufacturing experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "500 Bones",
+     "Where to put items": "Storage",
+     "Manufacturing experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "1 Titanium Chain Mail",
+     "Where to put items": "Inventory",
+     "Manufacturing experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "1 Titanium Serpent Sword",
+     "Where to put items": "Inventory",
+     "Manufacturing experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Manufacturing experience"
+   ]
+  },
+  {
+   "god": "Jayden",
+   "title": "Potion Goddess",
+   "priest": "* Iazurn",
+   "where": "* Morcraven Marsh",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Potion experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "120 Potion of Reasoning",
+     "Where to put items": "Inventory",
+     "Potion experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "400 Hawk Feathers",
+     "Where to put items": "Storage",
+     "Potion experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "6,500 Coal",
+     "Where to put items": "Storage",
+     "Potion experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "200 Ring of Palon Vertas",
+     "Where to put items": "Inventory",
+     "Potion experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "500 True Sight Potions",
+     "Where to put items": "Storage",
+     "Potion experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "3 Red Dragon Scales",
+     "Where to put items": "Inventory",
+     "Potion experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "25 Mixture of Power",
+     "Where to put items": "Inventory",
+     "Potion experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Potion experience"
+   ]
+  },
+  {
+   "god": "LaForge",
+   "title": "Engineering God",
+   "priest": "Diesel",
+   "where": "Western Kyr Woodlands, Arius - The entrance to the temple is a secret.",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Engineering experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "4 Books of Blackpowder",
+     "Where to put items": "Inventory",
+     "Engineering experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "1,000 Dung",
+     "Where to put items": "Storage",
+     "Engineering experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "500 Rope",
+     "Where to put items": "Storage",
+     "Engineering experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "1,000 Poison Ivy",
+     "Where to put items": "Storage",
+     "Engineering experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "200 Harvest/Degrade Indicators",
+     "Where to put items": "Storage",
+     "Engineering experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "1 Lightmeter",
+     "Where to put items": "Inventory",
+     "Engineering experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "50 High Explosive Mines",
+     "Where to put items": "Storage",
+     "Engineering experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Engineering experience"
+   ]
+  },
+  {
+   "god": "Lucaa",
+   "title": "Harvesting Goddess",
+   "priest": "Quira - Quira is not (yet?) in the game.",
+   "where": "Roanof Island, Tarsengaard",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Harvesting experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Harvesting experience"
+   ]
+  },
+  {
+   "god": "Mortos",
+   "title": "Attack God",
+   "priest": "Dirhyan",
+   "where": "Naralik Catacombs",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Attack experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "300 Bones",
+     "Where to put items": "Storage",
+     "Attack experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "50 Deer Antlers",
+     "Where to put items": "Storage",
+     "Attack experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "100 Leather Gloves",
+     "Where to put items": "Storage",
+     "Attack experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "100 Silver Bars",
+     "Where to put items": "Storage",
+     "Attack experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "40 Iron Swords",
+     "Where to put items": "Storage",
+     "Attack experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "200 Potions of Attack",
+     "Where to put items": "Storage",
+     "Attack experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "5 Steel Chain Mails",
+     "Where to put items": "Storage",
+     "Attack experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Attack experience"
+   ]
+  },
+  {
+   "god": "Selain",
+   "title": "Summoning God",
+   "priest": "Sylpho - Sylpho can cast \"Bones to Mana\" regardless of whether you worship Selain. You receive 80 ethereal points for 50 bones.",
+   "where": "Tirnwood Vale, White Stone",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Summoning experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "150 Raw Meat",
+     "Where to put items": "Inventory",
+     "Summoning experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "500 Sulfur",
+     "Where to put items": "Storage",
+     "Summoning experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "100 Brown Rabbit Furs",
+     "Where to put items": "Inventory",
+     "Summoning experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "25 White Rabbit Furs",
+     "Where to put items": "Inventory",
+     "Summoning experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "250 Life Essences",
+     "Where to put items": "Storage",
+     "Summoning experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "300 Gold Coins",
+     "Where to put items": "Inventory",
+     "Summoning experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "50 Puma Furs",
+     "Where to put items": "Storage",
+     "Summoning experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Summoning experience"
+   ]
+  },
+  {
+   "god": "Unolas",
+   "title": "Magic God",
+   "priest": "Adrian",
+   "where": "Vermor Castle, White Stone",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Magic experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "2 Leather Pants",
+     "Where to put items": "Inventory",
+     "Magic experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "5 Leather Boots",
+     "Where to put items": "Inventory",
+     "Magic experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "1 Iron Helm",
+     "Where to put items": "Inventory",
+     "Magic experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "4 Steel Shields",
+     "Where to put items": "Inventory",
+     "Magic experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "500 Coal",
+     "Where to put items": "Storage",
+     "Magic experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "1,000 Rose Quartz",
+     "Where to put items": "Storage",
+     "Magic experience": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "100 Gold Bars",
+     "Where to put items": "Storage",
+     "Magic experience": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Magic experience"
+   ]
+  },
+  {
+   "god": "Xiao",
+   "title": "Ranging God",
+   "priest": "Gatlin - Gatlin is not (yet?) in the game.",
+   "where": "Ruins of Tirnym",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Ranging experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+16%"
+    },
+    {
+     "Rank": "5",
+     "Items needed for this rank": "? [[]]",
+     "Where to put items": "+20%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Ranging experience"
+   ]
+  },
+  {
+   "god": "Zarin",
+   "title": "Crafting Goddess",
+   "priest": "Durnam",
+   "where": "Tarsengaard, near the exit by land to Forest of the Fall, White Stone - The entrance to the temple is a [secret.",
+   "ranks": [
+    {
+     "Rank": "-2",
+     "Items needed for this rank": "none - starting rank",
+     "Where to put items": "nowhere",
+     "Crafting experience": "-8%"
+    },
+    {
+     "Rank": "-1",
+     "Items needed for this rank": "150 Brown Rabbit Furs",
+     "Where to put items": "Storage",
+     "Crafting experience": "-4%"
+    },
+    {
+     "Rank": "0",
+     "Items needed for this rank": "1 Wooden Staff, 1 Quarterstaff, and 1 Iron Shield",
+     "Where to put items": "Inventory",
+     "Crafting experience": "-0%"
+    },
+    {
+     "Rank": "1",
+     "Items needed for this rank": "150 Magic Essences",
+     "Where to put items": "Storage",
+     "Crafting experience": "+4%"
+    },
+    {
+     "Rank": "2",
+     "Items needed for this rank": "40 Fox Furs",
+     "Where to put items": "Storage",
+     "Crafting experience": "+8%"
+    },
+    {
+     "Rank": "3",
+     "Items needed for this rank": "100 Gold Bars",
+     "Where to put items": "Storage",
+     "Crafting experience": "+12%"
+    },
+    {
+     "Rank": "4",
+     "Items needed for this rank": "200 Sulfur",
+     "Where to put items": "Storage",
+     "Crafting experience": "+16%"
+    }
+   ],
+   "columns": [
+    "Rank",
+    "Items needed for this rank",
+    "Where to put items",
+    "Crafting experience"
+   ]
+  }
+ ]
+}
