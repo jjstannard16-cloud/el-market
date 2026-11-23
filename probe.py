@@ -1,35 +1,25 @@
 #!/usr/bin/env python3
-"""
-probe.py - scratch space for looking at a source before building on it.
+"""One-off: is the invasions export reachable, and what is in it?"""
+import json, re, requests
+UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
-This sandbox cannot reach the Eternal Lands sites, so anything that
-needs looking at gets written here and run through the Probe workflow.
-Replace the body with whatever the current question is.
-
-Already checked, so nobody checks it twice:
-
-  Where does a player's guild come from?  Nowhere, as of 23 November
-  2026. Every candidate was tried and every one of them failed:
-
-    game.eternal-lands.com/view_user.php   attributes and skills only
-    game.eternal-lands.com/online_players  players and bots, no guilds
-    mercator /api/v1/players/online        in the docs, but 404
-    mercator /onlineplayer                 needs a login, and a member
-                                           confirmed it shows no guild
-                                           tags once you are in
-    eternal-lands.com/page/guild_list.php  navigation chrome, no guilds
-    top.el-db.com                          only a menu link
-    el.other-life.com/top/guild50.php      the Top Guilds page the
-                                           official menu points at. The
-                                           site is gone
-
-  So guild membership is hand-kept in guild.txt, which now takes a
-  roster pasted in whatever shape it arrives. The only real fix is the
-  developers publishing it.
-
-  Does the quest guide have the god rank items?  No - it says only
-  "a batch of a specific item". The wiki has the full table including
-  whether items go in inventory or storage, and el_gods.py reads it.
-"""
-
-print(__doc__)
+for url, params in (
+    ("https://mercator.holy-eternalland.de/analytics/export/invasions",
+     {"format": "json", "limit": 5}),
+    ("https://mercator.holy-eternalland.de/api/invasions", {"limit": 5}),
+    ("https://mercator.holy-eternalland.de/analytics/export/invasions",
+     {"format": "csv", "limit": 5}),
+):
+    try:
+        r = requests.get(url, params=params, headers=UA, timeout=40)
+        print(f"\n=== {r.url}\n  {r.status_code}, {len(r.text)} bytes, "
+              f"{r.headers.get('content-type')}")
+        if r.status_code == 200:
+            body = r.text[:1500]
+            try:
+                j = r.json()
+                print("  " + json.dumps(j)[:1200])
+            except Exception:
+                print("  " + " ".join(body.split())[:800])
+    except Exception as e:
+        print(f"\n=== {url} -> {e}")
