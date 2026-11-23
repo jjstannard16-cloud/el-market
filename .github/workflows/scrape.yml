@@ -41,6 +41,12 @@ jobs:
         run: python el_mercator.py
         continue-on-error: true
 
+      # Who is actually in the game. Hourly readings build the picture of
+      # when it is busy, and turn up players no ranking would show.
+      - name: Read who is online
+        run: python el_online.py
+        continue-on-error: true
+
       # Any item we have never seen before needs its icon copying over,
       # so the page never asks bots.el-services.net for one.
       - name: Fetch any new item artwork
@@ -74,6 +80,7 @@ jobs:
             git reset --hard origin/main
             python el_bots.py scrape
             python el_mercator.py || true
+            python el_online.py || true
             python el_site.py --out public/index.html
           done
           echo "Could not land the change after 5 attempts."
