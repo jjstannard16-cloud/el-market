@@ -91,16 +91,8 @@ def split_cells(line):
     return out
 
 
-def parse_table(wikitext):
-    """
-    The first wikitable, as a list of {column: value}. Header cells are
-    the ones written with ! rather than |, so the first row of them
-    names the columns.
-    """
-    m = TABLE.search(wikitext)
-    if not m:
-        return []
-    body = m.group()[2:-2]
+def parse_one(body):
+    """One table body into a list of {column: value}."""
     rows, current = [], []
     for raw in body.splitlines():
         line = raw.rstrip()
@@ -129,6 +121,7 @@ def parse_table(wikitext):
 
     headers = flat[0][1] if flat[0][0] else []
     out = []
+
     for all_head, cells in flat[1:]:
         if not headers:
             headers = cells
@@ -139,6 +132,25 @@ def parse_table(wikitext):
             row[key] = value
         out.append(row)
     return out
+
+
+def parse_table(wikitext):
+    """
+    The rank table. A god page opens with a one-cell box holding the
+    contents list, so taking the first table on the page gets that
+    instead - the right one is the one whose columns mention ranks.
+    """
+    best = []
+    for m in TABLE.finditer(wikitext):
+        rows = parse_one(m.group()[2:-2])
+        if not rows:
+            continue
+        cols = " ".join(rows[0].keys()).lower()
+        if "rank" in cols or "item" in cols:
+            return rows
+        if len(rows) > len(best):
+            best = rows
+    return best
 
 
 def god_names(s):
