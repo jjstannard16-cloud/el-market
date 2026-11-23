@@ -76,6 +76,14 @@ FOUND = re.compile(
 WON = re.compile(
     r"(?:winner is|congratulations to|won by)\s+(?P<who>[\w\-\[\]' ]+?)\s*[,.!]",
     re.I)
+# The Global Invasion Warning System speaks in a handful of sentences.
+# "...they will invade Portland!" / "...spawning inside the Portland Cave!"
+GIWS_OVER = re.compile(r"\bthe invasion is over\b", re.I)
+GIWS_WARN = re.compile(r"\binvasion warning\b|\bis spawning\b", re.I)
+INVADE = re.compile(r"\b(?:they will invade|invasion (?:in|at)|invading)\s+"
+                    r"(?P<map>[A-Z][\w' ]{2,30}?)\s*[!.,]", re.I)
+INSIDE = re.compile(r"\b(?:inside|in)\s+the\s+(?P<map>[A-Z][\w' ]{2,30}?)\s*[!.,]")
+
 # "Game Date: 14-07-0089 Game time: 0:08"
 GAMETIME = re.compile(
     r"(?P<d>\d{1,2})-(?P<m>\d{1,2})-(?P<y>\d{2,4}).*?(?P<t>\d{1,2}:\d{2})",
@@ -119,6 +127,17 @@ def parse_message(kind, text):
         w = WON.search(text)
         if w:
             return "lottery", w.group("who").strip(), None
+    if kind == "announcement":
+        # An announcement has no player, so "who" carries the place the
+        # invasion is headed for - that is what makes the feed useful.
+        if GIWS_OVER.search(text):
+            return "invasion over", None, None
+        if GIWS_WARN.search(text):
+            m = INVADE.search(text) or INSIDE.search(text)
+            place = m.group("map").strip() if m else None
+            return "invasion", place, None
+        if text.lstrip().startswith("#Message from"):
+            return "message", None, None
     return None, None, None
 
 
@@ -170,18 +189,42 @@ def store(con, rows):
     return con.execute("SELECT COUNT(*) FROM event_log").fetchone()[0] - before
 
 
+def fetch_page(s, kind, path, page, limit):
+    """
+    The paginated feed, or the bulk export when the feed is down.
+    /api/invances and /api/lottery have both been answering 500, so the
+    export is tried once before giving up on a feed.
+    """
+    try:
+        return get_json(s, BASE + path, page=page, limit=limit), False
+    except Exception as paged:
+        if page > 1:
+            raise
+        name = path.rsplit("/", 1)[-1]
+        try:
+            body = get_json(s, f"{BASE}/analytics/export/{name}",
+                            format="json", limit=100000)
+            print(f"  {kind}: the paged feed is down ({paged}); "
+                  f"used the bulk export instead")
+            return body, True
+        except Exception:
+            raise paged
+
+
 def walk(s, con, kind, path, full):
     known = {r[0] for r in con.execute(
         "SELECT id FROM event_log WHERE kind = ?", (kind,))}
-    url = BASE + path
     seen = added = 0
     for page in range(1, MAX_PAGES + 1):
         try:
-            body = get_json(s, url, page=page, limit=PAGE_SIZE)
+            body, bulk = fetch_page(s, kind, path, page, PAGE_SIZE)
         except Exception as e:
-            print(f"  {kind}: page {page}: {e}")
-            break
+            print(f"  {kind}: unavailable: {e}")
+            return 0
         items = body.get("items") if isinstance(body, dict) else body
+        if items is None and isinstance(body, dict):
+            # An export may wrap its rows under another name.
+            items = next((v for v in body.values() if isinstance(v, list)), None)
         if not items:
             break
         rows = [parse_record(kind, r) for r in items]
@@ -191,6 +234,8 @@ def walk(s, con, kind, path, full):
         if page == 1 and isinstance(body, dict) and body.get("total"):
             print(f"  {kind}: Mercator holds {body['total']}")
         ids = {r["id"] for r in rows}
+        if bulk:
+            break                      # the export returns everything at once
         if not full and known and ids <= known:
             break
         known |= ids
@@ -209,6 +254,12 @@ def report(con):
                           GROUP BY what ORDER BY c DESC""").fetchall()
     if rows:
         print("  finds: " + ", ".join(f"{r[0]} {r[1]}" for r in rows))
+    inv = con.execute("""SELECT who, COUNT(*) c FROM event_log
+                         WHERE what = 'invasion' AND who IS NOT NULL
+                         GROUP BY LOWER(who) ORDER BY c DESC LIMIT 6""")
+    best = list(inv)
+    if best:
+        print("  invaded most: " + ", ".join(f"{r[0]} ({r[1]})" for r in best))
     top = con.execute("""SELECT who, SUM(IFNULL(amount,1)) n FROM event_log
                          WHERE kind = 'find' AND who IS NOT NULL
                          GROUP BY LOWER(who) ORDER BY n DESC LIMIT 5""")
