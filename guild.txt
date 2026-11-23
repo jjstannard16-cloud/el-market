@@ -1,0 +1,3 @@
+# Guildies to follow even if they are not in the top 200.
+# One character name per line. Lines starting with # are ignored.
+stann

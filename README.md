@@ -17,11 +17,14 @@ last week's. This does, once it has been running a while.
 | `el_bots.py` | Reads every bot page and stores the results in `el_bots.db` |
 | `el_site.py` | Turns that database into `public/index.html` |
 | `el_recipes.py` | Imports crafting recipes and harvestables from the EL wiki |
+| `el_players.py` | Reads player levels and PK figures from the official site |
+| `guild.txt` | Extra players to follow, beyond the top 200 |
 | `overrides.json` | Corrections to wiki data, from people who actually play |
 | `el_bots.db` | SQLite database — current listings plus price history |
 | `public/index.html` | The page itself, rebuilt on every scrape |
 | `.github/workflows/scrape.yml` | Runs the scrape hourly |
 | `.github/workflows/recipes.yml` | Refreshes recipes from the wiki weekly |
+| `.github/workflows/players.yml` | Reads player stats daily |
 
 ## Running it yourself
 
@@ -49,6 +52,26 @@ python el_recipes.py profit                # what is worth making right now
 python el_recipes.py xp                    # cheapest experience per skill
 python el_recipes.py recipe "steel bar"    # one recipe, fully costed
 ```
+
+## Players
+
+```bash
+python el_players.py seed            # who to follow: top 200 plus guild.txt
+python el_players.py scrape          # read their pages
+python el_players.py top tailoring   # leaderboard with real levels
+python el_players.py movers          # who levelled recently
+python el_players.py pk              # PK table with weekly movement
+```
+
+top.el-db.com gives a rank per skill and ties share one, so thirty players
+can all show as "1". The official player page gives actual levels, so that
+is where the numbers come from.
+
+**About a third of players have privacy mode on.** Their stats are hidden,
+which is their choice: they are recorded as private, skipped on later
+reads, and re-checked weekly in case they change their mind. Any
+leaderboard here is therefore of players with public stats, not of the
+game, and should say so wherever it is shown.
 
 ## What a craft actually costs
 

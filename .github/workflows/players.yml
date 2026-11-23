@@ -1,0 +1,68 @@
+name: Read players
+
+# Levels move slowly, so once a day is plenty. PK figures move fast, and
+# a daily snapshot is what makes weekly movement possible.
+on:
+  schedule:
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  players:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      # Picks up anyone new in the rankings, and anyone in guild.txt.
+      - name: Refresh the player list
+        run: python el_players.py seed
+
+      - name: Read every player
+        run: python el_players.py scrape
+
+      # Players who turned privacy off, or came back, are found again.
+      - name: Re-check hidden players weekly
+        if: github.event.schedule == '41 5 * * 0' || github.event_name == 'workflow_dispatch'
+        run: python el_players.py scrape --include-private
+
+      - name: Rebuild the page
+        run: python el_site.py --out public/index.html
+
+      - name: Save
+        run: |
+          git config user.name  "el-market"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git add el_bots.db public/index.html
+            if git diff --staged --quiet; then
+              echo "Nothing changed."
+              exit 0
+            fi
+            git commit -m "Player read $(date -u '+%Y-%m-%d')"
+            if git push; then
+              exit 0
+            fi
+            echo "Remote moved. Redoing on top of it (attempt $attempt)."
+            git fetch origin main
+            git reset --hard origin/main
+            python el_players.py scrape
+            python el_site.py --out public/index.html
+          done
+          echo "Could not land the change after 3 attempts."
+          exit 1
