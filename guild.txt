@@ -1,5 +1,16 @@
-# Warlords (www) - tracked daily even when outside the top 200.
-# One character name per line. Lines starting with # are ignored.
+# Guilds followed daily, even when their members are outside the top 200.
+#
+# Start a guild with its tag in brackets and its name after it:
+#
+#     [www] Warlords
+#     stann
+#     Keruma
+#
+# then one character name per line underneath. Add another guild by
+# starting another bracket line. Lines beginning with # are ignored, and
+# so is anything above the first bracket line.
+
+[www] Warlords
 Adversary
 Sonny
 Zeni

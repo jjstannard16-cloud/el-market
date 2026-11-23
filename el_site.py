@@ -276,6 +276,22 @@ def load(db_path):
                         "donated": gold or 0}
         print(f"  {total} broadcasts, {read} read, {len(finders)} finders")
 
+    # Guild rosters. Who is in which guild is not published anywhere, so
+    # this comes from guild.txt, which someone keeps by hand.
+    guilds = []
+    try:
+        import el_players
+        rosters = el_players.read_guilds("guild.txt")
+    except Exception as e:
+        rosters = {}
+        print(f"  could not read guild.txt: {e}")
+    for tag, g in rosters.items():
+        guilds.append({"tag": tag, "name": g["name"],
+                       "members": g["members"]})
+    if guilds:
+        print("  " + ", ".join(f"{g['name']} [{g['tag']}] {len(g['members'])}"
+                               for g in guilds))
+
     # The quest guide, already parsed by el_quests.py. Missing is fine:
     # the tab simply does not appear.
     quests, quest_sections = [], []
@@ -565,6 +581,7 @@ def load(db_path):
         "invasions": invasions,
         "eventLog": event_log,
         "eventTotals": event_totals,
+        "guilds": guilds,
         "quests": quests,
         "questSections": quest_sections,
         "dayRanks": day_ranks,
@@ -989,6 +1006,7 @@ HTML = r"""<!doctype html>
     <button data-tab="players">Players</button>
     <button data-tab="quests">Quests</button>
     <button data-tab="events">Events</button>
+    <button data-tab="guilds">Guilds</button>
     <button data-tab="days">Days</button>
     <button data-tab="bots">Bots</button>
   </nav>
@@ -1083,6 +1101,7 @@ let craftMode = "value";
 let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 let focusQuest = null, qsection = "";                    // "" = every section
 let findersShown = 25, eboard = "found";
+let focusGuild = null, gskill = "";       // "" = the roster, not one skill
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -1193,6 +1212,13 @@ const SECTIONS = [
   { id: "quests", name: "Quests",
     what: "Every quest written up: who starts it, what it needs, what it pays",
     n: () => `${(DATA.quests || []).length} quests` },
+  { id: "guilds", name: "Guilds",
+    what: "Rosters, and how a guild's members rank against each other",
+    n: () => {
+      const g = DATA.guilds || [];
+      return g.length === 1 ? `${g[0].name}, ${g[0].members.length} members`
+                            : `${g.length} guilds`;
+    } },
   { id: "events", name: "Events",
     what: "Who finds the pears and jokers, and where the invasions land",
     n: () => `${fmt((DATA.eventTotals || {}).all || 0)} broadcasts` },
@@ -1412,7 +1438,7 @@ function renderHome(view, count) {
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
 const TABS = ["home", "market", "profit", "craft", "players", "quests",
-              "events", "days", "bots"];
+              "events", "guilds", "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -1427,6 +1453,7 @@ function applyRoute() {
   focusBot = tab === "bots" && sub ? sub : null;
   focusPlayer = tab === "players" && sub ? sub : null;
   focusQuest = tab === "quests" && sub ? sub : null;
+  focusGuild = tab === "guilds" && sub ? sub : null;
   sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === tab));
@@ -1443,7 +1470,8 @@ document.querySelectorAll("nav button").forEach(btn =>
     go(btn.dataset.tab);
   });
 document.getElementById("q").oninput = () => {
-  focusBot = null; focusPlayer = null; focusQuest = null; render();
+  focusBot = null; focusPlayer = null; focusQuest = null;
+  focusGuild = null; render();
 };
 document.getElementById("walk").onchange = e => {
   walkableOnly = e.target.checked; render();
@@ -1588,6 +1616,8 @@ function render() {
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "home")   return renderHome(view, count);
+  if (tab === "guilds") return focusGuild
+    ? renderOneGuild(view, count, q) : renderGuilds(view, count);
   if (tab === "events") return renderEvents(view, count, q);
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
@@ -1760,6 +1790,125 @@ const caveat = `<div class="caveat">${
 
 // The leaderboard runs to several hundred names, so it opens short.
 let summonersShown = 25;
+
+/* guilds --------------------------------------------------------------
+   Who is in which guild is published nowhere, so this comes from
+   guild.txt, kept by hand. A guild page is the same rankings as the
+   players tab, narrowed to one roster, which is the only way to see
+   where someone stands among the people they actually play with.    */
+
+const guildBy = tag => (DATA.guilds || []).find(g =>
+  g.tag.toLowerCase() === String(tag || "").toLowerCase());
+
+// A roster is a list of names; the stats live with the players.
+function guildMembers(g) {
+  const want = new Map((g.members || []).map(n => [n.toLowerCase(), n]));
+  const found = PLAYERS.filter(p => want.has(p.name.toLowerCase()));
+  const seen = new Set(found.map(p => p.name.toLowerCase()));
+  const missing = [...want.entries()].filter(([k]) => !seen.has(k))
+                                     .map(([, n]) => n);
+  return { found, missing };
+}
+
+function renderGuilds(view, count) {
+  const gs = DATA.guilds || [];
+  count.textContent = `${gs.length} guild${gs.length === 1 ? "" : "s"}`;
+  if (!gs.length) {
+    view.innerHTML = `<div class="empty">No guild is being followed yet.
+      <br><span class="sm">Add one to <code>guild.txt</code>.</span></div>`;
+    return;
+  }
+  view.innerHTML = `
+    <div class="grouphint">Guild membership is not published anywhere we
+      could find, so these rosters are kept by hand. To have a guild
+      added, send its member list.</div>
+    <table class="daylog"><thead><tr><th>Guild</th><th>Tag</th>
+      <th class="stonecell">Members</th>
+      <th class="stonecell">With stats</th></tr></thead>
+    <tbody>${gs.map(g => {
+      const { found } = guildMembers(g);
+      const open = found.filter(p => !p.private).length;
+      return `<tr>
+        <td><a class="lnk glnk" href="#guilds/${encodeURIComponent(g.tag)}">${
+          esc(g.name)}</a></td>
+        <td class="sm">${esc(g.tag)}</td>
+        <td class="num">${fmt(g.members.length)}</td>
+        <td class="num sm">${fmt(open)}</td></tr>`;
+    }).join("")}</tbody></table>`;
+}
+
+function renderOneGuild(view, count, q) {
+  const g = guildBy(focusGuild);
+  if (!g) { count.textContent = ""; 
+    view.innerHTML = `<div class="empty">No such guild.</div>`; return; }
+
+  const { found, missing } = guildMembers(g);
+  const open = found.filter(p => !p.private);
+  const hidden = found.length - open.length;
+
+  // Ranked by the chosen skill, or by overall when none is chosen.
+  const key = gskill || "Overall";
+  let rows = open
+    .map(p => ({ p, lvl: statOf(p, key) }))
+    .filter(x => x.lvl != null)
+    .filter(x => !q || x.p.name.toLowerCase().includes(q))
+    .sort((a, b) => b.lvl - a.lvl || a.p.name.localeCompare(b.p.name));
+
+  count.textContent = `${esc(g.name)}, ${fmt(g.members.length)} members`;
+
+  const picker = `<div class="pills">
+    <button class="pill${gskill ? "" : " on"}" data-gskill="">Overall</button>
+    ${SKILLS.filter(sk => sk !== "Overall").map(sk =>
+      `<button class="pill${gskill === sk ? " on" : ""}"
+        data-gskill="${esc(sk)}">${esc(sk)}</button>`).join("")}</div>`;
+
+  // The guild's own total, which is the number a guild actually argues
+  // about. Private members are not in it, so it is a floor.
+  const total = open.reduce((a, p) => a + (statOf(p, key) || 0), 0);
+  const best = rows[0];
+
+  let rank = 0, last = null;
+  view.innerHTML = `
+    <div class="bothead">
+      <button class="back">All guilds</button>
+      <h2>${esc(g.name)}</h2>
+      <span class="where">${esc(g.tag)}</span>
+    </div>
+    ${picker}
+    <div class="grouphint">${fmt(open.length)} of ${fmt(g.members.length)}
+      members have public stats${hidden ? `, ${fmt(hidden)} have privacy
+      mode on` : ""}${missing.length ? `, ${fmt(missing.length)} have not
+      been read yet` : ""}. Between them they hold
+      <b>${fmt(total)}</b> ${esc(key.toLowerCase())}${best
+        ? `, and ${playerLink(best.p.name)} leads on ${fmt(best.lvl)}` : ""}.
+      Private members are left out, so that total is a floor.</div>
+    ${rows.length ? `<div class="scroller"><table>
+      <thead><tr><th class="num">#</th><th>Player</th>
+        <th class="num">${esc(key)}</th>
+        ${gskill ? `<th class="num hide-sm">Overall</th>` : ""}</tr></thead>
+      <tbody>${rows.map(x => {
+        if (x.lvl !== last) { rank = rows.indexOf(x) + 1; last = x.lvl; }
+        return `<tr>
+          <td class="num sm">${rank}</td>
+          <td>${playerLink(x.p.name)}</td>
+          <td class="num brass">${fmt(x.lvl)}</td>
+          ${gskill ? `<td class="num sm hide-sm">${
+            fmt(statOf(x.p, "Overall") || 0)}</td>` : ""}
+        </tr>`; }).join("")}</tbody></table></div>`
+      : `<div class="empty">Nobody in this guild has a public ${
+          esc(key.toLowerCase())}.</div>`}
+    ${missing.length ? `<div class="caveat">Not read yet: ${
+      missing.slice(0, 12).map(esc).join(", ")}${
+      missing.length > 12 ? ` and ${fmt(missing.length - 12)} more` : ""}.
+      They are picked up on the next daily read.</div>` : ""}`;
+
+  wirePlayerLinks();
+  const back = view.querySelector(".back");
+  if (back) back.onclick = () => go("guilds");
+  view.querySelectorAll("[data-gskill]").forEach(b => b.onclick = () => {
+    gskill = b.dataset.gskill; render();
+  });
+}
 
 /* events --------------------------------------------------------------
    Mercator relays what the game broadcasts to everyone. Pears and jokers

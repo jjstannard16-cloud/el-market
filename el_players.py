@@ -137,6 +137,80 @@ def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def fold_duplicates(con):
+    """
+    The same character can arrive twice under different capitals - once
+    from the rankings as "pinkroses" and once from guild.txt as
+    "PinkRoses" - and then counts twice everywhere on the site. The row
+    that has actually been read wins; if both have, the newest does.
+    """
+    groups = con.execute("""SELECT LOWER(name) k, COUNT(*) n FROM player
+                            GROUP BY LOWER(name) HAVING n > 1""").fetchall()
+    merged = 0
+    for key, _ in groups:
+        rows = con.execute("""SELECT name, last_read, private, overall
+                              FROM player WHERE LOWER(name) = ?""",
+                           (key,)).fetchall()
+        rows.sort(key=lambda r: (r["last_read"] is not None,
+                                 r["overall"] is not None,
+                                 r["last_read"] or "", r["name"]),
+                  reverse=True)
+        keep, drop = rows[0]["name"], [r["name"] for r in rows[1:]]
+        for name in drop:
+            # Stats follow the name, so move any the keeper lacks.
+            con.execute("""INSERT OR IGNORE INTO player_stat
+                           (name, kind, stat, level)
+                           SELECT ?, kind, stat, level FROM player_stat
+                           WHERE name = ?""", (keep, name))
+            con.execute("DELETE FROM player_stat WHERE name = ?", (name,))
+            con.execute("DELETE FROM player WHERE name = ?", (name,))
+            merged += 1
+    if merged:
+        con.commit()
+        print(f"  folded {merged} duplicate name{'s' if merged > 1 else ''} "
+              f"that differed only by capitals")
+    return merged
+
+
+# ------------------------------------------------------------- guilds
+
+# "[www] Warlords" opens a roster; the names follow, one per line.
+GUILD_HEAD = re.compile(r"^\s*\[\s*(?P<tag>[^\]]{1,12})\s*\]\s*(?P<name>.*)$")
+
+
+def read_guilds(path):
+    """
+    {tag: {name, members}} out of guild.txt. A file in the older shape,
+    a bare list of names with no bracket line, is read as one unnamed
+    guild so nothing is lost by upgrading.
+    """
+    try:
+        with open(path, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except FileNotFoundError:
+        return {}
+
+    out, tag = {}, None
+    loose = []
+    for line in lines:
+        text = line.strip()
+        if not text or text.startswith("#"):
+            continue
+        head = GUILD_HEAD.match(text)
+        if head:
+            tag = head.group("tag").strip()
+            out.setdefault(tag, {"name": head.group("name").strip() or tag,
+                                 "members": []})
+            continue
+        (out[tag]["members"] if tag else loose).append(text)
+    if loose:
+        out.setdefault("?", {"name": "Guild", "members": []})
+        out["?"]["members"] += loose
+    for g in out.values():                     # a name listed twice is one
+        g["members"] = list(dict.fromkeys(g["members"]))
+    return out
+
+
 # ------------------------------------------------------------ seeding
 
 def do_seed(args):
@@ -159,16 +233,18 @@ def do_seed(args):
 
     print(f"  {len(names)} names from the rankings")
 
-    try:
-        with open(GUILD_FILE, encoding="utf-8") as f:
-            guild = [l.strip() for l in f
-                     if l.strip() and not l.startswith("#")]
-        for n in guild:
-            names[n] = "guild"
-        print(f"  {len(guild)} from {GUILD_FILE}")
-    except FileNotFoundError:
-        print(f"  no {GUILD_FILE} (make one, a name per line, to follow "
-              f"your guild)")
+    rosters = read_guilds(GUILD_FILE)
+    if rosters:
+        for tag, g in rosters.items():
+            for n in g["members"]:
+                names[n] = "guild"
+            print(f"  {len(g['members'])} in {g['name']} [{tag}]")
+    else:
+        print(f"  no {GUILD_FILE} (make one to follow a guild)")
+
+    # Match an existing row's spelling rather than making a second one.
+    known = {r[0].lower(): r[0] for r in con.execute("SELECT name FROM player")}
+    names = {known.get(n.lower(), n): src for n, src in names.items()}
 
     added = 0
     for n, src in names.items():
@@ -179,6 +255,7 @@ def do_seed(args):
                           (n, src, ts, ts))
         added += 1 if cur.rowcount and cur.lastrowid else 0
     con.commit()
+    fold_duplicates(con)
     total = con.execute("SELECT COUNT(*) FROM player").fetchone()[0]
     print(f"\n{total} players on the list")
 
