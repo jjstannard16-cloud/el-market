@@ -52,6 +52,9 @@ KINDS = {
 # "Attack/Defense: || <font color="red">105/90</font>"
 STAT_ROW = re.compile(r"^\s*\|\s*([A-Za-z /]+?)\s*:\s*\|\|\s*(.+?)\s*$")
 SECTION = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
+# A table cell, which is a line opening with a single pipe. The closing
+# "|}" and the row divider "|-" are not cells and must not be read as one.
+CELL = re.compile(r"^\s*\|(?![-}])\s*(.+?)\s*$", re.M)
 # "* [[File:X.png|25px]] 4 [[Invisibility Potion|Invisibility Potions]]"
 BULLET = re.compile(r"^\*\s*(.+?)\s*$", re.M)
 # "0-35 Gold coins" / "4 Invisibility Potions"
@@ -148,9 +151,9 @@ def read_creature(s, title):
         header = re.search(r"^\s*!\s*(?:colspan=\"\d+\"\s*\|)?\s*(.+?)\s*$",
                            chunk, re.M)
         label = clean_cell(header.group(1)) if header else ""
-        cells = [clean_cell(c) for c in
-                 re.findall(r"^\s*\|\s*(?!-)(.+?)\s*$", chunk, re.M)]
-        cells = [c for c in cells if c and not c.lower().startswith("style")]
+        cells = [clean_cell(c) for c in CELL.findall(chunk)]
+        cells = [c for c in cells
+                 if c and c != "}" and not c.lower().startswith("style")]
         if label.lower().startswith("instance"):
             instances += cells
         else:
@@ -158,9 +161,9 @@ def read_creature(s, title):
 
     drops = []
     for m in TABLE.finditer(section_of(body, "Drops")):
-        for cell in re.findall(r"^\s*\|\s*(?!-)(.+?)\s*$", m.group(), re.M):
+        for cell in CELL.findall(m.group()):
             clean = clean_cell(cell)
-            if not clean or clean.lower().startswith("style"):
+            if not clean or clean == "}" or clean.lower().startswith("style"):
                 continue
             n, what = split_amount(clean)
             if what:
