@@ -2944,7 +2944,7 @@ function renderAchievements(view, count, q) {
     || p.got.some(g => g.name.toLowerCase().includes(q)));
   count.textContent = `${fmt(hits.length)} of ${fmt(all.length)} players`;
 
-  const rarest = kinds.slice(0, 10);
+  const rarest = kinds;
   const rare = (q || !rarest.length) ? "" : `
     <h2 class="group">Hardest to come by</h2>
     <div class="grouphint">How few of the ${fmt(all.length)} players we
@@ -2962,20 +2962,21 @@ function renderAchievements(view, count, q) {
     <h2 class="group">Most achieved</h2>
     <div class="grouphint">Ranked on tiers added up, so Herbalist (III)
       counts for three and a plain badge for one. ${fmt(kinds.length)}
-      different achievements are held between them.</div>
+      different achievements are held between them, and only ${
+      fmt(all.filter(p => p.score === all[0].score).length)} players have
+      reached the top of the board.</div>
     ${hits.length ? `<div class="scroller"><table>
       <thead><tr><th class="num">#</th><th>Player</th>
         <th class="num">Score</th><th class="num hide-sm">Badges</th>
-        <th>Holds</th></tr></thead>
+        <th>How far along</th></tr></thead>
       <tbody>${hits.slice(0, 200).map(p => `<tr>
         <td class="num sm">${all.indexOf(p) + 1}</td>
         <td>${playerLink(p.name)}</td>
         <td class="num brass">${fmt(p.score)}</td>
         <td class="num sm hide-sm">${fmt(p.n)}</td>
-        <td class="sm">${p.got.slice(0, 6).map(g =>
-          `${esc(g.name)}${g.tier ? ` <span class="tier">${
-            ROMAN[g.tier]}</span>` : ""}`).join(", ")}${
-          p.got.length > 6 ? " \u2026" : ""}</td>
+        <td class="sm">${p.got.filter(g => g.tier).map(g =>
+          `${esc(g.name)} <span class="tier">${ROMAN[g.tier]}</span>`)
+          .join(" ")}</td>
       </tr>`).join("")}</tbody></table></div>`
       : `<div class="empty">Nothing matches that.</div>`}
     ${rare}`;
