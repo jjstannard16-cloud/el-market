@@ -1966,6 +1966,9 @@ function renderFight(view, count, q) {
       from the EL wiki, prices from the bots.</div>`
       : `<div class="empty">Nothing matches that.</div>`}`;
   wireSort();
+  view.querySelectorAll("[data-fkind]").forEach(b => b.onclick = () => {
+    fkind = b.dataset.fkind; render();
+  });
 }
 
 function renderOneBeast(view, count) {
