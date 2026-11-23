@@ -1,0 +1,18 @@
+name: Probe
+
+# Scratch space. Run by hand to look at a source before building against
+# it, because this sandbox cannot reach the Eternal Lands sites directly.
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml
+      - run: python probe.py

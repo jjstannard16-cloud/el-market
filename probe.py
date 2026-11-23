@@ -1,45 +1,31 @@
 #!/usr/bin/env python3
-"""One-off: where can we get a player's guild without a hand-made list?"""
-import json, re, sys, requests
+"""One-off: how does the official top-players page carry guilds?"""
+import re, requests
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
-print("=== 1. the official player page")
-for who in ("stann", "Burn"):
-    try:
-        r = requests.get("http://game.eternal-lands.com/view_user.php",
-                         params={"user": who}, headers=UA, timeout=25)
-        print(f"  {who}: {r.status_code}, {len(r.text)} bytes")
-        text = re.sub(r"<[^>]+>", " ", r.text)
-        text = " ".join(text.split())
-        print(f"    {text[:400]}")
-        if re.search(r"guild", r.text, re.I):
-            for m in re.finditer(r".{80}guild.{120}", r.text, re.I | re.S):
-                print(f"    GUILD CONTEXT: {' '.join(m.group().split())[:200]}")
-    except Exception as e:
-        print(f"  {who}: {e}")
+r = requests.get("https://top.el-db.com/365-200.html", headers=UA, timeout=30)
+html = r.text
+print(f"{r.status_code}, {len(html)} bytes, final url {r.url}")
 
-print("\n=== 2. Mercator online players")
-for url in ("https://mercator.holy-eternalland.de/api/v1/players/online",
-            "https://mercator.holy-eternalland.de/onlineplayer"):
-    try:
-        r = requests.get(url, headers={**UA, "Accept": "application/json"},
-                         timeout=25)
-        print(f"  {url} -> {r.status_code}, {len(r.text)} bytes")
-        if "json" in r.headers.get("content-type", ""):
-            body = r.json()
-            print("    " + json.dumps(body)[:900])
-        else:
-            text = " ".join(re.sub(r"<[^>]+>", " ", r.text).split())
-            print(f"    (html) {text[:500]}")
-    except Exception as e:
-        print(f"  {url}: {e}")
+print("\n--- every distinct context the word guild appears in")
+seen = set()
+for m in re.finditer(r".{110}guild.{150}", html, re.I | re.S):
+    chunk = " ".join(m.group().split())
+    key = re.sub(r"\d+", "#", chunk)[:90]
+    if key in seen:
+        continue
+    seen.add(key)
+    print(f"  * {chunk[:260]}")
+    if len(seen) >= 12:
+        break
 
-print("\n=== 3. the top-players page, which we already read")
-try:
-    r = requests.get("https://top.el-db.com/365-200.html", headers=UA, timeout=25)
-    text = " ".join(re.sub(r"<[^>]+>", " ", r.text).split())
-    print(f"  {r.status_code}, {len(r.text)} bytes")
-    print(f"  {text[:400]}")
-    print(f"  mentions guild: {bool(re.search(r'guild', r.text, re.I))}")
-except Exception as e:
-    print(f"  {e}")
+print("\n--- links that mention guild")
+for m in list(dict.fromkeys(re.findall(r'href=["\']([^"\']*guild[^"\']*)["\']',
+                                       html, re.I)))[:15]:
+    print(f"  {m}")
+
+print("\n--- one table row, in full")
+rows = re.findall(r"<tr[^>]*>.*?</tr>", html, re.S | re.I)
+print(f"  {len(rows)} rows on the page")
+for row in rows[1:4]:
+    print("  " + " ".join(row.split())[:400])

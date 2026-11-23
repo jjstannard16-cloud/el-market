@@ -30,11 +30,6 @@ jobs:
         run: pip install requests beautifulsoup4 lxml
 
       # Picks up anyone new in the rankings, and anyone in guild.txt.
-      - name: Where guilds might come from
-        if: github.event_name == 'workflow_dispatch'
-        run: python probe.py
-        continue-on-error: true
-
       - name: Refresh the player list
         run: python el_players.py seed
 
