@@ -779,25 +779,6 @@ HTML = r"""<!doctype html>
   .floor .wrap { padding-top: 18px; padding-bottom: 20px; }
   .floor h2 { font-family: var(--display); font-weight: 400; font-size: 16px;
               margin: 0 0 12px; color: var(--muted); }
-  .deals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .deal {
-    display: flex; gap: 12px; align-items: flex-start; text-align: left;
-    background: var(--raised); border: 1px solid var(--line);
-    border-left: 3px solid var(--brass); border-radius: 3px;
-    padding: 13px 15px; cursor: pointer; color: inherit; font: inherit;
-    width: 100%;
-  }
-  .deal:hover { border-color: var(--line-2); border-left-color: var(--brass); }
-  .deal img { width: 30px; height: 30px; object-fit: contain; flex: none;
-              image-rendering: pixelated; margin-top: 2px; }
-  .deal > span { display: block; min-width: 0; }
-  .deal .amt { display: block; font-family: var(--display); font-size: 22px;
-               font-weight: 600; color: var(--brass); line-height: 1.1;
-               font-variant-numeric: tabular-nums; }
-  .deal .what { display: block; font-size: 13.5px; margin-top: 2px; }
-  .deal .route { display: block; font-size: 12px; color: var(--muted);
-                 margin-top: 3px; }
-  .nodeals { color: var(--muted); font-size: 14px; padding: 2px 0 4px; }
 
   /* controls ------------------------------------------------------- */
   .bar { border-bottom: 1px solid var(--line); }
@@ -1124,7 +1105,6 @@ HTML = r"""<!doctype html>
   :focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   @media (max-width: 860px) {
-    .deals { grid-template-columns: 1fr; }
     .mast .wrap { padding-bottom: 14px; }
     .ledger { gap: 18px; }
     input[type=search] { width: 100%; }
@@ -1143,7 +1123,6 @@ HTML = r"""<!doctype html>
   <nav>
     <button class="on" data-tab="home">Home</button>
     <button data-tab="market">Market</button>
-    <button data-tab="profit">Profit</button>
     <button data-tab="craft">Craft</button>
     <button data-tab="players">Players</button>
     <button data-tab="quests">Quests</button>
@@ -1154,8 +1133,6 @@ HTML = r"""<!doctype html>
     <button data-tab="bots">Bots</button>
   </nav>
   <div class="spacer"></div>
-  <label class="walk" id="walkwrap">
-    <input type="checkbox" id="walk"> Hide boat trips</label>
   <span class="modes" id="viewwrap">
     <button data-pview="skills" class="on">Skills</button>
     <button data-pview="pk">PK</button>
@@ -1191,7 +1168,6 @@ if (typeof DATA === "undefined") {
 }
 const m = DATA.meta;
 let tab = "market", sortKey = null, sortDir = 1, focusBot = null;
-let walkableOnly = false;
 const openIds = new Set();
 const AUTO_OPEN_UPTO = 5;
 
@@ -1209,21 +1185,7 @@ for (const it of DATA.items) {
   const s = it.sell.filter(x => x.qty !== 0)[0] || null;
   const b = it.buy.filter(x => x.qty !== 0)[0] || null;
   it.best = { sell: s, buy: b };
-  if (s && b && b.price > s.price) {
-    it.unit = b.price - s.price;
-    it.units = Math.min(cap(s.qty), cap(b.qty));
-    it.total = it.units === Infinity ? Infinity : it.unit * it.units;
-    it.trip = s.map && s.map === b.map ? "map"
-            : s.cont && b.cont ? (s.cont === b.cont ? "cont" : "sea")
-            : "unknown";
-  } else { it.unit = it.units = it.total = 0; it.trip = null; }
 }
-const TRIP = {
-  map:     { label: "same map",  cls: "t-map"  },
-  cont:    { label: "a walk",    cls: "t-cont" },
-  sea:     { label: "by boat",   cls: "t-sea"  },
-  unknown: { label: "unknown",   cls: "sm"     },
-};
 
 const BOTS = {};
 for (const b of DATA.bots) BOTS[b.name] = { info: b, sell: [], buy: [] };
@@ -1344,9 +1306,6 @@ const SECTIONS = [
   { id: "market", name: "Market",
     what: "Every item, who sells it cheapest and who pays most",
     n: () => `${DATA.items.length} items` },
-  { id: "profit", name: "Profit",
-    what: "Buy from one bot, sell to another, and whether the walk is worth it",
-    n: () => `${DATA.items.filter(i => i.total > 0).length} trades in profit` },
   { id: "craft", name: "Craft",
     what: "What a craft costs at today's prices, and what a level costs",
     n: () => `${DATA.meta.recipeCount} recipes` },
@@ -1378,14 +1337,6 @@ const SECTIONS = [
     what: "Every trade bot, where it stands and what room it has left",
     n: () => `${DATA.bots.length} bots` },
 ];
-
-function bestDeals(n) {
-  return DATA.items
-    .filter(it => it.total > 0 && it.trip !== "sea")
-    .sort((a, b) => (b.total === Infinity ? 1e15 : b.total)
-                  - (a.total === Infinity ? 1e15 : a.total))
-    .slice(0, n);
-}
 
 // A day lasts about six hours, and the only clock we can read is the one
 // in the bot site's header. When that header stops moving, the honest
@@ -1516,23 +1467,9 @@ const ordinal = n => n + (["th","st","nd","rd"][
 
 function renderHome(view, count) {
   count.textContent = "";
-  const deals = bestDeals(3);
   const moves = (DATA.moves || []).slice(0, 8);
   const ups = (DATA.movers || []).slice(0, 8);
   const span = DATA.meta.moveSpanHours;
-
-  const top = `<h2 class="group">Worth a trip right now</h2>` + (deals.length
-    ? `<div class="deals">${deals.map(it => `
-        <button class="deal" data-item="${esc(it.name)}">
-          ${icon(it)}
-          <span>
-            <span class="amt">${fmt(it.total)}</span>
-            <span class="what">${esc(it.name)}</span>
-            <span class="route">${esc(it.best.sell.map || "?")} \u2192 ${
-              esc(it.best.buy.map || "?")} &middot; ${
-              it.units === Infinity ? "no limit" : qty(it.units)} to move</span>
-          </span></button>`).join("")}</div>`
-    : `<div class="caveat">No gaps worth walking for in this reading.</div>`);
 
   const movesPanel = `<div><h3>Prices that moved${
     span ? ` <span class="sm">in the last ${
@@ -1566,7 +1503,7 @@ function renderHome(view, count) {
     <a class="seeall" href="#days">All ${
       fmt((DATA.summoners || []).length)} of them \u2192</a></div>`;
 
-  view.innerHTML = todayBanner() + top
+  view.innerHTML = todayBanner()
     + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}${
         stonesPanel}</div>`
     + `<h2 class="group">Everything here</h2>
@@ -1576,17 +1513,13 @@ function renderHome(view, count) {
            <span class="sm">${sec.what}</span>
            <span class="tally2">${sec.n()}</span></a>`).join("")}</div>`;
 
-  view.querySelectorAll(".deal").forEach(btn => btn.onclick = () => {
-    document.getElementById("q").value = btn.dataset.item;
-    go("profit");
-  });
   wirePlayerLinks();
 }
 
 /* navigation ----------------------------------------------------------
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
-const TABS = ["home", "market", "profit", "craft", "players", "quests",
+const TABS = ["home", "market", "craft", "players", "quests",
               "events", "guilds", "online", "days", "bots"];
 
 function go(tab, sub) {
@@ -1598,7 +1531,9 @@ function applyRoute() {
   const raw = decodeURIComponent(location.hash.replace(/^#/, ""));
   const [t, ...rest] = raw.split("/");
   const sub = rest.join("/");
-  tab = TABS.includes(t) ? t : "home";
+  // The profit tab is gone, but links to it are not, so it lands on the
+  // market, which is the nearest thing to what it showed.
+  tab = TABS.includes(t) ? t : (t === "profit" ? "market" : "home");
   focusBot = tab === "bots" && sub ? sub : null;
   focusPlayer = tab === "players" && sub ? sub : null;
   focusQuest = tab === "quests" && sub ? sub : null;
@@ -1621,9 +1556,6 @@ document.querySelectorAll("nav button").forEach(btn =>
 document.getElementById("q").oninput = () => {
   focusBot = null; focusPlayer = null; focusQuest = null;
   focusGuild = null; render();
-};
-document.getElementById("walk").onchange = e => {
-  walkableOnly = e.target.checked; render();
 };
 document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".modes button").forEach(x =>
@@ -1682,9 +1614,7 @@ function detailRow(it, span) {
     verdict = d > 0
       ? `Buy at <b class="brass">${fmt(s.price)}</b> from ${botLink(s.bot)},
          sell at <b class="patina">${fmt(b.price)}</b> to ${botLink(b.bot)}
-         — <b>${fmt(d)}</b> a unit${it.units === Infinity
-           ? ", and the buyer takes any amount."
-           : `, <b>${fmt(it.total)}</b> across ${qty(it.units)}.`}`
+         — <b>${fmt(d)}</b> a unit.`
       : `Cheapest is <b class="brass">${fmt(s.price)}</b>, best buyer pays
          <b class="patina">${fmt(b.price)}</b>. No money in it.`;
     if (d > 0 && b.emu === 0)
@@ -1752,8 +1682,6 @@ function render() {
   const count = document.getElementById("count");
   document.getElementById("toolbar").style.visibility =
     tab === "home" ? "hidden" : "visible";
-  document.getElementById("walkwrap").style.display =
-    tab === "profit" ? "flex" : "none";
   document.getElementById("modewrap").style.display =
     tab === "craft" ? "flex" : "none";
   document.getElementById("viewwrap").style.display =
@@ -1775,20 +1703,13 @@ function render() {
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
 
-  let items = DATA.items.filter(it => matches(it, q));
-  if (tab === "profit") {
-    items = items.filter(it => it.total > 0);
-    if (walkableOnly) items = items.filter(it => it.trip !== "sea");
-  }
+  const items = DATA.items.filter(it => matches(it, q));
   if (!items.length) {
     count.textContent = "";
-    view.innerHTML = `<div class="empty">${q
-      ? "Nothing matches that."
-      : "No trades in profit right now."}</div>`;
+    view.innerHTML = `<div class="empty">Nothing matches that.</div>`;
     return;
   }
-  return tab === "profit" ? renderProfit(view, count, items, q)
-                          : renderMarket(view, count, items, q);
+  return renderMarket(view, count, items, q);
 }
 
 function renderMarket(view, count, items, q) {
@@ -1817,40 +1738,6 @@ function renderMarket(view, count, items, q) {
       <td class="num sm hide-sm">${it.sell.length + it.buy.length}</td></tr>
       ${isOpen(it, items.length, q) ? detailRow(it, 7) : ""}`;
   }).join("")}</tbody></table></div>`;
-  wireRows(); wireSort(); wireBotLinks();
-}
-
-function renderProfit(view, count, items, q) {
-  items = sortRows(items, "total");
-  count.textContent = `${items.length} trade${items.length === 1 ? "" : "s"} in profit`
-    + (walkableOnly ? ", boat trips hidden" : "");
-  view.innerHTML = `<div class="scroller"><table>${head([
-    { t: "Item", k: "name" },
-    { t: "Buy", k: it => it.best.sell.price, num: 1 },
-    { t: "From" },
-    { t: "Sell", k: it => it.best.buy.price, num: 1 },
-    { t: "To" },
-    { t: "Margin", k: "unit", num: 1, hide: 1 },
-    { t: "Units", k: "units", num: 1, hide: 1 },
-    { t: "Gold", k: "total", num: 1 },
-    { t: "Trip", k: "trip" },
-  ])}<tbody>${items.map(it => `
-    <tr class="item ${isOpen(it, items.length, q) ? "open" : ""}"
-        data-id="${it.id}">
-      <td><div class="nm">${icon(it)}<span>${esc(it.name)}</span></div></td>
-      <td class="num brass">${fmt(it.best.sell.price)}</td>
-      <td>${botLink(it.best.sell.bot)}<br><span class="sm">${
-        esc(it.best.sell.map || "")}</span></td>
-      <td class="num patina">${fmt(it.best.buy.price)}</td>
-      <td>${botLink(it.best.buy.bot)}<br><span class="sm">${
-        esc(it.best.buy.map || "")}</span></td>
-      <td class="num sm hide-sm">${fmt(it.unit)}</td>
-      <td class="num sm hide-sm">${it.units === Infinity ? "no limit"
-        : it.units.toLocaleString("en-GB")}</td>
-      <td class="num brass"><b>${fmt(it.total)}</b></td>
-      <td><span class="trip ${TRIP[it.trip].cls}">${TRIP[it.trip].label}</span></td>
-    </tr>${isOpen(it, items.length, q) ? detailRow(it, 9) : ""}`).join("")}
-    </tbody></table></div>`;
   wireRows(); wireSort(); wireBotLinks();
 }
 
