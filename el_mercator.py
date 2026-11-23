@@ -110,7 +110,7 @@ def number(v):
 #     Role Playing: Today we celebrate James Prescott Joule. ...
 #
 # An ordinary day is a single line, 'Just an ordinary day'.
-HEADING = re.compile(r"^today is a special day", re.I)
+HEADING = re.compile(r"^\s*today is a special day\s*:?\s*", re.I)
 LABEL = re.compile(r"\b(english|role playing)\s*:\s*", re.I)
 
 # The game has spelled a few of these differently over fifteen years.
@@ -120,6 +120,10 @@ ALIASES = {
     "just an ordinary day": "Ordinary Day",
     "solare flares": "Solar Flares Day",
     "solar flares": "Solar Flares Day",
+    # Eleven records from 2015 are missing both the heading and the name,
+    # and open straight into the description.
+    "today, everyone can eat bones. some creatures will also drop more "
+    "bones": "Day of Bones",
 }
 
 
@@ -127,10 +131,24 @@ def split_day(text):
     """The announcement into (name, what it does)."""
     lines = [ln.strip() for ln in str(text or "").replace("\r", "").split("\n")]
     lines = [ln for ln in lines if ln]
-    if lines and HEADING.match(lines[0]):
-        lines = lines[1:]
+    if lines:
+        lines[0] = HEADING.sub("", lines[0]).strip()
+        lines = [ln for ln in lines if ln]
     if not lines:
         return "", None
+
+    # A handful of records are known by their whole text, because the
+    # game sent them without a name at all.
+    whole = " ".join(lines).strip().rstrip(".").strip()
+    if whole.lower() in ALIASES:
+        return ALIASES[whole.lower()], None
+
+    # Some announcements put the heading, the name and the description on
+    # one line: 'Today is a special day: Day of Sun. Extra harvest xp!'
+    if len(lines) == 1 and ". " in lines[0]:
+        head, tail = lines[0].split(". ", 1)
+        if len(head) <= 40:
+            lines = [head, tail]
     name = lines[0].strip().rstrip(".").strip()
     name = ALIASES.get(name.lower(), name)
     rest = LABEL.sub("", " ".join(lines[1:])).strip()
@@ -181,6 +199,7 @@ def needs_reread(con):
     try:
         bad = con.execute("""SELECT COUNT(*) FROM special_day_log
                              WHERE name LIKE 'Today is a special day%'
+                                OR name LIKE 'Today,%'
                                 OR name LIKE '%' || char(10) || '%'
                                 OR name LIKE 'Just an ordinary day%'
                           """).fetchone()[0]

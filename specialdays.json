@@ -1,6 +1,14 @@
 {
   "_comment": "What each special day does, and the stone that starts it. Days last about six hours and either turn up at the start of a game day or are summoned by a player with a stone. Stone names must match the item name the bots use. Edit freely.",
   "days": {
+    "Day of action": {
+      "kind": "good",
+      "what": "Action points come back twice as fast."
+    },
+    "Day of Alchemy": {
+      "kind": "good",
+      "what": "2x alchemy experience."
+    },
     "Day of Aleksei Stakhanov": {
       "kind": "good",
       "what": "3x harvesting experience.",
@@ -11,6 +19,18 @@
       "what": "2x engineering experience, 4x at school.",
       "stone": "Day of Alfred Nobel Stone"
     },
+    "Day of Armor": {
+      "kind": "good",
+      "what": "Everyone gets +4 armour."
+    },
+    "Day of Bones": {
+      "kind": "good",
+      "what": "Everyone can eat bones, and some creatures drop more of them."
+    },
+    "Day of Evanescence": {
+      "kind": "good",
+      "what": "Everyone has the Evanescence perk, monsters included."
+    },
     "Day of Faster Respawns": {
       "kind": "good",
       "what": "Creatures respawn faster."
@@ -19,10 +39,6 @@
       "kind": "good",
       "what": "All cooldowns are halved.",
       "stone": "Day of Half cooldowns Stone"
-    },
-    "Day of the Horses": {
-      "kind": "good",
-      "what": "Horses last longer."
     },
     "Day of Joule": {
       "kind": "good",
@@ -54,10 +70,6 @@
       "kind": "good",
       "what": "Harvester of Sorrows, I can't dance, Power Hungry and Hellspawn all stop working."
     },
-    "Day of the Print": {
-      "kind": "good",
-      "what": "Reading a book may grant its knowledge instantly."
-    },
     "Day of Recycling": {
       "kind": "good",
       "what": "5% chance of keeping your ingredients when mixing.",
@@ -82,6 +94,10 @@
       "what": "2x summoning experience.",
       "stone": "Day of Summoners Stone"
     },
+    "Day of Sun": {
+      "kind": "good",
+      "what": "Extra harvesting experience."
+    },
     "Day of Sun Tzu": {
       "kind": "good",
       "what": "2x attack and defense experience.",
@@ -92,9 +108,13 @@
       "what": "2x tailoring experience, 4x at school.",
       "stone": "Day of Tailoring"
     },
-    "Day of Bones": {
+    "Day of the Horses": {
       "kind": "good",
-      "what": "Everyone can eat bones, and some creatures drop more of them."
+      "what": "Horses last longer."
+    },
+    "Day of the Print": {
+      "kind": "good",
+      "what": "Reading a book may grant its knowledge instantly."
     },
     "Healing Day": {
       "kind": "good",
@@ -109,10 +129,6 @@
       "what": "Harvesting does not stop for mini harvesting events.",
       "stone": "Day of Non Stop Stone"
     },
-    "Day of Evanescence": {
-      "kind": "good",
-      "what": "Everyone has the Evanescence perk, monsters included."
-    },
     "Reconstruction Day": {
       "kind": "good",
       "what": "Used items have a chance to stay in your inventory.",
@@ -126,10 +142,6 @@
       "kind": "good",
       "what": "No book knowledge needed for harvesting, manufacturing, alchemy and the rest. You still need the nexus."
     },
-    "Day of Armor": {
-      "kind": "good",
-      "what": "Everyone gets +4 armour."
-    },
     "Acid Rain Day": {
       "kind": "bad",
       "what": "Worn items may be destroyed in the rain. Indoors, caves and Desert Pines are safe.",
@@ -138,6 +150,11 @@
     "Day of Fasting": {
       "kind": "bad",
       "what": "No eating. At 0 hunger, research, mixing and regeneration all stop. Creature food still works.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of More Grief": {
+      "kind": "bad",
+      "what": "Items are more likely to break.",
       "removal": "Bad Day Removal"
     },
     "Day of Murphy": {
@@ -186,13 +203,13 @@
       "kind": "mixed",
       "what": "Random harvesting events are rarer."
     },
-    "Increased Harvesting Events Day": {
-      "kind": "mixed",
-      "what": "Random harvesting events are more common."
-    },
     "Decreased Rare Manufacturing day": {
       "kind": "mixed",
       "what": "Worse chance of a rare result when making items."
+    },
+    "Increased Harvesting Events Day": {
+      "kind": "mixed",
+      "what": "Random harvesting events are more common."
     },
     "Leonard's Day": {
       "kind": "mixed",
@@ -209,11 +226,6 @@
     "Scotty's Vacation": {
       "kind": "mixed",
       "what": "Beam-me-up is unavailable."
-    },
-    "Day of More Grief": {
-      "kind": "bad",
-      "what": "Items are more likely to break.",
-      "removal": "Bad Day Removal"
     },
     "Ordinary Day": {
       "kind": "ordinary",
