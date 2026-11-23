@@ -285,6 +285,27 @@ STAT_RE = re.compile(r"\b(" + "|".join(sorted(STAT_KIND, key=len, reverse=True))
 ANY_STAT_RE = re.compile(r"([A-Za-z][A-Za-z '\-]{1,22}?)\s*:\s*\d+\s*/\s*\d+")
 
 
+# The page separates one achievement from the next with two non-breaking
+# spaces. Flattening the page to text turns those into ordinary spaces
+# and the names run together, so they are taken off the raw html first.
+ACH_SPLIT = re.compile(r"(?:&nbsp;|\u00a0|\s){2,}")
+
+
+def read_achievements(html):
+    """["Herbalist (III)", "Miner (III)", ...] off the raw page."""
+    i = html.find("Achievements")
+    if i < 0:
+        return []
+    tail = re.sub(r"<[^>]+>", "", html[i + len("Achievements"):])
+    out = []
+    for part in ACH_SPLIT.split(tail):
+        name = part.strip(" :\u00a0")
+        # A real achievement is a short phrase, optionally with a tier.
+        if name and len(name) <= 48 and re.match(r"^[A-Za-z][\w' ()-]*$", name):
+            out.append(name)
+    return out
+
+
 def parse_player(html):
     """
     Pull every known stat, the PK figures and the achievements off a
@@ -318,11 +339,11 @@ def parse_player(html):
                          text, re.I):
         out["pk"][m.group(1).lower()] = float(m.group(2))
 
-    i = text.find("Achievements")
-    if i >= 0:
-        tail = text[i + len("Achievements"):].strip(" :")
-        if tail:
-            out["achievements"] = tail[:600]
+    got = read_achievements(html)
+    if got:
+        # Stored with a separator the names cannot contain, so they can
+        # be taken apart again without guessing where one ends.
+        out["achievements"] = " | ".join(got)[:900]
 
     return out if out["stats"] else None
 
