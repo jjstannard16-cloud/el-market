@@ -2107,6 +2107,18 @@ function renderOnline(view, count, q) {
 
 const ROMAN = ["", "I", "II", "III", "IV", "V"];
 
+function achPanel(name) {
+  const all = DATA.achPlayers || [];
+  const me = all.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!me) return "";
+  return `<div><h3>Achievements <span class="sm">#${
+    all.indexOf(me) + 1} on ${fmt(me.score)}</span></h3>
+    <div class="namegrid">${me.got.map(g =>
+      `<span class="chip">${esc(g.name)}${g.tier
+        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span>`)
+      .join("")}</div></div>`;
+}
+
 function renderAchievements(view, count, q) {
   const all = DATA.achPlayers || [];
   const kinds = DATA.achKinds || [];
@@ -2217,6 +2229,7 @@ function renderOnePlayer(view, count) {
         ${table(group("attribute"), "Attributes", false)
           .replace("<div>", "").replace(/<\/div>$/, "")}
         ${daysPanel(p.name).replace("<div>", "").replace(/<\/div>$/, "")}
+        ${achPanel(p.name)}
         ${p.pk ? `<h3 style="margin-top:18px">PK</h3><table>
           <tr><td>Score</td><td class="num brass">${p.pk.score.toFixed(2)}</td></tr>
           <tr><td>Fights</td><td class="num">${p.pk.f}</td></tr>
