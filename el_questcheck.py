@@ -190,12 +190,15 @@ def npc_check(s, quests):
     # rather than just counted.
     for t in nowhere:
         try:
-            body = api(s, action="query", prop="extracts", titles=t,
-                       explaintext=1, exintro=0, redirects=1)
+            body = api(s, action="query", prop="revisions", titles=t,
+                       rvprop="content", rvslots="main", redirects=1)
             for pg in body.get("query", {}).get("pages", []):
-                text = " ".join((pg.get("extract") or "").split())
+                revs = pg.get("revisions") or [{}]
+                text = (revs[0].get("slots", {}).get("main", {}).get("content")
+                        or revs[0].get("content") or "")
+                text = " ".join(text.split())
                 print(f"\n   --- {pg.get('title', t)}")
-                print(f"       {text[:600] if text else 'no text on the page'}")
+                print(f"       {text[:700] if text else 'the page is empty'}")
         except Exception as e:
             print(f"\n   --- {t}: {e}")
         time.sleep(PAUSE)
@@ -314,12 +317,17 @@ def main():
     extra = sorted({n for n in ours if not (keys(n) & theirs_keys)})
 
     print(f"\n{len(theirs)} distinct quest pages on the wiki")
-    print(f"{len(missing)} on the wiki but not in our guide:")
-    for t in missing:
-        print(f"   + {t}")
-    print(f"\n{len(extra)} in our guide but not found on the wiki:")
-    for t in extra:
-        print(f"   - {t}")
+    if len(theirs) < 10:
+        print("  That is far too few for the wiki to be a check on the "
+              "guide's quest list, so the per-quest comparison is skipped. "
+              "The NPC pass above is the real check.")
+    else:
+        print(f"{len(missing)} on the wiki but not in our guide:")
+        for t in missing:
+            print(f"   + {t}")
+        print(f"\n{len(extra)} in our guide but not found on the wiki:")
+        for t in extra:
+            print(f"   - {t}")
 
     if a.json:
         with open(a.json, "w", encoding="utf-8") as f:
