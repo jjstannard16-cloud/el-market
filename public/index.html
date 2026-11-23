@@ -629,7 +629,10 @@ function gameNow() {
   return {
     h: Math.floor(total / 60), m: total % 60, day, month, year, stale,
     readAt: read,
-    warning: (Date.now() - read < 25 * 60 * 1000) ? c.warning : null,
+    // Shown only while it is still news: Mercator keeps the text up long
+    // after the invasion, so the clock goes by when it first appeared.
+    warning: (Date.now() - Date.parse(c.warnSince || c.at) < 25 * 60 * 1000)
+      ? c.warning : null,
     monsters: c.monsters,
   };
 }

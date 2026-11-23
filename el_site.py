@@ -357,6 +357,18 @@ def load(db_path):
             clock = {"at": c["at"], "day": c["day"], "month": c["month"],
                      "year": c["year"], "h": c["hour"], "m": c["minute"],
                      "warning": c["warning"], "monsters": c["monsters"]}
+            # Mercator leaves the last warning in place long after the
+            # invasion is over, so what matters is when the text first
+            # appeared, not that it is there now. An old one is dropped.
+            if c["warning"]:
+                since = c["at"]
+                for prev in con.execute("""SELECT at, warning FROM game_clock
+                                           WHERE at < ? ORDER BY at DESC
+                                           LIMIT 48""", (c["at"],)):
+                    if (prev["warning"] or "") != c["warning"]:
+                        break
+                    since = prev["at"]
+                clock["warnSince"] = since
 
     # The in-game calendar, and what today's day actually does.
     today, recent_days = None, []
@@ -1118,7 +1130,10 @@ function gameNow() {
   return {
     h: Math.floor(total / 60), m: total % 60, day, month, year, stale,
     readAt: read,
-    warning: (Date.now() - read < 25 * 60 * 1000) ? c.warning : null,
+    // Shown only while it is still news: Mercator keeps the text up long
+    // after the invasion, so the clock goes by when it first appeared.
+    warning: (Date.now() - Date.parse(c.warnSince || c.at) < 25 * 60 * 1000)
+      ? c.warning : null,
     monsters: c.monsters,
   };
 }
