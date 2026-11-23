@@ -230,22 +230,69 @@ def load(db_path):
               + ", ".join(missing_stones[:4])
               + (" ..." if len(missing_stones) > 4 else ""))
 
+    # Mercator's log of every special day ever recorded: when it ran, and
+    # whether it came round naturally or a player paid for a stone. This is
+    # what turns the reference table into a record of how the game actually
+    # behaves.
+    day_log, day_stats, summoners = [], {}, []
+    if "special_day_log" in tables:
+        for r in con.execute("""SELECT name, donated_by, game_day, game_month,
+                                game_year, game_time, at FROM special_day_log
+                                ORDER BY at DESC LIMIT 60"""):
+            by = (r["donated_by"] or "").strip()
+            day_log.append({
+                "name": r["name"],
+                "by": None if by.lower() in ("natural", "") else by,
+                "when": (r["game_day"] and
+                         f"{r['game_day']}-{str(r['game_month']).zfill(2)}-"
+                         f"{str(r['game_year']).zfill(4)}"),
+                "clock": r["game_time"],
+                "at": (r["at"] or "")[:16].replace("T", " "),
+            })
+        for r in con.execute("""
+                SELECT name, COUNT(*) times,
+                       SUM(CASE WHEN LOWER(IFNULL(donated_by,'')) = 'natural'
+                                THEN 1 ELSE 0 END) natural_times,
+                       MAX(at) last
+                FROM special_day_log GROUP BY LOWER(name)"""):
+            day_stats[r["name"].lower()] = {
+                "times": r["times"],
+                "natural": r["natural_times"],
+                "summoned": r["times"] - r["natural_times"],
+                "last": (r["last"] or "")[:10],
+            }
+        for r in con.execute("""
+                SELECT donated_by name, COUNT(*) c, MAX(at) last
+                FROM special_day_log
+                WHERE LOWER(IFNULL(donated_by,'')) NOT IN ('natural','')
+                GROUP BY LOWER(donated_by)
+                ORDER BY c DESC, LOWER(donated_by) LIMIT 25"""):
+            summoners.append({"name": r["name"], "n": r["c"],
+                              "last": (r["last"] or "")[:10]})
+        for name, v in effects.items():
+            st = day_stats.get(name.lower())
+            if st:
+                v["seen"] = st
+
     # The in-game calendar, and what today's day actually does.
     today, recent_days = None, []
     if "game_day" in tables:
-        row = con.execute("""SELECT day, month, year, special, first_seen,
-                             last_seen FROM game_day
-                             ORDER BY last_seen DESC, id DESC
-                             LIMIT 1""").fetchone()
+        gcols = {r["name"] for r in con.execute("PRAGMA table_info(game_day)")}
+        src_col = "source" if "source" in gcols else "NULL AS source"
+        row = con.execute(f"""SELECT day, month, year, special, first_seen,
+                              last_seen, {src_col} FROM game_day
+                              ORDER BY last_seen DESC, id DESC
+                              LIMIT 1""").fetchone()
         if row:
             held = (datetime.fromisoformat(row["last_seen"])
                     - datetime.fromisoformat(row["first_seen"])).total_seconds()
-            # A clock we have never seen move is not a clock we can vouch
-            # for. Once it has ticked at least once the reading is good;
-            # until then it is a reading, not the date.
+            # Mercator publishes the clock live, so a reading from there is
+            # good on sight. The bot site's header is not: it has shown the
+            # same date for days, so a reading from it is only trusted once
+            # we have watched it move.
             dates = con.execute("""SELECT COUNT(*) FROM
                 (SELECT DISTINCT day, month, year FROM game_day)""").fetchone()[0]
-            ticked = dates > 1
+            ticked = row["source"] == "mercator" or dates > 1
             stale = not ticked and held > 8 * 3600
             info = effects.get(row["special"], {})
             today = {"day": row["day"], "month": row["month"],
@@ -329,6 +376,8 @@ def load(db_path):
         "moves": movements,
         "today": today,
         "days": recent_days,
+        "dayLog": day_log,
+        "summoners": summoners,
         "dayRef": effects,
         "harvestables": harvestables,
         "meta": {
@@ -505,6 +554,10 @@ HTML = r"""<!doctype html>
     text-align: left; padding-bottom: 6px; border-bottom: 1px solid var(--line);}
   .daylog thead th.stonecell { text-align: right; }
   .grouphint { font-size: 13.5px; color: var(--muted); margin: -6px 0 14px; }
+  .seen { font-family: var(--sans); font-size: 11.5px; color: var(--muted);
+          margin-top: 3px; }
+  .rank { display: inline-block; min-width: 20px; color: var(--muted);
+          font-size: 12px; font-variant-numeric: tabular-nums; }
   .stone { display: inline-block; font-size: 12.5px; color: var(--brass); }
   .stone.sm { color: var(--muted); }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
@@ -820,6 +873,8 @@ document.getElementById("foot").innerHTML = `
       Recipes and harvestables from the
       <a href="https://el-wiki.holy-eternalland.de/">EL wiki</a>.
       Player stats from <a href="https://www.eternal-lands.com/">eternal-lands.com</a>.
+      The in-game calendar and the record of every special day come from
+      <a href="https://mercator.holy-eternalland.de/">Mercator</a>.
       Item artwork is from Eternal Lands, copied here so visiting this
       site costs them nothing. Thanks to everyone who maintains them.
     </div>
@@ -883,9 +938,14 @@ function todayBanner() {
     <div class="daywhen">Everything below is still accurate: what each day
       does, and what it costs to start one yourself.</div>
   </div>`;
-  const when = [t.day ? ordinal(t.day) : null, t.month ? "of " + t.month : null,
-                t.year != null ? "year " + String(t.year).padStart(4, "0") : null]
-               .filter(Boolean).join(" ");
+  // Mercator gives the month as a number and nobody publishes the names,
+  // so the date is written the way the game writes it.
+  const numeric = /^\d+$/.test(String(t.month || ""));
+  const when = numeric
+    ? `${t.day}-${t.month}-${String(t.year).padStart(4, "0")}`
+    : [t.day ? ordinal(t.day) : null, t.month ? "of " + t.month : null,
+       t.year != null ? "year " + String(t.year).padStart(4, "0") : null]
+      .filter(Boolean).join(" ");
   return `<div class="today k-${esc(t.ticked ? t.kind : "unknown")}">
     <div class="dayname">${esc(t.special)}${
       t.ticked ? "" : ` <span class="unsure">unconfirmed</span>`}</div>
@@ -895,6 +955,26 @@ function todayBanner() {
       have not yet watched it change, so check with <b>#day</b> in game`}</div>`
       : ""}
   </div>`;
+}
+
+// Mercator spells the days slightly differently from our own reference
+// table ("Leonard's day" against "Leonard's Day"), so names are matched
+// without case.
+function kindOf(name) {
+  const ref = DATA.dayRef || {};
+  const hit = Object.keys(ref).find(k =>
+    k.toLowerCase() === String(name || "").toLowerCase());
+  return hit ? ref[hit].kind : "unknown";
+}
+
+// How often this day has actually turned up, and how much of that was
+// players paying for it rather than the game.
+function seenLine(v) {
+  const s = v.seen;
+  if (!s) return "";
+  const bits = [`seen ${fmt(s.times)}\u00d7`];
+  if (s.summoned) bits.push(`${fmt(s.summoned)} paid for`);
+  return `<div class="seen">${bits.join(" \u00b7 ")}</div>`;
 }
 
 // Most good days can be started on demand with a stone, and most bad ones
@@ -1339,31 +1419,49 @@ function renderDays(view, count, q) {
         ${summonable ? `<th class="stonecell">Stone to start it</th>` : ""}
       </tr></thead>
       <tbody>${rows.map(([name, v]) => `<tr>
-        <td><span class="daydot k-${esc(kind)}"></span>${esc(name)}</td>
+        <td><span class="daydot k-${esc(kind)}"></span>${esc(name)}
+          ${seenLine(v)}</td>
         <td class="sm">${esc(v.what || "")}</td>
         ${summonable ? `<td class="stonecell">${stoneLine(v)}</td>` : ""}
       </tr>`).join("")}</tbody></table>`;
   }).join("");
 
-  const logTable = log.length ? `
-    <h2 class="group">Days we have seen</h2>
-    <table class="daylog"><tbody>${log
-      .filter(d => match(d.special, d.what))
-      .map(d => `<tr>
-        <td class="sm">${esc(d.seen)}</td>
-        <td><span class="daydot k-${esc(d.kind)}"></span>${esc(d.special)}</td>
-        <td class="sm">${d.day ? esc(ordinal(d.day) + " of " + (d.month || "?"))
-          : ""}</td></tr>`).join("")}</tbody></table>
-    <div class="caveat">A day lasts about six hours and the game is read
-      once an hour, so a day that came and went between readings is not
-      listed.</div>` : "";
+  const mlog = (DATA.dayLog || []).filter(d => match(d.name, ""));
+  const logTable = mlog.length ? `
+    <h2 class="group">What has actually been running</h2>
+    <table class="daylog"><thead><tr><th>When</th><th>Day</th>
+      <th>Game date</th><th>Started by</th></tr></thead>
+    <tbody>${mlog.map(d => `<tr>
+        <td class="sm">${esc(d.at)}</td>
+        <td><span class="daydot k-${esc(kindOf(d.name))}"></span>${
+          esc(d.name)}</td>
+        <td class="sm">${esc(d.when || "")}${
+          d.clock ? ` <span class="muted">${esc(d.clock)}</span>` : ""}</td>
+        <td class="sm">${d.by
+          ? `<span class="brass">${esc(d.by)}</span>`
+          : `came round on its own`}</td>
+      </tr>`).join("")}</tbody></table>` : "";
+
+  const top = (DATA.summoners || []).slice(0, 12);
+  const summonerTable = top.length ? `
+    <h2 class="group">Who pays for everyone else</h2>
+    <div class="grouphint">Players who have put a day stone down, by how
+      many times they have done it.</div>
+    <table class="daylog"><thead><tr><th>Player</th>
+      <th class="stonecell">Days started</th><th>Last one</th></tr></thead>
+    <tbody>${top.map((p, i) => `<tr>
+      <td><span class="rank">${i + 1}</span>${playerLink(p.name)}</td>
+      <td class="num brass">${fmt(p.n)}</td>
+      <td class="sm">${esc(p.last || "")}</td>
+    </tr>`).join("")}</tbody></table>` : "";
 
   const buyable = Object.values(ref).filter(v => v.stonePrice).length;
   count.textContent = `${Object.keys(ref).length} special days, `
     + `${buyable} you can summon yourself`;
-  view.innerHTML = todayBanner() + logTable + reference
-    + (reference ? "" : `<div class="empty">Nothing matches that.</div>`);
-  wireBotLinks();
+  view.innerHTML = todayBanner() + logTable + reference + summonerTable
+    + (reference || logTable ? ""
+       : `<div class="empty">Nothing matches that.</div>`);
+  wireBotLinks(); wirePlayerLinks();
 }
 
 function renderPlayers(view, count, q) {
