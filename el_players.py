@@ -202,7 +202,11 @@ def read_guilds(path):
             out.setdefault(tag, {"name": head.group("name").strip() or tag,
                                  "members": []})
             continue
-        (out[tag]["members"] if tag else loose).append(text)
+        # A roster usually arrives pasted out of the game, so it can be
+        # one name a line, or several separated by commas or spaces. A
+        # character name has no spaces in it, so splitting is safe.
+        names = [n.strip(" ,;\t") for n in re.split(r"[,\s;]+", text)]
+        (out[tag]["members"] if tag else loose).extend(n for n in names if n)
     if loose:
         out.setdefault("?", {"name": "Guild", "members": []})
         out["?"]["members"] += loose
