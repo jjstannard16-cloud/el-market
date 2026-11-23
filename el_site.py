@@ -211,7 +211,7 @@ def load(db_path):
     # invasions, treasure, donations. Aggregates only - 51,000 broadcasts
     # are not going into the page.
     finders, invasions, event_log, event_totals = [], [], [], None
-    invasion_total = 0
+    invasion_total = invasion_ended = 0
     donors, speakers = [], []
     if "event_log" in tables:
         for r in con.execute("""
@@ -253,37 +253,57 @@ def load(db_path):
             speakers.append({"name": r["name"], "n": r["n"],
                              "first": (r["first"] or "")[:10],
                              "last": (r["last"] or "")[:10]})
-        # One invasion sends several warnings, a minute or so apart,
-        # while separate invasions at the same place are days apart.
-        # The gap between those two is enormous, so grouping anything
-        # inside half an hour turns warnings into invasions safely.
-        inv, warn, last_of = {}, {}, {}
-        prev_place, prev_at = None, None
-        for r in con.execute("""SELECT who place, at FROM event_log
-                                WHERE what = 'invasion' AND who IS NOT NULL
-                                  AND at IS NOT NULL
-                                ORDER BY LOWER(who), at"""):
-            place = r["place"]
-            key = place.lower()
-            warn[key] = warn.get(key, 0) + 1
-            last_of[key] = max(last_of.get(key, ""), r["at"] or "")
+        # An invasion is not a warning and it is not a place. It is a
+        # run of waves that moves around - a wave inside the Gold Mine
+        # second cave, then one in the Gold Mine six minutes later -
+        # and the game closes it with "the invasion is over". So the
+        # log is walked in time order and each run between those
+        # markers is one invasion, counted once for every place it
+        # touched. A run with no closing message is cut off after two
+        # hours so a missed marker cannot swallow the next one.
+        episodes, current, started = [], set(), None
+        warn = {}
+        names, last_of = {}, {}
+        for r in con.execute("""SELECT what, who, at FROM event_log
+                                WHERE what IN ('invasion', 'invasion over')
+                                  AND at IS NOT NULL ORDER BY at"""):
             try:
                 at = datetime.fromisoformat(r["at"])
             except (TypeError, ValueError):
                 continue
-            fresh = not (prev_place == key and prev_at
-                         and (at - prev_at).total_seconds() < 1800)
-            if fresh:
-                inv[key] = inv.get(key, 0) + 1
-                inv.setdefault("_names", {})
-            inv.setdefault("_names", {})[key] = place
-            prev_place, prev_at = key, at
-        names = inv.pop("_names", {})
-        for key, n in sorted(inv.items(), key=lambda kv: -kv[1])[:20]:
+            if r["what"] == "invasion over":
+                if current:
+                    episodes.append(current)
+                current, started = set(), None
+                continue
+            if started and (at - started).total_seconds() > 2 * 3600:
+                if current:
+                    episodes.append(current)
+                current, started = set(), None
+            if r["who"]:
+                key = r["who"].lower()
+                names[key] = r["who"]
+                warn[key] = warn.get(key, 0) + 1
+                last_of[key] = max(last_of.get(key, ""), r["at"])
+                current.add(key)
+            started = started or at
+        if current:
+            episodes.append(current)
+
+        hit = {}
+        for places in episodes:
+            for key in places:
+                hit[key] = hit.get(key, 0) + 1
+        for key, n in sorted(hit.items(), key=lambda kv: -kv[1])[:20]:
             invasions.append({"place": names.get(key, key), "n": n,
                               "warnings": warn.get(key, 0),
                               "last": (last_of.get(key) or "")[:10]})
-        invasion_total = sum(inv.values())
+        # The game announces the end of every invasion, so that count is
+        # the real one. Ours is lower because some invasions' warnings
+        # are among the broadcasts we cannot read.
+        invasion_total = len(episodes)
+        invasion_ended = con.execute("""SELECT COUNT(*) FROM event_log
+            WHERE what = 'invasion over'""").fetchone()[0]
         for r in con.execute("""SELECT what, who, amount, message, at
                                 FROM event_log WHERE what IS NOT NULL
                                 ORDER BY at DESC LIMIT 50"""):
@@ -301,6 +321,7 @@ def load(db_path):
                               WHERE what='donation'""").fetchone()[0]
         event_totals = {"kinds": kinds, "read": read, "all": total,
                         "invasions": invasion_total,
+                        "invasionsEnded": invasion_ended,
                         "since": (since or "")[:4], "finders": len(finders),
                         "donated": gold or 0}
         print(f"  {total} broadcasts, {read} read, {len(finders)} finders")
@@ -2090,8 +2111,9 @@ function renderEvents(view, count, q) {
       fmt(k.joker || 0)} jokers found, ${fmt(k.invasion || 0)} invasion
       warnings, ${fmt(k.treasure || 0)} treasures and ${
       fmt(k.donation || 0)} donations worth ${fmt(t.donated)} gold.
-      ${t.invasions ? `Those warnings work out at ${
-        fmt(t.invasions)} invasions.` : ""}
+      ${t.invasionsEnded ? `The game announced the end of ${
+        fmt(t.invasionsEnded)} invasions, and ${fmt(t.invasions)} of those
+        we can put on a map.` : ""}
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 
@@ -2131,14 +2153,21 @@ function renderEvents(view, count, q) {
   const invMax = Math.max(...inv.map(i => i.n), 1);
   const places = (!inv.length || q) ? "" : `
     <h2 class="group">Where the invasions land</h2>
-    <div class="grouphint">Warnings the invasion system has sent for each
-      place. One invasion sends several, so read these against each other
-      rather than as a count of invasions.</div>
+    <div class="grouphint">${t && t.invasions
+      ? `How many invasions reached each place. An invasion is a run of
+         waves that moves about — one inside the Gold Mine second
+         cave, then one in the Gold Mine six minutes later — so it
+         counts once for every place it touched, and the same invasion
+         can appear on two rows. ${fmt(t.invasions)} invasions, out of
+         the ${fmt(t.invasionsEnded)} the game announced the end of.`
+      : "Invasions by place."}</div>
     <table class="ranks">${inv.map(i => `<tr>
       <td>${esc(i.place)}</td>
       <td class="barcell"><span class="bar"><i style="width:${
         Math.max(2, Math.round(100 * i.n / invMax))}%"></i></span></td>
-      <td class="num">${fmt(i.n)}</td></tr>`).join("")}</table>`;
+      <td class="num">${fmt(i.n)}</td>
+      <td class="num sm muted">${i.warnings
+        ? fmt(i.warnings) + " warnings" : ""}</td></tr>`).join("")}</table>`;
 
   const log = (DATA.eventLog || []).filter(e =>
     !q || (e.message || "").toLowerCase().includes(q));

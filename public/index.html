@@ -1387,8 +1387,9 @@ function renderEvents(view, count, q) {
       fmt(k.joker || 0)} jokers found, ${fmt(k.invasion || 0)} invasion
       warnings, ${fmt(k.treasure || 0)} treasures and ${
       fmt(k.donation || 0)} donations worth ${fmt(t.donated)} gold.
-      ${t.invasions ? `Those warnings work out at ${
-        fmt(t.invasions)} invasions.` : ""}
+      ${t.invasionsEnded ? `The game announced the end of ${
+        fmt(t.invasionsEnded)} invasions, and ${fmt(t.invasions)} of those
+        we can put on a map.` : ""}
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 
@@ -1428,14 +1429,21 @@ function renderEvents(view, count, q) {
   const invMax = Math.max(...inv.map(i => i.n), 1);
   const places = (!inv.length || q) ? "" : `
     <h2 class="group">Where the invasions land</h2>
-    <div class="grouphint">Warnings the invasion system has sent for each
-      place. One invasion sends several, so read these against each other
-      rather than as a count of invasions.</div>
+    <div class="grouphint">${t && t.invasions
+      ? `How many invasions reached each place. An invasion is a run of
+         waves that moves about — one inside the Gold Mine second
+         cave, then one in the Gold Mine six minutes later — so it
+         counts once for every place it touched, and the same invasion
+         can appear on two rows. ${fmt(t.invasions)} invasions, out of
+         the ${fmt(t.invasionsEnded)} the game announced the end of.`
+      : "Invasions by place."}</div>
     <table class="ranks">${inv.map(i => `<tr>
       <td>${esc(i.place)}</td>
       <td class="barcell"><span class="bar"><i style="width:${
         Math.max(2, Math.round(100 * i.n / invMax))}%"></i></span></td>
-      <td class="num">${fmt(i.n)}</td></tr>`).join("")}</table>`;
+      <td class="num">${fmt(i.n)}</td>
+      <td class="num sm muted">${i.warnings
+        ? fmt(i.warnings) + " warnings" : ""}</td></tr>`).join("")}</table>`;
 
   const log = (DATA.eventLog || []).filter(e =>
     !q || (e.message || "").toLowerCase().includes(q));
