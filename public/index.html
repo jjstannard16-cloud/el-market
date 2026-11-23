@@ -118,6 +118,13 @@
   .pills .pill:hover { color: var(--ink); border-color: var(--brass); }
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
+  .namegrid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
+  .chip { font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+          border: 1px solid var(--line); border-radius: 3px;
+          padding: 4px 9px; text-decoration: none; line-height: 1.3; }
+  a.chip:hover { color: var(--ink); border-color: var(--brass); }
+  .chip.trades { color: var(--ink); border-color: var(--line-2); }
+  .chip span { display: block; font-size: 10.5px; color: var(--muted); }
   .evkind { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
             color: var(--muted); border: 1px solid var(--line-2);
             border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
@@ -399,6 +406,7 @@
     <button data-tab="quests">Quests</button>
     <button data-tab="events">Events</button>
     <button data-tab="guilds">Guilds</button>
+    <button data-tab="online">Online</button>
     <button data-tab="days">Days</button>
     <button data-tab="bots">Bots</button>
   </nav>
@@ -409,7 +417,6 @@
     <button data-pview="skills" class="on">Skills</button>
     <button data-pview="pk">PK</button>
     <button data-pview="movers">Level-ups</button>
-    <button data-pview="online">Online</button>
   </span>
   <select id="skillpick" class="pick"></select>
   <span class="modes" id="modewrap">
@@ -606,6 +613,11 @@ const SECTIONS = [
   { id: "quests", name: "Quests",
     what: "Every quest written up: who starts it, what it needs, what it pays",
     n: () => `${(DATA.quests || []).length} quests` },
+  { id: "online", name: "Online",
+    what: "Who is in the game right now, and which bots are up",
+    n: () => DATA.online
+      ? `${fmt(DATA.online.n)} players, ${fmt(DATA.online.bots)} bots`
+      : "not read yet" },
   { id: "guilds", name: "Guilds",
     what: "Rosters, and how a guild's members rank against each other",
     n: () => {
@@ -832,7 +844,7 @@ function renderHome(view, count) {
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
 const TABS = ["home", "market", "profit", "craft", "players", "quests",
-              "events", "guilds", "days", "bots"];
+              "events", "guilds", "online", "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -1010,6 +1022,7 @@ function render() {
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "home")   return renderHome(view, count);
+  if (tab === "online") return renderOnline(view, count, q);
   if (tab === "guilds") return focusGuild
     ? renderOneGuild(view, count, q) : renderGuilds(view, count);
   if (tab === "events") return renderEvents(view, count, q);
@@ -1718,7 +1731,6 @@ function renderPlayers(view, count, q) {
   if (focusPlayer) return renderOnePlayer(view, count);
   if (pview === "pk") return renderPk(view, count, q);
   if (pview === "movers") return renderMovers(view, count, q);
-  if (pview === "online") return renderOnline(view, count, q);
   if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
@@ -1906,23 +1918,49 @@ function renderOnline(view, count, q) {
   }
   const when = new Date(o.at);
   const mins = Math.max(0, Math.round((Date.now() - when) / 60000));
-  const regs = (o.regulars || []).filter(r =>
-    !q || r.name.toLowerCase().includes(q));
-  count.textContent = `${fmt(o.n)} online, read ${
-    mins < 90 ? `${mins} minutes ago` : when.toLocaleString("en-GB")}`;
+  const ago = mins < 90 ? `${mins} minutes ago`
+                        : when.toLocaleString("en-GB");
+  const players = (o.players || []).filter(n =>
+    !q || n.toLowerCase().includes(q));
+  const bots = (o.botList || []).filter(b =>
+    !q || b.name.toLowerCase().includes(q)
+       || (b.where || "").toLowerCase().includes(q));
+
+  count.textContent = `${fmt(o.n)} players and ${fmt(o.bots)} bots, `
+    + `read ${ago}`;
+
+  // A bot that is up is a bot you can trade with, so its name goes
+  // straight to what it is buying and selling.
+  const botGrid = !bots.length ? "" : `
+    <h2 class="group">Bots up now</h2>
+    <div class="grouphint">${fmt(o.trading)} of the ${fmt(o.bots)} bots in
+      the game are trading ones we have prices for. The rest are running
+      for some other reason.</div>
+    <div class="namegrid">${bots.map(b => b.trades
+      ? `<a class="chip trades" href="#bots/${encodeURIComponent(b.name)}"
+           title="${esc(b.where || "")}">${esc(b.name)}${b.where
+           ? `<span>${esc(b.where)}</span>` : ""}</a>`
+      : `<span class="chip" title="not a trading bot">${esc(b.name)}</span>`
+      ).join("")}</div>`;
+
+  const playerGrid = !players.length ? "" : `
+    <h2 class="group">Players in the game</h2>
+    <div class="namegrid">${players.map(n =>
+      `<a class="chip" href="#players/${encodeURIComponent(n)}">${
+        esc(n)}</a>`).join("")}</div>`;
 
   const hours = (o.byHour || []).filter(h => h.n);
   const peak = Math.max(...hours.map(h => h.peak), 1);
   const chart = hours.length < 6 ? `
-    <div class="caveat">The busiest hours need a day's readings before
-      they mean anything. ${fmt(o.readings)} reading${
-      o.readings === 1 ? "" : "s"} so far.</div>`
+    <h2 class="group">When the game is busy</h2>
+    <div class="caveat">This needs a day of readings before it means
+      anything. ${fmt(o.readings)} reading${o.readings === 1 ? "" : "s"}
+      so far, and it fills in on its own.</div>`
     : `<h2 class="group">When the game is busy</h2>
-      <div class="grouphint">Average players online by hour, UTC, across
-        ${fmt(o.readings)} readings. The tallest bar is the busiest hour.
-        </div>
+      <div class="grouphint">Players online by hour, UTC, averaged over
+        ${fmt(o.readings)} readings.</div>
       <div class="yearbars">${hours.map(h => `
-        <div class="yb" title="${h.h}:00 UTC — ${fmt(h.avg)} on average, ${
+        <div class="yb" title="${h.h}:00 UTC \u2014 ${fmt(h.avg)} on average, ${
           fmt(h.peak)} at best, from ${fmt(h.n)} readings">
           <b>${fmt(h.avg)}</b>
           <div class="ybstack" style="height:${
@@ -1930,34 +1968,39 @@ function renderOnline(view, count, q) {
           <span>${String(h.h).padStart(2, "0")}</span>
         </div>`).join("")}</div>`;
 
-  view.innerHTML = `
-    <div class="grouphint">At the last reading there were
-      <b>${fmt(o.n)}</b> players and ${fmt(o.bots)} bots in the game.
-      The list is read once an hour, so this is a recent reading and not
-      a live one${o.readings > 1
-        ? `; we have seen between ${fmt(o.lo)} and ${fmt(o.hi)} players on`
-        : ""}. ${fmt(o.seen)} different players have turned up so far.</div>
-    ${chart}
-    ${o.readings < 12 ? `
-      <h2 class="group">On most often</h2>
-      <div class="caveat">This needs a day of readings before it ranks
-        anybody: with ${fmt(o.readings)} so far, everyone who has been
-        seen is tied. It fills in on its own.</div>` : `
-      <h2 class="group">On most often</h2>
+  const regs = (o.regulars || []).filter(r =>
+    !q || r.name.toLowerCase().includes(q));
+  const board = o.readings < 12 ? `
+    <h2 class="group">On most often</h2>
+    <div class="caveat">With ${fmt(o.readings)} reading${
+      o.readings === 1 ? "" : "s"} everyone seen is tied, so there is
+      nothing to rank yet.</div>`
+    : `<h2 class="group">On most often</h2>
       <div class="grouphint">How many of our ${fmt(o.readings)} readings
         each player was in the game for. It measures turning up rather
         than grinding, but it is the closest thing anyone publishes.</div>
       ${regs.length ? `<div class="scroller"><table>
-      <thead><tr><th class="num">#</th><th>Player</th>
-        <th class="num">Readings</th><th class="hide-sm">Last seen</th>
-      </tr></thead><tbody>${regs.slice(0, 200).map((r, i) => `<tr>
-        <td class="num sm">${i + 1}</td>
-        <td>${playerLink(r.name)}</td>
-        <td class="num brass">${fmt(r.n)}</td>
-        <td class="sm hide-sm">${esc(r.last)}</td>
+        <thead><tr><th class="num">#</th><th>Player</th>
+          <th class="num">Readings</th><th class="hide-sm">Last seen</th>
+        </tr></thead><tbody>${regs.slice(0, 200).map((r, i) => `<tr>
+          <td class="num sm">${i + 1}</td>
+          <td>${playerLink(r.name)}</td>
+          <td class="num brass">${fmt(r.n)}</td>
+          <td class="sm hide-sm">${esc(r.last)}</td>
         </tr>`).join("")}</tbody></table></div>`
-        : `<div class="empty">Nobody by that name has been seen online.
-           </div>`}`}`;
+        : `<div class="empty">Nobody by that name has been seen.</div>`}`;
+
+  view.innerHTML = `
+    <div class="grouphint">At the last reading there were
+      <b>${fmt(o.n)}</b> players and <b>${fmt(o.bots)}</b> bots in the
+      game. The list is read once an hour, so this is a recent reading
+      rather than a live one${o.readings > 1
+        ? `; we have seen between ${fmt(o.lo)} and ${fmt(o.hi)} players on`
+        : ""}. ${fmt(o.seen)} different players have turned up so far.</div>
+    ${botGrid}${playerGrid}${chart}${board}
+    ${!bots.length && !players.length
+      ? `<div class="empty">Nobody by that name is in the game.</div>` : ""}`;
+  wirePlayerLinks();
   wirePlayerLinks();
 }
 
@@ -2189,7 +2232,26 @@ function renderBotList(view, count, q) {
 }
 
 function renderBot(view, count) {
-  const B = BOTS[focusBot], i = B.info;
+  // A link can arrive with the game's capitalisation rather than ours,
+  // from the online list or from a day stone's seller.
+  if (!BOTS[focusBot]) {
+    const hit = Object.keys(BOTS).find(k =>
+      k.toLowerCase() === String(focusBot || "").toLowerCase());
+    if (hit) focusBot = hit;
+  }
+  const B = BOTS[focusBot];
+  if (!B) {
+    count.textContent = "";
+    view.innerHTML = `<div class="bothead">
+        <button class="back">All bots</button>
+        <h2>${esc(focusBot)}</h2></div>
+      <div class="caveat">This bot is in the game but is not trading, so
+        we have no prices for it.</div>`;
+    const back = view.querySelector(".back");
+    if (back) back.onclick = () => go("bots");
+    return;
+  }
+  const i = B.info;
   const where = (i.location || "unknown spot") +
     (i.map_x != null ? ` [${i.map_x},${i.map_y}]` : "");
   const room = i.emu == null ? ""
