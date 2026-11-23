@@ -72,7 +72,16 @@
     background: none; border: 0; border-bottom: 2px solid transparent;
     color: var(--muted); padding: 14px 0; margin-right: 22px; cursor: pointer;
     font: 500 var(--t-md) var(--ui); transition: color .12s;
+    display: inline-flex; align-items: center; gap: 7px;
   }
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .ic { width: 16px; height: 16px; flex: none; fill: none;
+        stroke: currentColor; stroke-width: 1.6;
+        stroke-linecap: round; stroke-linejoin: round; }
+  /* The icon is a second way to read a label that is already there, so
+     it is never the only thing carrying the meaning. */
+  nav button .ic { opacity: .72; }
+  nav button:hover .ic, nav button.on .ic { opacity: 1; }
   nav button:hover { color: var(--ink); }
   nav button.on { color: var(--brass); border-bottom-color: var(--brass); }
   .spacer { flex: 1; }
@@ -130,7 +139,9 @@
                          color: var(--dim); margin-top: 1px; }
   .evkind { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
             color: var(--muted); border: 1px solid var(--line-2);
-            border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
+            border-radius: 2px; padding: 2px 7px; white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 5px; }
+  .evkind .ic { width: 12px; height: 12px; stroke-width: 1.8; }
   table.ranktable { width: 100%; border-collapse: collapse;
                    font-size: 13.5px; margin-bottom: 10px; }
   @media (max-width: 620px) {
@@ -299,7 +310,10 @@
   .sec .sechead { display: flex; align-items: baseline; gap: 12px;
                   justify-content: space-between; }
   .sec .nm2 { font-family: var(--display); font-size: var(--t-lg);
-              color: var(--ink); }
+              color: var(--ink); display: inline-flex; align-items: center;
+              gap: 9px; }
+  .secic { width: 17px; height: 17px; color: var(--brass); opacity: .75; }
+  .sec:hover .secic { opacity: 1; }
   .sec .sm { display: block; line-height: 1.45; color: var(--muted);
              margin-top: 3px; max-width: 40ch; font-size: var(--t-sm); }
   .sec .tally2 { font-size: var(--t-sm); color: var(--brass);
@@ -442,6 +456,58 @@
 </head>
 <body>
 
+<!-- Drawn here rather than fetched, so the page stays one file with
+     nothing to load. They are plain shapes of our own: the game's own
+     item art belongs to Eternal Lands and is not copied. Every one is a
+     stroke on a 24-grid inheriting currentColor, so a tab's icon turns
+     brass with its label. -->
+<svg class="sprite" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path d="M4 21h16M6 21V9l6-4 6 4v12M10 21v-6h4v6"/></symbol>
+  <symbol id="i-market" viewBox="0 0 24 24">
+    <path d="M12 4.2v15.6M8 19.8h8M4.6 7.6h14.8"/>
+    <path d="M4.6 7.6L2 13.4h5.2zM19.4 7.6l-2.6 5.8H22z"/></symbol>
+  <symbol id="i-craft" viewBox="0 0 24 24">
+    <path d="M2.5 6.5h11.5l6 3-6 2.5H2.5z"/>
+    <path d="M8.5 12v2.6c0 2.3-1.7 3.4-3.9 4.1h14.8c-2.2-.7-3.9-1.8-3.9-4.1V12"/>
+    </symbol>
+  <symbol id="i-fight" viewBox="0 0 24 24">
+    <path d="M18.5 3.5h2v2L9.5 16.5l-2.5.5.5-2.5z"/>
+    <path d="M5.5 3.5h-2v2l11 11 2.5.5-.5-2.5z"/></symbol>
+  <symbol id="i-players" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="3.6"/>
+    <path d="M5 20.5c0-3.9 3.1-7 7-7s7 3.1 7 7"/></symbol>
+  <symbol id="i-quests" viewBox="0 0 24 24">
+    <path d="M7 3h10v15a3 3 0 003 3H7a3 3 0 01-3-3V6a3 3 0 013-3z"/>
+    <path d="M10 8h5M10 12h4"/></symbol>
+  <symbol id="i-events" viewBox="0 0 24 24">
+    <path d="M4 9.5v5h3.5l6 4.5v-14l-6 4.5z"/>
+    <path d="M17 9.2a4 4 0 010 5.6M19.6 6.6a8 8 0 010 10.8"/></symbol>
+  <symbol id="i-guilds" viewBox="0 0 24 24">
+    <path d="M12 3l8 3v6c0 4.4-3.3 8.2-8 9.4C7.3 20.2 4 16.4 4 12V6z"/></symbol>
+  <symbol id="i-online" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="2.8"/>
+    <path d="M6.6 6.6a7.6 7.6 0 000 10.8M17.4 17.4a7.6 7.6 0 000-10.8"/></symbol>
+  <symbol id="i-days" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4.2"/>
+    <path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6
+             M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></symbol>
+  <symbol id="i-find" viewBox="0 0 24 24">
+    <path d="M12 2.8l2 6.2 6.2 2-6.2 2-2 6.2-2-6.2-6.2-2 6.2-2z"/></symbol>
+  <symbol id="i-joker" viewBox="0 0 24 24">
+    <path d="M12 2.6l5.4 9.4-5.4 9.4-5.4-9.4z"/></symbol>
+  <symbol id="i-chest" viewBox="0 0 24 24">
+    <rect x="3" y="9.5" width="18" height="10.5" rx="1.6"/>
+    <path d="M3 13.4h18M12 11.6v3.6"/>
+    <path d="M4.6 9.5a7.4 7.4 0 0114.8 0"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.2"/></symbol>
+  <symbol id="i-bots" viewBox="0 0 24 24">
+    <rect x="4" y="8" width="16" height="11" rx="2.6"/>
+    <path d="M12 8V5M10.4 3.6h3.2M2.4 12v3M21.6 12v3"/>
+    <circle cx="9.2" cy="13.4" r="1.2"/><circle cx="14.8" cy="13.4" r="1.2"/>
+  </symbol>
+</defs></svg>
 <div class="mast"><div class="wrap">
   <a class="mark" href="#home">EL <em>Headquarters</em></a>
   <div class="ledger" id="ledger"></div>
@@ -449,17 +515,17 @@
 
 <div class="bar"><div class="wrap">
   <nav>
-    <button class="on" data-tab="home">Home</button>
-    <button data-tab="market">Market</button>
-    <button data-tab="craft">Craft</button>
-    <button data-tab="fight">Fight</button>
-    <button data-tab="players">Players</button>
-    <button data-tab="quests">Quests</button>
-    <button data-tab="events">Events</button>
-    <button data-tab="guilds">Guilds</button>
-    <button data-tab="online">Online</button>
-    <button data-tab="days">Days</button>
-    <button data-tab="bots">Bots</button>
+    <button class="on" data-tab="home"><svg class="ic"><use href="#i-home"/></svg>Home</button>
+    <button data-tab="market"><svg class="ic"><use href="#i-market"/></svg>Market</button>
+    <button data-tab="craft"><svg class="ic"><use href="#i-craft"/></svg>Craft</button>
+    <button data-tab="fight"><svg class="ic"><use href="#i-fight"/></svg>Fight</button>
+    <button data-tab="players"><svg class="ic"><use href="#i-players"/></svg>Players</button>
+    <button data-tab="quests"><svg class="ic"><use href="#i-quests"/></svg>Quests</button>
+    <button data-tab="events"><svg class="ic"><use href="#i-events"/></svg>Events</button>
+    <button data-tab="guilds"><svg class="ic"><use href="#i-guilds"/></svg>Guilds</button>
+    <button data-tab="online"><svg class="ic"><use href="#i-online"/></svg>Online</button>
+    <button data-tab="days"><svg class="ic"><use href="#i-days"/></svg>Days</button>
+    <button data-tab="bots"><svg class="ic"><use href="#i-bots"/></svg>Bots</button>
   </nav>
   <div class="spacer"></div>
   <span class="modes" id="viewwrap">
@@ -633,6 +699,15 @@ document.getElementById("foot").innerHTML = `
 /* home ---------------------------------------------------------------
    What has changed since you last looked, then a way into each section.
    Everything on this page links somewhere.                             */
+const EVICON = { invasion: "fight", "invasion over": "fight",
+                 pulled: "fight", message: "events", joker: "joker",
+                 lottery: "chest", treasure: "chest", donation: "coin" };
+
+function evIcon(what) {
+  const id = EVICON[what] || (what ? "find" : null);
+  return id ? `<svg class="ic"><use href="#i-${id}"/></svg>` : "";
+}
+
 const SECTIONS = [
   { id: "market", name: "Market",
     what: "Every item, who sells it cheapest and who pays most",
@@ -844,7 +919,8 @@ function renderHome(view, count) {
     + `<h2 class="group">Everything here</h2>
        <div class="sections">${SECTIONS.map(sec => `
          <a class="sec" href="#${sec.id}">
-           <span class="sechead"><span class="nm2">${sec.name}</span>
+           <span class="sechead"><span class="nm2"><svg class="ic secic"
+             ><use href="#i-${sec.id}"/></svg>${sec.name}</span>
              <span class="tally2">${sec.n()}</span></span>
            <span class="sm">${sec.what}</span></a>`).join("")}</div>`;
 
@@ -1541,7 +1617,8 @@ function renderEvents(view, count, q) {
     <h2 class="group">Lately</h2>
     <div class="scroller"><table class="daylog"><tbody>${log.slice(0, 30).map(e => `<tr>
       <td class="sm nowrap">${esc(e.at)}</td>
-      <td class="sm"><span class="evkind">${esc(e.what)}</span></td>
+      <td class="sm"><span class="evkind">${evIcon(e.what)}${
+        esc(e.what)}</span></td>
       <td class="sm">${esc(e.message)}</td></tr>`).join("")}</tbody></table></div>`;
 
   view.innerHTML = finders + places + recent
