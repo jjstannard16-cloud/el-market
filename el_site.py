@@ -15,6 +15,7 @@ Usage:
 import argparse
 import json
 import os
+import re
 import sqlite3
 import sys
 import webbrowser
@@ -49,6 +50,7 @@ MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
+GODS_FILE = "gods.json"
 
 
 def load_special_days():
@@ -348,6 +350,23 @@ def load(db_path):
             qd = json.load(f)
         quests = qd.get("quests", [])
         quest_sections = qd.get("sections", [])
+
+        # The guide never says which items a rank of worship wants, nor
+        # whether they go in your inventory or your storage. The wiki
+        # does, so those tables are attached to the god write-ups.
+        if os.path.exists(GODS_FILE):
+            with open(GODS_FILE, encoding="utf-8") as f:
+                by_god = {g["god"].lower(): g
+                          for g in json.load(f).get("gods", [])}
+            attached = 0
+            for q in quests:
+                m = re.search(r"\(([^)]+)\)", q.get("name", ""))
+                hit = by_god.get(m.group(1).strip().lower()) if m else None
+                if hit:
+                    q["ranks"] = hit["ranks"]
+                    q["rankColumns"] = hit["columns"]
+                    attached += 1
+            print(f"  rank tables on {attached} god pages")
         print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
@@ -785,6 +804,19 @@ HTML = r"""<!doctype html>
   .evkind { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
             color: var(--muted); border: 1px solid var(--line-2);
             border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
+  table.ranktable { width: 100%; border-collapse: collapse;
+                   font-size: 13.5px; margin-bottom: 10px; }
+  table.ranktable th { font-family: var(--sans); font-size: 11px;
+    font-weight: 500; letter-spacing: .04em; color: var(--muted);
+    text-align: left; padding: 0 10px 6px 0;
+    border-bottom: 1px solid var(--line); }
+  table.ranktable td { padding: 7px 10px 7px 0;
+                       border-bottom: 1px solid var(--line); }
+  .put { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
+         border: 1px solid var(--line-2); border-radius: 2px;
+         padding: 2px 7px; white-space: nowrap; }
+  .put.inventory { color: var(--brass); border-color: var(--brass); }
+  .put.storage { color: var(--patina, var(--muted)); }
   .qnpc { font-size: 14.5px; margin: 2px 0 12px; }
   .qnpc b { color: var(--brass); font-weight: 500; }
   .coord { font-family: var(--mono, monospace); font-size: 12.5px;
@@ -2188,7 +2220,27 @@ function renderOneQuest(view, count) {
     st.sub && st.sub.length ? `<ol class="sub">${st.sub.map(sb =>
       `<li>${esc(sb.text)}</li>`).join("")}</ol>` : ""}</li>`).join("");
 
-  const right = block("Steps", steps ? `<ol class="steps">${steps}</ol>` : "")
+  // What each rank of worship wants. The guide does not say, so this
+  // comes from the wiki, and the storage-or-inventory column is the
+  // part people actually get wrong.
+  const ranks = qu.ranks || [];
+  const cols = qu.rankColumns || (ranks.length ? Object.keys(ranks[0]) : []);
+  const rankTable = !ranks.length ? "" : `<table class="ranktable">
+    <thead><tr>${cols.map(c => `<th${/experience|rank$/i.test(c)
+      ? ` class="num"` : ""}>${esc(c)}</th>`).join("")}</tr></thead>
+    <tbody>${ranks.map(r => `<tr>${cols.map(c => {
+      const v = r[c] || "";
+      const where = /where/i.test(c) && v && !/nowhere/i.test(v);
+      return `<td${/experience|^rank$/i.test(c) ? ` class="num"` : ""}>${
+        where ? `<span class="put ${esc(v.toLowerCase())}">${esc(v)}</span>`
+              : esc(v)}</td>`;
+    }).join("")}</tr>`).join("")}</tbody></table>
+    <div class="caveat">Rank table from the Eternal Lands wiki. Check the
+      column that says where the items go: handing them over from the
+      wrong place is the usual mistake.</div>`;
+
+  const right = block("Ranks of worship", rankTable)
+              + block("Steps", steps ? `<ol class="steps">${steps}</ol>` : "")
               + block("Notes", notes);
 
   view.innerHTML = `

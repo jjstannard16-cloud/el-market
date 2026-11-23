@@ -75,7 +75,10 @@ def clean_cell(text):
     text = EXT_LINK.sub(lambda m: m.group(1), text)
     text = HTML.sub(" ", text)
     text = text.replace("'''", "").replace("''", "")
-    return " ".join(text.split()).strip(" |")
+    # An empty link, [[]], is how the wiki marks a value nobody knows.
+    text = re.sub(r"\[\[\s*\]\]", " ", text)
+    text = re.sub(r"[\[\]]+", " ", text)
+    return " ".join(text.split()).strip(" |?").strip()
 
 
 def split_cells(line):
@@ -126,10 +129,20 @@ def parse_one(body):
         if not headers:
             headers = cells
             continue
-        row = OrderedDict()
-        for i, value in enumerate(cells):
-            key = headers[i] if i < len(headers) else f"column {i + 1}"
-            row[key] = value
+        row = OrderedDict((h, "") for h in headers)
+        if len(cells) < len(headers):
+            # A row can leave a cell out entirely: the gods that are not
+            # in the game yet have no items and nowhere to put them. The
+            # first and last columns are never in doubt, so fill from
+            # both ends and leave the hole in the middle, rather than
+            # shifting every value one column to the left.
+            row[headers[0]] = cells[0]
+            for i, value in enumerate(reversed(cells[1:])):
+                row[headers[len(headers) - 1 - i]] = value
+        else:
+            for i, value in enumerate(cells):
+                key = headers[i] if i < len(headers) else f"column {i + 1}"
+                row[key] = value
         out.append(row)
     return out
 
