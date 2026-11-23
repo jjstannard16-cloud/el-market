@@ -185,6 +185,20 @@ def npc_check(s, quests):
     print(f"  {len(nowhere)} appear nowhere in the guide at all:")
     for t in nowhere:
         print(f"     ? {t}")
+
+    # Say what each of those actually does, so the gap can be judged
+    # rather than just counted.
+    for t in nowhere:
+        try:
+            body = api(s, action="query", prop="extracts", titles=t,
+                       explaintext=1, exintro=0, redirects=1)
+            for pg in body.get("query", {}).get("pages", []):
+                text = " ".join((pg.get("extract") or "").split())
+                print(f"\n   --- {pg.get('title', t)}")
+                print(f"       {text[:600] if text else 'no text on the page'}")
+        except Exception as e:
+            print(f"\n   --- {t}: {e}")
+        time.sleep(PAUSE)
     return nowhere
 
 
