@@ -121,11 +121,64 @@ def keys(name):
     return out
 
 
+def discover(s):
+    """
+    Find out how this wiki files its quests, rather than assuming. Prints
+    every category whose name mentions quests, what a few known quest
+    names turn up, and how big the wiki is.
+    """
+    print("categories mentioning quests, dailies or gods:")
+    cont, seen = None, 0
+    for _ in range(40):
+        kw = {"action": "query", "list": "allcategories", "aclimit": 500}
+        if cont:
+            kw["acfrom"] = cont
+        body = api(s, **kw)
+        cats = body.get("query", {}).get("allcategories", [])
+        seen += len(cats)
+        for c in cats:
+            name = c if isinstance(c, str) else c.get("category", "")
+            if re.search(r"quest|daily|dailies|god|tutorial", str(name), re.I):
+                print(f"   * {name}")
+        cont = body.get("continue", {}).get("accontinue")
+        if not cont:
+            break
+        time.sleep(PAUSE)
+    print(f"   ({seen} categories in all)")
+
+    print("\nsearching for quests we already have:")
+    for probe in ["All Oiled Up", "Haidir", "Treasure of Nordcarn",
+                  "Mortos", "Beginner Tutorial"]:
+        hits, total = search_quests(s, probe, limit=5)
+        print(f"   {probe!r}: {total} hits -> {hits[:5]}")
+        time.sleep(PAUSE)
+
+    print("\nwhat categories one known quest page sits in:")
+    for title in ["All Oiled Up", "Treasure of Nordcarn"]:
+        try:
+            body = api(s, action="query", titles=title, prop="categories",
+                       cllimit=50)
+            for pg in body.get("query", {}).get("pages", []):
+                cats = [c["title"] for c in pg.get("categories", [])]
+                print(f"   {pg.get('title')!r}: "
+                      + (", ".join(cats) if cats else
+                         ("missing" if pg.get("missing") else "no categories")))
+        except Exception as e:
+            print(f"   {title}: {e}")
+        time.sleep(PAUSE)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Check quests.json vs the wiki")
     ap.add_argument("--quests", default=QUESTS_FILE)
     ap.add_argument("--json", help="write the gaps to this file as well")
+    ap.add_argument("--discover", action="store_true",
+                    help="report how the wiki files its quests, then stop")
     a = ap.parse_args()
+
+    if a.discover:
+        discover(session())
+        return
 
     if not os.path.exists(a.quests):
         sys.exit(f"No {a.quests}. Run el_quests.py first.")
