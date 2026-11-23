@@ -929,12 +929,15 @@ HTML = r"""<!doctype html>
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
   .namegrid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
-  .chip { font-family: var(--sans); font-size: 12.5px; color: var(--muted);
-          border: 1px solid var(--line); border-radius: 3px;
-          padding: 4px 9px; text-decoration: none; line-height: 1.3; }
-  a.chip:hover { color: var(--ink); border-color: var(--brass); }
-  .chip.trades { color: var(--ink); border-color: var(--line-2); }
-  .chip span { display: block; font-size: 10.5px; color: var(--muted); }
+  .namegrid .chip { font-family: var(--sans); font-size: var(--t-sm);
+          color: var(--muted); border: 1px solid var(--line-2);
+          border-radius: 3px; padding: 5px 10px; text-decoration: none;
+          line-height: 1.3; }
+  .namegrid a.chip:hover { color: var(--ink); border-color: var(--brass);
+                           background: var(--raised); }
+  .namegrid .chip.trades { color: var(--ink); }
+  .namegrid .chip span { display: block; font-size: var(--t-xs);
+                         color: var(--dim); margin-top: 1px; }
   .evkind { font-family: var(--sans); font-size: 11px; letter-spacing: .03em;
             color: var(--muted); border: 1px solid var(--line-2);
             border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
@@ -999,8 +1002,8 @@ HTML = r"""<!doctype html>
   .hidden-row td { color: var(--muted); }
   .rank { color: var(--muted); font-variant-numeric: tabular-nums; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .chip { font-size: 11.5px; border: 1px solid var(--line-2);
-          border-radius: 10px; padding: 1px 8px; color: var(--muted); }
+  .chips .tag { font-size: var(--t-xs); border: 1px solid var(--line-2);
+          border-radius: 10px; padding: 2px 9px; color: var(--muted); }
   h2.group { font-family: var(--display); font-weight: 500; font-size: 19px;
              color: var(--ink); margin: 34px 0 12px; letter-spacing: -.01em;
              border-bottom: 1px solid var(--line); padding-bottom: 8px; }
@@ -1037,9 +1040,9 @@ HTML = r"""<!doctype html>
                margin: -4px 0 16px; max-width: 78ch; line-height: 1.55; }
   .seen { font-family: var(--sans); font-size: 11.5px; color: var(--muted);
           margin-top: 3px; }
-  .rank { display: inline-block; min-width: 24px; color: var(--muted);
-          font-size: 12px; font-variant-numeric: tabular-nums; }
-  .rank.medal { color: var(--brass); font-weight: 600; }
+  .pos { display: inline-block; min-width: 24px; color: var(--dim);
+         font-size: var(--t-sm); font-variant-numeric: tabular-nums; }
+  .pos.medal { color: var(--brass); font-weight: 600; }
   .more { font-family: var(--sans); font-size: 13px; color: var(--muted);
           background: none; border: 1px solid var(--line-2);
           border-radius: 3px; padding: 7px 14px; margin-top: 14px;
@@ -1094,17 +1097,23 @@ HTML = r"""<!doctype html>
             padding: 1px 5px; vertical-align: 2px; }
   .today a { color: inherit; text-decoration: underline;
              text-underline-offset: 3px; }
-  .sections { display: grid; gap: 12px;
-              grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .sec { display: block; padding: 15px 17px; border: 1px solid var(--line);
-         border-radius: 3px; background: var(--panel); text-decoration: none;
-         color: inherit; }
-  .sec:hover { border-color: var(--line-2); }
-  .sec .nm2 { display: block; font-family: var(--display); font-size: 18px;
-              color: var(--brass); margin-bottom: 3px; }
-  .sec .sm { display: block; line-height: 1.45; }
-  .sec .tally2 { display: block; margin-top: 9px; font-size: 12.5px;
-                 color: var(--muted); font-variant-numeric: tabular-nums; }
+  /* An index of the site, not a row of cards: the count is the reason
+     to click, so it is the thing that carries colour, and the rule down
+     the left does the work a border box was doing. */
+  .sections { display: grid; gap: 0 34px;
+              grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  .sec { display: block; padding: 13px 14px 14px; text-decoration: none;
+         color: inherit; border-left: 2px solid var(--line-2);
+         border-bottom: 1px solid var(--line); }
+  .sec:hover { border-left-color: var(--brass); background: var(--panel); }
+  .sec .sechead { display: flex; align-items: baseline; gap: 12px;
+                  justify-content: space-between; }
+  .sec .nm2 { font-family: var(--display); font-size: var(--t-lg);
+              color: var(--ink); }
+  .sec .sm { display: block; line-height: 1.45; color: var(--muted);
+             margin-top: 3px; max-width: 40ch; font-size: var(--t-sm); }
+  .sec .tally2 { font-size: var(--t-sm); color: var(--brass);
+                 white-space: nowrap; font-variant-numeric: tabular-nums; }
   .skillgrid { display: grid; gap: 26px 30px;
                grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
   .skillcol h3 { font-family: var(--display); font-weight: 400; font-size: 16px;
@@ -1632,7 +1641,7 @@ function renderHome(view, count) {
   const stonesPanel = !stones.length ? "" : `<div>
     <h3>Most day stones used <span class="sm">all time</span></h3>
     <table>${stones.map((pl, i) => `<tr>
-      <td class="nowrap"><span class="rank${i < 3 ? " medal" : ""}">${
+      <td class="nowrap"><span class="pos${i < 3 ? " medal" : ""}">${
         i + 1}</span>${playerLink(pl.name)}</td>
       <td class="num brass">${fmt(pl.n)}</td>
     </tr>`).join("")}</table>
@@ -1645,9 +1654,9 @@ function renderHome(view, count) {
     + `<h2 class="group">Everything here</h2>
        <div class="sections">${SECTIONS.map(sec => `
          <a class="sec" href="#${sec.id}">
-           <span class="nm2">${sec.name}</span>
-           <span class="sm">${sec.what}</span>
-           <span class="tally2">${sec.n()}</span></a>`).join("")}</div>`;
+           <span class="sechead"><span class="nm2">${sec.name}</span>
+             <span class="tally2">${sec.n()}</span></span>
+           <span class="sm">${sec.what}</span></a>`).join("")}</div>`;
 
   wirePlayerLinks();
 }
@@ -2302,7 +2311,7 @@ function renderEvents(view, count, q) {
     <tbody>${shown.map(r => {
       const pos = place.get(r.name);
       return `<tr>
-        <td class="nowrap"><span class="rank${pos <= 3 ? " medal" : ""}">${
+        <td class="nowrap"><span class="pos${pos <= 3 ? " medal" : ""}">${
           pos}</span>${playerLink(r.name)}</td>
         <td class="num brass">${fmt(board.value(r))}</td>
         ${eboard === "found" ? `<td class="num sm">${
@@ -2640,7 +2649,7 @@ function renderDays(view, count, q) {
     <tbody>${shown.map(p => {
       const pos = place.get(p.name);
       return `<tr>
-      <td><span class="rank${pos <= 3 ? " medal" : ""}">${pos}</span>${
+      <td><span class="pos${pos <= 3 ? " medal" : ""}">${pos}</span>${
         playerLink(p.name)}</td>
       <td class="num brass">${fmt(p.n)}</td>
       <td class="sm">${p.fav ? `${esc(p.fav)} <span class="muted">\u00d7${
@@ -3098,7 +3107,7 @@ function renderOnePlayer(view, count) {
         <td class="num brass">${m.now}</td></tr>`).join("")}</table>` : ""}
     ${p.ach ? `<h3 style="margin-top:24px">Achievements</h3>
       <div class="chips">${p.ach.split(/\s{2,}/).filter(Boolean)
-        .map(a => `<span class="chip">${esc(a.trim())}</span>`).join("")}</div>`
+        .map(a => `<span class="tag">${esc(a.trim())}</span>`).join("")}</div>`
       : ""}`;
   view.querySelector(".back").onclick = () => go("players");
 }
@@ -3321,6 +3330,66 @@ applyRoute();
 """
 
 
+def clashing_styles(html):
+    """
+    Two rules for one class name, disagreeing about a property.
+
+    This has bitten the page three times. A progress bar was given the
+    class "bar", which the navigation strip already used, so the whole
+    navigation shipped clipped to seven pixels for several hours. The
+    name chips and the little achievement tags both answered to "chip".
+    A rank badge and a rank cell both answered to "rank", which set a
+    table cell to inline-block and dropped it out of its table.
+
+    None of those were visible in the source: both rules read fine where
+    they sat, hundreds of lines apart. So the check is on the property,
+    not the name - two rules for one class setting the same property to
+    different values is always a mistake, while two rules setting
+    different properties is a deliberate split and stays quiet.
+    """
+    css = re.search(r"<style>(.*?)</style>", html, re.S)
+    if not css:
+        return
+    body = re.sub(r"/\*.*?\*/", "", css.group(1), flags=re.S)
+
+    # Each rule is tagged with the media query it sits in, tracked by
+    # counting braces: a phone rule is meant to override the desktop one
+    # above it, so the two are never compared with each other. Only a
+    # second rule in the same context is the mistake.
+    rules, stack, at = {}, [], 0
+    while at < len(body):
+        brace = body.find("{", at)
+        if brace < 0:
+            break
+        head = " ".join(body[at:brace].split()).lstrip("}").strip()
+        if head.lower().startswith("@"):
+            stack.append(head)
+            at = brace + 1
+            continue
+        close = body.find("}", brace)
+        if close < 0:
+            break
+        # One bare class and nothing else, so .chip is checked against
+        # .chip but never against .namegrid .chip - that extra scope is
+        # the fix rather than the bug.
+        if re.fullmatch(r"\.[a-z][a-z0-9-]*", head, re.I):
+            where = " ".join(stack)
+            seen = rules.setdefault((where, head), {})
+            for prop in body[brace + 1:close].split(";"):
+                if ":" not in prop:
+                    continue
+                name, _, value = prop.partition(":")
+                name, value = name.strip().lower(), " ".join(value.split())
+                if name in seen and seen[name] != value:
+                    yield (where, head, name, seen[name], value)
+                seen[name] = value
+        at = close + 1
+        # A closing brace that ends the media block, not a rule.
+        while stack and re.match(r"\s*\}", body[at:]):
+            stack.pop()
+            at = body.index("}", at) + 1
+
+
 def main():
     p = argparse.ArgumentParser(description="Build the EL Market page")
     p.add_argument("--db", default=DB_PATH)
@@ -3341,6 +3410,14 @@ def main():
         f.write("const DATA = ")
         json.dump(data, f, separators=(",", ":"))
         f.write(";\n")
+
+    clashes = list(clashing_styles(HTML))
+    if clashes:
+        print("STOPPING: one class name, two rules, disagreeing:")
+        for where, cls, prop, first, second in clashes:
+            print(f"  {cls} in {where or 'the stylesheet'}: "
+                  f"{prop} is both {first!r} and {second!r}")
+        raise SystemExit(1)
 
     with open(a.out, "w", encoding="utf-8") as f:
         f.write(HTML)
