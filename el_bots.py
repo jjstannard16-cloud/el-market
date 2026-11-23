@@ -56,6 +56,20 @@ CREATE TABLE IF NOT EXISTS run (
     errors      INTEGER DEFAULT 0
 );
 
+-- The bot index header carries the in-game clock and today's special
+-- day, which is the single most useful thing in the game to know and
+-- nothing outside the client shows it. One row per in-game day seen.
+CREATE TABLE IF NOT EXISTS game_day (
+    id         INTEGER PRIMARY KEY,
+    day        INTEGER,        -- day of the in-game month
+    month      TEXT,
+    year       INTEGER,
+    special    TEXT,           -- "Ordinary Day", "Day of Magic", ...
+    first_seen TEXT NOT NULL,
+    last_seen  TEXT NOT NULL,
+    UNIQUE (day, month, year, special)
+);
+
 CREATE TABLE IF NOT EXISTS bot (
     name       TEXT PRIMARY KEY,
     location   TEXT,
@@ -144,6 +158,59 @@ def parse_number(text):
         return float(cleaned)
     except ValueError:
         return None
+
+
+MONTHS_RE = r"([A-Za-z]+)"
+
+
+def parse_game_header(html):
+    """
+    The index header reads like:
+        Game Time 4:55
+        6th day in the month of Akbar, the year 0051
+        Ordinary Day
+    Returns {day, month, year, special, clock} with whatever it could find.
+    """
+    text = re.sub(r"\s+", " ",
+                  BeautifulSoup(html, "lxml").get_text(" ", strip=True))
+    out = {"day": None, "month": None, "year": None, "special": None,
+           "clock": None}
+
+    m = re.search(r"(\d{1,2})(?:st|nd|rd|th)?\s+day\s+in\s+the\s+month\s+"
+                  r"of\s+" + MONTHS_RE + r"\s*,?\s*(?:the\s+)?year\s+"
+                  r"(\d+)", text, re.I)
+    if m:
+        out["day"] = int(m.group(1))
+        out["month"] = m.group(2)
+        out["year"] = int(m.group(3))
+
+    m = re.search(r"Game Time\s+(\d{1,2}:\d{2})", text, re.I)
+    if m:
+        out["clock"] = m.group(1)
+
+    # The day name sits just after the date. Take the words between the
+    # year and whatever follows, rather than guessing from a fixed list,
+    # so a day we have never seen is still captured.
+    m = re.search(r"year\s+\d+\s*,?\s*([A-Z][A-Za-z'\- ]{2,40}?)\s*"
+                  r"(?:Please select|Item Name|Search|$)", text)
+    if m:
+        cand = m.group(1).strip(" .,")
+        if 2 < len(cand) < 42:
+            out["special"] = cand
+    return out
+
+
+def store_game_day(con, info, ts):
+    if not info or not info.get("special"):
+        return None
+    con.execute("""
+        INSERT INTO game_day (day, month, year, special, first_seen, last_seen)
+        VALUES (?,?,?,?,?,?)
+        ON CONFLICT(day, month, year, special) DO UPDATE SET
+            last_seen = excluded.last_seen
+    """, (info["day"], info["month"], info["year"], info["special"], ts, ts))
+    con.commit()
+    return info["special"]
 
 
 def find_bot_links(html):
@@ -336,6 +403,14 @@ def scrape(args):
         r.raise_for_status()
     except Exception as e:
         sys.exit(f"Could not fetch index: {e}")
+
+    day = store_game_day(con, parse_game_header(r.text), ts)
+    if day:
+        info = parse_game_header(r.text)
+        print(f"  in game: {info['day']} {info['month']} {info['year']}"
+              f"{', ' + info['clock'] if info['clock'] else ''} \u2014 {day}")
+    else:
+        print("  could not read the in-game date from the index header")
 
     bots = find_bot_links(r.text)
     if args.limit:

@@ -21,6 +21,7 @@ last week's. This does, once it has been running a while.
 | `el_images.py` | Keeps a local copy of the item artwork |
 | `guild.txt` | Extra players to follow, beyond the top 200 |
 | `overrides.json` | Corrections to wiki data, from people who actually play |
+| `specialdays.json` | What each special day does |
 | `el_bots.db` | SQLite database — current listings plus price history |
 | `public/index.html` | The page itself: markup and code, about 50 KB |
 | `public/data.js` | Everything the page displays, rebuilt on every scrape |
@@ -54,6 +55,19 @@ python el_recipes.py profit                # what is worth making right now
 python el_recipes.py xp                    # cheapest experience per skill
 python el_recipes.py recipe "steel bar"    # one recipe, fully costed
 ```
+
+## Special days
+
+The bot index header carries the in-game clock, date and today's special
+day, so every hourly scrape records it. Nothing outside the game client
+shows which day it is, and the day decides what is worth doing: 3x
+harvesting on Stakhanov's day, no harvesting at all on a Green Day.
+
+`specialdays.json` says what each one does. A day the game throws that is
+not in that file is reported at build time so it can be added.
+
+The game is only checked hourly, so a day that comes and goes between
+checks is missed.
 
 ## Players
 

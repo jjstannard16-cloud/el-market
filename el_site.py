@@ -47,6 +47,21 @@ CONTINENTS = {
 MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 
 
+SPECIAL_DAYS_FILE = "specialdays.json"
+
+
+def load_special_days():
+    """What each day does. Missing file just means no explanations."""
+    try:
+        with open(SPECIAL_DAYS_FILE, encoding="utf-8") as f:
+            return json.load(f).get("days", {})
+    except FileNotFoundError:
+        return {}
+    except Exception as e:
+        print(f"  could not read {SPECIAL_DAYS_FILE}: {e}")
+        return {}
+
+
 def split_location(loc):
     """'White Stone - Tirnwood Vale' -> ('White Stone', 'Irilion'|'Seridia'|None)"""
     if not loc:
@@ -189,6 +204,35 @@ def load(db_path):
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
 
+    # The in-game calendar, and what today's day actually does.
+    today, recent_days = None, []
+    if "game_day" in tables:
+        effects = load_special_days()
+        row = con.execute("""SELECT day, month, year, special, last_seen
+                             FROM game_day ORDER BY last_seen DESC,
+                             id DESC LIMIT 1""").fetchone()
+        if row:
+            info = effects.get(row["special"], {})
+            today = {"day": row["day"], "month": row["month"],
+                     "year": row["year"], "special": row["special"],
+                     "kind": info.get("kind", "unknown"),
+                     "what": info.get("what"), "seen": row["last_seen"]}
+        for r in con.execute("""SELECT day, month, year, special, last_seen
+                                FROM game_day
+                                ORDER BY last_seen DESC, id DESC LIMIT 25"""):
+            e = effects.get(r["special"], {})
+            recent_days.append({"day": r["day"], "month": r["month"],
+                                "year": r["year"], "special": r["special"],
+                                "kind": e.get("kind", "unknown"),
+                                "what": e.get("what"),
+                                "seen": r["last_seen"][:16].replace("T", " ")})
+        if effects:
+            known = {k for k in effects}
+            seen = {r["special"] for r in con.execute(
+                "SELECT DISTINCT special FROM game_day")}
+            for odd in sorted(seen - known):
+                print(f"  special day not in {SPECIAL_DAYS_FILE}: {odd!r}")
+
     # What has moved since yesterday, worked out here so the page gets a
     # short answer rather than the whole history.
     movements, span_hours = [], None
@@ -242,6 +286,9 @@ def load(db_path):
         "skills": skills,
         "movers": movers,
         "moves": movements,
+        "today": today,
+        "days": recent_days,
+        "dayRef": load_special_days(),
         "harvestables": harvestables,
         "meta": {
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -388,6 +435,29 @@ HTML = r"""<!doctype html>
              color: var(--muted); margin: 26px 0 12px;
              border-bottom: 1px solid var(--line); padding-bottom: 6px; }
   h2.group:first-child { margin-top: 2px; }
+  .today { border: 1px solid var(--line-2); border-left-width: 3px;
+           border-radius: 3px; padding: 15px 18px; margin: 2px 0 6px;
+           background: var(--panel); }
+  .today .dayname { font-family: var(--display); font-size: 25px;
+                    font-weight: 600; line-height: 1.1; }
+  .today .daywhat { margin-top: 5px; font-size: 14px; max-width: 62ch; }
+  .today .daywhen { margin-top: 7px; font-size: 12.5px; color: var(--muted); }
+  .k-good     { border-left-color: var(--patina); }
+  .k-good .dayname { color: var(--patina); }
+  .k-bad      { border-left-color: var(--rust); }
+  .k-bad .dayname  { color: var(--rust); }
+  .k-mixed    { border-left-color: var(--brass); }
+  .k-mixed .dayname { color: var(--brass); }
+  .k-ordinary, .k-unknown { border-left-color: var(--line-2); }
+  .k-ordinary .dayname, .k-unknown .dayname { color: var(--ink); }
+  .daylog td:first-child { white-space: nowrap; }
+  .daylog td { vertical-align: top; }
+  .daydot { display: inline-block; width: 7px; height: 7px; border-radius: 4px;
+            margin-right: 9px; vertical-align: 1px;
+            background: var(--line-2); }
+  .daydot.k-good { background: var(--patina); }
+  .daydot.k-bad { background: var(--rust); }
+  .daydot.k-mixed { background: var(--brass); }
   .sections { display: grid; gap: 12px;
               grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
   .sec { display: block; padding: 15px 17px; border: 1px solid var(--line);
@@ -530,6 +600,7 @@ HTML = r"""<!doctype html>
     <button data-tab="profit">Profit</button>
     <button data-tab="craft">Craft</button>
     <button data-tab="players">Players</button>
+    <button data-tab="days">Days</button>
     <button data-tab="bots">Bots</button>
   </nav>
   <div class="spacer"></div>
@@ -726,6 +797,9 @@ const SECTIONS = [
   { id: "players", name: "Players",
     what: "Skill rankings with real levels, PK records and level-ups",
     n: () => `${DATA.meta.playerCount} players` },
+  { id: "days", name: "Days",
+    what: "What today's special day does, and every day the game can throw",
+    n: () => `${Object.keys(DATA.dayRef || {}).length} special days` },
   { id: "bots", name: "Bots",
     what: "Every trade bot, where it stands and what room it has left",
     n: () => `${DATA.bots.length} bots` },
@@ -738,6 +812,21 @@ function bestDeals(n) {
                   - (a.total === Infinity ? 1e15 : a.total))
     .slice(0, n);
 }
+
+function todayBanner() {
+  const t = DATA.today;
+  if (!t) return "";
+  const when = [t.day ? ordinal(t.day) : null, t.month ? "of " + t.month : null,
+                t.year != null ? "year " + String(t.year).padStart(4, "0") : null]
+               .filter(Boolean).join(" ");
+  return `<div class="today k-${esc(t.kind)}">
+    <div class="dayname">${esc(t.special)}</div>
+    ${t.what ? `<div class="daywhat">${esc(t.what)}</div>` : ""}
+    ${when ? `<div class="daywhen">${esc(when)}</div>` : ""}
+  </div>`;
+}
+const ordinal = n => n + (["th","st","nd","rd"][
+  (n % 100 - 20) % 10] || ["th","st","nd","rd"][n % 100] || "th");
 
 function renderHome(view, count) {
   count.textContent = "";
@@ -777,7 +866,7 @@ function renderHome(view, count) {
       : `<div class="caveat">No level-ups yet. They appear once players have
          been read on two different days.</div>`}</div>`;
 
-  view.innerHTML = top
+  view.innerHTML = todayBanner() + top
     + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}</div>`
     + `<h2 class="group">Everything here</h2>
        <div class="sections">${SECTIONS.map(sec => `
@@ -796,7 +885,7 @@ function renderHome(view, count) {
 /* navigation ----------------------------------------------------------
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
-const TABS = ["home", "market", "profit", "craft", "players", "bots"];
+const TABS = ["home", "market", "profit", "craft", "players", "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -971,6 +1060,7 @@ function render() {
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "home")   return renderHome(view, count);
+  if (tab === "days")   return renderDays(view, count, q);
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
 
@@ -1136,6 +1226,48 @@ const caveat = `<div class="caveat">${
   DATA.meta.playerCount} players with public stats. ${
   DATA.meta.privateCount} have privacy mode on, so they are not shown
   here \u2014 any of them could be top of this table.</div>`;
+
+function renderDays(view, count, q) {
+  const ref = DATA.dayRef || {};
+  const log = DATA.days || [];
+  const match = (name, what) => !q
+    || name.toLowerCase().includes(q)
+    || (what || "").toLowerCase().includes(q);
+
+  const groups = [["good", "Days worth being online for"],
+                  ["bad", "Days to sit out"],
+                  ["mixed", "Depends what you are doing"],
+                  ["ordinary", "Nothing doing"]];
+  const seenCount = {};
+  for (const d of log) seenCount[d.special] = (seenCount[d.special] || 0) + 1;
+
+  const reference = groups.map(([kind, title]) => {
+    const rows = Object.entries(ref)
+      .filter(([name, v]) => v.kind === kind && match(name, v.what));
+    if (!rows.length) return "";
+    return `<h2 class="group">${title}</h2>
+      <table class="daylog"><tbody>${rows.map(([name, v]) => `<tr>
+        <td><span class="daydot k-${esc(kind)}"></span>${esc(name)}</td>
+        <td class="sm">${esc(v.what || "")}</td>
+      </tr>`).join("")}</tbody></table>`;
+  }).join("");
+
+  const logTable = log.length ? `
+    <h2 class="group">Days we have seen</h2>
+    <table class="daylog"><tbody>${log
+      .filter(d => match(d.special, d.what))
+      .map(d => `<tr>
+        <td class="sm">${esc(d.seen)}</td>
+        <td><span class="daydot k-${esc(d.kind)}"></span>${esc(d.special)}</td>
+        <td class="sm">${d.day ? esc(ordinal(d.day) + " of " + (d.month || "?"))
+          : ""}</td></tr>`).join("")}</tbody></table>
+    <div class="caveat">The game is checked once an hour, so a day that
+      came and went between checks is not listed.</div>` : "";
+
+  count.textContent = `${Object.keys(ref).length} special days`;
+  view.innerHTML = todayBanner() + logTable + reference
+    + (reference ? "" : `<div class="empty">Nothing matches that.</div>`);
+}
 
 function renderPlayers(view, count, q) {
   if (!PLAYERS.length) {
