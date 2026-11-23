@@ -1,0 +1,61 @@
+name: Event feeds
+
+# Mercator's open feeds: who found a joker or a pear, invances, the
+# lottery, and moderator broadcasts. Run hourly, offset from the market
+# scrape so the two do not race for the same commit.
+on:
+  schedule:
+    - cron: "13 * * * *"
+  workflow_dispatch:
+    inputs:
+      dump:
+        description: "Print what each feed returns and stop"
+        type: boolean
+        default: false
+
+concurrency:
+  group: scrape
+
+jobs:
+  events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml
+
+      - name: Look at the feeds
+        if: inputs.dump
+        run: python el_events.py --dump
+
+      - name: Read the feeds
+        if: ${{ !inputs.dump }}
+        run: python el_events.py
+
+      - name: Rebuild the site
+        if: ${{ !inputs.dump }}
+        run: python el_site.py --out public/index.html
+
+      - name: Save
+        if: ${{ !inputs.dump }}
+        run: |
+          git config user.name "el-hq bot"
+          git config user.email "bot@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            git add el_bots.db public/index.html public/data.js public/img
+            git diff --cached --quiet && echo "nothing changed" && exit 0
+            git commit -q -m "events $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push -q origin main && exit 0
+            echo "push lost a race, redoing (attempt $i)"
+            git reset -q --hard origin/main
+            git fetch -q origin && git reset -q --hard origin/main
+            python el_events.py || true
+            python el_site.py --out public/index.html
+            sleep $((RANDOM % 20 + 5))
+          done
+          exit 1
