@@ -142,6 +142,53 @@ def load(db_path):
                 "nexus": r["nexus_level"],
             }
 
+    # Players are optional too: only present once el_players.py has run.
+    players, skills, movers = [], [], []
+    if "player" in tables:
+        stats = {}
+        if "player_stat" in tables:
+            for r in con.execute("""SELECT name, kind, stat, level
+                                    FROM player_stat"""):
+                stats.setdefault(r["name"], {})[r["stat"]] = {
+                    "k": r["kind"], "v": r["level"]}
+                if r["kind"] == "skill" and r["stat"] not in skills:
+                    skills.append(r["stat"])
+        pcols = {r["name"] for r in con.execute("PRAGMA table_info(player)")}
+        priv = "private" if "private" in pcols else "NULL"
+        miss = "missing" if "missing" in pcols else "NULL"
+        # A week of PK figures, to show movement.
+        week = {}
+        if "pk_snapshot" in tables:
+            for r in con.execute("""SELECT name, fights, won FROM pk_snapshot
+                                    WHERE day <= date('now', '-7 day')
+                                    GROUP BY name HAVING day = MAX(day)"""):
+                week[r["name"]] = {"f": r["fights"], "w": r["won"]}
+        for r in con.execute(f"""SELECT name, overall, pk_score, pk_fights,
+                                 pk_won, pk_lost, achievements, source,
+                                 {priv} AS private, {miss} AS missing,
+                                 last_read FROM player"""):
+            if r["missing"]:
+                continue
+            w = week.get(r["name"], {})
+            players.append({
+                "name": r["name"], "overall": r["overall"],
+                "private": bool(r["private"]),
+                "pk": None if not r["pk_fights"] else {
+                    "score": r["pk_score"], "f": r["pk_fights"],
+                    "w": r["pk_won"], "l": r["pk_lost"],
+                    "wasF": w.get("f"), "wasW": w.get("w"),
+                },
+                "ach": r["achievements"],
+                "stats": stats.get(r["name"], {}),
+            })
+        if "level_change" in tables:
+            for r in con.execute("""SELECT name, stat, was, now, at
+                                    FROM level_change
+                                    ORDER BY at DESC, name LIMIT 300"""):
+                movers.append({"name": r["name"], "stat": r["stat"],
+                               "was": r["was"], "now": r["now"],
+                               "at": r["at"][:10]})
+
     # price history, for a sparkline / "changed recently" flag later
     hist_count = con.execute("SELECT COUNT(*) FROM price_history").fetchone()[0]
     runs = con.execute("""SELECT COUNT(*) FROM run
@@ -158,6 +205,9 @@ def load(db_path):
         "items": sorted(items.values(), key=lambda x: x["name"].lower()),
         "bots": bots,
         "recipes": sorted(recipes, key=lambda r: r["item"].lower()),
+        "players": sorted(players, key=lambda p: p["name"].lower()),
+        "skills": skills,
+        "movers": movers,
         "harvestables": harvestables,
         "meta": {
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -171,6 +221,8 @@ def load(db_path):
             "imgBase": IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
+            "playerCount": sum(1 for p in players if not p["private"]),
+            "privateCount": sum(1 for p in players if p["private"]),
         },
     }
 
@@ -286,6 +338,15 @@ HTML = r"""<!doctype html>
   .modes button.on { color: var(--ground); background: var(--brass);
                      border-color: var(--brass); }
   .gathered { color: var(--patina); }
+  .pick { display: none; padding: 5px 9px; border-radius: 3px;
+          border: 1px solid var(--line-2); background: var(--ground);
+          color: var(--ink); font: 400 13px var(--ui); }
+  .caveat { color: var(--muted); font-size: 12.5px; margin: -2px 0 12px; }
+  .hidden-row td { color: var(--muted); }
+  .rank { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip { font-size: 11.5px; border: 1px solid var(--line-2);
+          border-radius: 10px; padding: 1px 8px; color: var(--muted); }
   .gate { font-size: 11.5px; color: var(--rust); border: 1px solid #4e2e26;
           border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
   .ing { display: grid; grid-template-columns: 2.4rem 1fr auto auto;
@@ -405,11 +466,18 @@ HTML = r"""<!doctype html>
     <button class="on" data-tab="market">Market</button>
     <button data-tab="profit">Profit</button>
     <button data-tab="craft">Craft</button>
+    <button data-tab="players">Players</button>
     <button data-tab="bots">Bots</button>
   </nav>
   <div class="spacer"></div>
   <label class="walk" id="walkwrap">
     <input type="checkbox" id="walk"> Hide boat trips</label>
+  <span class="modes" id="viewwrap">
+    <button data-pview="skills" class="on">Skills</button>
+    <button data-pview="pk">PK</button>
+    <button data-pview="movers">Level-ups</button>
+  </span>
+  <select id="skillpick" class="pick"></select>
   <span class="modes" id="modewrap">
     <span class="lbl">Gathered materials</span>
     <button data-mode="value" class="on">worth what bots pay</button>
@@ -480,6 +548,7 @@ const botLink = n => `<a class="lnk" data-bot="${esc(n)}">${esc(n)}</a>`;
    which is the number that says whether crafting beats selling the raw
    materials. "free" ignores that, "buy" refuses to gather at all.        */
 let craftMode = "value";
+let pview = "skills", pskill = null, focusPlayer = null;
 const PRICE = {};
 for (const it of DATA.items) {
   const k = it.name.toLowerCase();
@@ -534,6 +603,7 @@ const icon = it => it.img
 /* masthead ----------------------------------------------------------- */
 document.getElementById("ledger").innerHTML = [
   [m.botCount, "bots"], [m.itemCount, "items"], [m.listingCount, "offers"],
+  ...(m.playerCount ? [[m.playerCount, "players"]] : []),
   [m.lastScrape ? new Date(m.lastScrape).toLocaleTimeString("en-GB",
      { hour: "2-digit", minute: "2-digit" }) : "–", "last read"],
 ].map(([n, k]) => `<div><div class="n">${
@@ -585,14 +655,16 @@ document.getElementById("foot").innerHTML =
 
 /* navigation --------------------------------------------------------- */
 function setTab(t) {
-  tab = t; sortKey = null; focusBot = null;
+  tab = t; sortKey = null; focusBot = null; focusPlayer = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === t));
   render();
 }
 document.querySelectorAll("nav button").forEach(btn =>
   btn.onclick = () => { document.getElementById("q").value = ""; setTab(btn.dataset.tab); });
-document.getElementById("q").oninput = () => { focusBot = null; render(); };
+document.getElementById("q").oninput = () => {
+  focusBot = null; focusPlayer = null; render();
+};
 document.getElementById("walk").onchange = e => {
   walkableOnly = e.target.checked; render();
 };
@@ -730,10 +802,16 @@ function render() {
     tab === "profit" ? "flex" : "none";
   document.getElementById("modewrap").style.display =
     tab === "craft" ? "flex" : "none";
+  document.getElementById("viewwrap").style.display =
+    tab === "players" && !focusPlayer ? "flex" : "none";
+  document.getElementById("skillpick").style.display =
+    tab === "players" && !focusPlayer && pview === "skills"
+      ? "inline-block" : "none";
 
   if (tab === "bots" && focusBot) return renderBot(view, count);
   if (tab === "bots")   return renderBotList(view, count, q);
   if (tab === "craft")  return renderCraft(view, count, q);
+  if (tab === "players") return renderPlayers(view, count, q);
 
   let items = DATA.items.filter(it => matches(it, q));
   if (tab === "profit") {
@@ -812,6 +890,210 @@ function renderProfit(view, count, items, q) {
     </tr>${isOpen(it, items.length, q) ? detailRow(it, 9) : ""}`).join("")}
     </tbody></table></div>`;
   wireRows(); wireSort(); wireBotLinks();
+}
+
+/* players -------------------------------------------------------------
+   About a third of players have privacy mode on, so every table here is
+   of players with public stats rather than of the game. Say so.         */
+const PLAYERS = DATA.players || [];
+const PUBLIC = PLAYERS.filter(p => !p.private);
+const SKILLS = (DATA.skills || []).slice().sort((a, b) =>
+  a === "Overall" ? -1 : b === "Overall" ? 1 : a.localeCompare(b));
+if (!pskill) pskill = SKILLS.includes("Overall") ? "Overall" : SKILLS[0];
+
+const pickEl = document.getElementById("skillpick");
+if (pickEl && SKILLS.length) {
+  pickEl.innerHTML = SKILLS.map(s =>
+    `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  pickEl.value = pskill;
+  pickEl.onchange = () => { pskill = pickEl.value; render(); };
+}
+document.querySelectorAll("#viewwrap button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#viewwrap button").forEach(x =>
+    x.classList.remove("on"));
+  b.classList.add("on"); pview = b.dataset.pview; focusPlayer = null; render();
+});
+const playerLink = n =>
+  `<a class="lnk" data-player="${esc(n)}">${esc(n)}</a>`;
+const wirePlayerLinks = () =>
+  document.querySelectorAll("a.lnk[data-player]").forEach(a =>
+    a.onclick = e => {
+      e.stopPropagation(); focusPlayer = a.dataset.player;
+      tab = "players"; window.scrollTo({ top: 0 }); render();
+    });
+
+const caveat = `<div class="caveat">${
+  DATA.meta.playerCount} players with public stats. ${
+  DATA.meta.privateCount} have privacy mode on, so they are not shown
+  here \u2014 any of them could be top of this table.</div>`;
+
+function renderPlayers(view, count, q) {
+  if (!PLAYERS.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No player data yet.<br>
+      <span class="sm">Run <code>python el_players.py seed</code> then
+      <code>scrape</code>, and rebuild.</span></div>`;
+    return;
+  }
+  if (focusPlayer) return renderOnePlayer(view, count);
+  if (pview === "pk") return renderPk(view, count, q);
+  if (pview === "movers") return renderMovers(view, count, q);
+
+  const rows = PUBLIC
+    .filter(p => p.stats[pskill] != null)
+    .filter(p => !q || p.name.toLowerCase().includes(q))
+    .map(p => ({ p, lvl: p.stats[pskill].v }))
+    .sort((a, b) => b.lvl - a.lvl || a.p.name.localeCompare(b.p.name));
+  if (!rows.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">Nothing matches that.</div>`;
+    return;
+  }
+  count.textContent = `${rows.length} players ranked by ${pskill}`;
+  let rank = 0, last = null;
+  view.innerHTML = caveat + `<div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Player</th>
+    <th class="num">${esc(pskill)}</th><th class="num hide-sm">Overall</th>
+    <th class="hide-sm">Best at</th></tr></thead><tbody>
+    ${rows.map(({ p, lvl }, i) => {
+      if (lvl !== last) { rank = i + 1; last = lvl; }
+      const best = Object.entries(p.stats)
+        .filter(([s, v]) => v.k === "skill" && s !== "Overall")
+        .sort((a, b) => b[1].v - a[1].v)[0];
+      return `<tr>
+        <td class="num rank">${rank}</td>
+        <td>${playerLink(p.name)}</td>
+        <td class="num brass">${lvl}</td>
+        <td class="num sm hide-sm">${p.overall ?? "\u2013"}</td>
+        <td class="sm hide-sm">${best ? esc(best[0]) + " " + best[1].v : ""}</td>
+      </tr>`;
+    }).join("")}</tbody></table></div>`;
+  wirePlayerLinks();
+}
+
+function renderPk(view, count, q) {
+  const rows = PUBLIC.filter(p => p.pk && p.pk.f > 0)
+    .filter(p => !q || p.name.toLowerCase().includes(q))
+    .sort((a, b) => b.pk.score - a.pk.score);
+  if (!rows.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No PK data yet.</div>`;
+    return;
+  }
+  const anyMovement = rows.some(p => p.pk.wasF != null);
+  count.textContent = `${rows.length} players with PK history`;
+  view.innerHTML = caveat + `<div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Player</th><th class="num">Score</th>
+    <th class="num">Fights</th><th class="num hide-sm">Won</th>
+    <th class="num hide-sm">Lost</th><th class="num">Win rate</th>
+    <th class="num">This week</th></tr></thead><tbody>
+    ${rows.map((p, i) => {
+      const k = p.pk, rate = k.f ? k.w / k.f * 100 : 0;
+      const df = k.wasF != null ? k.f - k.wasF : null;
+      const dw = k.wasW != null ? k.w - k.wasW : null;
+      return `<tr>
+        <td class="num rank">${i + 1}</td>
+        <td>${playerLink(p.name)}</td>
+        <td class="num brass">${k.score.toFixed(2)}</td>
+        <td class="num">${k.f.toLocaleString("en-GB")}</td>
+        <td class="num sm hide-sm">${k.w.toLocaleString("en-GB")}</td>
+        <td class="num sm hide-sm">${k.l.toLocaleString("en-GB")}</td>
+        <td class="num ${rate >= 80 ? "patina" : rate < 50 ? "t-sea" : ""}">${
+          rate.toFixed(0)}%</td>
+        <td class="num ${df ? "patina" : "sm"}">${
+          df == null ? "\u2013" : df === 0 ? "\u2013"
+          : `+${df} fight${df === 1 ? "" : "s"}${dw ? `, ${dw} won` : ""}`}</td>
+      </tr>`;
+    }).join("")}</tbody></table></div>`
+    + (anyMovement ? "" : `<div class="caveat" style="margin-top:14px">
+       Weekly movement appears once there are readings from two different
+       days.</div>`);
+  wirePlayerLinks();
+}
+
+function renderMovers(view, count, q) {
+  const rows = (DATA.movers || [])
+    .filter(m => !q || m.name.toLowerCase().includes(q)
+                    || m.stat.toLowerCase().includes(q));
+  if (!rows.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No level-ups recorded yet.<br>
+      <span class="sm">The first appear once players have been read on two
+      different days.</span></div>`;
+    return;
+  }
+  count.textContent = `${rows.length} level-ups`;
+  view.innerHTML = caveat + `<div class="scroller"><table>
+    <thead><tr><th>When</th><th>Player</th><th>Skill</th>
+    <th class="num">Level</th><th class="num hide-sm">Gained</th>
+    </tr></thead><tbody>
+    ${rows.map(m => `<tr>
+      <td class="sm">${esc(m.at)}</td>
+      <td>${playerLink(m.name)}</td>
+      <td>${esc(m.stat)}</td>
+      <td class="num brass">${m.now}</td>
+      <td class="num sm hide-sm">${m.was != null
+        ? "+" + (m.now - m.was) : "\u2013"}</td></tr>`).join("")}
+    </tbody></table></div>`;
+  wirePlayerLinks();
+}
+
+function renderOnePlayer(view, count) {
+  const p = PLAYERS.find(x => x.name === focusPlayer);
+  count.textContent = "";
+  if (!p) { view.innerHTML = `<div class="empty">Not followed.</div>`; return; }
+
+  const group = kind => Object.entries(p.stats)
+    .filter(([, v]) => v.k === kind)
+    .sort((a, b) => b[1].v - a[1].v);
+
+  const rankIn = skill => {
+    const better = PUBLIC.filter(x => x.stats[skill]
+      && x.stats[skill].v > p.stats[skill].v).length;
+    return better + 1;
+  };
+
+  const table = (rows, title, ranked) => !rows.length ? "" : `
+    <div><h3>${title}</h3><table>${rows.map(([stat, v]) => `<tr>
+      <td>${esc(stat)}</td><td class="num brass">${v.v}</td>
+      ${ranked ? `<td class="num sm">#${rankIn(stat)}</td>` : ""}
+    </tr>`).join("")}</table></div>`;
+
+  const mine = (DATA.movers || []).filter(m => m.name === p.name).slice(0, 12);
+
+  view.innerHTML = `
+    <div class="bothead">
+      <button class="back">All players</button>
+      <h2>${esc(p.name)}</h2>
+      <span class="where">${p.overall ? "overall " + p.overall : ""}${
+        p.private ? " \u00b7 privacy mode on" : ""}</span>
+    </div>
+    ${p.private ? `<div class="caveat">This player has hidden their stats.
+      Only their achievements are public.</div>` : ""}
+    <div class="cols">
+      ${table(group("skill"), "Skills", true)}
+      <div>
+        ${table(group("attribute"), "Attributes", false)
+          .replace("<div>", "").replace(/<\/div>$/, "")}
+        ${p.pk ? `<h3 style="margin-top:18px">PK</h3><table>
+          <tr><td>Score</td><td class="num brass">${p.pk.score.toFixed(2)}</td></tr>
+          <tr><td>Fights</td><td class="num">${p.pk.f}</td></tr>
+          <tr><td>Won</td><td class="num patina">${p.pk.w}</td></tr>
+          <tr><td>Lost</td><td class="num">${p.pk.l}</td></tr>
+          <tr><td>Win rate</td><td class="num">${
+            (p.pk.w / p.pk.f * 100).toFixed(0)}%</td></tr></table>` : ""}
+      </div>
+      ${table(group("cross"), "Cross attributes", false)}
+    </div>
+    ${mine.length ? `<h3 style="margin-top:24px">Recent levels</h3>
+      <table style="max-width:420px">${mine.map(m => `<tr>
+        <td class="sm">${esc(m.at)}</td><td>${esc(m.stat)}</td>
+        <td class="num brass">${m.now}</td></tr>`).join("")}</table>` : ""}
+    ${p.ach ? `<h3 style="margin-top:24px">Achievements</h3>
+      <div class="chips">${p.ach.split(/\s{2,}/).filter(Boolean)
+        .map(a => `<span class="chip">${esc(a.trim())}</span>`).join("")}</div>`
+      : ""}`;
+  view.querySelector(".back").onclick = () => { focusPlayer = null; render(); };
 }
 
 function renderCraft(view, count, q) {
