@@ -347,6 +347,10 @@ HTML = r"""<!doctype html>
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .chip { font-size: 11.5px; border: 1px solid var(--line-2);
           border-radius: 10px; padding: 1px 8px; color: var(--muted); }
+  h2.group { font-family: var(--display); font-weight: 400; font-size: 15px;
+             color: var(--muted); margin: 26px 0 12px;
+             border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  h2.group:first-child { margin-top: 2px; }
   .skillgrid { display: grid; gap: 26px 30px;
                grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
   .skillcol h3 { font-family: var(--display); font-weight: 400; font-size: 16px;
@@ -911,10 +915,64 @@ const PLAYERS = DATA.players || [];
 const PUBLIC = PLAYERS.filter(p => !p.private);
 const SKILLS = (DATA.skills || []).slice().sort((a, b) =>
   a === "Overall" ? -1 : b === "Overall" ? 1 : a.localeCompare(b));
+/* Composite rankings. The official page has these and they are the ones
+   people argue about. Combat and non-combat are split the way the game
+   groups them; say so, since it is a judgement call at the edges.      */
+const COMBAT = ["Attack", "Defense", "Defence", "Ranging", "Summoning",
+                "Magic"];
+const NONCOMBAT = ["Harvest", "Harvesting", "Alchemy", "Potion",
+                   "Manufacture", "Manufacturing", "Crafting",
+                   "Engineering", "Tailoring"];
+const realSkills = p => Object.entries(p.stats)
+  .filter(([n, v]) => v.k === "skill" && n !== "Overall");
+
+const COMPOSITES = {
+  "Combat total": {
+    note: "Attack, Defense, Ranging, Summoning and Magic added together",
+    of: p => {
+      const v = realSkills(p).filter(([n]) => COMBAT.includes(n));
+      return v.length ? v.reduce((t, [, x]) => t + x.v, 0) : null;
+    },
+  },
+  "Non-combat total": {
+    note: "the gathering and making skills added together",
+    of: p => {
+      const v = realSkills(p).filter(([n]) => NONCOMBAT.includes(n));
+      return v.length ? v.reduce((t, [, x]) => t + x.v, 0) : null;
+    },
+  },
+  "All skills total": {
+    note: "every skill added together, Overall excluded",
+    of: p => {
+      const v = realSkills(p);
+      return v.length ? v.reduce((t, [, x]) => t + x.v, 0) : null;
+    },
+  },
+  "Jack of all trades": {
+    note: "your lowest skill - rewards being well rounded rather than "
+        + "specialised",
+    of: p => {
+      const v = realSkills(p);
+      return v.length ? Math.min(...v.map(([, x]) => x.v)) : null;
+    },
+  },
+};
+const COMPOSITE_NAMES = Object.keys(COMPOSITES);
+
+function statOf(p, key) {
+  if (COMPOSITES[key]) return COMPOSITES[key].of(p);
+  return p.stats[key] ? p.stats[key].v : null;
+}
+
 const pickEl = document.getElementById("skillpick");
 if (pickEl && SKILLS.length) {
   pickEl.innerHTML = `<option value="">Every skill</option>`
-    + SKILLS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+    + `<optgroup label="Skill">`
+    + SKILLS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("")
+    + `</optgroup><optgroup label="Combined">`
+    + COMPOSITE_NAMES.map(s =>
+        `<option value="${esc(s)}">${esc(s)}</option>`).join("")
+    + `</optgroup>`;
   pickEl.value = pskill;
   pickEl.onchange = () => { pskill = pickEl.value; render(); };
 }
@@ -951,9 +1009,9 @@ function renderPlayers(view, count, q) {
   if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
-    .filter(p => p.stats[pskill] != null)
     .filter(p => !q || p.name.toLowerCase().includes(q))
-    .map(p => ({ p, lvl: p.stats[pskill].v }))
+    .map(p => ({ p, lvl: statOf(p, pskill) }))
+    .filter(x => x.lvl != null)
     .sort((a, b) => b.lvl - a.lvl || a.p.name.localeCompare(b.p.name));
   if (!rows.length) {
     count.textContent = "";
@@ -961,8 +1019,11 @@ function renderPlayers(view, count, q) {
     return;
   }
   count.textContent = `${rows.length} players ranked by ${pskill}`;
+  const note = COMPOSITES[pskill]
+    ? `<div class="caveat" style="margin-bottom:4px">${pskill}:
+       ${COMPOSITES[pskill].note}.</div>` : "";
   let rank = 0, last = null;
-  view.innerHTML = caveat + `<div class="scroller"><table>
+  view.innerHTML = note + caveat + `<div class="scroller"><table>
     <thead><tr><th class="num">#</th><th>Player</th>
     <th class="num">${esc(pskill)}</th><th class="num hide-sm">Overall</th>
     <th class="hide-sm">Best at</th></tr></thead><tbody>
@@ -986,34 +1047,42 @@ function renderAllSkills(view, count, q) {
   // Every skill at once, the way the official rankings page does it, but
   // with the levels it leaves out. Pick a skill above for the full table.
   const per = 10;
-  const cols = SKILLS.map(skill => {
+  const build = skill => {
     const rows = PUBLIC
-      .filter(p => p.stats[skill] != null)
       .filter(p => !q || p.name.toLowerCase().includes(q))
-      .sort((a, b) => b.stats[skill].v - a.stats[skill].v
-                   || a.name.localeCompare(b.name))
+      .map(p => ({ p, v: statOf(p, skill) }))
+      .filter(x => x.v != null)
+      .sort((a, b) => b.v - a.v || a.p.name.localeCompare(b.p.name))
       .slice(0, per);
     if (!rows.length) return "";
     let rank = 0, last = null;
     return `<div class="skillcol"><h3>${esc(skill)}</h3><table>
-      ${rows.map((p, i) => {
-        const lvl = p.stats[skill].v;
+      ${rows.map(({ p, v: lvl }, i) => {
         if (lvl !== last) { rank = i + 1; last = lvl; }
         return `<tr><td class="num rank">${rank}</td>
           <td>${playerLink(p.name)}</td>
           <td class="num brass">${lvl}</td></tr>`;
       }).join("")}</table>
-      <button class="more" data-skill="${esc(skill)}">All ${esc(skill)}</button>
+      <button class="more" data-skill="${esc(skill)}">Full table</button>
       </div>`;
-  }).filter(Boolean).join("");
+  };
+
+  const section = (title, names) => {
+    const inner = names.map(build).filter(Boolean).join("");
+    return inner ? `<h2 class="group">${title}</h2>
+      <div class="skillgrid">${inner}</div>` : "";
+  };
+  const cols = section("Combined", COMPOSITE_NAMES)
+             + section("Skill by skill", SKILLS);
 
   if (!cols) {
     count.textContent = "";
     view.innerHTML = `<div class="empty">Nothing matches that.</div>`;
     return;
   }
-  count.textContent = `top ${per} in each of ${SKILLS.length} skills`;
-  view.innerHTML = caveat + `<div class="skillgrid">${cols}</div>`;
+  count.textContent = `top ${per} in each of ${SKILLS.length} skills `
+    + `and ${COMPOSITE_NAMES.length} combined rankings`;
+  view.innerHTML = caveat + cols;
   view.querySelectorAll("button.more").forEach(b => b.onclick = () => {
     pskill = b.dataset.skill;
     document.getElementById("skillpick").value = pskill;
