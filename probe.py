@@ -1,31 +1,35 @@
 #!/usr/bin/env python3
-"""One-off: how does the official top-players page carry guilds?"""
+"""One-off: the official guild list, and whether it names members."""
 import re, requests
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
-r = requests.get("https://top.el-db.com/365-200.html", headers=UA, timeout=30)
-html = r.text
-print(f"{r.status_code}, {len(html)} bytes, final url {r.url}")
+def grab(url, **kw):
+    r = requests.get(url, headers=UA, timeout=30, params=kw or None)
+    print(f"\n=== {r.url} -> {r.status_code}, {len(r.text)} bytes")
+    return r.text
 
-print("\n--- every distinct context the word guild appears in")
-seen = set()
-for m in re.finditer(r".{110}guild.{150}", html, re.I | re.S):
-    chunk = " ".join(m.group().split())
-    key = re.sub(r"\d+", "#", chunk)[:90]
-    if key in seen:
-        continue
-    seen.add(key)
-    print(f"  * {chunk[:260]}")
-    if len(seen) >= 12:
-        break
-
-print("\n--- links that mention guild")
-for m in list(dict.fromkeys(re.findall(r'href=["\']([^"\']*guild[^"\']*)["\']',
-                                       html, re.I)))[:15]:
-    print(f"  {m}")
-
-print("\n--- one table row, in full")
+html = grab("https://www.eternal-lands.com/page/guild_list.php")
+text = " ".join(re.sub(r"<[^>]+>", " ", html).split())
+print(f"  text: {text[:500]}")
 rows = re.findall(r"<tr[^>]*>.*?</tr>", html, re.S | re.I)
-print(f"  {len(rows)} rows on the page")
-for row in rows[1:4]:
-    print("  " + " ".join(row.split())[:400])
+print(f"  {len(rows)} table rows; a few from the middle:")
+for row in rows[len(rows)//2:len(rows)//2 + 4]:
+    print("   " + " ".join(row.split())[:260])
+links = list(dict.fromkeys(re.findall(r'href=["\']([^"\']+)["\']', html, re.I)))
+guildish = [l for l in links if re.search(r"guild", l, re.I)]
+print(f"  {len(guildish)} guild links, first few: {guildish[:6]}")
+
+# Whatever a single guild's page looks like decides everything.
+if guildish:
+    target = guildish[0]
+    if not target.startswith("http"):
+        target = "https://www.eternal-lands.com/page/" + target.lstrip("/")
+    g = grab(target)
+    gt = " ".join(re.sub(r"<[^>]+>", " ", g).split())
+    print(f"  text: {gt[:600]}")
+    grows = re.findall(r"<tr[^>]*>.*?</tr>", g, re.S | re.I)
+    print(f"  {len(grows)} rows; a few:")
+    for row in grows[:6]:
+        print("   " + " ".join(row.split())[:240])
+
+grab("https://www.eternal-lands.com/page/players_online.php")
