@@ -59,6 +59,19 @@ CREATE TABLE IF NOT EXISTS special_day_log (
 CREATE INDEX IF NOT EXISTS sd_at ON special_day_log (at);
 CREATE INDEX IF NOT EXISTS sd_name ON special_day_log (name);
 CREATE INDEX IF NOT EXISTS sd_by ON special_day_log (donated_by);
+
+-- Every reading of the clock, so the site can run it forward between
+-- readings and show the invasion warnings while they are still useful.
+CREATE TABLE IF NOT EXISTS game_clock (
+    at       TEXT PRIMARY KEY,   -- real time the reading was taken
+    day      INTEGER,
+    month    INTEGER,
+    year     INTEGER,
+    hour     INTEGER,
+    minute   INTEGER,
+    warning  TEXT,
+    monsters INTEGER
+);
 """
 
 # game_day predates this script and was fed from the bot site. Rows now
@@ -271,6 +284,23 @@ def current_day(con):
     return row[0] if age < CURRENT_FOR else None
 
 
+def store_clock(con, info, ts):
+    """One row per reading. The site works the rate out from these."""
+    if not info:
+        return
+    con.execute("""INSERT OR REPLACE INTO game_clock
+        (at, day, month, year, hour, minute, warning, monsters)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+        (ts, info.get("day"),
+         int(info["month"]) if str(info.get("month") or "").isdigit() else None,
+         info.get("year"), info.get("hour"), info.get("minute"),
+         info.get("warning"), info.get("monsters")))
+    # A year of hourly readings is plenty to keep.
+    con.execute("""DELETE FROM game_clock WHERE at NOT IN
+                   (SELECT at FROM game_clock ORDER BY at DESC LIMIT 9000)""")
+    con.commit()
+
+
 def store_today(con, info, ts):
     """Keep game_day fed, so the rest of the site needs no changes."""
     if not info or not info.get("special"):
@@ -319,6 +349,8 @@ def read_clock(s):
         "month": f"{month:02d}" if month else None,
         "year": number(pick(d, "GameYear", "year")),
         "clock": clock,
+        "hour": hour,
+        "minute": minute,
         "warning": pick(d, "GIWS_Text"),
         "monsters": number(pick(d, "GIWS_Monsters")),
     }, raw
@@ -411,6 +443,7 @@ def main():
     print(f"  read {seen}, {added} new")
 
     if today:
+        store_clock(con, today, ts)
         today["special"] = current_day(con)
         store_today(con, today, ts)
         when = (f"{today['day']}-{today['month']}-"

@@ -194,6 +194,11 @@
              color: var(--muted); margin-top: 6px; }
   .stone { display: inline-block; font-size: 12.5px; color: var(--brass); }
   .stone.sm { color: var(--muted); }
+  .gclock { font-variant-numeric: tabular-nums; color: var(--ink);
+            letter-spacing: .02em; }
+  .today .warning { font-family: var(--sans); font-size: 13px;
+    color: var(--rust); margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--line); }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
             letter-spacing: .04em; color: var(--muted);
             border: 1px solid var(--line-2); border-radius: 2px;
@@ -580,15 +585,73 @@ function todayBanner() {
     : [t.day ? ordinal(t.day) : null, t.month ? "of " + t.month : null,
        t.year != null ? "year " + String(t.year).padStart(4, "0") : null]
       .filter(Boolean).join(" ");
+  const g = gameNow();
   return `<div class="today k-${esc(t.ticked ? t.kind : "unknown")}">
     <div class="dayname">${esc(t.special)}${
       t.ticked ? "" : ` <span class="unsure">unconfirmed</span>`}</div>
     ${t.what ? `<div class="daywhat">${esc(t.what)}</div>` : ""}
-    ${when ? `<div class="daywhen">${esc(when)}${
-      t.ticked ? "" : ` \u2014 this is what the bot site header says, but we
-      have not yet watched it change, so check with <b>#day</b> in game`}</div>`
-      : ""}
+    ${g && !g.stale
+      ? `<div class="daywhen"><span id="gclock" class="gclock">${
+          gameDate(g)} \u00b7 ${g.h}:${String(g.m).padStart(2, "0")}</span>
+         <span class="muted">game time, running</span></div>`
+      : when ? `<div class="daywhen">${esc(when)}${
+          t.ticked ? "" : ` \u2014 this is what the bot site header says, but
+          we have not yet watched it change, so check with <b>#day</b> in
+          game`}</div>` : ""}
+    ${g && g.warning ? `<div class="warning">${esc(g.warning)}${
+      g.monsters ? ` <span class="muted">${fmt(g.monsters)} monsters</span>`
+      : ""}</div>` : ""}
   </div>`;
+}
+
+// A game day is six real hours and the clock runs 0:00 to 5:59, measured
+// off fifteen years of announcements rather than assumed. So the page can
+// run the clock on from the last reading; the hourly reading only has to
+// correct for the server having been down.
+const GAME_DAY_MINUTES = 360;
+const REAL_MS_PER_GAME_MINUTE = 60000;
+
+function gameNow() {
+  const c = DATA.clock;
+  if (!c) return null;
+  const read = Date.parse(c.at);
+  if (!read) return null;
+  const elapsed = Math.floor((Date.now() - read) / REAL_MS_PER_GAME_MINUTE);
+  // A reading much older than an hour means the scrape is not running,
+  // and a clock that has drifted for days is worse than no clock.
+  const stale = Date.now() - read > 3 * 3600 * 1000;
+  let total = c.h * 60 + c.m + Math.max(0, elapsed);
+  const rolled = Math.floor(total / GAME_DAY_MINUTES);
+  total %= GAME_DAY_MINUTES;
+  let day = (c.day || 1) + rolled, month = c.month || 1, year = c.year || 0;
+  while (day > 30) { day -= 30; month += 1; }
+  while (month > 12) { month -= 12; year += 1; }
+  return {
+    h: Math.floor(total / 60), m: total % 60, day, month, year, stale,
+    readAt: read,
+    warning: (Date.now() - read < 25 * 60 * 1000) ? c.warning : null,
+    monsters: c.monsters,
+  };
+}
+
+function gameDate(g) {
+  return `${g.day}-${String(g.month).padStart(2, "0")}-`
+       + `${String(g.year).padStart(4, "0")}`;
+}
+
+// Redrawing the whole tab every minute would fight with scrolling and
+// typing, so the clock writes into its own element.
+let clockTimer = null;
+function startClock() {
+  if (clockTimer) clearInterval(clockTimer);
+  const tick = () => {
+    const el = document.getElementById("gclock");
+    const g = gameNow();
+    if (!el || !g) { clearInterval(clockTimer); clockTimer = null; return; }
+    el.textContent = `${gameDate(g)} \u00b7 ${g.h}:${String(g.m).padStart(2, "0")}`;
+  };
+  tick();
+  clockTimer = setInterval(tick, 10000);
 }
 
 // Mercator spells the days slightly differently from our own reference
@@ -1172,7 +1235,7 @@ function renderDays(view, count, q) {
     + summonerTable
     + (reference || logTable || summonerTable ? ""
        : `<div class="empty">Nothing matches that.</div>`);
-  wireBotLinks(); wirePlayerLinks();
+  wireBotLinks(); wirePlayerLinks(); startClock();
   const more = document.getElementById("moresummoners");
   if (more) more.onclick = () => { summonersShown += 200; render(); };
 }
