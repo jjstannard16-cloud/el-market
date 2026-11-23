@@ -1,0 +1,26 @@
+name: Check quests against the wiki
+
+# Run by hand. The quest guide is a PDF someone maintains and the wiki is
+# edited by everyone, so this says what one has and the other does not.
+# It only reports: what to do about a gap is a judgement call.
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Compare the guide with the wiki
+        run: python el_questcheck.py --json /tmp/questgaps.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quest-gaps
+          path: /tmp/questgaps.json
+          if-no-files-found: ignore

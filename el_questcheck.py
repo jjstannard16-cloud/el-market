@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""
+el_questcheck.py - check the quest guide against the wiki.
+
+quests.json comes from a community PDF, which is thorough but is one
+person's work and dates from whenever it was last revised. The wiki is
+edited by everyone and keeps up. This compares the two and says what is
+in one and not the other, so gaps are found rather than assumed away.
+
+    python el_questcheck.py                 # report only
+    python el_questcheck.py --json gaps.json
+
+Nothing is written to the site: this only reports. Deciding what to do
+about a gap is a judgement call, not something to automate.
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+import time
+
+try:
+    import requests
+except ImportError:
+    sys.exit("Run: pip install requests")
+
+API = "https://el-wiki.holy-eternalland.de/api.php"
+UA = "EL-HQ/0.1 (Eternal Lands community site; contact: stann in-game)"
+PAUSE = 0.4
+QUESTS_FILE = "quests.json"
+
+# Where the wiki keeps quests. More than one, because it has reorganised
+# itself over the years and the old names still hold pages.
+CATEGORIES = ["Quests", "Quest", "Daily Quests", "Dailies", "God Quests",
+              "Tutorial Quests", "Instance Quests"]
+
+# Pages that live in a quest category without being a quest.
+NOT_A_QUEST = re.compile(
+    r"^(Category|Template|File|Help|Talk|User|Quests?$|Quest list|"
+    r"List of quests|Quest rewards?)\b", re.I)
+
+
+def session():
+    s = requests.Session()
+    s.headers.update({"User-Agent": UA})
+    return s
+
+
+def api(s, **params):
+    params.setdefault("format", "json")
+    params.setdefault("formatversion", 2)
+    r = s.get(API, params=params, timeout=30)
+    r.raise_for_status()
+    return r.json()
+
+
+def category_members(s, name):
+    """Every page in a category, following continuations."""
+    out, cont = [], None
+    for _ in range(20):
+        kw = {"action": "query", "list": "categorymembers",
+              "cmtitle": f"Category:{name}", "cmlimit": 500}
+        if cont:
+            kw["cmcontinue"] = cont
+        try:
+            body = api(s, **kw)
+        except Exception as e:
+            print(f"  {name}: {e}")
+            return out
+        for m in body.get("query", {}).get("categorymembers", []):
+            title = m.get("title", "")
+            if title and not NOT_A_QUEST.match(title):
+                out.append(title)
+        cont = body.get("continue", {}).get("cmcontinue")
+        if not cont:
+            break
+        time.sleep(PAUSE)
+    return out
+
+
+def search_quests(s, term, limit=200):
+    try:
+        body = api(s, action="query", list="search", srsearch=term,
+                   srlimit=limit, srnamespace=0)
+    except Exception as e:
+        print(f"  search {term!r}: {e}")
+        return [], 0
+    hits = body.get("query", {}).get("search", [])
+    total = body.get("query", {}).get("searchinfo", {}).get("totalhits", 0)
+    return [h["title"] for h in hits if not NOT_A_QUEST.match(h["title"])], total
+
+
+def norm(text):
+    """
+    Compare names the way a reader would: case, punctuation and the words
+    'quest' and 'the' are noise. An apostrophe closes a word up rather
+    than splitting it, so "Novac's" and "Novacs" are the same name.
+    """
+    t = str(text or "").lower()
+    t = t.replace("’", "").replace("‘", "").replace("'", "")
+    t = re.sub(r"[^a-z0-9 ]+", " ", t)
+    t = re.sub(r"\b(the|a|an|quest|quests|of)\b", " ", t)
+    return " ".join(t.split())
+
+
+def keys(name):
+    """
+    Every form a page might be filed under. The god pages are the reason:
+    ours is "Attack (Mortos)", and the wiki may call it "Mortos",
+    "Attack God", or the whole thing.
+    """
+    name = str(name or "")
+    out = {norm(name)}
+    bracket = re.search(r"\((.*?)\)", name)
+    if bracket:
+        out.add(norm(bracket.group(1)))
+        out.add(norm(re.sub(r"\(.*?\)", " ", name)))
+    out.discard("")
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Check quests.json vs the wiki")
+    ap.add_argument("--quests", default=QUESTS_FILE)
+    ap.add_argument("--json", help="write the gaps to this file as well")
+    a = ap.parse_args()
+
+    if not os.path.exists(a.quests):
+        sys.exit(f"No {a.quests}. Run el_quests.py first.")
+    with open(a.quests, encoding="utf-8") as f:
+        ours = [q["name"] for q in json.load(f).get("quests", [])]
+    ours_norm = {}
+    for n in ours:
+        for k in keys(n):
+            ours_norm.setdefault(k, n)
+    print(f"{len(ours)} quests in {a.quests}")
+
+    s = session()
+    theirs = {}
+    for cat in CATEGORIES:
+        found = category_members(s, cat)
+        if found:
+            print(f"  wiki category {cat!r}: {len(found)} pages")
+        for t in found:
+            theirs.setdefault(norm(t), t)
+        time.sleep(PAUSE)
+
+    # Categories alone miss anything uncategorised, so search as well.
+    for term in ["quest", "daily quest", "incategory:Quests"]:
+        hits, total = search_quests(s, term)
+        if hits:
+            print(f"  wiki search {term!r}: {len(hits)} of {total} hits")
+        for t in hits:
+            theirs.setdefault(norm(t), t)
+        time.sleep(PAUSE)
+
+    if not theirs:
+        sys.exit("The wiki returned nothing - treat this check as not run.")
+
+    # A wiki page counts as covered if any of our names matches any of
+    # the forms it could be filed under.
+    missing = sorted({t for t in theirs.values()
+                      if not (keys(t) & set(ours_norm))})
+    theirs_keys = set()
+    for t in theirs.values():
+        theirs_keys |= keys(t)
+    extra = sorted({n for n in ours if not (keys(n) & theirs_keys)})
+
+    print(f"\n{len(theirs)} distinct quest pages on the wiki")
+    print(f"{len(missing)} on the wiki but not in our guide:")
+    for t in missing:
+        print(f"   + {t}")
+    print(f"\n{len(extra)} in our guide but not found on the wiki:")
+    for t in extra:
+        print(f"   - {t}")
+
+    if a.json:
+        with open(a.json, "w", encoding="utf-8") as f:
+            json.dump({"ours": sorted(ours), "wiki": sorted(theirs.values()),
+                       "missing_from_ours": missing,
+                       "not_on_wiki": extra}, f, indent=1, ensure_ascii=False)
+        print(f"\nwrote {a.json}")
+
+
+if __name__ == "__main__":
+    main()
