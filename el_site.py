@@ -375,6 +375,41 @@ def load(db_path):
             print(f"  {last['n']} players and {last['bots']} bots online at "
                   f"the last reading, {readings} readings so far")
 
+    # Achievements, which the game awards in tiers. The tier is the
+    # interesting part: everyone has Herbalist, but the third tier of it
+    # means a different amount of work from the first.
+    ach_players, ach_kinds = [], []
+    rows = con.execute("""SELECT name, achievements FROM player
+                          WHERE achievements LIKE '%|%'""").fetchall()
+    if rows:
+        TIERS = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
+        counts, holders = {}, {}
+        for r in rows:
+            got, score = [], 0
+            for raw in r["achievements"].split("|"):
+                name = raw.strip()
+                if not name:
+                    continue
+                tier_match = re.search(r"\(([IVX]+)\)\s*$", name)
+                tier = TIERS.get(tier_match.group(1)) if tier_match else None
+                base = re.sub(r"\s*\([IVX]+\)\s*$", "", name).strip()
+                got.append({"name": base, "tier": tier})
+                score += tier or 1
+                counts[base] = counts.get(base, 0) + 1
+                holders.setdefault(base, set()).add(r["name"].lower())
+            if got:
+                ach_players.append({"name": r["name"], "n": len(got),
+                                    "score": score, "got": got})
+        ach_players.sort(key=lambda p: (-p["score"], -p["n"],
+                                        p["name"].lower()))
+        total = len(ach_players)
+        ach_kinds = sorted(
+            ({"name": k, "n": len(v),
+              "share": round(100 * len(v) / total, 1)}
+             for k, v in holders.items()), key=lambda x: x["n"])
+        print(f"  {total} players with achievements, "
+              f"{len(ach_kinds)} different ones")
+
     # Creatures and what they drop. The drops are joined to what bots
     # pay, which is the whole point: nothing else puts a price on a kill.
     creatures = []
@@ -746,6 +781,8 @@ def load(db_path):
         "eventTotals": event_totals,
         "online": online,
         "creatures": creatures,
+        "achPlayers": ach_players,
+        "achKinds": ach_kinds,
         "guilds": guilds,
         "quests": quests,
         "questSections": quest_sections,
@@ -1024,6 +1061,9 @@ HTML = r"""<!doctype html>
   .today .warning { font-family: var(--sans); font-size: 13px;
     color: var(--rust); margin-top: 10px; padding-top: 10px;
     border-top: 1px solid var(--line); }
+  .tier { font-family: var(--sans); font-size: 10px; letter-spacing: .06em;
+          color: var(--brass); border: 1px solid var(--line-2);
+          border-radius: 2px; padding: 0 4px; vertical-align: 1px; }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
             letter-spacing: .04em; color: var(--muted);
             border: 1px solid var(--line-2); border-radius: 2px;
@@ -1187,6 +1227,7 @@ HTML = r"""<!doctype html>
     <button data-pview="skills" class="on">Skills</button>
     <button data-pview="pk">PK</button>
     <button data-pview="movers">Level-ups</button>
+    <button data-pview="ach">Achievements</button>
   </span>
   <select id="skillpick" class="pick"></select>
   <span class="modes" id="modewrap">
@@ -2594,6 +2635,7 @@ function renderPlayers(view, count, q) {
   if (focusPlayer) return renderOnePlayer(view, count);
   if (pview === "pk") return renderPk(view, count, q);
   if (pview === "movers") return renderMovers(view, count, q);
+  if (pview === "ach") return renderAchievements(view, count, q);
   if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
@@ -2867,6 +2909,79 @@ function renderOnline(view, count, q) {
   wirePlayerLinks();
 }
 
+/* achievements --------------------------------------------------------
+   The game awards these in tiers, and the tier is where the work shows:
+   everybody picks up Herbalist, but the third tier of it is a different
+   proposition from the first. So a player is ranked on the sum of their
+   tiers rather than on how many badges they hold.                    */
+
+const ROMAN = ["", "I", "II", "III", "IV", "V"];
+
+function achPanel(name) {
+  const all = DATA.achPlayers || [];
+  const me = all.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!me) return "";
+  return `<div><h3>Achievements <span class="sm">#${
+    all.indexOf(me) + 1} on ${fmt(me.score)}</span></h3>
+    <div class="namegrid">${me.got.map(g =>
+      `<span class="chip">${esc(g.name)}${g.tier
+        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span>`)
+      .join("")}</div></div>`;
+}
+
+function renderAchievements(view, count, q) {
+  const all = DATA.achPlayers || [];
+  const kinds = DATA.achKinds || [];
+  if (!all.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No achievements read yet.
+      <br><span class="sm">They arrive with the next daily player
+      read.</span></div>`;
+    return;
+  }
+  const hits = all.filter(p => !q
+    || p.name.toLowerCase().includes(q)
+    || p.got.some(g => g.name.toLowerCase().includes(q)));
+  count.textContent = `${fmt(hits.length)} of ${fmt(all.length)} players`;
+
+  const rarest = kinds.slice(0, 10);
+  const rare = (q || !rarest.length) ? "" : `
+    <h2 class="group">Hardest to come by</h2>
+    <div class="grouphint">How few of the ${fmt(all.length)} players we
+      follow hold each one. Privacy mode hides a player's achievements
+      along with their skills, so these are shares of what is public.
+      </div>
+    <table class="ranks">${rarest.map(k => `<tr>
+      <td>${esc(k.name)}</td>
+      <td class="barcell"><span class="bar"><i style="width:${
+        Math.max(2, Math.round(k.share))}%"></i></span></td>
+      <td class="num">${fmt(k.n)}</td>
+      <td class="num sm muted">${k.share}%</td></tr>`).join("")}</table>`;
+
+  view.innerHTML = `
+    <h2 class="group">Most achieved</h2>
+    <div class="grouphint">Ranked on tiers added up, so Herbalist (III)
+      counts for three and a plain badge for one. ${fmt(kinds.length)}
+      different achievements are held between them.</div>
+    ${hits.length ? `<div class="scroller"><table>
+      <thead><tr><th class="num">#</th><th>Player</th>
+        <th class="num">Score</th><th class="num hide-sm">Badges</th>
+        <th>Holds</th></tr></thead>
+      <tbody>${hits.slice(0, 200).map(p => `<tr>
+        <td class="num sm">${all.indexOf(p) + 1}</td>
+        <td>${playerLink(p.name)}</td>
+        <td class="num brass">${fmt(p.score)}</td>
+        <td class="num sm hide-sm">${fmt(p.n)}</td>
+        <td class="sm">${p.got.slice(0, 6).map(g =>
+          `${esc(g.name)}${g.tier ? ` <span class="tier">${
+            ROMAN[g.tier]}</span>` : ""}`).join(", ")}${
+          p.got.length > 6 ? " \u2026" : ""}</td>
+      </tr>`).join("")}</tbody></table></div>`
+      : `<div class="empty">Nothing matches that.</div>`}
+    ${rare}`;
+  wirePlayerLinks();
+}
+
 function renderOnePlayer(view, count) {
   // The game's own capitalisation of a name is not consistent between
   // the stats list and the day log, so "stann" and "StAnN" are one person.
@@ -2924,6 +3039,7 @@ function renderOnePlayer(view, count) {
         ${table(group("attribute"), "Attributes", false)
           .replace("<div>", "").replace(/<\/div>$/, "")}
         ${daysPanel(p.name).replace("<div>", "").replace(/<\/div>$/, "")}
+        ${achPanel(p.name)}
         ${p.pk ? `<h3 style="margin-top:18px">PK</h3><table>
           <tr><td>Score</td><td class="num brass">${p.pk.score.toFixed(2)}</td></tr>
           <tr><td>Fights</td><td class="num">${p.pk.f}</td></tr>

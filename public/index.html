@@ -251,6 +251,9 @@
   .today .warning { font-family: var(--sans); font-size: 13px;
     color: var(--rust); margin-top: 10px; padding-top: 10px;
     border-top: 1px solid var(--line); }
+  .tier { font-family: var(--sans); font-size: 10px; letter-spacing: .06em;
+          color: var(--brass); border: 1px solid var(--line-2);
+          border-radius: 2px; padding: 0 4px; vertical-align: 1px; }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
             letter-spacing: .04em; color: var(--muted);
             border: 1px solid var(--line-2); border-radius: 2px;
@@ -414,6 +417,7 @@
     <button data-pview="skills" class="on">Skills</button>
     <button data-pview="pk">PK</button>
     <button data-pview="movers">Level-ups</button>
+    <button data-pview="ach">Achievements</button>
   </span>
   <select id="skillpick" class="pick"></select>
   <span class="modes" id="modewrap">
@@ -1821,6 +1825,7 @@ function renderPlayers(view, count, q) {
   if (focusPlayer) return renderOnePlayer(view, count);
   if (pview === "pk") return renderPk(view, count, q);
   if (pview === "movers") return renderMovers(view, count, q);
+  if (pview === "ach") return renderAchievements(view, count, q);
   if (!pskill) return renderAllSkills(view, count, q);
 
   const rows = PUBLIC
@@ -2091,6 +2096,67 @@ function renderOnline(view, count, q) {
     ${!bots.length && !players.length
       ? `<div class="empty">Nobody by that name is in the game.</div>` : ""}`;
   wirePlayerLinks();
+  wirePlayerLinks();
+}
+
+/* achievements --------------------------------------------------------
+   The game awards these in tiers, and the tier is where the work shows:
+   everybody picks up Herbalist, but the third tier of it is a different
+   proposition from the first. So a player is ranked on the sum of their
+   tiers rather than on how many badges they hold.                    */
+
+const ROMAN = ["", "I", "II", "III", "IV", "V"];
+
+function renderAchievements(view, count, q) {
+  const all = DATA.achPlayers || [];
+  const kinds = DATA.achKinds || [];
+  if (!all.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No achievements read yet.
+      <br><span class="sm">They arrive with the next daily player
+      read.</span></div>`;
+    return;
+  }
+  const hits = all.filter(p => !q
+    || p.name.toLowerCase().includes(q)
+    || p.got.some(g => g.name.toLowerCase().includes(q)));
+  count.textContent = `${fmt(hits.length)} of ${fmt(all.length)} players`;
+
+  const rarest = kinds.slice(0, 10);
+  const rare = (q || !rarest.length) ? "" : `
+    <h2 class="group">Hardest to come by</h2>
+    <div class="grouphint">How few of the ${fmt(all.length)} players we
+      follow hold each one. Privacy mode hides a player's achievements
+      along with their skills, so these are shares of what is public.
+      </div>
+    <table class="ranks">${rarest.map(k => `<tr>
+      <td>${esc(k.name)}</td>
+      <td class="barcell"><span class="bar"><i style="width:${
+        Math.max(2, Math.round(k.share))}%"></i></span></td>
+      <td class="num">${fmt(k.n)}</td>
+      <td class="num sm muted">${k.share}%</td></tr>`).join("")}</table>`;
+
+  view.innerHTML = `
+    <h2 class="group">Most achieved</h2>
+    <div class="grouphint">Ranked on tiers added up, so Herbalist (III)
+      counts for three and a plain badge for one. ${fmt(kinds.length)}
+      different achievements are held between them.</div>
+    ${hits.length ? `<div class="scroller"><table>
+      <thead><tr><th class="num">#</th><th>Player</th>
+        <th class="num">Score</th><th class="num hide-sm">Badges</th>
+        <th>Holds</th></tr></thead>
+      <tbody>${hits.slice(0, 200).map(p => `<tr>
+        <td class="num sm">${all.indexOf(p) + 1}</td>
+        <td>${playerLink(p.name)}</td>
+        <td class="num brass">${fmt(p.score)}</td>
+        <td class="num sm hide-sm">${fmt(p.n)}</td>
+        <td class="sm">${p.got.slice(0, 6).map(g =>
+          `${esc(g.name)}${g.tier ? ` <span class="tier">${
+            ROMAN[g.tier]}</span>` : ""}`).join(", ")}${
+          p.got.length > 6 ? " \u2026" : ""}</td>
+      </tr>`).join("")}</tbody></table></div>`
+      : `<div class="empty">Nothing matches that.</div>`}
+    ${rare}`;
   wirePlayerLinks();
 }
 
