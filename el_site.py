@@ -806,6 +806,12 @@ HTML = r"""<!doctype html>
             border-radius: 2px; padding: 1px 6px; white-space: nowrap; }
   table.ranktable { width: 100%; border-collapse: collapse;
                    font-size: 13.5px; margin-bottom: 10px; }
+  @media (max-width: 620px) {
+    table.ranktable { font-size: 12px; }
+    table.ranktable th, table.ranktable td { padding-right: 6px; }
+    table.ranktable th:nth-child(4), table.ranktable td:nth-child(4) {
+      display: none; }
+  }
   table.ranktable th { font-family: var(--sans); font-size: 11px;
     font-weight: 500; letter-spacing: .04em; color: var(--muted);
     text-align: left; padding: 0 10px 6px 0;
@@ -2231,6 +2237,11 @@ function renderOneQuest(view, count) {
     <tbody>${ranks.map(r => `<tr>${cols.map(c => {
       const v = r[c] || "";
       const where = /where/i.test(c) && v && !/nowhere/i.test(v);
+      // The gods that are not in the game yet have no items listed, and
+      // a blank cell reads like an oversight rather than the truth.
+      if (!v && /where|item/i.test(c)) {
+        return `<td class="sm muted">not known yet</td>`;
+      }
       return `<td${/experience|^rank$/i.test(c) ? ` class="num"` : ""}>${
         where ? `<span class="put ${esc(v.toLowerCase())}">${esc(v)}</span>`
               : esc(v)}</td>`;
