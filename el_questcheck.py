@@ -121,6 +121,35 @@ def keys(name):
     return out
 
 
+HOSTS = ["https://el-wiki.holy-eternalland.de/api.php",
+         "https://www.el-wiki.net/api.php"]
+
+
+def npc_check(s, ours_npcs):
+    """
+    This wiki has no quest write-ups, but it does keep a Quest NPCs
+    category. Every quest starts with someone, so an NPC there that no
+    quest of ours starts with is a quest we may be missing.
+    """
+    listed = {}
+    for cat in ("Quest NPCs", "Gods"):
+        for t in category_members(s, cat):
+            listed.setdefault(norm(t), t)
+        time.sleep(PAUSE)
+    if not listed:
+        print("  the wiki listed no quest NPCs; treat this as not run")
+        return
+    mine = {norm(n) for n in ours_npcs if n}
+    # An NPC may be written "Haidir" by us and "Haidir the Hunter" there.
+    unmatched = sorted(t for k, t in listed.items()
+                       if not any(k == m or k in m or m in k for m in mine))
+    print(f"\n  {len(listed)} quest NPCs and gods on the wiki, "
+          f"{len(mine)} distinct starters in our guide")
+    print(f"  {len(unmatched)} wiki NPCs no quest of ours starts with:")
+    for t in unmatched:
+        print(f"     ? {t}")
+
+
 def discover(s):
     """
     Find out how this wiki files its quests, rather than assuming. Prints
@@ -177,7 +206,13 @@ def main():
     a = ap.parse_args()
 
     if a.discover:
-        discover(session())
+        for host in HOSTS:
+            globals()["API"] = host
+            print(f"\n===== {host}")
+            try:
+                discover(session())
+            except Exception as e:
+                print(f"  unreachable: {e}")
         return
 
     if not os.path.exists(a.quests):
@@ -209,8 +244,13 @@ def main():
             theirs.setdefault(norm(t), t)
         time.sleep(PAUSE)
 
+    npc_check(s, [q.get("npc") for q in
+                  json.load(open(a.quests, encoding="utf-8"))["quests"]])
+
     if not theirs:
-        sys.exit("The wiki returned nothing - treat this check as not run.")
+        print("\nThe wiki has no quest write-ups to compare against, so the "
+              "guide stands on its own. The NPC list above is the check.")
+        return
 
     # A wiki page counts as covered if any of our names matches any of
     # the forms it could be filed under.
