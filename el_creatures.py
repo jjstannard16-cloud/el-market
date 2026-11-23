@@ -257,17 +257,30 @@ def main():
         seen = {(r.get("n"), r["item"]) for r in rare}
         rare += [r for r in page.get("rareOnPage", [])
                  if (r.get("n"), r["item"]) not in seen]
+        # The creature's own page is the reliable source: its statistics
+        # box is a plain key-and-value list. The master table's columns
+        # do not line up for the monsters - it had the Blue Dragon with
+        # 179 health when its page says 9,000 - so that is used only to
+        # fill a gap, and only where it agrees in shape.
         base = master.get(title.lower(), {})
+        stats = page["stats"]
+        ad = (stats.get("Attack/Defense") or "").split("/")
+        attack = ad[0].strip() if ad and ad[0].strip() else base.get("attack")
+        defense = (ad[1].strip() if len(ad) > 1 and ad[1].strip()
+                   else base.get("defense"))
+        health = stats.get("Health Points") or base.get("material")
+        respawn = stats.get("Respawn Time") or base.get("respawn")
+        hostile = base.get("hostile")
+        if hostile not in ("Yes", "No"):
+            hostile = None
         out.append({
             "name": title,
             "kinds": kind_of.get(title, []),
-            "attack": base.get("attack") or page["stats"].get("Attack/Defense",
-                                                              "").split("/")[0],
-            "defense": base.get("defense"),
-            "material": base.get("material"),
-            "respawn": base.get("respawn")
-                       or page["stats"].get("Respawn Time"),
-            "hostile": base.get("hostile"),
+            "attack": attack,
+            "defense": defense,
+            "material": health,
+            "respawn": respawn,
+            "hostile": hostile,
             "stats": page["stats"],
             "places": page["places"],
             "instances": page["instances"],

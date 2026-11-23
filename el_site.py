@@ -51,6 +51,7 @@ MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
 GODS_FILE = "gods.json"
+CREATURES_FILE = "creatures.json"
 
 
 def load_special_days():
@@ -373,6 +374,53 @@ def load(db_path):
                       "trading": sum(1 for b in now_bots if b["trades"])}
             print(f"  {last['n']} players and {last['bots']} bots online at "
                   f"the last reading, {readings} readings so far")
+
+    # Creatures and what they drop. The drops are joined to what bots
+    # pay, which is the whole point: nothing else puts a price on a kill.
+    creatures = []
+    if os.path.exists(CREATURES_FILE):
+        with open(CREATURES_FILE, encoding="utf-8") as f:
+            creatures = json.load(f).get("creatures", [])
+        pays = {}
+        for r in con.execute("""
+                SELECT LOWER(i.name) n, MAX(l.price) p,
+                       (SELECT bot FROM listing x WHERE x.item_id = i.item_id
+                         AND x.side='buy' AND IFNULL(x.quantity,0) <> 0
+                        ORDER BY x.price DESC LIMIT 1) b
+                FROM item i JOIN listing l ON l.item_id = i.item_id
+                WHERE l.side='buy' AND IFNULL(l.quantity,0) <> 0
+                GROUP BY i.item_id"""):
+            pays[r["n"]] = {"price": r["p"], "bot": r["b"]}
+
+        def price_drops(rows):
+            """
+            What a drop is worth, and the most it can be worth, since
+            a drop of "0-35 Gold coins" is a range rather than a number.
+            """
+            worth = 0
+            for d in rows:
+                name = (d.get("item") or "").lower()
+                # The wiki writes plurals; bots do not.
+                hit = pays.get(name) or pays.get(name.rstrip("s"))
+                if name in ("gold coins", "gold coin"):
+                    hit = {"price": 1, "bot": None}
+                if not hit:
+                    continue
+                d["pays"] = hit["price"]
+                d["bot"] = hit["bot"]
+                top = str(d.get("n") or "1").split("-")[-1]
+                d["most"] = hit["price"] * (int(top) if top.isdigit() else 1)
+                worth += d["most"]
+            return worth
+
+        priced = 0
+        for c in creatures:
+            c["worth"] = price_drops(c.get("drops", []))
+            price_drops(c.get("rare", []))
+            if c["worth"]:
+                priced += 1
+        print(f"  {len(creatures)} creatures, {priced} with a price on "
+              f"their drops")
 
     # Guild rosters. Who is in which guild is not published anywhere, so
     # this comes from guild.txt, which someone keeps by hand.
@@ -697,6 +745,7 @@ def load(db_path):
         "eventLog": event_log,
         "eventTotals": event_totals,
         "online": online,
+        "creatures": creatures,
         "guilds": guilds,
         "quests": quests,
         "questSections": quest_sections,
@@ -1124,6 +1173,7 @@ HTML = r"""<!doctype html>
     <button class="on" data-tab="home">Home</button>
     <button data-tab="market">Market</button>
     <button data-tab="craft">Craft</button>
+    <button data-tab="fight">Fight</button>
     <button data-tab="players">Players</button>
     <button data-tab="quests">Quests</button>
     <button data-tab="events">Events</button>
@@ -1206,6 +1256,7 @@ let craftMode = "value";
 let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 let focusQuest = null, qsection = "";                    // "" = every section
 let findersShown = 25, eboard = "found";
+let focusBeast = null, fkind = "";
 let focusGuild = null, gskill = "";       // "" = the roster, not one skill
 const PRICE = {};
 for (const it of DATA.items) {
@@ -1306,6 +1357,9 @@ const SECTIONS = [
   { id: "market", name: "Market",
     what: "Every item, who sells it cheapest and who pays most",
     n: () => `${DATA.items.length} items` },
+  { id: "fight", name: "Fight",
+    what: "Every creature, what it drops, and what the drops are worth",
+    n: () => `${(DATA.creatures || []).length} creatures` },
   { id: "craft", name: "Craft",
     what: "What a craft costs at today's prices, and what a level costs",
     n: () => `${DATA.meta.recipeCount} recipes` },
@@ -1519,7 +1573,7 @@ function renderHome(view, count) {
 /* navigation ----------------------------------------------------------
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
-const TABS = ["home", "market", "craft", "players", "quests",
+const TABS = ["home", "market", "craft", "fight", "players", "quests",
               "events", "guilds", "online", "days", "bots"];
 
 function go(tab, sub) {
@@ -1538,6 +1592,7 @@ function applyRoute() {
   focusPlayer = tab === "players" && sub ? sub : null;
   focusQuest = tab === "quests" && sub ? sub : null;
   focusGuild = tab === "guilds" && sub ? sub : null;
+  focusBeast = tab === "fight" && sub ? sub : null;
   sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === tab));
@@ -1555,7 +1610,7 @@ document.querySelectorAll("nav button").forEach(btn =>
   });
 document.getElementById("q").oninput = () => {
   focusBot = null; focusPlayer = null; focusQuest = null;
-  focusGuild = null; render();
+  focusGuild = null; focusBeast = null; render();
 };
 document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".modes button").forEach(x =>
@@ -1700,6 +1755,8 @@ function render() {
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
+  if (tab === "fight" && focusBeast) return renderOneBeast(view, count);
+  if (tab === "fight")  return renderFight(view, count, q);
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
 
@@ -1827,6 +1884,144 @@ const caveat = `<div class="caveat">${
 
 // The leaderboard runs to several hundred names, so it opens short.
 let summonersShown = 25;
+
+/* fight ---------------------------------------------------------------
+   Creature stats and drop tables from the wiki, with what the bots pay
+   for each drop. The money figure is a ceiling, not an average: a drop
+   written "0-35 Gold coins" is priced at 35, and rare drops are not
+   counted towards it at all.                                         */
+
+// Wiki figures arrive as text, sometimes with a unit: "26 seconds",
+// "105/90". Sorting needs the number in front of it.
+const num = v => {
+  const m = /-?\d+(?:\.\d+)?/.exec(String(v == null ? "" : v));
+  return m ? parseFloat(m[0]) : -1;
+};
+
+const beastBy = name => (DATA.creatures || []).find(c =>
+  c.name.toLowerCase() === String(name || "").toLowerCase());
+
+const KINDS = { animal: "Animals", monster: "Monsters",
+                instance: "Instance", invance: "Invance",
+                invasion: "Invasion", other: "Other" };
+
+function beastMatches(c, q) {
+  if (!q) return true;
+  return [c.name, (c.kinds || []).join(" "),
+          (c.places || []).map(p => p.where).join(" "),
+          (c.instances || []).join(" "),
+          (c.drops || []).map(d => d.item).join(" "),
+          (c.rare || []).map(d => d.item).join(" ")]
+    .join(" ").toLowerCase().includes(q);
+}
+
+function renderFight(view, count, q) {
+  const all = DATA.creatures || [];
+  if (!all.length) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No creature data yet.</div>`;
+    return;
+  }
+  let list = all.filter(c => beastMatches(c, q));
+  if (fkind) list = list.filter(c => (c.kinds || []).includes(fkind));
+  list = sortRows(list, "worth");
+
+  count.textContent = `${fmt(list.length)} creature${
+    list.length === 1 ? "" : "s"}${fkind ? ", " + KINDS[fkind].toLowerCase()
+    : ""}`;
+
+  const picker = `<div class="pills">
+    <button class="pill${fkind ? "" : " on"}" data-fkind="">Everything</button>
+    ${Object.entries(KINDS).map(([k, label]) => {
+      const n = all.filter(c => (c.kinds || []).includes(k)).length;
+      return n ? `<button class="pill${fkind === k ? " on" : ""}"
+        data-fkind="${k}">${esc(label)}</button>` : "";
+    }).join("")}</div>`;
+
+  view.innerHTML = picker + `<div class="scroller"><table>${head([
+    { t: "Creature", k: "name" },
+    { t: "Att", k: c => num(c.attack), num: 1, hide: 1 },
+    { t: "Def", k: c => num(c.defense), num: 1, hide: 1 },
+    { t: "Health", k: c => num(c.material), num: 1, hide: 1 },
+    { t: "Respawn", k: c => num(c.respawn), num: 1, hide: 1 },
+    { t: "Drops" },
+    { t: "Worth", k: "worth", num: 1 },
+  ])}<tbody>${list.map(c => `<tr>
+      <td><a class="lnk blnk" href="#fight/${encodeURIComponent(c.name)}">${
+        esc(c.name)}</a>${(c.kinds || []).length
+        ? `<div class="seen">${(c.kinds || []).map(k => esc(KINDS[k] || k))
+            .join(" \u00b7 ")}</div>` : ""}</td>
+      <td class="num sm hide-sm">${esc(c.attack || "")}</td>
+      <td class="num sm hide-sm">${esc(c.defense || "")}</td>
+      <td class="num sm hide-sm">${esc(c.material || "")}</td>
+      <td class="num sm hide-sm">${esc(c.respawn || "")}</td>
+      <td class="sm">${(c.drops || []).slice(0, 3).map(d =>
+        `${d.n ? esc(d.n) + " " : ""}${esc(d.item)}`).join(", ")}${
+        (c.drops || []).length > 3 ? " \u2026" : ""}</td>
+      <td class="num brass">${c.worth ? fmt(c.worth) : ""}</td>
+    </tr>`).join("")}</tbody></table></div>
+    ${list.length ? `<div class="caveat">Worth is the most a kill can be
+      carrying, not an average: a drop written 0-35 gold coins is counted
+      at 35, and rare drops are not counted at all. Stats and drops come
+      from the EL wiki, prices from the bots.</div>`
+      : `<div class="empty">Nothing matches that.</div>`}`;
+  wireSort();
+}
+
+function renderOneBeast(view, count) {
+  const c = beastBy(focusBeast);
+  count.textContent = "";
+  if (!c) {
+    view.innerHTML = `<div class="empty">No such creature.</div>`;
+    return;
+  }
+  const stats = Object.entries(c.stats || {});
+  const dropTable = rows => !rows.length ? "" : `<table>${rows.map(d => `<tr>
+      <td>${d.n ? `<span class="sm muted">${esc(d.n)}</span> ` : ""}${
+        esc(d.item)}</td>
+      <td class="num ${d.pays ? "brass" : "sm muted"}">${
+        d.pays ? fmt(d.most) : "no bot buys it"}</td>
+      <td class="sm">${d.bot ? botLink(d.bot) : ""}</td>
+    </tr>`).join("")}</table>`;
+
+  view.innerHTML = `
+    <div class="bothead">
+      <button class="back">All creatures</button>
+      <h2>${esc(c.name)}</h2>
+      <span class="where">${(c.kinds || []).map(k => esc(KINDS[k] || k))
+        .join(" \u00b7 ")}</span>
+    </div>
+    ${c.worth ? `<div class="qnpc">A kill is carrying at most
+      <b>${fmt(c.worth)}</b> gold, before rare drops.</div>` : ""}
+    <div class="cols">
+      <div>
+        ${stats.length ? `<div class="qblock"><h3>Statistics</h3>
+          <table>${stats.map(([k, v]) => `<tr><td>${esc(k)}</td>
+            <td class="sm">${esc(v)}</td></tr>`).join("")}</table></div>` : ""}
+        ${(c.places || []).length ? `<div class="qblock"><h3>Found in</h3>
+          <ul class="plain">${c.places.map(p => `<li>${esc(p.where)}${
+            p.region ? ` <span class="sm muted">${esc(p.region)}</span>`
+            : ""}</li>`).join("")}</ul></div>` : ""}
+        ${(c.instances || []).length ? `<div class="qblock">
+          <h3>Instances</h3><ul class="plain">${c.instances.map(i =>
+            `<li>${esc(i)}</li>`).join("")}</ul></div>` : ""}
+      </div>
+      <div style="flex: 2 1 420px">
+        ${(c.drops || []).length ? `<div class="qblock"><h3>Drops</h3>
+          ${dropTable(c.drops)}</div>` : ""}
+        ${(c.rare || []).length ? `<div class="qblock"><h3>Rare drops</h3>
+          <div class="panelhint">Players confirm these on the wiki as they
+            find them, so the list grows and nobody knows the odds.</div>
+          ${dropTable(c.rare)}</div>` : ""}
+      </div>
+    </div>
+    <div class="caveat">Stats and drops from the EL wiki, prices from the
+      bots. A drop written as a range is priced at the top of it.</div>`;
+
+  wireBotLinks();
+  const back = view.querySelector(".back");
+  if (back) back.onclick = () => go("fight");
+}
 
 /* guilds --------------------------------------------------------------
    Who is in which guild is published nowhere, so this comes from
