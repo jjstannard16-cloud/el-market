@@ -157,6 +157,19 @@ def follow_new(con, names, ts):
     return len(fresh)
 
 
+def unmix(con):
+    """
+    The first run read both lists as one, so bots landed in the player
+    tally. Anything we now know to be a bot comes out of it.
+    """
+    gone = con.execute("""DELETE FROM online_player WHERE LOWER(name) IN
+                          (SELECT LOWER(name) FROM online_bot)""").rowcount
+    if gone:
+        con.commit()
+        print(f"  took {gone} bots out of the player tally")
+    return gone
+
+
 def report(con):
     n, = con.execute("SELECT COUNT(*) FROM online_count").fetchone()
     if n < 2:
@@ -216,6 +229,7 @@ def main():
     con.row_factory = sqlite3.Row
     ensure(con)
     store(con, names, bots, ts)
+    unmix(con)
     fresh = follow_new(con, names, ts)
     if fresh:
         print(f"  {fresh} player{'s' if fresh > 1 else ''} we had not seen "
