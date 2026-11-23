@@ -45,7 +45,7 @@ jobs:
           # If the remote moved while this job ran, throw our copy away,
           # take theirs, and redo the work on top. Both jobs are
           # idempotent, so redoing is always safe and always correct.
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5; do
             git add el_bots.db public/index.html
             if git diff --staged --quiet; then
               echo "Nothing changed."
@@ -55,11 +55,12 @@ jobs:
             if git push; then
               exit 0
             fi
+            sleep $(( RANDOM % 20 + 5 ))
             echo "Remote moved. Redoing this run on top of it (attempt $attempt)."
             git fetch origin main
             git reset --hard origin/main
             python el_bots.py scrape
             python el_site.py --out public/index.html
           done
-          echo "Could not land the change after 3 attempts."
+          echo "Could not land the change after 5 attempts."
           exit 1
