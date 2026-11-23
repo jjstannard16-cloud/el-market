@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
-"""One-off: does the wiki list every achievement by name?"""
-import re, requests, time
-API = "https://el-wiki.holy-eternalland.de/api.php"
+"""One-off: what is on a player page beyond skills? Counters, or badges?"""
+import re, requests
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
-def api(**kw):
-    kw.setdefault("format", "json"); kw.setdefault("formatversion", 2)
-    return requests.get(API, params=kw, headers=UA, timeout=30).json()
-
-b = api(action="query", prop="revisions", titles="Achievements",
-        rvprop="content", rvslots="main", redirects=1)
-for pg in b.get("query", {}).get("pages", []):
-    rv = (pg.get("revisions") or [{}])[0]
-    t = rv.get("slots", {}).get("main", {}).get("content") or ""
-    print(f"{pg.get('title')}: {len(t)} chars, "
-          f"{len(re.findall(r'^==', t, re.M))} headings, "
-          f"{len(re.findall(r'^\|-', t, re.M))} table rows")
-    print("\n".join(t.splitlines()[:60]))
+for who in ("stann", "Burn"):
+    r = requests.get("http://game.eternal-lands.com/view_user.php",
+                     params={"user": who}, headers=UA, timeout=25)
+    html = r.text
+    print(f"\n===== {who}: {r.status_code}, {len(html)} bytes")
+    text = " ".join(re.sub(r"<[^>]+>", " ", html).split())
+    print(text)
+    for word in ("Instances", "kills", "missions", "Haidir", "harvested",
+                 "Lucky", "Rostogol", "achiev"):
+        if re.search(word, html, re.I):
+            print(f"  >>> mentions {word!r}")
