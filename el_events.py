@@ -84,6 +84,24 @@ INVADE = re.compile(r"\b(?:they will invade|invasion (?:in|at)|invading)\s+"
                     r"(?P<map>[A-Z][\w' ]{2,30}?)\s*[!.,]", re.I)
 INSIDE = re.compile(r"\b(?:inside|in)\s+the\s+(?P<map>[A-Z][\w' ]{2,30}?)\s*[!.,]")
 
+# The announcements feed carries more than invasions. Each of these was
+# read off the real broadcasts rather than guessed:
+#   JOKER: LadyReni found Joker and got a Potion of Wildness
+#   GIWS: mashu has kindly donated 50000 gold coins for the project...
+#   GIWS: A Rat was pulled out of an outhouse in Portland! ...
+#   A treasure has been found in Desert Pines!
+JOKER = re.compile(r"^JOKER:\s*(?P<who>.+?)\s+found\s+Joker"
+                   r"(?:\s+and\s+got\s+(?:an?\s+)?(?P<prize>.+?))?\s*[.!]*\s*$",
+                   re.I)
+DONATED = re.compile(r"^GIWS:\s*(?P<who>.+?)\s+has kindly donated\s+"
+                     r"(?P<n>[\d,]+)\s+gold", re.I)
+PULLED = re.compile(r"^GIWS:\s*An?\s+(?P<mob>[\w' ]+?)\s+was pulled out of .*?\bin\s+"
+                    r"(?P<map>[\w' ]+?)\s*[!.]", re.I)
+TREASURE = re.compile(r"^A treasure has been found(?:\s+in\s+(?P<map>[\w' ]+?))?\s*[!.]*\s*$",
+                      re.I)
+# "radu: There is a new treasure..." - a named person broadcasting.
+SPEAKER = re.compile(r"^(?P<who>[A-Za-z][\w\-]{1,19}):\s+\S")
+
 # "Game Date: 14-07-0089 Game time: 0:08"
 GAMETIME = re.compile(
     r"(?P<d>\d{1,2})-(?P<m>\d{1,2})-(?P<y>\d{2,4}).*?(?P<t>\d{1,2}:\d{2})",
@@ -128,16 +146,33 @@ def parse_message(kind, text):
         if w:
             return "lottery", w.group("who").strip(), None
     if kind == "announcement":
-        # An announcement has no player, so "who" carries the place the
-        # invasion is headed for - that is what makes the feed useful.
+        # Most of this feed is the invasion warning system, where there
+        # is no player, so "who" carries the place instead. The joker and
+        # donation broadcasts do name a player, and those use "who" for
+        # the player as everywhere else.
+        j = JOKER.match(text)
+        if j:
+            return "joker", j.group("who").strip(), 1
+        d = DONATED.match(text)
+        if d:
+            return "donation", d.group("who").strip(), \
+                   int(d.group("n").replace(",", ""))
+        t = TREASURE.match(text)
+        if t:
+            return "treasure", (t.group("map") or "").strip() or None, None
+        p = PULLED.match(text)
+        if p:
+            return "pulled", p.group("map").strip(), None
         if GIWS_OVER.search(text):
             return "invasion over", None, None
-        if GIWS_WARN.search(text):
+        if GIWS_WARN.search(text) or "invasion advanced warning" in text.lower():
             m = INVADE.search(text) or INSIDE.search(text)
-            place = m.group("map").strip() if m else None
-            return "invasion", place, None
+            return "invasion", (m.group("map").strip() if m else None), None
         if text.lstrip().startswith("#Message from"):
             return "message", None, None
+        sp = SPEAKER.match(text)
+        if sp and not text.startswith("GIWS"):
+            return "message", sp.group("who"), None
     return None, None, None
 
 
@@ -248,12 +283,33 @@ def walk(s, con, kind, path, full):
     return added
 
 
+def reparse(con):
+    """
+    Re-read the stored broadcasts with the current patterns. The text is
+    already here, so this costs nothing and means a new pattern does not
+    need a fresh download of 35,000 rows.
+    """
+    rows = con.execute("SELECT kind, id, message FROM event_log").fetchall()
+    changed = 0
+    for kind, rid, msg in rows:
+        what, who, amount = parse_message(kind, msg)
+        cur = con.execute("""SELECT what, who, amount FROM event_log
+                             WHERE kind = ? AND id = ?""", (kind, rid)).fetchone()
+        if cur != (what, who, amount):
+            con.execute("""UPDATE event_log SET what = ?, who = ?, amount = ?
+                           WHERE kind = ? AND id = ?""",
+                        (what, who, amount, kind, rid))
+            changed += 1
+    con.commit()
+    print(f"  re-read {len(rows)} broadcasts, {changed} changed")
+
+
 def report(con):
     rows = con.execute("""SELECT what, COUNT(*) c FROM event_log
-                          WHERE kind = 'find' AND what IS NOT NULL
+                          WHERE what IS NOT NULL
                           GROUP BY what ORDER BY c DESC""").fetchall()
     if rows:
-        print("  finds: " + ", ".join(f"{r[0]} {r[1]}" for r in rows))
+        print("  kinds: " + ", ".join(f"{r[0]} {r[1]}" for r in rows))
     inv = con.execute("""SELECT who, COUNT(*) c FROM event_log
                          WHERE what = 'invasion' AND who IS NOT NULL
                          GROUP BY LOWER(who) ORDER BY c DESC LIMIT 6""")
@@ -261,7 +317,7 @@ def report(con):
     if best:
         print("  invaded most: " + ", ".join(f"{r[0]} ({r[1]})" for r in best))
     top = con.execute("""SELECT who, SUM(IFNULL(amount,1)) n FROM event_log
-                         WHERE kind = 'find' AND who IS NOT NULL
+                         WHERE what IN ('pear','joker') AND who IS NOT NULL
                          GROUP BY LOWER(who) ORDER BY n DESC LIMIT 5""")
     best = list(top)
     if best:
@@ -275,6 +331,8 @@ def main():
     ap.add_argument("--full", action="store_true")
     ap.add_argument("--dump", action="store_true",
                     help="print what each feed returns and stop")
+    ap.add_argument("--reparse", action="store_true",
+                    help="re-read stored broadcasts with the current patterns")
     a = ap.parse_args()
 
     s = session()
@@ -297,6 +355,12 @@ def main():
     print(f"[{ts}] reading the event feeds...")
     for kind, path in FEEDS.items():
         walk(s, con, kind, path, a.full)
+    if a.reparse:
+        reparse(con)
+    unread = con.execute("""SELECT COUNT(*) FROM event_log
+                            WHERE what IS NULL""").fetchone()[0]
+    total = con.execute("SELECT COUNT(*) FROM event_log").fetchone()[0]
+    print(f"  {total - unread} of {total} broadcasts read, {unread} not")
     report(con)
     con.close()
 

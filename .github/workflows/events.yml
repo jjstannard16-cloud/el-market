@@ -35,7 +35,7 @@ jobs:
 
       - name: Read the feeds
         if: ${{ !inputs.dump }}
-        run: python el_events.py
+        run: python el_events.py --reparse
 
       - name: Rebuild the site
         if: ${{ !inputs.dump }}
