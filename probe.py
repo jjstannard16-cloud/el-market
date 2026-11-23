@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-"""One-off: the official online-players page."""
-import re, requests, time
+"""One-off: why does the online page have more links than it claims?"""
+import re, requests
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-URL = "http://game.eternal-lands.com/online_players.htm"
+html = requests.get("http://game.eternal-lands.com/online_players.htm",
+                    headers=UA, timeout=30).text
+print(f"{len(html)} bytes")
+for m in re.finditer(r"There are\s+(\d+)\s+([^<:]+)", html, re.I):
+    print(f"  header: {m.group(0).strip()!r} at offset {m.start()}")
+links = [(m.start(), m.group(1)) for m in
+         re.finditer(r"view_user\.php\?user=([^\"'&<>\s]+)", html)]
+print(f"  {len(links)} links, {len(set(n for _, n in links))} distinct")
+print(f"  first at {links[0][0]}, last at {links[-1][0]}")
 
-r = requests.get(URL, headers=UA, timeout=30)
-html = r.text
-print(f"{r.url} -> {r.status_code}, {len(html)} bytes, "
-      f"type {r.headers.get('content-type')}")
-text = " ".join(re.sub(r"<[^>]+>", " ", html).split())
-print(f"\ntext ({len(text)} chars):\n  {text[:900]}")
-print(f"\nview_user links: {len(re.findall(r'view_user', html))}")
-print(f"rows: {len(re.findall(r'<tr', html, re.I))}")
-print(f"mentions guild: {bool(re.search(r'guild', html, re.I))}")
-print("\nfirst 1200 bytes of raw html:")
-print(html[:1200])
+# Anything between the links that is not another link marks a new block.
+print("\n--- text that is not a player link, through the body:")
+body = html[html.lower().find("<body"):]
+plain = re.sub(r'<a [^>]*view_user[^>]*>[^<]*</a>', "", body)
+plain = " ".join(re.sub(r"<[^>]+>", " ", plain).split())
+print(f"  {plain[:700]}")
 
-# Does it move? Two reads a minute apart say whether it is live.
-time.sleep(45)
-again = requests.get(URL, headers=UA, timeout=30).text
-t2 = " ".join(re.sub(r"<[^>]+>", " ", again).split())
-print(f"\n45 seconds later: {len(again)} bytes, identical: {again == html}")
-print(f"  {t2[:300]}")
+# Where exactly does the second block start?
+chunks = re.split(r"(There are\s+\d+[^<:]*:?)", html, flags=re.I)
+print(f"\n--- {len(chunks)} chunks split on 'There are N ...'")
+for i, c in enumerate(chunks):
+    n = len(re.findall(r"view_user", c))
+    head = " ".join(re.sub(r"<[^>]+>", " ", c).split())[:90]
+    print(f"  [{i}] {n:>4} links  {head!r}")
