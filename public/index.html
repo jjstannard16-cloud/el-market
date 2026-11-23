@@ -232,8 +232,11 @@
 
   .empty { padding: 56px 0; text-align: center; color: var(--muted); }
   footer { border-top: 1px solid var(--line); }
-  footer .wrap { padding-top: 16px; padding-bottom: 40px;
-                 color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+  footer .wrap { padding-top: 20px; padding-bottom: 44px;
+                 color: var(--muted); font-size: 12.5px; line-height: 1.65; }
+  .footgrid { display: grid; gap: 18px 36px;
+              grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .footgrid b { color: var(--ink); font-weight: 600; }
   code { font-family: ui-monospace, Menlo, Consolas, monospace;
          background: var(--panel); padding: 1px 5px; border-radius: 2px;
          font-size: 12px; color: var(--ink); }
@@ -415,18 +418,33 @@ document.getElementById("ledger").innerHTML = [
   typeof n === "number" ? n.toLocaleString("en-GB") : n
 }</div><div class="k">${k}</div></div>`).join("");
 
-document.getElementById("foot").innerHTML =
-  `Built from ${m.runs} scrape${m.runs === 1 ? "" : "s"} of
-   bots.el-services.net, ${m.historyRows.toLocaleString("en-GB")} price points
-   recorded. Refresh with <code>python el_bots.py scrape</code> then
-   <code>python el_site.py</code>.` +
-  (m.unknownMaps.length
-    ? `<br>Maps not yet placed on a continent: ${esc(m.unknownMaps.join(", "))}.`
-    : "") +
-  `<br>Item art is loaded from bots.el-services.net. Host your own copies
-   before putting this online.`;
+document.getElementById("foot").innerHTML = `
+  <div class="footgrid">
+    <div>
+      <b>EL Headquarters</b> collects what the trade bots are buying and
+      selling, what everything costs to craft, and where players stand,
+      and puts it in one place. Prices are read every hour.
+    </div>
+    <div>
+      Prices from <a href="https://bots.el-services.net/">bots.el-services.net</a>.
+      Recipes and harvestables from the
+      <a href="https://el-wiki.holy-eternalland.de/">EL wiki</a>.
+      Player stats from <a href="https://www.eternal-lands.com/">eternal-lands.com</a>.
+      Thanks to everyone who maintains them.
+    </div>
+    <div>
+      Prices last read ${m.lastScrape
+        ? new Date(m.lastScrape).toLocaleString("en-GB",
+            { day: "numeric", month: "short", hour: "2-digit",
+              minute: "2-digit" })
+        : "\u2013"}.
+      ${m.privateCount ? `${m.privateCount} players have privacy mode on and
+        are left out of the rankings.` : ""}
+      <br>A community project, not affiliated with Eternal Lands.
+      Spotted something wrong? Tell stann in game.
+    </div>
+  </div>`;
 
-/* the floor ---------------------------------------------------------- */
 /* home ---------------------------------------------------------------
    What has changed since you last looked, then a way into each section.
    Everything on this page links somewhere.                             */
