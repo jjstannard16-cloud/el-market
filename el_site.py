@@ -236,9 +236,23 @@ def load(db_path):
     # behaves.
     day_log, day_stats, summoners = [], {}, []
     if "special_day_log" in tables:
+        # Mercator records the same announcement more than once - twice at
+        # the same minute, or a minute apart - so a run of the same day
+        # close together is one event as far as a reader is concerned.
+        prev_name, prev_at = None, None
         for r in con.execute("""SELECT name, donated_by, game_day, game_month,
                                 game_year, game_time, at FROM special_day_log
-                                ORDER BY at DESC LIMIT 60"""):
+                                ORDER BY at DESC, id DESC LIMIT 200"""):
+            if len(day_log) >= 60:
+                break
+            try:
+                at = datetime.fromisoformat(r["at"]) if r["at"] else None
+            except ValueError:
+                at = None
+            if (r["name"] == prev_name and at and prev_at
+                    and abs((prev_at - at).total_seconds()) < 900):
+                continue
+            prev_name, prev_at = r["name"], at
             by = (r["donated_by"] or "").strip()
             day_log.append({
                 "name": r["name"],
@@ -274,6 +288,11 @@ def load(db_path):
             if st:
                 v["seen"] = st
 
+    # The game capitalises its own day names inconsistently ("Leonard's
+    # day" one place, "Leonard's Day" another), so they are matched
+    # without case.
+    by_lower = {k.lower(): v for k, v in effects.items()}
+
     # The in-game calendar, and what today's day actually does.
     today, recent_days = None, []
     if "game_day" in tables:
@@ -294,7 +313,7 @@ def load(db_path):
                 (SELECT DISTINCT day, month, year FROM game_day)""").fetchone()[0]
             ticked = row["source"] == "mercator" or dates > 1
             stale = not ticked and held > 8 * 3600
-            info = effects.get(row["special"], {})
+            info = by_lower.get((row["special"] or "").lower(), {})
             today = {"day": row["day"], "month": row["month"],
                      "year": row["year"], "special": row["special"],
                      "kind": info.get("kind", "unknown"),
@@ -308,18 +327,19 @@ def load(db_path):
         for r in con.execute("""SELECT day, month, year, special, last_seen
                                 FROM game_day
                                 ORDER BY last_seen DESC, id DESC LIMIT 25"""):
-            e = effects.get(r["special"], {})
+            e = by_lower.get((r["special"] or "").lower(), {})
             recent_days.append({"day": r["day"], "month": r["month"],
                                 "year": r["year"], "special": r["special"],
                                 "kind": e.get("kind", "unknown"),
                                 "what": e.get("what"),
                                 "seen": r["last_seen"][:16].replace("T", " ")})
         if effects:
-            known = {k for k in effects}
-            seen = {r["special"] for r in con.execute(
+            known = {k.lower() for k in effects}
+            seen = {(r["special"] or "").lower() for r in con.execute(
                 "SELECT DISTINCT special FROM game_day")}
             for odd in sorted(seen - known):
                 print(f"  special day not in {SPECIAL_DAYS_FILE}: {odd!r}")
+
 
     # What has moved since yesterday, worked out here so the page gets a
     # short answer rather than the whole history.
