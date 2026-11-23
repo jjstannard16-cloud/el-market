@@ -1,57 +1,223 @@
 {
-  "_comment": "What each special day does, from the EL wiki. Edit freely - this is read at build time and shown beside whatever day the game is currently on. 'kind' is good, bad or mixed.",
+  "_comment": "What each special day does, and the stone that starts it. Days last about six hours and either turn up at the start of a game day or are summoned by a player with a stone. Stone names must match the item name the bots use. Edit freely.",
   "days": {
-    "Day of Aleksei Stakhanov": {"kind": "good", "what": "3x harvesting experience."},
-    "Day of Alfred Nobel": {"kind": "good", "what": "2x engineering experience, 4x at school."},
-    "Day of Faster Respawns": {"kind": "good", "what": "Creatures respawn faster."},
-    "Day of half Cooldowns": {"kind": "good", "what": "All cooldowns are halved."},
-    "Day of the Horses": {"kind": "good", "what": "Horses last longer."},
-    "Day of Joule": {"kind": "good", "what": "Manufacturing and potion food costs are halved. Failed mixes still cost the normal amount."},
-    "Day of Magic": {"kind": "good", "what": "2x magic experience."},
-    "Day of Mana": {"kind": "good", "what": "Mana potions give 50% more. Mana 7 instead of 5, Spirit Restoration 30 instead of 20, Extra Mana 75 instead of 50."},
-    "Day of Manufacturing": {"kind": "good", "what": "2x manufacturing experience, 4x at school."},
-    "Day of Mushrooms": {"kind": "good", "what": "Toadstools are safer to eat, though poison still applies."},
-    "Day of No Grief": {"kind": "good", "what": "Weapons, armour and clothes do not break in combat."},
-    "Day of Positivity": {"kind": "good", "what": "Harvester of Sorrows, I can't dance, Power Hungry and Hellspawn all stop working."},
-    "Day of the Print": {"kind": "good", "what": "Reading a book may grant its knowledge instantly."},
-    "Day of Recycling": {"kind": "good", "what": "5% chance of keeping your ingredients when mixing."},
-    "Day of Robin Tell": {"kind": "good", "what": "2x ranging experience."},
-    "Day of Running": {"kind": "good", "what": "Running uses less food."},
-    "Day of Schools": {"kind": "good", "what": "School experience is 3x rather than 2x."},
-    "Day of Summoners": {"kind": "good", "what": "2x summoning experience."},
-    "Day of Sun Tzu": {"kind": "good", "what": "2x attack and defense experience."},
-    "Day of Tailoring": {"kind": "good", "what": "2x tailoring experience, 4x at school."},
-    "Day of Bones": {"kind": "good", "what": "Everyone can eat bones, and some creatures drop more of them."},
-    "Healing Day": {"kind": "good", "what": "5 health restored every minute whatever your food level."},
-    "Increased rare manufacturing day": {"kind": "good", "what": "Better chance of a rare result when making items."},
-    "Non Stop Day": {"kind": "good", "what": "Harvesting does not stop for mini harvesting events."},
-    "Day of Evanescence": {"kind": "good", "what": "Everyone has the Evanescence perk, monsters included."},
-    "Reconstruction Day": {"kind": "good", "what": "Used items have a chance to stay in your inventory."},
-    "Scholars Day": {"kind": "good", "what": "Every skill gets a random experience bonus, roughly +1% to +42%."},
-    "Scientists Day": {"kind": "good", "what": "No book knowledge needed for harvesting, manufacturing, alchemy and the rest. You still need the nexus."},
-    "Day of Armor": {"kind": "good", "what": "Everyone gets +4 armour."},
-
-    "Acid Rain Day": {"kind": "bad", "what": "Worn items may be destroyed in the rain. Indoors, caves and Desert Pines are safe."},
-    "Day of Fasting": {"kind": "bad", "what": "No eating. At 0 hunger, research, mixing and regeneration all stop. Creature food still works."},
-    "Day of Murphy": {"kind": "bad", "what": "Every failure is critical, so ingredients are lost."},
-    "Day of No Rostogols": {"kind": "bad", "what": "Rostogol stones do not work."},
-    "Day of the Brave": {"kind": "bad", "what": "No fleeing, even with disengagement rings."},
-    "Green Day": {"kind": "bad", "what": "No harvesting of any kind."},
-    "Labour Day": {"kind": "bad", "what": "No manufacturing, or anything else using the mix window."},
-    "Solar Flares Day": {"kind": "bad", "what": "Outdoors in daylight costs 2 health a minute. Isla Prima is unaffected."},
-
-    "Day of Invasions": {"kind": "mixed", "what": "Invasions are more likely, last longer and are harder."},
-    "Day of Stronger Animals and Monsters": {"kind": "mixed", "what": "Respawning animals and monsters hit harder and give more experience. Invasion and instance mobs are unchanged."},
-    "Day of the Dead": {"kind": "mixed", "what": "Anything that dies may respawn on the spot at full health, dropping nothing."},
-    "Decreased Harvesting Events Day": {"kind": "mixed", "what": "Random harvesting events are rarer."},
-    "Increased Harvesting Events Day": {"kind": "mixed", "what": "Random harvesting events are more common."},
-    "Decreased Rare Manufacturing day": {"kind": "mixed", "what": "Worse chance of a rare result when making items."},
-    "Leonard's Day": {"kind": "mixed", "what": "Leonard is stronger, stays awake all day, and is easier to find and kill."},
-    "No Drops Day": {"kind": "mixed", "what": "Nothing drops when players or AI die. Rostogol stones still go."},
-    "Peace Day": {"kind": "mixed", "what": "No fighting at all, and Remote Heal does not work. Ants can still fight."},
-    "Scotty's Vacation": {"kind": "mixed", "what": "Beam-me-up is unavailable."},
-    "Day of More Grief": {"kind": "bad", "what": "Items are more likely to break."},
-
-    "Ordinary Day": {"kind": "ordinary", "what": "Nothing special today."}
+    "Day of Aleksei Stakhanov": {
+      "kind": "good",
+      "what": "3x harvesting experience.",
+      "stone": "Day of Stakhanov Stone"
+    },
+    "Day of Alfred Nobel": {
+      "kind": "good",
+      "what": "2x engineering experience, 4x at school.",
+      "stone": "Day of Alfred Nobel Stone"
+    },
+    "Day of Faster Respawns": {
+      "kind": "good",
+      "what": "Creatures respawn faster."
+    },
+    "Day of half Cooldowns": {
+      "kind": "good",
+      "what": "All cooldowns are halved.",
+      "stone": "Day of Half cooldowns Stone"
+    },
+    "Day of the Horses": {
+      "kind": "good",
+      "what": "Horses last longer."
+    },
+    "Day of Joule": {
+      "kind": "good",
+      "what": "Manufacturing and potion food costs are halved. Failed mixes still cost the normal amount.",
+      "stone": "Joules Stone"
+    },
+    "Day of Magic": {
+      "kind": "good",
+      "what": "2x magic experience.",
+      "stone": "Day of Magic Stone"
+    },
+    "Day of Mana": {
+      "kind": "good",
+      "what": "Mana potions give 50% more. Mana 7 instead of 5, Spirit Restoration 30 instead of 20, Extra Mana 75 instead of 50."
+    },
+    "Day of Manufacturing": {
+      "kind": "good",
+      "what": "2x manufacturing experience, 4x at school."
+    },
+    "Day of Mushrooms": {
+      "kind": "good",
+      "what": "Toadstools are safer to eat, though poison still applies."
+    },
+    "Day of No Grief": {
+      "kind": "good",
+      "what": "Weapons, armour and clothes do not break in combat."
+    },
+    "Day of Positivity": {
+      "kind": "good",
+      "what": "Harvester of Sorrows, I can't dance, Power Hungry and Hellspawn all stop working."
+    },
+    "Day of the Print": {
+      "kind": "good",
+      "what": "Reading a book may grant its knowledge instantly."
+    },
+    "Day of Recycling": {
+      "kind": "good",
+      "what": "5% chance of keeping your ingredients when mixing.",
+      "stone": "Day of Recycling"
+    },
+    "Day of Robin Tell": {
+      "kind": "good",
+      "what": "2x ranging experience.",
+      "stone": "Day of Robin Tell Stone"
+    },
+    "Day of Running": {
+      "kind": "good",
+      "what": "Running uses less food."
+    },
+    "Day of Schools": {
+      "kind": "good",
+      "what": "School experience is 3x rather than 2x.",
+      "stone": "Day of Schools Stone"
+    },
+    "Day of Summoners": {
+      "kind": "good",
+      "what": "2x summoning experience.",
+      "stone": "Day of Summoners Stone"
+    },
+    "Day of Sun Tzu": {
+      "kind": "good",
+      "what": "2x attack and defense experience.",
+      "stone": "Sun Tzu Stone"
+    },
+    "Day of Tailoring": {
+      "kind": "good",
+      "what": "2x tailoring experience, 4x at school.",
+      "stone": "Day of Tailoring"
+    },
+    "Day of Bones": {
+      "kind": "good",
+      "what": "Everyone can eat bones, and some creatures drop more of them."
+    },
+    "Healing Day": {
+      "kind": "good",
+      "what": "5 health restored every minute whatever your food level."
+    },
+    "Increased rare manufacturing day": {
+      "kind": "good",
+      "what": "Better chance of a rare result when making items."
+    },
+    "Non Stop Day": {
+      "kind": "good",
+      "what": "Harvesting does not stop for mini harvesting events.",
+      "stone": "Day of Non Stop Stone"
+    },
+    "Day of Evanescence": {
+      "kind": "good",
+      "what": "Everyone has the Evanescence perk, monsters included."
+    },
+    "Reconstruction Day": {
+      "kind": "good",
+      "what": "Used items have a chance to stay in your inventory.",
+      "stone": "Day of Reconstruction"
+    },
+    "Scholars Day": {
+      "kind": "good",
+      "what": "Every skill gets a random experience bonus, roughly +1% to +42%."
+    },
+    "Scientists Day": {
+      "kind": "good",
+      "what": "No book knowledge needed for harvesting, manufacturing, alchemy and the rest. You still need the nexus."
+    },
+    "Day of Armor": {
+      "kind": "good",
+      "what": "Everyone gets +4 armour."
+    },
+    "Acid Rain Day": {
+      "kind": "bad",
+      "what": "Worn items may be destroyed in the rain. Indoors, caves and Desert Pines are safe.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of Fasting": {
+      "kind": "bad",
+      "what": "No eating. At 0 hunger, research, mixing and regeneration all stop. Creature food still works.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of Murphy": {
+      "kind": "bad",
+      "what": "Every failure is critical, so ingredients are lost.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of No Rostogols": {
+      "kind": "bad",
+      "what": "Rostogol stones do not work.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of the Brave": {
+      "kind": "bad",
+      "what": "No fleeing, even with disengagement rings.",
+      "removal": "Bad Day Removal"
+    },
+    "Green Day": {
+      "kind": "bad",
+      "what": "No harvesting of any kind.",
+      "removal": "Bad Day Removal"
+    },
+    "Labour Day": {
+      "kind": "bad",
+      "what": "No manufacturing, or anything else using the mix window.",
+      "removal": "Bad Day Removal"
+    },
+    "Solar Flares Day": {
+      "kind": "bad",
+      "what": "Outdoors in daylight costs 2 health a minute. Isla Prima is unaffected.",
+      "removal": "Bad Day Removal"
+    },
+    "Day of Invasions": {
+      "kind": "mixed",
+      "what": "Invasions are more likely, last longer and are harder."
+    },
+    "Day of Stronger Animals and Monsters": {
+      "kind": "mixed",
+      "what": "Respawning animals and monsters hit harder and give more experience. Invasion and instance mobs are unchanged."
+    },
+    "Day of the Dead": {
+      "kind": "mixed",
+      "what": "Anything that dies may respawn on the spot at full health, dropping nothing."
+    },
+    "Decreased Harvesting Events Day": {
+      "kind": "mixed",
+      "what": "Random harvesting events are rarer."
+    },
+    "Increased Harvesting Events Day": {
+      "kind": "mixed",
+      "what": "Random harvesting events are more common."
+    },
+    "Decreased Rare Manufacturing day": {
+      "kind": "mixed",
+      "what": "Worse chance of a rare result when making items."
+    },
+    "Leonard's Day": {
+      "kind": "mixed",
+      "what": "Leonard is stronger, stays awake all day, and is easier to find and kill."
+    },
+    "No Drops Day": {
+      "kind": "mixed",
+      "what": "Nothing drops when players or AI die. Rostogol stones still go."
+    },
+    "Peace Day": {
+      "kind": "mixed",
+      "what": "No fighting at all, and Remote Heal does not work. Ants can still fight."
+    },
+    "Scotty's Vacation": {
+      "kind": "mixed",
+      "what": "Beam-me-up is unavailable."
+    },
+    "Day of More Grief": {
+      "kind": "bad",
+      "what": "Items are more likely to break.",
+      "removal": "Bad Day Removal"
+    },
+    "Ordinary Day": {
+      "kind": "ordinary",
+      "what": "Nothing special today."
+    }
   }
 }

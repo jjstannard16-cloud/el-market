@@ -404,12 +404,18 @@ def scrape(args):
     except Exception as e:
         sys.exit(f"Could not fetch index: {e}")
 
-    day = store_game_day(con, parse_game_header(r.text), ts)
-    if day:
+    # The calendar is a bonus; the prices are the point. If the header
+    # changes shape one day, note it and carry on scraping.
+    try:
         info = parse_game_header(r.text)
+        day = store_game_day(con, info, ts)
+    except Exception as e:
+        info, day = None, None
+        print(f"  could not read the in-game date: {e}")
+    if day:
         print(f"  in game: {info['day']} {info['month']} {info['year']}"
               f"{', ' + info['clock'] if info['clock'] else ''} \u2014 {day}")
-    else:
+    elif info is not None:
         print("  could not read the in-game date from the index header")
 
     bots = find_bot_links(r.text)

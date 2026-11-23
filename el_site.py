@@ -204,19 +204,60 @@ def load(db_path):
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
 
+    # What each special day does, and what a stone to start it costs.
+    # A day you can summon is only useful if you know the price, so the
+    # cheapest sell listing for each stone is attached here.
+    effects = load_special_days()
+    cheapest = {r["n"]: {"price": r["p"], "bot": r["b"]} for r in
+                con.execute("""
+        SELECT LOWER(i.name) n, MIN(l.price) p,
+               (SELECT bot FROM listing x WHERE x.item_id = i.item_id
+                 AND x.side='sell' AND IFNULL(x.quantity,0) <> 0
+                ORDER BY x.price LIMIT 1) b
+        FROM item i JOIN listing l ON l.item_id = i.item_id
+        WHERE l.side='sell' AND IFNULL(l.quantity,0) <> 0
+        GROUP BY i.item_id""")}
+    for _name, _v in effects.items():
+        for _field in ("stone", "removal"):
+            _item = _v.get(_field)
+            if _item:
+                _v[_field + "Price"] = cheapest.get(_item.lower())
+    missing_stones = sorted({v[f] for v in effects.values()
+                             for f in ("stone", "removal")
+                             if v.get(f) and not v.get(f + "Price")})
+    if missing_stones:
+        print(f"  {len(missing_stones)} day stones no bot is selling: "
+              + ", ".join(missing_stones[:4])
+              + (" ..." if len(missing_stones) > 4 else ""))
+
     # The in-game calendar, and what today's day actually does.
     today, recent_days = None, []
     if "game_day" in tables:
-        effects = load_special_days()
-        row = con.execute("""SELECT day, month, year, special, last_seen
-                             FROM game_day ORDER BY last_seen DESC,
-                             id DESC LIMIT 1""").fetchone()
+        row = con.execute("""SELECT day, month, year, special, first_seen,
+                             last_seen FROM game_day
+                             ORDER BY last_seen DESC, id DESC
+                             LIMIT 1""").fetchone()
         if row:
+            held = (datetime.fromisoformat(row["last_seen"])
+                    - datetime.fromisoformat(row["first_seen"])).total_seconds()
+            # A clock we have never seen move is not a clock we can vouch
+            # for. Once it has ticked at least once the reading is good;
+            # until then it is a reading, not the date.
+            dates = con.execute("""SELECT COUNT(*) FROM
+                (SELECT DISTINCT day, month, year FROM game_day)""").fetchone()[0]
+            ticked = dates > 1
+            stale = not ticked and held > 8 * 3600
             info = effects.get(row["special"], {})
             today = {"day": row["day"], "month": row["month"],
                      "year": row["year"], "special": row["special"],
                      "kind": info.get("kind", "unknown"),
-                     "what": info.get("what"), "seen": row["last_seen"]}
+                     "what": info.get("what"), "seen": row["last_seen"],
+                     "stale": stale, "ticked": ticked,
+                     "heldHours": round(held / 3600, 1)}
+            if not ticked:
+                print(f"  the in-game date has read the same for "
+                      f"{held / 3600:.0f} hours and has never changed, "
+                      f"so it is shown as unconfirmed")
         for r in con.execute("""SELECT day, month, year, special, last_seen
                                 FROM game_day
                                 ORDER BY last_seen DESC, id DESC LIMIT 25"""):
@@ -288,7 +329,7 @@ def load(db_path):
         "moves": movements,
         "today": today,
         "days": recent_days,
-        "dayRef": load_special_days(),
+        "dayRef": effects,
         "harvestables": harvestables,
         "meta": {
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -458,6 +499,20 @@ HTML = r"""<!doctype html>
   .daydot.k-good { background: var(--patina); }
   .daydot.k-bad { background: var(--rust); }
   .daydot.k-mixed { background: var(--brass); }
+  .stonecell { white-space: nowrap; text-align: right; }
+  .daylog thead th { font-family: var(--sans); font-size: 11px;
+    font-weight: 500; letter-spacing: .05em; color: var(--muted);
+    text-align: left; padding-bottom: 6px; border-bottom: 1px solid var(--line);}
+  .daylog thead th.stonecell { text-align: right; }
+  .grouphint { font-size: 13.5px; color: var(--muted); margin: -6px 0 14px; }
+  .stone { display: inline-block; font-size: 12.5px; color: var(--brass); }
+  .stone.sm { color: var(--muted); }
+  .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
+            letter-spacing: .04em; color: var(--muted);
+            border: 1px solid var(--line-2); border-radius: 2px;
+            padding: 1px 5px; vertical-align: 2px; }
+  .today a { color: inherit; text-decoration: underline;
+             text-underline-offset: 3px; }
   .sections { display: grid; gap: 12px;
               grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
   .sec { display: block; padding: 15px 17px; border: 1px solid var(--line);
@@ -813,17 +868,43 @@ function bestDeals(n) {
     .slice(0, n);
 }
 
+// A day lasts about six hours, and the only clock we can read is the one
+// in the bot site's header. When that header stops moving, the honest
+// thing is to say we cannot tell, not to print a date from last week.
 function todayBanner() {
   const t = DATA.today;
   if (!t) return "";
+  if (t.stale) return `<div class="today k-unknown">
+    <div class="dayname">We cannot tell you what day it is</div>
+    <div class="daywhat">Special days last about six hours. The clock we
+      read, in the header of the bot site, has shown the same reading for
+      ${Math.round(t.heldHours)} hours, so it is not keeping time. Type
+      <b>#day</b> in game for the real answer.</div>
+    <div class="daywhen">Everything below is still accurate: what each day
+      does, and what it costs to start one yourself.</div>
+  </div>`;
   const when = [t.day ? ordinal(t.day) : null, t.month ? "of " + t.month : null,
                 t.year != null ? "year " + String(t.year).padStart(4, "0") : null]
                .filter(Boolean).join(" ");
-  return `<div class="today k-${esc(t.kind)}">
-    <div class="dayname">${esc(t.special)}</div>
+  return `<div class="today k-${esc(t.ticked ? t.kind : "unknown")}">
+    <div class="dayname">${esc(t.special)}${
+      t.ticked ? "" : ` <span class="unsure">unconfirmed</span>`}</div>
     ${t.what ? `<div class="daywhat">${esc(t.what)}</div>` : ""}
-    ${when ? `<div class="daywhen">${esc(when)}</div>` : ""}
+    ${when ? `<div class="daywhen">${esc(when)}${
+      t.ticked ? "" : ` \u2014 this is what the bot site header says, but we
+      have not yet watched it change, so check with <b>#day</b> in game`}</div>`
+      : ""}
   </div>`;
+}
+
+// Most good days can be started on demand with a stone, and most bad ones
+// cleared with one. Only the ones a bot is actually selling get a price.
+function stoneLine(v) {
+  if (v.stonePrice) return `<span class="stone">${
+    fmt(v.stonePrice.price)}</span><br><span class="sm">${
+    botLink(v.stonePrice.bot)}</span>`;
+  if (v.stone) return `<span class="sm">no bot has one</span>`;
+  return "";
 }
 const ordinal = n => n + (["th","st","nd","rd"][
   (n % 100 - 20) % 10] || ["th","st","nd","rd"][n % 100] || "th");
@@ -1245,10 +1326,22 @@ function renderDays(view, count, q) {
     const rows = Object.entries(ref)
       .filter(([name, v]) => v.kind === kind && match(name, v.what));
     if (!rows.length) return "";
-    return `<h2 class="group">${title}</h2>
-      <table class="daylog"><tbody>${rows.map(([name, v]) => `<tr>
+    // Every bad day is cleared by the same stone, so that price is said
+    // once above the table rather than nine times down a column.
+    const removal = rows.map(([, v]) => v.removalPrice).find(Boolean);
+    const note = kind === "bad" && removal
+      ? `<div class="grouphint">Any of these can be cut short with a
+         <b>Bad Day Removal</b> \u2014 ${fmt(removal.price)} at ${
+         botLink(removal.bot)}.</div>` : "";
+    const summonable = kind !== "bad";
+    return `<h2 class="group">${title}</h2>${note}
+      <table class="daylog"><thead><tr><th>Day</th><th>What it does</th>
+        ${summonable ? `<th class="stonecell">Stone to start it</th>` : ""}
+      </tr></thead>
+      <tbody>${rows.map(([name, v]) => `<tr>
         <td><span class="daydot k-${esc(kind)}"></span>${esc(name)}</td>
         <td class="sm">${esc(v.what || "")}</td>
+        ${summonable ? `<td class="stonecell">${stoneLine(v)}</td>` : ""}
       </tr>`).join("")}</tbody></table>`;
   }).join("");
 
@@ -1261,12 +1354,16 @@ function renderDays(view, count, q) {
         <td><span class="daydot k-${esc(d.kind)}"></span>${esc(d.special)}</td>
         <td class="sm">${d.day ? esc(ordinal(d.day) + " of " + (d.month || "?"))
           : ""}</td></tr>`).join("")}</tbody></table>
-    <div class="caveat">The game is checked once an hour, so a day that
-      came and went between checks is not listed.</div>` : "";
+    <div class="caveat">A day lasts about six hours and the game is read
+      once an hour, so a day that came and went between readings is not
+      listed.</div>` : "";
 
-  count.textContent = `${Object.keys(ref).length} special days`;
+  const buyable = Object.values(ref).filter(v => v.stonePrice).length;
+  count.textContent = `${Object.keys(ref).length} special days, `
+    + `${buyable} you can summon yourself`;
   view.innerHTML = todayBanner() + logTable + reference
     + (reference ? "" : `<div class="empty">Nothing matches that.</div>`);
+  wireBotLinks();
 }
 
 function renderPlayers(view, count, q) {
