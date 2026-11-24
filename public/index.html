@@ -246,6 +246,10 @@
   h2.group:first-child { margin-top: 6px; }
   h2.group .count { color: var(--dim); font-size: var(--t-sm);
                     font-weight: 400; }
+  h2.group.withicon { display: flex; align-items: center; gap: 10px; }
+  h2.group.withicon .ic { width: 19px; height: 19px; color: var(--brass); }
+  h2.group.withicon img { width: 24px; height: 24px; object-fit: contain;
+                          image-rendering: pixelated; }
   .today { border: 1px solid var(--line-2); border-left-width: 3px;
            border-radius: 3px; padding: 15px 18px; margin: 2px 0 6px;
            background: var(--panel); }
@@ -1879,24 +1883,32 @@ function renderEvents(view, count, q) {
   // switching between them does not rearrange the page.
   const BOARDS = {
     found:  { label: "Most found", unit: "Found", who: "finders",
+              sym: "find",
               hint: "Pears and jokers together.",
               rows: all, value: f => f.n,
               first: f => f.first, last: f => f.last },
     pears:  { label: "Most pears", unit: "Pears", who: "have found one",
+              item: "Pear",
               hint: "Pears alone.",
               rows: all.filter(f => f.pears), value: f => f.pears,
               first: f => f.pearFirst, last: f => f.pearLast },
     jokers: { label: "Most jokers", unit: "Jokers", who: "have found one",
+              sym: "joker",
               hint: "Jokers alone. Some players have found hundreds of "
                     + "these and never a single pear.",
               rows: all.filter(f => f.jokers), value: f => f.jokers,
               first: f => f.jokerFirst, last: f => f.jokerLast },
     gold:   { label: "Most generous", unit: "Gold given", who: "donors",
+              sym: "coin",
               hint: "Gold given to keep the project running.",
               rows: DATA.donors || [], value: d => d.gold,
               first: d => d.first, last: d => d.last },
     said:   { label: "Most broadcasts", unit: "Broadcasts", who: "speakers",
-              hint: "Whose name the game's own announcements come from.",
+              sym: "events",
+              hint: "Whose name the game's own announcements come from. "
+                    + "These are the game's Moderators: making the "
+                    + "announcements is part of the job, so this is as "
+                    + "close to a list of them as the broadcasts can give.",
               rows: DATA.speakers || [], value: m => m.n,
               first: m => m.first, last: m => m.last },
   };
@@ -1929,7 +1941,9 @@ function renderEvents(view, count, q) {
   const finders = !ranked.length ? "" : `
     ${picker}
     ${headline}
-    <h2 class="group">${esc(board.label)}</h2>
+    <h2 class="group withicon">${board.item ? nameIcon(board.item)
+      : board.sym ? `<svg class="ic"><use href="#i-${board.sym}"/></svg>`
+      : ""}<span>${esc(board.label)}</span></h2>
     <div class="grouphint">${esc(board.hint)}</div>
     <div class="scroller"><table class="daylog sortable finders"><thead><tr><th>Player</th>
       <th class="stonecell">${esc(board.unit)}</th>
