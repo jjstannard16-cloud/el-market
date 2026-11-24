@@ -432,6 +432,11 @@ def load(db_path):
             if a:
                 c["img"] = a["file"]
                 c["imgSmall"] = bool(a.get("small"))
+                # An invasion variant borrows the ordinary creature's
+                # picture, and the page says so rather than implying
+                # the artwork is of this exact spawn.
+                if a.get("of"):
+                    c["imgOf"] = a["of"]
         pays = {}
         for r in con.execute("""
                 SELECT LOWER(i.name) n, MAX(l.price) p,
@@ -2471,11 +2476,17 @@ function renderOneBeast(view, count) {
     <div class="bothead${c.img ? " withpic" : ""}">
       <button class="back">All creatures</button>
       ${c.img ? `<img class="pic${c.imgSmall ? " tiny" : " photo"}"
-        src="${m.beastImgBase}${c.img}" alt="">` : ""}
+        src="${m.beastImgBase}${c.img}"
+        title="${c.imgOf ? `Picture of an ordinary ${esc(c.imgOf)}`
+                         : esc(c.name)}" alt="">` : ""}
       <h2>${esc(c.name)}</h2>
       <span class="where">${(c.kinds || []).map(k => esc(KINDS[k] || k))
         .join(" \u00b7 ")}</span>
     </div>
+    ${c.imgOf ? `<p class="note">This is an invasion's version of an
+      ordinary <a href="#fight/${encodeURIComponent(c.imgOf)}">${
+      esc(c.imgOf)}</a>, whose picture it is borrowing; it has none of
+      its own.</p>` : ""}
     ${c.worth ? `<div class="qnpc">A kill is carrying at most
       <b>${fmt(c.worth)}</b> gold, before rare drops.</div>` : ""}
     <div class="cols">
