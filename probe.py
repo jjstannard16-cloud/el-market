@@ -27,44 +27,94 @@ Answers found so far, recorded so nobody goes looking twice:
   name with capitals, spaces, underscores and extension stripped. That
   found 98 of 108. The remaining ten have no artwork anywhere.
 
-Asking now: do the achievement badges have pictures? read_achievements
-strips every tag before reading the names, so if the badges are images
-their addresses are being thrown away unseen. This prints the raw HTML
-of that part of the page to find out what is actually in there.
+  view_user.php has no pictures on it at all. The whole page is about
+  2,300 bytes and holds not one img tag; the achievements on it are
+  plain text separated by two non-breaking spaces. So badge artwork,
+  if it exists, has to come from somewhere else.
+
+Asking now: does the wiki have the achievement badges? Looking for a
+page about them and for any file whose name resembles one, against the
+30 badge names we have actually seen on players.
 """
 
+import json
 import re
+import time
+from difflib import get_close_matches
 
 import requests
 
+API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-URL = "http://game.eternal-lands.com/view_user.php"
 
-for who in ("stann", "Burn"):
-    r = requests.get(URL, params={"user": who}, headers=UA, timeout=25)
-    html = r.text
-    print(f"\n{'=' * 70}\n===== {who}: {r.status_code}, {len(html)} bytes")
+# Every badge name seen across the players we have read.
+NAMES = ["Tutorial completed", "Vanquisher", "Church donator", "Alchemist",
+         "Professor of Potioning", "Crafter", "Armorer", "Big belly",
+         "Child of Stars", "Mushroomer", "Herbalist", "Miner",
+         "Mother nature hates me", "Lucky finder", "Lucky crafter",
+         "Exterminator"]
 
-    i = html.find("Achievements")
-    if i < 0:
-        print("  no Achievements section")
-        continue
 
-    chunk = html[i:i + 4000]
-    print("--- raw HTML from 'Achievements', first 2600 characters ---")
-    print(chunk[:2600])
+def api(**params):
+    params.setdefault("format", "json")
+    params.setdefault("formatversion", 2)
+    r = requests.get(API, params=params, headers=UA, timeout=30)
+    r.raise_for_status()
+    return r.json()
 
-    print("\n--- every tag found in that chunk, counted ---")
-    tags = re.findall(r"<\s*([a-zA-Z][a-zA-Z0-9]*)", chunk)
-    seen = {}
-    for t in tags:
-        seen[t.lower()] = seen.get(t.lower(), 0) + 1
-    print("   " + ", ".join(f"{k}x{v}" for k, v in sorted(seen.items())))
 
-    print("\n--- image sources anywhere on the page ---")
-    for m in re.finditer(r"<img[^>]*>", html, re.I):
-        print("   " + m.group()[:200])
+def every_image():
+    out, cont = {}, None
+    for _ in range(200):
+        kw = {"action": "query", "list": "allimages", "ailimit": 500,
+              "aiprop": "url|size", "aisort": "name"}
+        if cont:
+            kw["aicontinue"] = cont
+        body = api(**kw)
+        for im in body.get("query", {}).get("allimages", []):
+            out[im["name"]] = im
+        cont = body.get("continue", {}).get("aicontinue")
+        if not cont:
+            break
+        time.sleep(0.25)
+    return out
 
-    print("\n--- anything that looks like a title or alt attribute ---")
-    for m in re.finditer(r'(?:title|alt)\s*=\s*"([^"]{2,60})"', chunk, re.I):
-        print(f"   {m.group(1)}")
+
+print("--- is there a page about achievements? ---")
+body = api(action="query", list="search", srsearch="achievements",
+           srlimit=12)
+for hit in body.get("query", {}).get("search", []):
+    print(f"   {hit['title']}  ({hit.get('wordcount')} words)")
+
+for title in ("Achievements", "Achievement", "Medals"):
+    body = api(action="query", prop="revisions", titles=title,
+               rvprop="content", rvslots="main", redirects=1)
+    pages = body.get("query", {}).get("pages", [])
+    if pages and not pages[0].get("missing"):
+        text = (pages[0]["revisions"][0]["slots"]["main"]["content"])
+        print(f"\n--- page '{title}' exists, {len(text)} bytes ---")
+        print(text[:1200])
+        files = re.findall(r"\[\[File:([^\]|]+)", text, re.I)
+        print(f"   files it uses: {files[:20]}")
+        break
+else:
+    print("\n   no Achievements page under any of those titles")
+
+files = every_image()
+print(f"\n{len(files)} files on the wiki")
+
+print("\n--- files whose name mentions an achievement-ish word ---")
+for name in sorted(files):
+    if re.search(r"achiev|badge|medal|trophy", name, re.I):
+        im = files[name]
+        print(f"   {name}  {im.get('width')}x{im.get('height')}")
+
+print("\n--- nearest file to each badge name ---")
+plain = {}
+for name in files:
+    stem = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
+    plain.setdefault(stem.replace("_", " ").lower(), name)
+for badge in NAMES:
+    near = get_close_matches(badge.lower(), plain, n=2, cutoff=0.8)
+    print(f"   {badge:26} -> "
+          + (", ".join(plain[m] for m in near) if near else "nothing close"))
