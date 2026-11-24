@@ -54,6 +54,8 @@ GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
 CREATURE_IMG_FILE = "creature_images.json"
 BADGES_FILE = "badges.json"
+NPC_IMG_FILE = "npc_images.json"
+NPC_IMG_BASE = "img/n/"   # our own copies; see el_npc_images.py
 BADGE_BASE = "img/a/"   # our own copies; see el_badges.py
 # The wiki and the game do not spell every achievement the same way.
 BADGE_ALIAS = {"mothernaturehatesme": "naturehatesme",
@@ -573,6 +575,23 @@ def load(db_path):
                     q["rankColumns"] = hit["columns"]
                     attached += 1
             print(f"  rank tables on {attached} god pages")
+
+        # The guide names who a quest starts with but has no pictures.
+        # The wiki has a portrait for nearly all of them. The guide
+        # writes "Elle, Valley of the Dwarves", so the name is cut at
+        # the first comma or bracket to match.
+        if os.path.exists(NPC_IMG_FILE):
+            with open(NPC_IMG_FILE, encoding="utf-8") as f:
+                faces = json.load(f).get("npcs", {})
+            drawn = 0
+            for q in quests:
+                who = re.split(r"\s*[,\[(]", q.get("npc") or "")[0].strip()
+                hit = faces.get(who)
+                if hit:
+                    q["npcImg"] = hit["file"]
+                    q["npcName"] = who
+                    drawn += 1
+            print(f"  portraits on {drawn} of {len(quests)} quests")
         print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
@@ -876,6 +895,7 @@ def load(db_path):
             "imgBase": IMG_BASE,
             "beastImgBase": CREATURE_IMG_BASE,
             "badgeBase": BADGE_BASE,
+            "npcBase": NPC_IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
             "playerCount": sum(1 for p in players if not p["private"]),
@@ -1020,6 +1040,13 @@ HTML = r"""<!doctype html>
   .namegrid .chip:has(.badge) { display: inline-flex; align-items: center;
                                 gap: 7px; padding: 4px 10px 4px 5px; }
   .badge { width: 26px; height: 26px; object-fit: contain; flex: none; }
+  /* An NPC portrait is a drawing at 96 square, so it is smoothed. */
+  .nm img.face { width: 28px; height: 28px; border-radius: 3px;
+                 image-rendering: auto; }
+  .qhead { display: flex; align-items: center; gap: 14px; margin: 0 0 4px; }
+  .qhead img { width: 64px; height: 64px; border-radius: 4px; flex: none;
+               background: var(--panel); border: 1px solid var(--line); }
+  .qhead h2 { margin: 0; }
   .namegrid .chip { font-family: var(--sans); font-size: var(--t-sm);
           color: var(--muted); border: 1px solid var(--line-2);
           border-radius: 3px; padding: 5px 10px; text-decoration: none;
@@ -2920,8 +2947,12 @@ function renderQuests(view, count, q) {
       ? ` <span class="unsure">${esc(qu.status)}</span>` : ""}
       <div class="seen">${esc(qu.section.replace(/ Quests$/, ""))}</div></td>
     <td class="sm">${qu.npc
-      ? `${esc(qu.npc)}${qu.where ? `<div class="seen">${esc(qu.where)}${
-          qu.at ? ` [${qu.at[0]},${qu.at[1]}]` : ""}</div>` : ""}`
+      ? `<div class="nm">${qu.npcImg
+          ? `<img class="face" src="${m.npcBase}${qu.npcImg}"
+               loading="lazy" alt="">` : `<span class="noimg"></span>`
+        }<span>${esc(qu.npc)}${qu.where
+          ? `<div class="seen">${esc(qu.where)}${
+            qu.at ? ` [${qu.at[0]},${qu.at[1]}]` : ""}</div>` : ""}</span></div>`
       : ""}</td>
     <td class="sm brass">${questPay(qu)}</td>
     <td class="num sm">${qu.steps && qu.steps.length
@@ -2999,10 +3030,13 @@ function renderOneQuest(view, count) {
       <span class="where">${esc(qu.section)}${qu.status
         ? ` \u00b7 ${esc(qu.status)}` : ""}</span>
     </div>
-    ${qu.npc ? `<div class="qnpc">Start with <b>${esc(qu.npc)}</b>${
+    ${qu.npc ? `<div class="qhead">${qu.npcImg
+      ? `<img src="${m.npcBase}${qu.npcImg}" alt=""
+           title="${esc(qu.npcName || qu.npc)}">` : ""}
+      <div class="qnpc">Start with <b>${esc(qu.npc)}</b>${
       qu.where ? ` at ${esc(qu.where)}` : ""}${
       qu.at ? ` <span class="coord">[${qu.at[0]},${qu.at[1]}]</span>` : ""}
-      </div>` : ""}
+      </div></div>` : ""}
     ${(qu.intro || []).map(p => `<p class="qintro">${esc(p)}</p>`).join("")}
     ${twoCol ? `<div class="cols">
       <div>

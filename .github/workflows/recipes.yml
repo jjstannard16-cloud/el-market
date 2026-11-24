@@ -60,6 +60,12 @@ jobs:
         run: python el_badges.py
         continue-on-error: true
 
+      # The quest guide names who a quest starts with; the wiki has a
+      # portrait for nearly all of them.
+      - name: Fetch any new NPC portraits
+        run: python el_npc_images.py
+        continue-on-error: true
+
       - name: Rebuild the page
         run: python el_site.py --out public/index.html
 
@@ -74,7 +80,8 @@ jobs:
           # idempotent, so redoing is always safe and always correct.
           for attempt in 1 2 3 4 5; do
             git add el_bots.db gods.json creatures.json \
-                    creature_images.json badges.json public/index.html \
+                    creature_images.json badges.json npc_images.json \
+                    public/index.html \
                     public/data.js public/img
             if git diff --staged --quiet; then
               echo "Nothing changed."
@@ -93,6 +100,7 @@ jobs:
             python el_creatures.py || true
             python el_creature_images.py || true
             python el_badges.py || true
+            python el_npc_images.py || true
             python el_site.py --out public/index.html
           done
           echo "Could not land the change after 5 attempts."
