@@ -27,22 +27,26 @@ IMG_BASE = "img/"   # our own copies; see el_images.py
 
 # Which landmass each map sits on. Bots report locations like
 # "White Stone - Tirnwood Vale", so we match on the part before the dash.
+# The order here is the order the site lists maps in, so it is kept as
+# a route round each land rather than as the order they were typed. To
+# change where a map appears, move its line. Nothing may be dropped:
+# these are also the keys that decide which land a map belongs to.
 CONTINENTS = {
     "Seridia": [
-        "tahraji desert", "desert pines", "kilaran field", "north kilaran",
-        "valley of the dwarves", "nordcarn", "tarsengaard", "tarsengaard",
-        "portland", "white stone", "whitestone", "morcraven marsh",
-        "naralik", "grubani peninsula", "ruins of tirnym", "isla prima",
-        # Underground maps, which don't appear on the overworld maps.
-        "crystal cavern", "crystal caverns",   # cave inside Desert Pines
+        "isla prima", "white stone", "whitestone", "desert pines",
+        "crystal cavern", "crystal caverns",   # caves inside Desert Pines
+        "valley of the dwarves", "tarsengaard", "portland", "nordcarn",
+        "morcraven marsh", "naralik", "grubani peninsula",
+        "tahraji desert", "kilaran field", "north kilaran",
+        "ruins of tirnym",
     ],
     "Irilion": [
-        "idaloran", "melinis", "bethel", "sedicolis", "north redmoon",
-        "south redmoon", "palon vertas", "thelinor", "irsis", "zirakinbar",
-        "emerald valley", "kusamura", "hurquin", "yarris", "egratia point",
-        "imbroglio islands", "willowvine forest", "aeth aelfan",
-        "iscarlith", "irinveron", "glacmor", "isle of the forgotten",
-        "trassian", "hulda",
+        "melinis", "palon vertas", "iscarlith", "thelinor", "zirakinbar",
+        "glacmor", "irinveron", "sedicolis", "idaloran", "hurquin",
+        "trassian", "willowvine forest", "emerald valley", "kusamura",
+        "yarris", "egratia point", "imbroglio islands", "aeth aelfan",
+        "isle of the forgotten", "bethel", "irsis", "north redmoon",
+        "south redmoon", "hulda",
     ],
 }
 MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
@@ -898,6 +902,7 @@ def load(db_path):
             "imgBase": IMG_BASE,
             "beastImgBase": CREATURE_IMG_BASE,
             "badgeBase": BADGE_BASE,
+            "mapOrder": [m for maps in CONTINENTS.values() for m in maps],
             "npcBase": NPC_IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
@@ -3636,10 +3641,17 @@ function renderOnline(view, count, q) {
     byMap.get(key).rows.push(b);
   });
   const section = (land, label) => {
+    // In the order you would walk them, not by how many bots happen to
+    // be standing on each - that put White Stone above Naralik one hour
+    // and below it the next. A map not on the list goes to the end.
     const maps = [...byMap.entries()]
       .filter(([, v]) => v.land === land)
-      .sort((a, b) => b[1].rows.length - a[1].rows.length
-                      || a[0].localeCompare(b[0]));
+      .sort((a, b) => {
+        const ia = (m.mapOrder || []).indexOf(a[0].toLowerCase());
+        const ib = (m.mapOrder || []).indexOf(b[0].toLowerCase());
+        return (ia < 0 ? 9e9 : ia) - (ib < 0 ? 9e9 : ib)
+               || a[0].localeCompare(b[0]);
+      });
     if (!maps.length) return "";
     const total = maps.reduce((n, [, v]) => n + v.rows.length, 0);
     return `<div class="land">

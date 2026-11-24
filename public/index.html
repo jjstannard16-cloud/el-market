@@ -2726,10 +2726,17 @@ function renderOnline(view, count, q) {
     byMap.get(key).rows.push(b);
   });
   const section = (land, label) => {
+    // In the order you would walk them, not by how many bots happen to
+    // be standing on each - that put White Stone above Naralik one hour
+    // and below it the next. A map not on the list goes to the end.
     const maps = [...byMap.entries()]
       .filter(([, v]) => v.land === land)
-      .sort((a, b) => b[1].rows.length - a[1].rows.length
-                      || a[0].localeCompare(b[0]));
+      .sort((a, b) => {
+        const ia = (m.mapOrder || []).indexOf(a[0].toLowerCase());
+        const ib = (m.mapOrder || []).indexOf(b[0].toLowerCase());
+        return (ia < 0 ? 9e9 : ia) - (ib < 0 ? 9e9 : ib)
+               || a[0].localeCompare(b[0]);
+      });
     if (!maps.length) return "";
     const total = maps.reduce((n, [, v]) => n + v.rows.length, 0);
     return `<div class="land">
