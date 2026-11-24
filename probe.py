@@ -21,97 +21,50 @@ Answers found so far, recorded so nobody goes looking twice:
   How many a recipe makes is the ManuInfo template's "resamount". The
   template says so itself. No resamount means one. el_recipes.py reads it.
 
-  A creature's picture is File:Creature <Name>.png, or the same as .jpg,
-  or Creature_<NameRunTogether>.jpg, or the small <Name> 25px.png.
-  Trying all four found 86 of 108.
+  Creature pictures are not named to one rule - Creature Yeti.png,
+  Badaran.png, Legionnaire_Troll.PNG, Monster_phantomwarrior.png - so
+  el_creature_images.py reads the whole file list and matches on the
+  name with capitals, spaces, underscores and extension stripped. That
+  found 98 of 108. The remaining ten have no artwork anywhere.
 
-Asking now: why the other 22? They look like three different problems -
-variant spawns named "Black Bear (mana burn)" whose base creature has a
-picture, names whose capitals differ from the wiki's, and invasion
-bosses that may have no art at all. Rather than guess at more name
-shapes, this pulls every file name on the wiki and reports the closest
-thing to each creature we could not place.
+Asking now: do the achievement badges have pictures? read_achievements
+strips every tag before reading the names, so if the badges are images
+their addresses are being thrown away unseen. This prints the raw HTML
+of that part of the page to find out what is actually in there.
 """
 
-import json
 import re
-import time
-from difflib import get_close_matches
 
 import requests
 
-API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+URL = "http://game.eternal-lands.com/view_user.php"
 
+for who in ("stann", "Burn"):
+    r = requests.get(URL, params={"user": who}, headers=UA, timeout=25)
+    html = r.text
+    print(f"\n{'=' * 70}\n===== {who}: {r.status_code}, {len(html)} bytes")
 
-def api(**params):
-    params.setdefault("format", "json")
-    params.setdefault("formatversion", 2)
-    r = requests.get(API, params=params, headers=UA, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def every_image():
-    out, cont = {}, None
-    for _ in range(200):
-        kw = {"action": "query", "list": "allimages", "ailimit": 500,
-              "aiprop": "url|size", "aisort": "name"}
-        if cont:
-            kw["aicontinue"] = cont
-        body = api(**kw)
-        for im in body.get("query", {}).get("allimages", []):
-            out[im["name"]] = im
-        cont = body.get("continue", {}).get("aicontinue")
-        if not cont:
-            break
-        time.sleep(0.25)
-    return out
-
-
-creatures = json.load(open("creatures.json"))["creatures"]
-have = json.load(open("creature_images.json"))["images"]
-missing = [c["name"] for c in creatures if c["name"] not in have]
-
-files = every_image()
-print(f"{len(files)} files on the wiki in all")
-print(f"{len(missing)} creatures still without a picture\n")
-
-# Strip an extension and the decoration our names do not share.
-plain = {}
-for name in files:
-    stem = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
-    stem = re.sub(r"^Creature[ _]", "", stem)
-    stem = re.sub(r"[ _]25px$", "", stem)
-    plain.setdefault(stem.replace("_", " ").lower(), name)
-
-for name in missing:
-    base = re.sub(r"\s*\(.*?\)\s*$", "", name).strip()
-    note = ""
-    if base != name:
-        note = (f"   [variant of {base}: "
-                f"{'base HAS art' if base in have else 'base has none'}]")
-    near = get_close_matches(name.lower(), plain, n=3, cutoff=0.72)
-    near += [m for m in get_close_matches(base.lower(), plain, n=3,
-                                          cutoff=0.72) if m not in near]
-    print(f"{name}{note}")
-    if near:
-        for m in near[:4]:
-            print(f"     could be {plain[m]}")
-    else:
-        print("     nothing on the wiki looks like it")
-
-# Do the bracket variants really share the base creature's page?
-print("\n--- do variants redirect to the base creature? ---")
-for name in missing:
-    base = re.sub(r"\s*\(.*?\)\s*$", "", name).strip()
-    if base == name:
+    i = html.find("Achievements")
+    if i < 0:
+        print("  no Achievements section")
         continue
-    body = api(action="query", titles=name, redirects=1)
-    q = body.get("query", {})
-    red = q.get("redirects") or []
-    pages = q.get("pages") or [{}]
-    print(f"  {name}: "
-          f"{'page missing' if pages[0].get('missing') else 'page exists'}"
-          f"{' -> ' + red[0]['to'] if red else ''}")
-    time.sleep(0.25)
+
+    chunk = html[i:i + 4000]
+    print("--- raw HTML from 'Achievements', first 2600 characters ---")
+    print(chunk[:2600])
+
+    print("\n--- every tag found in that chunk, counted ---")
+    tags = re.findall(r"<\s*([a-zA-Z][a-zA-Z0-9]*)", chunk)
+    seen = {}
+    for t in tags:
+        seen[t.lower()] = seen.get(t.lower(), 0) + 1
+    print("   " + ", ".join(f"{k}x{v}" for k, v in sorted(seen.items())))
+
+    print("\n--- image sources anywhere on the page ---")
+    for m in re.finditer(r"<img[^>]*>", html, re.I):
+        print("   " + m.group()[:200])
+
+    print("\n--- anything that looks like a title or alt attribute ---")
+    for m in re.finditer(r'(?:title|alt)\s*=\s*"([^"]{2,60})"', chunk, re.I):
+        print(f"   {m.group(1)}")
