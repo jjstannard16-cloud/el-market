@@ -176,6 +176,10 @@ def fold_duplicates(con):
 
 # "[www] Warlords" opens a roster; the names follow, one per line.
 GUILD_HEAD = re.compile(r"^\s*\[\s*(?P<tag>[^\]]{1,12})\s*\]\s*(?P<name>.*)$")
+# A guild picks the colour its tag is drawn in, and the game shows it
+# in that colour above a player's head. "[wWw] Warlords #c9a227" sets
+# one; without it the tag takes the page's own colour.
+GUILD_COLOUR = re.compile(r"\s+(#[0-9a-fA-F]{3,8})\s*$")
 
 
 def read_guilds(path):
@@ -199,8 +203,14 @@ def read_guilds(path):
         head = GUILD_HEAD.match(text)
         if head:
             tag = head.group("tag").strip()
-            out.setdefault(tag, {"name": head.group("name").strip() or tag,
-                                 "members": []})
+            name = head.group("name").strip()
+            colour = None
+            hit = GUILD_COLOUR.search(name)
+            if hit:
+                colour = hit.group(1)
+                name = name[:hit.start()].strip()
+            out.setdefault(tag, {"name": name or tag, "members": [],
+                                 "colour": colour})
             continue
         # A roster usually arrives pasted out of the game, so it can be
         # one name a line, or several separated by commas or spaces. A

@@ -10,7 +10,7 @@
 # starting another bracket line. Lines beginning with # are ignored, and
 # so is anything above the first bracket line.
 
-[www] Warlords
+[wWw] Warlords
 Adversary
 Sonny
 Zeni

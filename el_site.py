@@ -545,6 +545,7 @@ def load(db_path):
         print(f"  could not read guild.txt: {e}")
     for tag, g in rosters.items():
         guilds.append({"tag": tag, "name": g["name"],
+                       "colour": g.get("colour"),
                        "members": g["members"]})
     if guilds:
         print("  " + ", ".join(f"{g['name']} [{g['tag']}] {len(g['members'])}"
@@ -1249,6 +1250,15 @@ HTML = r"""<!doctype html>
      as an empty text field rather than a rank. */
   .namegrid .chip .tier { display: block; margin-top: 1px;
                           letter-spacing: .14em; }
+  /* The game draws a guild's tag above its members' heads, so it reads
+     as a badge rather than as a word in a sentence. */
+  .gtag { display: inline-block; font-family: var(--mono, ui-monospace,
+          SFMono-Regular, Menlo, monospace); font-size: 12.5px;
+          letter-spacing: .04em; color: var(--brass);
+          border: 1px solid var(--line-2); border-radius: 3px;
+          padding: 1px 7px; background: rgba(0,0,0,.25);
+          white-space: nowrap; vertical-align: 1px; }
+  .gtag.big { font-size: 15px; padding: 3px 10px; letter-spacing: .06em; }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
             letter-spacing: .04em; color: var(--muted);
             border: 1px solid var(--line-2); border-radius: 2px;
@@ -2663,6 +2673,10 @@ function renderOneBeast(view, count) {
    players tab, narrowed to one roster, which is the only way to see
    where someone stands among the people they actually play with.    */
 
+const guildTag = g => `<span class="gtag"${g.colour
+  ? ` style="color:${esc(g.colour)};border-color:${esc(g.colour)}44"` : ""
+  }>${esc(g.tag)}</span>`;
+
 const guildBy = tag => (DATA.guilds || []).find(g =>
   g.tag.toLowerCase() === String(tag || "").toLowerCase());
 
@@ -2697,7 +2711,7 @@ function renderGuilds(view, count) {
       return `<tr>
         <td><a class="lnk glnk" href="#guilds/${encodeURIComponent(g.tag)}">${
           esc(g.name)}</a></td>
-        <td class="sm">${esc(g.tag)}</td>
+        <td>${guildTag(g)}</td>
         <td class="num">${fmt(g.members.length)}</td>
         <td class="num sm">${fmt(open)}</td></tr>`;
     }).join("")}</tbody></table></div>`;
@@ -2738,7 +2752,8 @@ function renderOneGuild(view, count, q) {
     <div class="bothead">
       <button class="back">All guilds</button>
       <h2>${esc(g.name)}</h2>
-      <span class="where">${esc(g.tag)}</span>
+      <span class="where">${guildTag(g).replace('class="gtag"',
+        'class="gtag big"')}</span>
     </div>
     ${picker}
     <div class="grouphint">${fmt(open.length)} of ${fmt(g.members.length)}
