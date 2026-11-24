@@ -1282,6 +1282,21 @@ function itemIndex() {
 const itemByKey = name =>
   DATA.items.find(i => ikey(i.name) === ikey(name));
 
+/* An icon for an item we only know the name of, which is how the craft
+   tab and the drop lists refer to them. Built once; a name with no
+   artwork gets an empty space the same size, so names stay lined up. */
+let IMG_BY_NAME = null;
+function nameIcon(name) {
+  if (!IMG_BY_NAME) {
+    IMG_BY_NAME = {};
+    DATA.items.forEach(i => { if (i.img) IMG_BY_NAME[ikey(i.name)] = i.img; });
+  }
+  const file = IMG_BY_NAME[ikey(name)];
+  return file
+    ? `<img src="${m.imgBase}${file}" loading="lazy" alt="">`
+    : `<span class="noimg"></span>`;
+}
+
 function itemLink(name) {
   const it = itemByKey(name);
   return it ? `<a href="#market/${encodeURIComponent(it.name)}">${
@@ -1345,7 +1360,8 @@ function renderOneItem(view, count, name) {
     <tbody>${(made.ings || []).map(g => {
       const sub = itemByKey(g.n);
       const line = sub && sub.best.sell ? sub.best.sell.price * g.a : null;
-      return `<tr><td class="num sm">${g.a}</td><td>${itemLink(g.n)}</td>
+      return `<tr><td class="num sm">${g.a}</td>
+      <td><div class="nm">${nameIcon(g.n)}<span>${itemLink(g.n)}</span></div></td>
       <td class="num ${line ? "brass" : "sm"}">${
         line ? fmt(line) : "no bot sells it"}</td></tr>`;
     }).join("")}</tbody></table>
@@ -1379,7 +1395,8 @@ function renderOneItem(view, count, name) {
     <table class="itab"><thead><tr><th class="wide">Recipe</th>
       <th class="num">Needs</th></tr></thead>
     <tbody>${sortedUses.slice(0, USES_SHOWN).map(u => `<tr>
-      <td>${itemLink(u.item)}</td>
+      <td><div class="nm">${nameIcon(u.item)}<span>${
+        itemLink(u.item)}</span></div></td>
       <td class="num sm">${u.a}</td></tr>`).join("")}</tbody></table>
     ${uses.length > USES_SHOWN ? `<p class="note">and ${
       uses.length - USES_SHOWN} more.</p>` : ""}`;
@@ -1639,8 +1656,9 @@ function renderOneBeast(view, count) {
   }
   const stats = Object.entries(c.stats || {});
   const dropTable = rows => !rows.length ? "" : `<table>${rows.map(d => `<tr>
-      <td>${d.n ? `<span class="sm muted">${esc(d.n)}</span> ` : ""}${
-        esc(d.item)}</td>
+      <td><div class="nm">${nameIcon(d.item)}<span>${
+        d.n ? `<span class="sm muted">${esc(d.n)}</span> ` : ""}${
+        itemLink(d.item)}</span></div></td>
       <td class="num ${d.pays ? "brass" : "sm muted"}">${
         d.pays ? fmt(d.most) : "no bot buys it"}</td>
       <td class="sm">${d.bot ? botLink(d.bot) : ""}</td>
@@ -2740,7 +2758,8 @@ function renderCraft(view, count, q) {
     { t: "Gold per xp", k: "perXp", num: 1 },
   ])}<tbody>${rows.map(({ r, c }, i) => `
     <tr class="item ${openIds.has("c" + i) ? "open" : ""}" data-craft="${i}">
-      <td><div class="nm"><span>${esc(r.item)}${c.gathered
+      <td><div class="nm">${nameIcon(r.item)}<span>${esc(r.item)}${
+        c.gathered
         ? ` <span class="gathered" title="uses gathered materials">\u2726</span>`
         : ""}${c.gate ? ` <span class="gate" title="needs nexus ${
         c.gate} to gather the materials">nexus ${c.gate}</span>` : ""
@@ -2772,7 +2791,7 @@ function craftDetail(r, c) {
   const rows = c.lines.map(l => {
     let desc, each;
     if (l.how === "buy") {
-      desc = `${esc(l.n)} <span class="sm">from ${botLink(l.from)}</span>`;
+      desc = `${itemLink(l.n)} <span class="sm">from ${botLink(l.from)}</span>`;
       each = fmt(l.each);
     } else if (l.how === "gather") {
       const needs = [
@@ -2780,14 +2799,15 @@ function craftDetail(r, c) {
         l.tool || null,
         l.nexus ? "nexus " + Math.round(l.nexus) : null,
       ].filter(Boolean).join(", ");
-      desc = `${esc(l.n)} <span class="gathered">gather${
+      desc = `${itemLink(l.n)} <span class="gathered">gather${
         needs ? " \u2014 " + esc(needs) : ""}</span>`;
       each = l.each ? fmt(l.each) : "\u2013";
     } else {
-      desc = `${esc(l.n)} <span class="sm">nobody sells it, you cannot gather it</span>`;
+      desc = `${itemLink(l.n)} <span class="sm">nobody sells it, you cannot gather it</span>`;
       each = "\u2013";
     }
-    return `<div class="amt">${l.a}\u00d7</div><div>${desc}</div>
+    return `<div class="amt">${l.a}\u00d7</div>
+      <div class="nm">${nameIcon(l.n)}<span>${desc}</span></div>
       <div class="each sm">${each}</div>
       <div class="sub">${l.each != null ? fmt(l.each * l.a) : "\u2013"}</div>`;
   }).join("");
