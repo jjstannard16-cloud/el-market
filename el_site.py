@@ -2776,8 +2776,7 @@ function instanceWorth(inst) {
   let low = 0, high = 0, known = false;
   (inst.waves || []).forEach(wave => {
     const each = wave.map(o => countTop(o.count) * (o.worth || 0));
-    const有 = each.some(v => v > 0);
-    if (any) known = true;
+    if (each.some(v => v > 0)) known = true;
     low += Math.min(...each);
     high += Math.max(...each);
   });

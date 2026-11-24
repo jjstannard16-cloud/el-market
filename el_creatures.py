@@ -140,13 +140,17 @@ def drop_sections(wikitext):
 
 def is_rare(heading, header):
     """
-    Whether a table holds drops you cannot count on. The table's own
-    header is believed before the heading above it, because Castellan's
-    instance table is headed "Normal Drops" under a heading that says
-    "Instance Drops", and a plain "Drops" with nothing said either way
-    means the ordinary ones.
+    Whether a table holds drops you cannot count on.
+
+    The heading is believed before the table under it, because Invdrag
+    heads a table "Normal Drops" under "Possible Special Drops" and
+    says in words above it that only one of the eight will drop.
+    Counting all eight as normal made the kill look eight times richer
+    than it is. A heading that says neither leaves it to the table, and
+    a plain "Drops" with nothing said either way means the ordinary
+    ones.
     """
-    for text in (header or "", heading):
+    for text in (heading, header or ""):
         low = text.lower()
         if "normal" in low:
             return False
@@ -167,6 +171,22 @@ def where_of(heading, header):
     if "invasion" in low or "invance" in low:
         return "invasion"
     return None
+
+
+NOTE = re.compile(r"\s*\(([^)]*)\)")
+
+
+def tidy_item(what):
+    """
+    An item name, and anything the wiki said about it in brackets.
+
+    "1 Human Removal Stone (20% chance)" names an item no bot has ever
+    heard of; the stone itself they have. The note is worth keeping and
+    showing, but not inside the name.
+    """
+    note = " ".join(n.strip() for n in NOTE.findall(what)).strip(" ?")
+    what = " ".join(NOTE.sub(" ", what).split())
+    return what, (note or None)
 
 
 def split_amount(text):
@@ -247,8 +267,11 @@ def read_creature(s, title):
                 if not clean or clean == "}":
                     continue
                 n, what = split_amount(clean)
+                what, note = tidy_item(what)
                 if what:
                     one = {"n": n, "item": what}
+                    if note:
+                        one["note"] = note
                     if where:
                         one["where"] = where
                     into.append(one)
@@ -280,9 +303,18 @@ def bullet_drops(text):
         if not clean or clean.endswith(":") or len(clean) > 60:
             continue
         n, what = split_amount(clean)
+        what, note = tidy_item(what)
         if not what or what.lower() in ("none", "nothing", "unknown", "n/a"):
             continue
-        out.append({"n": n, "item": what})
+        # An item name is a few words. Anything longer is the wiki
+        # explaining itself - "Gold coins he gets from creature kills"
+        # - and is not a drop a bot can price.
+        if len(what.split()) > 6:
+            continue
+        one = {"n": n, "item": what}
+        if note:
+            one["note"] = note
+        out.append(one)
     return out
 
 
@@ -307,8 +339,15 @@ def read_rare(s, creature):
                          clean, re.I):
                 continue
             n, what = split_amount(clean)
-            if what and not what.lower().startswith(("new drops", "to ")):
-                out.append({"n": n, "item": what})
+            what, note = tidy_item(what)
+            if not what or what.lower().startswith(("new drops", "to ")):
+                continue
+            if len(what.split()) > 6:
+                continue
+            one = {"n": n, "item": what}
+            if note:
+                one["note"] = note
+            out.append(one)
         return out, title
     return [], None
 
@@ -358,9 +397,15 @@ def main():
         rare, _ = read_rare(s, title)
         # A creature page can list its rare drops itself; both sources
         # are kept, without listing the same item twice.
-        seen = {(r.get("n"), r["item"]) for r in rare}
-        rare += [r for r in page.get("rareOnPage", [])
-                 if (r.get("n"), r["item"]) not in seen]
+        # "10k Gold Coins" and "10k gold coins" are one drop written
+        # twice, so the two sources are matched without regard to case.
+        def same(r):
+            return (str(r.get("n") or "").lower(), r["item"].lower())
+        seen = {same(r) for r in rare}
+        for r in page.get("rareOnPage", []):
+            if same(r) not in seen:
+                seen.add(same(r))
+                rare.append(r)
         # The creature's own page is the reliable source: its statistics
         # box is a plain key-and-value list. The master table's columns
         # do not line up for the monsters - it had the Blue Dragon with
@@ -408,7 +453,7 @@ def main():
     print(f"  {with_drops} with normal drops, {with_rare} with rare drops")
     if no_page:
         print(f"  {len(no_page)} with no page of their own: "
-              + ", ".join(no_page[:6]))
+              + ", ".join(no_page))
 
 
 if __name__ == "__main__":
