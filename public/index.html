@@ -131,25 +131,26 @@
   /* Two hundred names wrapped by their own widths is a jumble: nothing
      lines up and the eye has no column to follow. A grid of equal cells
      gives it rows and columns to read down instead. */
-  .pgrid { display: grid; gap: 6px; margin-bottom: 28px;
-           grid-template-columns: repeat(auto-fill, minmax(142px, 1fr)); }
-  .pgrid.wide { grid-template-columns: repeat(auto-fill, minmax(186px, 1fr)); }
-  .pgrid > * { display: block; padding: 7px 11px; border-radius: 3px;
-               border: 1px solid var(--line); background: var(--panel);
-               text-decoration: none; overflow: hidden; }
-  .pgrid b { display: block; font-weight: 400; font-size: var(--t-sm);
-             color: var(--ink); white-space: nowrap; overflow: hidden;
-             text-overflow: ellipsis; }
-  .pgrid .sub { display: block; font-size: var(--t-xs); color: var(--dim);
-                white-space: nowrap; overflow: hidden;
-                text-overflow: ellipsis; margin-top: 2px; }
-  .pgrid a:hover { border-color: var(--brass); background: var(--raised); }
-  .pgrid a:hover b { color: var(--brass); }
-  .pgrid .idle { background: none; }
-  .pgrid .idle b { color: var(--muted); }
+  /* Two hundred names want to be a list, not two hundred boxes: a box
+     each is mostly border and padding and runs off the bottom of the
+     screen. Plain names in columns fit on one. */
+  .names { display: grid; gap: 0 14px; margin-bottom: 4px;
+           grid-template-columns: repeat(auto-fill, minmax(106px, 1fr)); }
+  .names.big { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+               margin-bottom: 26px; }
+  .names > * { font-size: var(--t-sm); line-height: 1.75; color: var(--muted);
+               text-decoration: none; white-space: nowrap; overflow: hidden;
+               text-overflow: ellipsis; padding: 0 3px; border-radius: 2px; }
+  .names a:hover { color: var(--brass); background: var(--panel); }
+  .names span { color: var(--dim); }
+  .maprow { margin-bottom: 14px; }
+  .maprow h4 { font-family: var(--ui); font-size: var(--t-xs);
+               font-weight: 500; letter-spacing: .04em; color: var(--dim);
+               margin: 0 0 2px; text-transform: none; }
+  .maprow h4 span { color: var(--line-2); margin-left: 6px; }
   @media (max-width: 620px) {
-    .pgrid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
-    .pgrid.wide { grid-template-columns: repeat(auto-fill, minmax(144px, 1fr)); }
+    .names, .names.big {
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
   }
   /* A badge is a small drawing, so it is smoothed, and the chip turns
      into a row so the picture and the name sit beside each other. */
@@ -2574,28 +2575,44 @@ function renderOnline(view, count, q) {
 
   // A bot that is up is a bot you can trade with, so its name goes
   // straight to what it is buying and selling.
+  // A hundred and twenty-six bots each repeating its own map is a lot
+  // of saying the same dozen words. Grouped under the map instead, the
+  // list is shorter and answers the question people actually have,
+  // which is who is standing where.
+  const byMap = new Map();
+  bots.forEach(b => {
+    const key = !b.trades ? "\u0000idle"
+      : (String(b.where || "").split(" - ")[0].trim() || "Somewhere else");
+    if (!byMap.has(key)) byMap.set(key, []);
+    byMap.get(key).push(b);
+  });
+  const mapOrder = [...byMap.keys()].sort((a, b) =>
+    a === "\u0000idle" ? 1 : b === "\u0000idle" ? -1
+      : byMap.get(b).length - byMap.get(a).length || a.localeCompare(b));
+
   const botGrid = !bots.length ? "" : `
     <h2 class="group">Bots up now <span class="count">${
       fmt(bots.length)}</span></h2>
     <div class="grouphint">${fmt(o.trading)} of the ${fmt(o.bots)} bots in
-      the game are trading ones we have prices for. The rest are running
-      for some other reason.</div>
-    <div class="pgrid wide">${bots.map(b => b.trades
-      ? `<a href="#bots/${encodeURIComponent(b.name)}"
-           title="${esc(b.where || "")}"><b>${esc(b.name)}</b>${b.where
-           ? `<span class="sub">${esc(b.where)}</span>` : ""}</a>`
-      : `<span class="idle" title="not a trading bot"><b>${esc(b.name)}</b>
-           <span class="sub">not trading</span></span>`
-      ).join("")}</div>`;
+      the game are trading ones we have prices for, grouped by where they
+      are standing. The rest are running for some other reason.</div>
+    ${mapOrder.map(key => `<div class="maprow">
+      <h4>${key === "\u0000idle" ? "Not trading" : esc(key)}
+        <span>${byMap.get(key).length}</span></h4>
+      <div class="names">${byMap.get(key).map(b => b.trades
+        ? `<a href="#bots/${encodeURIComponent(b.name)}"
+             title="${esc(b.where || "")}">${esc(b.name)}</a>`
+        : `<span title="not a trading bot">${esc(b.name)}</span>`
+        ).join("")}</div></div>`).join("")}`;
 
   const playerGrid = !players.length ? "" : `
     <h2 class="group">Players in the game <span class="count">${
       fmt(players.length)}</span></h2>
     <div class="grouphint">Everyone the game lists as online right now,
       bots aside. A name links to what we know of them.</div>
-    <div class="pgrid">${players.map(n =>
-      `<a href="#players/${encodeURIComponent(n)}"><b>${
-        esc(n)}</b></a>`).join("")}</div>`;
+    <div class="names big">${players.map(n =>
+      `<a href="#players/${encodeURIComponent(n)}">${esc(n)}</a>`
+      ).join("")}</div>`;
 
   const hours = (o.byHour || []).filter(h => h.n);
   const peak = Math.max(...hours.map(h => h.peak), 1);
