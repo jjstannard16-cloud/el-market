@@ -34,20 +34,37 @@ Answers found so far, recorded so nobody goes looking twice:
   each with the files under it giving the tiers in order. el_badges.py
   reads it. The wiki and the game disagree on two spellings.
 
-Asking now: is there a picture for a quest's NPC? The quest guide names
-61 of them. Looking for a category or page listing NPCs, and for any
-file resembling each name, the same way the creatures were found.
+  Quest NPC portraits are a plain <Name>.png on the wiki at 96 pixels,
+  found the same way as the creatures. 55 of the 61 NPCs have one.
+
+Asking now: two holes in the instance pages.
+
+  Nineteen creatures have no drops at all in creatures.json, Castellan
+  among them, and a player says Castellan is the best dropper in the
+  game. So either its page lays drops out in a shape read_creature does
+  not read, or the drops live somewhere else entirely.
+
+  Instance membership is built from each creature page's own Locations
+  table, which gives only 6 to 11 creatures per instance. That smells
+  short. Looking for a page per instance that lists what is inside.
 """
 
 import json
 import re
 import time
-from difflib import get_close_matches
 
 import requests
 
 API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+
+NO_DROPS = ["Castellan", "Bulangiu", "Badaran", "Frozen Dragon", "Leonard",
+            "Sslessar", "Bricker", "Small dragon", "Tank Rabbit", "Shy Rat",
+            "Nenorocit"]
+INSTANCES = ["Noob Instance", "Advanced Instance", "Pr0 Farm Instance",
+             "Almost Pr0 Instance", "Pr0 Instance", "WTF???111?! Instance"]
+
+HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 
 
 def api(**params):
@@ -58,83 +75,77 @@ def api(**params):
     return r.json()
 
 
-def every_image():
-    out, cont = {}, None
-    for _ in range(200):
-        kw = {"action": "query", "list": "allimages", "ailimit": 500,
-              "aiprop": "url|size", "aisort": "name"}
-        if cont:
-            kw["aicontinue"] = cont
-        body = api(**kw)
-        for im in body.get("query", {}).get("allimages", []):
-            out[im["name"]] = im
-        cont = body.get("continue", {}).get("aicontinue")
-        if not cont:
-            break
-        time.sleep(0.25)
-    return out
+def page_text(title):
+    body = api(action="query", prop="revisions", titles=title,
+               rvprop="content", rvslots="main", redirects=1)
+    for pg in body.get("query", {}).get("pages", []):
+        if pg.get("missing"):
+            return None
+        revs = pg.get("revisions") or [{}]
+        return (revs[0].get("slots", {}).get("main", {}).get("content")
+                or revs[0].get("content") or "")
+    return None
 
 
-# "Elle, Valley of the Dwarves" and "Bob the Gob, Portland [wandering]"
-# carry a place; the name is what comes before the comma or bracket.
-def bare(npc):
-    return re.split(r"\s*[,\[(]", npc)[0].strip()
+print("=" * 70)
+print("PART 1 - pages whose title mentions instance")
+print("=" * 70)
+body = api(action="query", list="search", srsearch="instance",
+           srlimit=50, srwhat="title")
+for hit in body.get("query", {}).get("search", []):
+    print(f"   {hit['title']}")
 
-
-def key(text):
-    return re.sub(r"[^a-z0-9]", "", text.lower())
-
-
-quests = json.load(open("quests.json"))["quests"]
-npcs = sorted({bare(q["npc"]) for q in quests if q.get("npc")})
-print(f"{len(npcs)} distinct NPCs named by the quest guide")
-
-print("\n--- categories whose name mentions NPC ---")
-body = api(action="query", list="allcategories", acprefix="", aclimit=500)
-cats = [c["category"] for c in body.get("query", {}).get("allcategories", [])]
-print("   " + ", ".join(c for c in cats if re.search(r"npc|character|people",
-                                                     c, re.I)) or "   none")
-
-for cat in ("NPCs", "NPC", "Characters", "Priest NPCs"):
+print("\n--- Category:Instances and friends ---")
+for cat in ("Instances", "Instance", "Instance creatures", "Invance",
+            "Invances", "Instance maps"):
     body = api(action="query", list="categorymembers",
                cmtitle=f"Category:{cat}", cmlimit=500)
     members = [m["title"] for m in
                body.get("query", {}).get("categorymembers", [])]
-    if members:
-        print(f"\n--- Category:{cat} has {len(members)} members ---")
-        print("   " + ", ".join(members[:30]))
+    print(f"   Category:{cat}: {len(members)}"
+          + ("  " + ", ".join(members) if members else ""))
 
-files = every_image()
-print(f"\n{len(files)} files on the wiki")
+print("\n" + "=" * 70)
+print("PART 2 - the instance pages themselves, in full")
+print("=" * 70)
+for title in INSTANCES + ["Instances", "Instance"]:
+    text = page_text(title)
+    print(f"\n----- {title} -----")
+    if text is None:
+        print("   no such page")
+        continue
+    print(f"   {len(text)} bytes, headings: "
+          + ", ".join(HEADING.findall(text)))
+    print(text[:4000])
+    time.sleep(0.3)
 
-plain = {}
-for name in files:
-    stem = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
-    plain.setdefault(key(stem), name)
+print("\n" + "=" * 70)
+print("PART 3 - the creatures with no drops, in full")
+print("=" * 70)
+for name in NO_DROPS:
+    text = page_text(name)
+    print(f"\n----- {name} -----")
+    if text is None:
+        print("   no such page")
+        continue
+    print(f"   {len(text)} bytes, headings: "
+          + ", ".join(HEADING.findall(text)))
+    print(text[:2500])
+    time.sleep(0.3)
 
-hit, miss = [], []
-for npc in npcs:
-    k = key(npc)
-    found = None
-    for prefix in ("npc", "", "character", "quest"):
-        if prefix + k in plain:
-            found = plain[prefix + k]
-            break
-    (hit if found else miss).append((npc, found))
-
-print(f"\n{len(hit)} NPCs have a file, {len(miss)} do not")
-for npc, f in hit[:20]:
-    im = files[f]
-    print(f"   {npc:22} {f}  {im.get('width')}x{im.get('height')} "
-          f"{im.get('size')}b")
-
-print("\n--- nearest file to each miss ---")
-for npc, _ in miss[:25]:
-    near = get_close_matches(key(npc), plain, n=2, cutoff=0.78)
-    print(f"   {npc:22} -> "
-          + (", ".join(plain[m] for m in near) if near else "nothing close"))
-
-print("\n--- files whose name mentions npc or quest ---")
-for name in sorted(files):
-    if re.search(r"\bnpc|quest", name, re.I):
-        print(f"   {name}")
+print("\n" + "=" * 70)
+print("PART 4 - every heading used on a creature page, counted")
+print("=" * 70)
+creatures = [c["name"] for c in
+             json.load(open("creatures.json"))["creatures"]]
+seen = {}
+for name in creatures:
+    text = page_text(name)
+    if not text:
+        continue
+    for h in HEADING.findall(text):
+        seen.setdefault(h.strip(), []).append(name)
+    time.sleep(0.2)
+for h, who in sorted(seen.items(), key=lambda kv: -len(kv[1])):
+    sample = "" if len(who) > 20 else "  " + ", ".join(who)
+    print(f"   {len(who):4}  {h}{sample}")
