@@ -2425,8 +2425,12 @@ function renderOneItem(view, count, name) {
       made.nexus ? `, <b>${esc(made.nexus)} nexus ${made.nexusLvl}</b>` : ""}${
       made.exp ? `, ${fmt(made.exp)} experience` : ""}${
       made.makes > 1 ? `. One mix makes <b>${fmt(made.makes)}</b>` : ""}${
-      made.vendor ? `. A vendor pays ${fmt(made.vendor)} each.` : "."}${
-      made.knows ? ` Needs <b>${esc(made.knows)}</b> read first.` : ""}</p>
+      made.vendor ? `. A vendor pays ${fmt(made.vendor)} each.` : "."}
+      ${made.tool || made.food || made.knows ? `Needs ${[
+        made.tool ? `a <b>${esc(made.tool)}</b>` : null,
+        made.food ? `<b>${Math.round(made.food)} food</b> a mix` : null,
+        made.knows ? `<b>${esc(made.knows)}</b> read first` : null,
+      ].filter(Boolean).join(", ")}.` : ""}</p>
     <table class="itab"><thead><tr><th class="num">Need</th>
       <th class="wide">Ingredient</th>
       <th class="num">At cheapest</th></tr></thead>
@@ -4048,8 +4052,13 @@ function craftDetail(r, c) {
         experience, so ${c.perXp < 0 ? "you earn" : "it costs"}
         ${fmt(Math.abs(c.perXp))} a point</div><div></div><div></div>` : ""}
     </div>
-    ${r.tool ? `<div class="sm" style="margin-top:12px">Needs ${esc(r.tool)}${
-      r.food ? `, ${Math.round(r.food)} food` : ""}</div>` : ""}
+    ${(r.tool || r.food || r.nexus || r.knows) ? `<div class="sm"
+      style="margin-top:12px">Also needs ${[
+        r.tool ? esc(r.tool) : null,
+        r.nexus ? `${esc(r.nexus)} nexus ${r.nexusLvl}` : null,
+        r.food ? `${Math.round(r.food)} food a mix` : null,
+        r.knows ? `${esc(r.knows)} read` : null,
+      ].filter(Boolean).join(", ")}</div>` : ""}
   </div></td></tr>`;
 }
 
