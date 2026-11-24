@@ -458,6 +458,10 @@
   /* The artwork is a 32px game sprite. Doubling it with smoothing turns
      it to mush, so it is kept on the pixel grid and shown as drawn. */
   .bothead.withpic { align-items: center; }
+  /* With a full portrait the name reads as the artwork's title, so it
+     sits on the picture's foot rather than floating halfway up it. */
+  .bothead.bigpic { align-items: flex-end; }
+  .bothead.bigpic h2 { line-height: 1; }
   .bothead .pic { width: 64px; height: 64px; flex: none; padding: 7px;
                   object-fit: contain; image-rendering: pixelated;
                   background: var(--panel); border: 1px solid var(--line);
@@ -1643,7 +1647,8 @@ function renderOneBeast(view, count) {
     </tr>`).join("")}</table>`;
 
   view.innerHTML = `
-    <div class="bothead${c.img ? " withpic" : ""}">
+    <div class="bothead${c.img ? " withpic" : ""}${
+      c.img && !c.imgSmall ? " bigpic" : ""}">
       <button class="back">All creatures</button>
       ${c.img ? `<img class="pic${c.imgSmall ? " tiny" : " photo"}"
         src="${m.beastImgBase}${c.img}"
