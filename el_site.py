@@ -521,6 +521,11 @@ def load(db_path):
             The most a drop count can mean. The wiki writes a number
             however it likes - "4", "0-35", "2,800", "~200k-835k" - and
             a Castellan's whole worth is in the k.
+
+            None where it has written "??" instead of a number. That is
+            not one: a Meltean's gold is simply not recorded, and
+            counting it as a single coin put a wave of thirty of them
+            at thirty gold.
             """
             top = str(text or "1").split("-")[-1].strip().lower()
             mult = 1
@@ -532,7 +537,7 @@ def load(db_path):
             try:
                 return int(float(top) * mult)
             except ValueError:
-                return 1
+                return None if "?" in top else 1
 
         def price_drops(rows, skip=None):
             """
@@ -554,7 +559,12 @@ def load(db_path):
                     continue
                 d["pays"] = hit["price"]
                 d["bot"] = hit["bot"]
-                d["most"] = hit["price"] * how_many(d.get("n"))
+                many = how_many(d.get("n"))
+                if many is None:
+                    # Priced, but nobody has written down how many.
+                    d["unknown"] = True
+                    continue
+                d["most"] = hit["price"] * many
                 if d.get("where") != skip:
                     worth += d["most"]
             return worth
@@ -567,6 +577,10 @@ def load(db_path):
             c["worth"] = price_drops(c.get("drops", []), skip="instance")
             c["worthInst"] = price_drops(c.get("drops", []), skip="invasion")
             price_drops(c.get("rare", []))
+            # Something it drops has no recorded amount, so every figure
+            # for this creature is a floor rather than a total.
+            if any(d.get("unknown") for d in c.get("drops", [])):
+                c["more"] = True
             if c["worth"] or c["worthInst"]:
                 priced += 1
         print(f"  {len(creatures)} creatures, {priced} with a price on "
@@ -593,6 +607,8 @@ def load(db_path):
                     # Enough to draw the row without carrying the whole
                     # creature again; the link goes to the full page.
                     opt["worth"] = c.get("worthInst") or c.get("worth") or 0
+                    if c.get("more"):
+                        opt["more"] = True
                     opt["health"] = c.get("material")
                     opt["att"] = c.get("attack")
                     opt["def"] = c.get("defense")
@@ -1273,6 +1289,14 @@ HTML = r"""<!doctype html>
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .chips .tag { font-size: var(--t-xs); border: 1px solid var(--line-2);
           border-radius: 10px; padding: 2px 9px; color: var(--muted); }
+  /* A wave number is one character wide and the three figures beside
+     it are short, so left to itself the table hands them a third of the
+     page each and the creatures end up squeezed into the middle with a
+     gutter in front of them. The narrow columns are pinned and the
+     creatures take what is left. */
+  .waves th:first-child, .waves td:first-child { width: 58px; }
+  .waves th:nth-child(3), .waves td:nth-child(3) { width: 120px; }
+  .waves th:last-child, .waves td:last-child { width: 130px; }
   /* The handful of facts that decide whether you can go in at all:
      level range, how many people, how long, how often. */
   .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
@@ -2773,14 +2797,15 @@ function instanceWorth(inst) {
      clear is worth somewhere between the cheapest run of choices and
      the richest. Both are "at most", since a drop written 0-35 gold is
      counted at 35. */
-  let low = 0, high = 0, known = false;
+  let low = 0, high = 0, known = false, more = false;
   (inst.waves || []).forEach(wave => {
     const each = wave.map(o => countTop(o.count) * (o.worth || 0));
     if (each.some(v => v > 0)) known = true;
+    if (wave.some(o => o.more)) more = true;
     low += Math.min(...each);
     high += Math.max(...each);
   });
-  return known ? { low, high } : null;
+  return known ? { low, high, more } : null;
 }
 
 function instanceRares(inst) {
@@ -2847,12 +2872,14 @@ function renderInstances(view, count, q) {
         inst.notes.map(esc).join(" ")}</div>` : ""}
       ${money ? `<div class="grouphint">A clear carries <b
         class="brass">${money.low === money.high ? fmt(money.high)
-          : `${fmt(money.low)}–${fmt(money.high)}`}</b> gold at
-        most, before rare drops.${rare.length ? ` Best rare drop in
+          : `${fmt(money.low)}–${fmt(money.high)}`}${money.more ? "+" : ""
+          }</b> gold at most, before rare drops.${money.more
+        ? " The plus is for the creatures in here whose gold the wiki has"
+          + " never written down." : ""}${rare.length ? ` Best rare drop in
         here: ${rare.map(d => `${itemLink(d.item)}${d.most
           ? ` at <b class="brass">${fmt(d.most)}</b>` : ""}`)
           .join(", ")}.` : ""}</div>` : ""}
-      <div class="scroller"><table><thead><tr>
+      <div class="scroller"><table class="waves"><thead><tr>
         <th class="num">Wave</th><th>What comes through</th>
         <th class="num hide-sm">Health each</th>
         <th class="num">Worth</th>
@@ -2866,8 +2893,8 @@ function renderInstances(view, count, q) {
             <a class="lnk blnk" href="#fight/${
               encodeURIComponent(o.creature)}">${esc(o.creature)}</a></div></td>
           <td class="num sm hide-sm">${esc(o.health || "–")}</td>
-          <td class="num ${o.worth ? "brass" : "sm"}">${o.worth
-            ? fmt(countTop(o.count) * o.worth) : "–"}</td>
+          <td class="num ${o.worth ? "brass" : "sm"}">${
+            worthText(countTop(o.count) * (o.worth || 0), o.more)}</td>
         </tr>`).join("")).join("")}</tbody></table></div>`;
     }).join("")}`;
   wireFightPicker(view);
@@ -2880,6 +2907,15 @@ function renderInstances(view, count, q) {
    one creature dropping everything twice. */
 function killWorth(c) {
   return Math.max(c.worth || 0, c.worthInst || 0);
+}
+
+/* A figure with something unpriced inside it is a floor, not a total.
+   The wiki records no amount at all for some gold drops - a Meltean's
+   is written "??" - so those creatures are worth at least what is
+   shown and nobody can say how much more. */
+function worthText(value, more) {
+  if (!value) return more ? "?" : "\u2013";
+  return fmt(value) + (more ? "+" : "");
 }
 
 function dropGroups(drops) {
@@ -2933,7 +2969,8 @@ function renderFight(view, count, q) {
       <td class="sm">${(c.drops || []).slice(0, 3).map(d =>
         `${d.n ? esc(d.n) + " " : ""}${esc(d.item)}`).join(", ")}${
         (c.drops || []).length > 3 ? " \u2026" : ""}</td>
-      <td class="num brass">${killWorth(c) ? fmt(killWorth(c)) : ""}</td>
+      <td class="num brass">${killWorth(c) || c.more
+        ? worthText(killWorth(c), c.more) : ""}</td>
     </tr>`).join("")}</tbody></table></div>
     ${list.length ? `<div class="caveat">Worth is the most a kill can be
       carrying, not an average: a drop written 0-35 gold coins is counted
@@ -2958,8 +2995,9 @@ function renderOneBeast(view, count) {
         itemLink(d.item)}${d.note
           ? ` <span class="sm muted">(${esc(d.note)})</span>` : ""
         }</span></div></td>
-      <td class="num ${d.pays ? "brass" : "sm muted"}">${
-        d.pays ? fmt(d.most) : "no bot buys it"}</td>
+      <td class="num ${d.pays && !d.unknown ? "brass" : "sm muted"}">${
+        !d.pays ? "no bot buys it"
+        : d.unknown ? "how many is not recorded" : fmt(d.most)}</td>
       <td class="sm">${d.bot ? botLink(d.bot) : ""}</td>
     </tr>`).join("")}</table>`;
 
@@ -2980,8 +3018,9 @@ function renderOneBeast(view, count) {
       esc(c.imgOf)}</a>, whose picture it is borrowing; it has none of
       its own.</p>` : ""}
     ${c.worth || c.worthInst ? `<div class="qnpc">A kill is carrying at
-      most <b>${fmt(Math.max(c.worth || 0, c.worthInst || 0))}</b> gold,
-      before rare drops.${c.worthInst && c.worth
+      most <b>${fmt(killWorth(c))}</b> gold, before rare drops.${c.more
+        ? " And more than that: one of the things it drops has no amount"
+          + " written down on the wiki." : ""}${c.worthInst && c.worth
         && c.worthInst !== c.worth ? ` That is inside an instance; in an
       invasion it carries ${fmt(Math.min(c.worth, c.worthInst))}.` : ""
       }</div>` : ""}

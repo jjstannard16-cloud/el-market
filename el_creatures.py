@@ -61,8 +61,8 @@ BULLET = re.compile(r"^\*\s*(.+?)\s*$", re.M)
 # Coins", "~200k-835k Gold Coins". The wiki writes big numbers however
 # it likes and a Castellan's whole worth hangs on reading them.
 AMOUNT = re.compile(r"""^\s*~?\s*
-     (\d[\d,.]*\s*[km]?
-      (?:\s*(?:-|to|\u2013)\s*~?\s*\d[\d,.]*\s*[km]?)?)
+     ((?:\d[\d,.]*\s*[km]?|\?+)
+      (?:\s*(?:-|to|\u2013)\s*~?\s*(?:\d[\d,.]*\s*[km]?|\?+))?)
      \s+(.+?)\s*$""", re.X | re.I)
 # A table cell may carry its layout before the content it holds:
 #   | style="width: 95%;" | 1 [[Bones]]
@@ -174,6 +174,10 @@ def where_of(heading, header):
 
 
 NOTE = re.compile(r"\s*\(([^)]*)\)")
+# A cell that opens with question marks: "?? [[Gold Coins]]" is the
+# wiki saying nobody has written the number down. clean_cell rubs the
+# marks off, so the raw line is what has to be asked.
+FIRST_Q = re.compile(r'^\s*(?:[A-Za-z-]+\s*=\s*"[^"]*"\s*\|)?\s*\?+(\s|$)')
 
 
 def tidy_item(what):
@@ -187,6 +191,27 @@ def tidy_item(what):
     note = " ".join(n.strip() for n in NOTE.findall(what)).strip(" ?")
     what = " ".join(NOTE.sub(" ", what).split())
     return what, (note or None)
+
+
+def read_drop(raw, clean):
+    """
+    One drop line into what it is, how many, and anything said about it
+    in brackets.
+
+    An amount the wiki has not recorded is kept as a question mark
+    rather than left empty, because an empty amount means one and a
+    Meltean does not drop one gold coin.
+    """
+    what, note = tidy_item(clean)
+    n, what = split_amount(what)
+    if n is None and FIRST_Q.match(raw):
+        n = "?"
+    if not what:
+        return None
+    one = {"n": n, "item": what}
+    if note:
+        one["note"] = note
+    return one
 
 
 def split_amount(text):
@@ -266,12 +291,8 @@ def read_creature(s, title):
                 clean = cell_text(cell)
                 if not clean or clean == "}":
                     continue
-                n, what = split_amount(clean)
-                what, note = tidy_item(what)
-                if what:
-                    one = {"n": n, "item": what}
-                    if note:
-                        one["note"] = note
+                one = read_drop(cell, clean)
+                if one:
                     if where:
                         one["where"] = where
                     into.append(one)
@@ -302,18 +323,15 @@ def bullet_drops(text):
         clean = clean_cell(line.lstrip("* "))
         if not clean or clean.endswith(":") or len(clean) > 60:
             continue
-        n, what = split_amount(clean)
-        what, note = tidy_item(what)
-        if not what or what.lower() in ("none", "nothing", "unknown", "n/a"):
+        one = read_drop(line.lstrip("* "), clean)
+        if not one or one["item"].lower() in ("none", "nothing", "unknown",
+                                              "n/a"):
             continue
         # An item name is a few words. Anything longer is the wiki
         # explaining itself - "Gold coins he gets from creature kills"
         # - and is not a drop a bot can price.
-        if len(what.split()) > 6:
+        if len(one["item"].split()) > 6:
             continue
-        one = {"n": n, "item": what}
-        if note:
-            one["note"] = note
         out.append(one)
     return out
 
@@ -338,15 +356,12 @@ def read_rare(s, creature):
             if re.search(r"copy the drop line|confirm a drop|signature",
                          clean, re.I):
                 continue
-            n, what = split_amount(clean)
-            what, note = tidy_item(what)
-            if not what or what.lower().startswith(("new drops", "to ")):
+            one = read_drop(line, clean)
+            if not one or one["item"].lower().startswith(("new drops",
+                                                          "to ")):
                 continue
-            if len(what.split()) > 6:
+            if len(one["item"].split()) > 6:
                 continue
-            one = {"n": n, "item": what}
-            if note:
-                one["note"] = note
             out.append(one)
         return out, title
     return [], None
