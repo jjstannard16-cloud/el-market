@@ -52,6 +52,8 @@ SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
 GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
+CREATURE_IMG_FILE = "creature_images.json"
+CREATURE_IMG_BASE = "img/c/"   # our own copies; see el_creature_images.py
 
 
 def load_special_days():
@@ -418,6 +420,18 @@ def load(db_path):
     if os.path.exists(CREATURES_FILE):
         with open(CREATURES_FILE, encoding="utf-8") as f:
             creatures = json.load(f).get("creatures", [])
+        # The wiki keeps a picture for most of them under four different
+        # naming habits; el_creature_images.py works out which and
+        # leaves the answer here. A creature without one shows no box.
+        art = {}
+        if os.path.exists(CREATURE_IMG_FILE):
+            with open(CREATURE_IMG_FILE, encoding="utf-8") as f:
+                art = json.load(f).get("images", {})
+        for c in creatures:
+            a = art.get(c["name"])
+            if a:
+                c["img"] = a["file"]
+                c["imgSmall"] = bool(a.get("small"))
         pays = {}
         for r in con.execute("""
                 SELECT LOWER(i.name) n, MAX(l.price) p,
@@ -801,6 +815,7 @@ def load(db_path):
                                 for i in items.values()),
             "historyRows": hist_count,
             "imgBase": IMG_BASE,
+            "beastImgBase": CREATURE_IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
             "playerCount": sum(1 for p in players if not p["private"]),
@@ -1272,6 +1287,14 @@ HTML = r"""<!doctype html>
                   object-fit: contain; image-rendering: pixelated;
                   background: var(--panel); border: 1px solid var(--line);
                   border-radius: 3px; }
+  /* A creature portrait is a real drawing, not a sprite, so it is
+     smoothed and given room; the 25px thumbnails stay on the grid. */
+  .bothead .pic.photo { width: 104px; height: 104px; padding: 0;
+                        object-fit: cover; image-rendering: auto; }
+  .bothead .pic.tiny { width: 46px; height: 46px; padding: 5px; }
+  @media (max-width: 620px) {
+    .bothead .pic.photo { width: 72px; height: 72px; }
+  }
   .back { background: none; border: 1px solid var(--line-2); color: var(--muted);
           padding: 5px 11px; border-radius: 3px; cursor: pointer;
           font: 400 13px var(--ui); }
@@ -2397,8 +2420,11 @@ function renderFight(view, count, q) {
     { t: "Drops" },
     { t: "Worth", k: "worth", num: 1 },
   ])}<tbody>${list.map(c => `<tr>
-      <td><a class="lnk blnk" href="#fight/${encodeURIComponent(c.name)}">${
-        esc(c.name)}</a>${(c.kinds || []).length
+      <td><div class="nm">${c.img
+          ? `<img src="${m.beastImgBase}${c.img}" loading="lazy" alt="">`
+          : `<img alt="">`}<a class="lnk blnk"
+          href="#fight/${encodeURIComponent(c.name)}">${
+        esc(c.name)}</a></div>${(c.kinds || []).length
         ? `<div class="seen">${(c.kinds || []).map(k => esc(KINDS[k] || k))
             .join(" \u00b7 ")}</div>` : ""}</td>
       <td class="num sm hide-sm">${esc(c.attack || "")}</td>
@@ -2438,8 +2464,10 @@ function renderOneBeast(view, count) {
     </tr>`).join("")}</table>`;
 
   view.innerHTML = `
-    <div class="bothead">
+    <div class="bothead${c.img ? " withpic" : ""}">
       <button class="back">All creatures</button>
+      ${c.img ? `<img class="pic${c.imgSmall ? " tiny" : " photo"}"
+        src="${m.beastImgBase}${c.img}" alt="">` : ""}
       <h2>${esc(c.name)}</h2>
       <span class="where">${(c.kinds || []).map(k => esc(KINDS[k] || k))
         .join(" \u00b7 ")}</span>

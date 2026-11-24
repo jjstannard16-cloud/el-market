@@ -27,7 +27,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 lxml
+        run: pip install requests beautifulsoup4 lxml pillow
 
       - name: Read the wiki
         run: python el_recipes.py import
@@ -47,6 +47,13 @@ jobs:
       - name: Fetch any new item artwork
         run: python el_images.py
 
+      # Creatures had no picture at all. This finds one on the wiki for
+      # as many as it can and shrinks it; a creature already done is
+      # skipped, so only a new creature costs anything.
+      - name: Fetch any new creature artwork
+        run: python el_creature_images.py
+        continue-on-error: true
+
       - name: Rebuild the page
         run: python el_site.py --out public/index.html
 
@@ -60,7 +67,8 @@ jobs:
           # take theirs, and redo the work on top. Both jobs are
           # idempotent, so redoing is always safe and always correct.
           for attempt in 1 2 3 4 5; do
-            git add el_bots.db gods.json creatures.json public/index.html \
+            git add el_bots.db gods.json creatures.json \
+                    creature_images.json public/index.html \
                     public/data.js public/img
             if git diff --staged --quiet; then
               echo "Nothing changed."
@@ -77,6 +85,7 @@ jobs:
             python el_recipes.py import
             python el_gods.py || true
             python el_creatures.py || true
+            python el_creature_images.py || true
             python el_site.py --out public/index.html
           done
           echo "Could not land the change after 5 attempts."
