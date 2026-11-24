@@ -53,6 +53,11 @@ QUESTS_FILE = "quests.json"
 GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
 CREATURE_IMG_FILE = "creature_images.json"
+BADGES_FILE = "badges.json"
+BADGE_BASE = "img/a/"   # our own copies; see el_badges.py
+# The wiki and the game do not spell every achievement the same way.
+BADGE_ALIAS = {"mothernaturehatesme": "naturehatesme",
+               "professorofpotioning": "professorofpotions"}
 CREATURE_IMG_BASE = "img/c/"   # our own copies; see el_creature_images.py
 
 
@@ -384,20 +389,67 @@ def load(db_path):
     # means a different amount of work from the first.
     ach_players, ach_kinds = [], []
     rows = con.execute("""SELECT name, achievements FROM player
-                          WHERE achievements LIKE '%|%'""").fetchall()
+                          WHERE achievements IS NOT NULL
+                            AND achievements <> ''""").fetchall()
+    badges = {}
+    if os.path.exists(BADGES_FILE):
+        with open(BADGES_FILE, encoding="utf-8") as f:
+            badges = json.load(f).get("badges", {})
+
+    def badge_for(base, tier):
+        k = re.sub(r"[^a-z0-9]", "", base.lower())
+        entry = badges.get(k) or badges.get(BADGE_ALIAS.get(k, ""))
+        if not entry or not entry.get("tiers"):
+            return None
+        tiers = entry["tiers"]
+        return tiers[min(tier or 1, len(tiers)) - 1]
+
     if rows:
         TIERS = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
-        counts, holders = {}, {}
+        strip_tier = lambda t: re.sub(r"\s*\([IVX]+\)\s*$", "", t).strip()
+
+        # Before a fix to the separator, a player's achievements were
+        # stored as one unbroken line. Those rows were being dropped
+        # from the rankings entirely rather than shown wrong, which is
+        # why nobody noticed. The rows that did store properly name
+        # every achievement the game has, so they are used to break the
+        # others apart rather than waiting for all 500 to be read again.
+        known = set()
+        for r in rows:
+            if "|" in (r["achievements"] or ""):
+                for raw in r["achievements"].split("|"):
+                    base = strip_tier(raw.strip())
+                    if base:
+                        known.add(base)
+        run_on = re.compile(
+            "(" + "|".join(re.escape(n) for n in
+                           sorted(known, key=len, reverse=True))
+            + r")\s*(?:\(([IVX]+)\))?", re.I) if known else None
+
+        def parts_of(text):
+            if "|" in text:
+                return [p.strip() for p in text.split("|") if p.strip()]
+            if run_on:
+                return [m.group(0).strip() for m in run_on.finditer(text)]
+            return [text.strip()]
+
+        counts, holders, repaired = {}, {}, 0
         for r in rows:
             got, score = [], 0
-            for raw in r["achievements"].split("|"):
+            if "|" not in (r["achievements"] or ""):
+                repaired += 1
+            for raw in parts_of(r["achievements"]):
                 name = raw.strip()
                 if not name:
                     continue
                 tier_match = re.search(r"\(([IVX]+)\)\s*$", name)
                 tier = TIERS.get(tier_match.group(1)) if tier_match else None
                 base = re.sub(r"\s*\([IVX]+\)\s*$", "", name).strip()
-                got.append({"name": base, "tier": tier})
+                entry = {"name": base, "tier": tier}
+                img = badge_for(base, tier)
+                if img:
+                    entry["img"] = img
+                got.append(entry)
                 score += tier or 1
                 counts[base] = counts.get(base, 0) + 1
                 holders.setdefault(base, set()).add(r["name"].lower())
@@ -409,6 +461,7 @@ def load(db_path):
         total = len(ach_players)
         ach_kinds = sorted(
             ({"name": k, "n": len(v),
+              "img": badge_for(k, None),
               "share": round(100 * len(v) / total, 1)}
              for k, v in holders.items()), key=lambda x: x["n"])
         print(f"  {total} players with achievements, "
@@ -822,6 +875,7 @@ def load(db_path):
             "historyRows": hist_count,
             "imgBase": IMG_BASE,
             "beastImgBase": CREATURE_IMG_BASE,
+            "badgeBase": BADGE_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
             "playerCount": sum(1 for p in players if not p["private"]),
@@ -961,6 +1015,11 @@ HTML = r"""<!doctype html>
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
   .namegrid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
+  /* A badge is a small drawing, so it is smoothed, and the chip turns
+     into a row so the picture and the name sit beside each other. */
+  .namegrid .chip:has(.badge) { display: inline-flex; align-items: center;
+                                gap: 7px; padding: 4px 10px 4px 5px; }
+  .badge { width: 26px; height: 26px; object-fit: contain; flex: none; }
   .namegrid .chip { font-family: var(--sans); font-size: var(--t-sm);
           color: var(--muted); border: 1px solid var(--line-2);
           border-radius: 3px; padding: 5px 10px; text-decoration: none;
@@ -3415,8 +3474,10 @@ function achPanel(name) {
   return `<div><h3>Achievements <span class="sm">#${
     all.indexOf(me) + 1} on ${fmt(me.score)}</span></h3>
     <div class="namegrid">${me.got.map(g =>
-      `<span class="chip">${esc(g.name)}${g.tier
-        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span>`)
+      `<span class="chip">${g.img
+        ? `<img class="badge" src="${m.badgeBase}${g.img}" loading="lazy"
+             alt="">` : ""}<span>${esc(g.name)}${g.tier
+        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span></span>`)
       .join("")}</div></div>`;
 }
 
@@ -3443,7 +3504,10 @@ function renderAchievements(view, count, q) {
       along with their skills, so these are shares of what is public.
       </div>
     <table class="ranks">${rarest.map(k => `<tr>
-      <td>${esc(k.name)}</td>
+      <td><div class="nm">${k.img
+        ? `<img class="badge" src="${m.badgeBase}${k.img}" loading="lazy"
+             alt="">` : `<span class="noimg"></span>`}<span>${
+        esc(k.name)}</span></div></td>
       <td class="barcell"><span class="meter"><i style="width:${
         Math.max(2, Math.round(k.share))}%"></i></span></td>
       <td class="num">${fmt(k.n)}</td>

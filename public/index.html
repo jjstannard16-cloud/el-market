@@ -128,6 +128,11 @@
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
   .namegrid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
+  /* A badge is a small drawing, so it is smoothed, and the chip turns
+     into a row so the picture and the name sit beside each other. */
+  .namegrid .chip:has(.badge) { display: inline-flex; align-items: center;
+                                gap: 7px; padding: 4px 10px 4px 5px; }
+  .badge { width: 26px; height: 26px; object-fit: contain; flex: none; }
   .namegrid .chip { font-family: var(--sans); font-size: var(--t-sm);
           color: var(--muted); border: 1px solid var(--line-2);
           border-radius: 3px; padding: 5px 10px; text-decoration: none;
@@ -2582,8 +2587,10 @@ function achPanel(name) {
   return `<div><h3>Achievements <span class="sm">#${
     all.indexOf(me) + 1} on ${fmt(me.score)}</span></h3>
     <div class="namegrid">${me.got.map(g =>
-      `<span class="chip">${esc(g.name)}${g.tier
-        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span>`)
+      `<span class="chip">${g.img
+        ? `<img class="badge" src="${m.badgeBase}${g.img}" loading="lazy"
+             alt="">` : ""}<span>${esc(g.name)}${g.tier
+        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span></span>`)
       .join("")}</div></div>`;
 }
 
@@ -2610,7 +2617,10 @@ function renderAchievements(view, count, q) {
       along with their skills, so these are shares of what is public.
       </div>
     <table class="ranks">${rarest.map(k => `<tr>
-      <td>${esc(k.name)}</td>
+      <td><div class="nm">${k.img
+        ? `<img class="badge" src="${m.badgeBase}${k.img}" loading="lazy"
+             alt="">` : `<span class="noimg"></span>`}<span>${
+        esc(k.name)}</span></div></td>
       <td class="barcell"><span class="meter"><i style="width:${
         Math.max(2, Math.round(k.share))}%"></i></span></td>
       <td class="num">${fmt(k.n)}</td>

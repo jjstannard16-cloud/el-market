@@ -63,6 +63,9 @@ def key(text):
 
 
 def slug(name):
+    """'Award harvest3.png' -> 'award-harvest3'. The extension is put
+    back by the caller, so it does not end up in the middle."""
+    name = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "x"
 
 
