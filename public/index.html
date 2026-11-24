@@ -464,11 +464,13 @@
                   border-radius: 3px; }
   /* A creature portrait is a real drawing, not a sprite, so it is
      smoothed and given room; the 25px thumbnails stay on the grid. */
-  .bothead .pic.photo { width: 104px; height: 104px; padding: 5px;
-                        object-fit: contain; image-rendering: auto; }
+  .bothead .pic.photo { width: auto; height: auto; max-height: 200px;
+                        max-width: min(360px, 100%); padding: 0;
+                        object-fit: contain; image-rendering: auto;
+                        border-radius: 4px; }
   .bothead .pic.tiny { width: 46px; height: 46px; padding: 5px; }
   @media (max-width: 620px) {
-    .bothead .pic.photo { width: 72px; height: 72px; }
+    .bothead .pic.photo { max-height: 150px; }
   }
   .back { background: none; border: 1px solid var(--line-2); color: var(--muted);
           padding: 5px 11px; border-radius: 3px; cursor: pointer;
@@ -1597,7 +1599,7 @@ function renderFight(view, count, q) {
     { t: "Worth", k: "worth", num: 1 },
   ])}<tbody>${list.map(c => `<tr>
       <td><div class="nm">${c.img
-          ? `<img class="beast" src="${m.beastImgBase}${c.img}"
+          ? `<img class="beast" src="${m.beastImgBase}${c.imgThumb}"
                loading="lazy" alt="">`
           : `<span class="noimg"></span>`}<a class="lnk blnk"
           href="#fight/${encodeURIComponent(c.name)}">${
