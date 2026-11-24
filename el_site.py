@@ -560,6 +560,12 @@ def load(db_path):
                 d["pays"] = hit["price"]
                 d["bot"] = hit["bot"]
                 many = how_many(d.get("n"))
+                # An item with no amount against it means one of it.
+                # Gold is the exception: nothing drops a single coin,
+                # so a gold line with no number is a number nobody has
+                # written down.
+                if name in ("gold coins", "gold coin") and not d.get("n"):
+                    many = None
                 if many is None:
                     # Priced, but nobody has written down how many.
                     d["unknown"] = True
