@@ -1036,6 +1036,29 @@ HTML = r"""<!doctype html>
   .pills .pill.on { color: var(--ground); background: var(--brass);
                     border-color: var(--brass); }
   .namegrid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
+  /* Two hundred names wrapped by their own widths is a jumble: nothing
+     lines up and the eye has no column to follow. A grid of equal cells
+     gives it rows and columns to read down instead. */
+  .pgrid { display: grid; gap: 6px; margin-bottom: 28px;
+           grid-template-columns: repeat(auto-fill, minmax(142px, 1fr)); }
+  .pgrid.wide { grid-template-columns: repeat(auto-fill, minmax(186px, 1fr)); }
+  .pgrid > * { display: block; padding: 7px 11px; border-radius: 3px;
+               border: 1px solid var(--line); background: var(--panel);
+               text-decoration: none; overflow: hidden; }
+  .pgrid b { display: block; font-weight: 400; font-size: var(--t-sm);
+             color: var(--ink); white-space: nowrap; overflow: hidden;
+             text-overflow: ellipsis; }
+  .pgrid .sub { display: block; font-size: var(--t-xs); color: var(--dim);
+                white-space: nowrap; overflow: hidden;
+                text-overflow: ellipsis; margin-top: 2px; }
+  .pgrid a:hover { border-color: var(--brass); background: var(--raised); }
+  .pgrid a:hover b { color: var(--brass); }
+  .pgrid .idle { background: none; }
+  .pgrid .idle b { color: var(--muted); }
+  @media (max-width: 620px) {
+    .pgrid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+    .pgrid.wide { grid-template-columns: repeat(auto-fill, minmax(144px, 1fr)); }
+  }
   /* A badge is a small drawing, so it is smoothed, and the chip turns
      into a row so the picture and the name sit beside each other. */
   .namegrid .chip:has(.badge) { display: inline-flex; align-items: center;
@@ -3460,22 +3483,27 @@ function renderOnline(view, count, q) {
   // A bot that is up is a bot you can trade with, so its name goes
   // straight to what it is buying and selling.
   const botGrid = !bots.length ? "" : `
-    <h2 class="group">Bots up now</h2>
+    <h2 class="group">Bots up now <span class="count">${
+      fmt(bots.length)}</span></h2>
     <div class="grouphint">${fmt(o.trading)} of the ${fmt(o.bots)} bots in
       the game are trading ones we have prices for. The rest are running
       for some other reason.</div>
-    <div class="namegrid">${bots.map(b => b.trades
-      ? `<a class="chip trades" href="#bots/${encodeURIComponent(b.name)}"
-           title="${esc(b.where || "")}">${esc(b.name)}${b.where
-           ? `<span>${esc(b.where)}</span>` : ""}</a>`
-      : `<span class="chip" title="not a trading bot">${esc(b.name)}</span>`
+    <div class="pgrid wide">${bots.map(b => b.trades
+      ? `<a href="#bots/${encodeURIComponent(b.name)}"
+           title="${esc(b.where || "")}"><b>${esc(b.name)}</b>${b.where
+           ? `<span class="sub">${esc(b.where)}</span>` : ""}</a>`
+      : `<span class="idle" title="not a trading bot"><b>${esc(b.name)}</b>
+           <span class="sub">not trading</span></span>`
       ).join("")}</div>`;
 
   const playerGrid = !players.length ? "" : `
-    <h2 class="group">Players in the game</h2>
-    <div class="namegrid">${players.map(n =>
-      `<a class="chip" href="#players/${encodeURIComponent(n)}">${
-        esc(n)}</a>`).join("")}</div>`;
+    <h2 class="group">Players in the game <span class="count">${
+      fmt(players.length)}</span></h2>
+    <div class="grouphint">Everyone the game lists as online right now,
+      bots aside. A name links to what we know of them.</div>
+    <div class="pgrid">${players.map(n =>
+      `<a href="#players/${encodeURIComponent(n)}"><b>${
+        esc(n)}</b></a>`).join("")}</div>`;
 
   const hours = (o.byHour || []).filter(h => h.n);
   const peak = Math.max(...hours.map(h => h.peak), 1);
@@ -3525,7 +3553,7 @@ function renderOnline(view, count, q) {
       rather than a live one${o.readings > 1
         ? `; we have seen between ${fmt(o.lo)} and ${fmt(o.hi)} players on`
         : ""}. ${fmt(o.seen)} different players have turned up so far.</div>
-    ${botGrid}${playerGrid}${chart}${board}
+    ${playerGrid}${botGrid}${chart}${board}
     ${!bots.length && !players.length
       ? `<div class="empty">Nobody by that name is in the game.</div>` : ""}`;
   wirePlayerLinks();
