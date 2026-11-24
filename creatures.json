@@ -1029,8 +1029,8 @@
      "item": "Bones"
     },
     {
-     "n": null,
-     "item": "0-700 Gold coins"
+     "n": "0-700",
+     "item": "Gold coins"
     }
    ],
    "rare": [
@@ -5377,7 +5377,7 @@
    ],
    "drops": [
     {
-     "n": null,
+     "n": "?",
      "item": "Gold Coins"
     }
    ],
@@ -5635,8 +5635,8 @@
      "item": "Bones"
     },
     {
-     "n": null,
-     "item": "0-?? Gold Coins"
+     "n": "0-??",
+     "item": "Gold Coins"
     }
    ],
    "rare": [
