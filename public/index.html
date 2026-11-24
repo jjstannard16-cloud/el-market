@@ -300,6 +300,12 @@
      page each and the creatures end up squeezed into the middle with a
      gutter in front of them. The narrow columns are pinned and the
      creatures take what is left. */
+  /* There are six to ten rows behind a door and a column 800 pixels
+     wide to put them in, so the creatures are worth looking at here
+     rather than squinting at a 20 pixel thumbnail. */
+  .waves .nm { gap: 12px; }
+  .waves .nm img, .waves .nm .noimg { width: 46px; height: 46px; }
+  .waves td { vertical-align: middle; }
   .waves th:first-child, .waves td:first-child { width: 58px; }
   .waves th:nth-child(3), .waves td:nth-child(3) { width: 120px; }
   .waves th:last-child, .waves td:last-child { width: 130px; }
@@ -312,7 +318,7 @@
   /* "130x" in front of a creature. Lining figures, so a wave of 130
      and a wave of 1 line up down the column. */
   .many { color: var(--brass); font-variant-numeric: tabular-nums;
-          margin-right: 1px; }
+          margin-right: 1px; white-space: nowrap; }
   h2.group { font-family: var(--display); font-weight: 500; font-size: 19px;
              color: var(--ink); margin: 34px 0 12px; letter-spacing: -.01em;
              border-bottom: 1px solid var(--line); padding-bottom: 8px; }
