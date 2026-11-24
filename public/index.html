@@ -398,8 +398,10 @@
   tr.item { cursor: pointer; }
   tr.item.open > td { background: var(--raised); }
   .nm { display: flex; align-items: center; gap: 10px; }
-  .nm img { width: 20px; height: 20px; object-fit: contain; flex: none;
-            image-rendering: pixelated; }
+  .nm img, .nm .noimg { width: 20px; height: 20px; object-fit: contain;
+            flex: none; image-rendering: pixelated; }
+  /* A creature thumbnail is a drawing, not a sprite; let it smooth. */
+  .nm img.beast { image-rendering: auto; border-radius: 2px; }
   .sm { color: var(--muted); font-size: var(--t-sm); }
   .muted { color: var(--muted); }
   .brass { color: var(--brass); }
@@ -462,8 +464,8 @@
                   border-radius: 3px; }
   /* A creature portrait is a real drawing, not a sprite, so it is
      smoothed and given room; the 25px thumbnails stay on the grid. */
-  .bothead .pic.photo { width: 104px; height: 104px; padding: 0;
-                        object-fit: cover; image-rendering: auto; }
+  .bothead .pic.photo { width: 104px; height: 104px; padding: 5px;
+                        object-fit: contain; image-rendering: auto; }
   .bothead .pic.tiny { width: 46px; height: 46px; padding: 5px; }
   @media (max-width: 620px) {
     .bothead .pic.photo { width: 72px; height: 72px; }
@@ -702,7 +704,8 @@ function cost(r, mode) {
   };
 }
 const icon = it => it.img
-  ? `<img src="${m.imgBase}${it.img}" loading="lazy" alt="">` : `<img alt="">`;
+  ? `<img src="${m.imgBase}${it.img}" loading="lazy" alt="">`
+  : `<span class="noimg"></span>`;
 
 /* masthead ----------------------------------------------------------- */
 document.getElementById("ledger").innerHTML = [
@@ -1594,8 +1597,9 @@ function renderFight(view, count, q) {
     { t: "Worth", k: "worth", num: 1 },
   ])}<tbody>${list.map(c => `<tr>
       <td><div class="nm">${c.img
-          ? `<img src="${m.beastImgBase}${c.img}" loading="lazy" alt="">`
-          : `<img alt="">`}<a class="lnk blnk"
+          ? `<img class="beast" src="${m.beastImgBase}${c.img}"
+               loading="lazy" alt="">`
+          : `<span class="noimg"></span>`}<a class="lnk blnk"
           href="#fight/${encodeURIComponent(c.name)}">${
         esc(c.name)}</a></div>${(c.kinds || []).length
         ? `<div class="seen">${(c.kinds || []).map(k => esc(KINDS[k] || k))
