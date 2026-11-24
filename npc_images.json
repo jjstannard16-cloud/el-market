@@ -1,0 +1,229 @@
+{
+ "_comment": "Quest NPC portraits from the EL wiki, by el_npc_images.py. Keyed on the name as the quest guide writes it, before any place.",
+ "npcs": {
+  "Adrian": {
+   "file": "adrian.png",
+   "from": "Adrian.png"
+  },
+  "Ayelle": {
+   "file": "ayelle.png",
+   "from": "Ayelle.png"
+  },
+  "Azra": {
+   "file": "azra.png",
+   "from": "Azra.png"
+  },
+  "Baostas": {
+   "file": "baostas.png",
+   "from": "Baostas.png"
+  },
+  "Bertan": {
+   "file": "bertan.png",
+   "from": "Bertan.png"
+  },
+  "Buni": {
+   "file": "buni.png",
+   "from": "Buni.png"
+  },
+  "Caton": {
+   "file": "caton.png",
+   "from": "Caton.png"
+  },
+  "Christopher": {
+   "file": "christopher.png",
+   "from": "Christopher.png"
+  },
+  "Daritha": {
+   "file": "daritha.png",
+   "from": "Daritha.png"
+  },
+  "Diesel": {
+   "file": "diesel.png",
+   "from": "Diesel.png"
+  },
+  "Dirhyan": {
+   "file": "dirhyan.png",
+   "from": "Dirhyan.png"
+  },
+  "Dorel": {
+   "file": "dorel.png",
+   "from": "Dorel.png"
+  },
+  "Durnam": {
+   "file": "durnam.png",
+   "from": "Durnam.png"
+  },
+  "Elevy": {
+   "file": "elevy.png",
+   "from": "Elevy.png"
+  },
+  "Elle": {
+   "file": "elle.png",
+   "from": "Elle.png"
+  },
+  "Ellia": {
+   "file": "ellia.png",
+   "from": "Ellia.png"
+  },
+  "Gerund": {
+   "file": "gerund.png",
+   "from": "Gerund.png"
+  },
+  "Granny Lorpak": {
+   "file": "granny-lorpak.png",
+   "from": "Granny_Lorpak.png"
+  },
+  "Haidir": {
+   "file": "haidir.png",
+   "from": "Haidir.png"
+  },
+  "Henk": {
+   "file": "henk.png",
+   "from": "Henk.png"
+  },
+  "Hyutan": {
+   "file": "hyutan.png",
+   "from": "Hyutan.png"
+  },
+  "Iazurn": {
+   "file": "iazurn.png",
+   "from": "Iazurn.png"
+  },
+  "Ios": {
+   "file": "ios.png",
+   "from": "Ios.png"
+  },
+  "Jandir": {
+   "file": "jandir.png",
+   "from": "Jandir.png"
+  },
+  "Kaleb": {
+   "file": "kaleb.png",
+   "from": "Kaleb.png"
+  },
+  "Kelcha": {
+   "file": "kelcha.png",
+   "from": "Kelcha.png"
+  },
+  "Kiyana": {
+   "file": "kiyana.png",
+   "from": "Kiyana.png"
+  },
+  "Koki": {
+   "file": "koki.png",
+   "from": "Koki.png"
+  },
+  "Lasud": {
+   "file": "lasud.png",
+   "from": "Lasud.png"
+  },
+  "Latis": {
+   "file": "latis.png",
+   "from": "Latis.png"
+  },
+  "Logan": {
+   "file": "logan.png",
+   "from": "Logan.png"
+  },
+  "Lord Luxin": {
+   "file": "lord-luxin.png",
+   "from": "Lord_Luxin.png"
+  },
+  "Lustra": {
+   "file": "lustra.png",
+   "from": "Lustra.png"
+  },
+  "Maia": {
+   "file": "maia.png",
+   "from": "Maia.png"
+  },
+  "Minel": {
+   "file": "minel.png",
+   "from": "Minel.png"
+  },
+  "Noria": {
+   "file": "noria.png",
+   "from": "Noria.png"
+  },
+  "Novac": {
+   "file": "novac.png",
+   "from": "Novac.png"
+  },
+  "Osold": {
+   "file": "osold.png",
+   "from": "Osold.png"
+  },
+  "Patrick": {
+   "file": "patrick.png",
+   "from": "Patrick.png"
+  },
+  "Portia": {
+   "file": "portia.png",
+   "from": "Portia.png"
+  },
+  "Quello": {
+   "file": "quello.png",
+   "from": "Quello.png"
+  },
+  "Reca": {
+   "file": "reca.png",
+   "from": "Reca.png"
+  },
+  "Romira": {
+   "file": "romira.png",
+   "from": "Romira.png"
+  },
+  "Serpa": {
+   "file": "serpa.png",
+   "from": "Serpa.png"
+  },
+  "Shayna": {
+   "file": "shayna.png",
+   "from": "Shayna.png"
+  },
+  "Strajer": {
+   "file": "strajer.png",
+   "from": "Strajer.png"
+  },
+  "Sylpho": {
+   "file": "sylpho.png",
+   "from": "Sylpho.png"
+  },
+  "Tankel": {
+   "file": "tankel.png",
+   "from": "Tankel.png"
+  },
+  "Tatu": {
+   "file": "tatu.png",
+   "from": "Tatu.png"
+  },
+  "The Wraith": {
+   "file": "the-wraith.png",
+   "from": "Wraith.png"
+  },
+  "Tutorial NPC": {
+   "file": "tutorial-npc.png",
+   "from": "Tutorial_NPC.png"
+  },
+  "Vaesura": {
+   "file": "vaesura.png",
+   "from": "Vaesura.png"
+  },
+  "Vixen": {
+   "file": "vixen.png",
+   "from": "Vixen.png"
+  },
+  "Wimmip": {
+   "file": "wimmip.png",
+   "from": "Wimmip.png"
+  },
+  "Xaquelina": {
+   "file": "xaquelina.png",
+   "from": "Xaquelina.png"
+  },
+  "Yinta": {
+   "file": "yinta.png",
+   "from": "Yinta.png"
+  }
+ }
+}
