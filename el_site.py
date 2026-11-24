@@ -162,6 +162,11 @@ def load(db_path):
                 "level": r["level"], "exp": r["exp"] or 0,
                 "tool": r["tool"], "food": r["food"],
                 "vendor": r["vendor_pays"],
+                # 307 of the 462 recipes want a nexus as well as the
+                # skill, and without it the level alone says you can
+                # make something you cannot.
+                "nexus": r["nexus"], "nexusLvl": r["nexus_level"],
+                "knows": r["knowledge"],
                 "makes": r["makes"] if "makes" in r.keys()
                          and r["makes"] else 1,
                 "ings": ings.get(r["item"], []),
@@ -1364,6 +1369,10 @@ HTML = r"""<!doctype html>
                 color: var(--muted); font: 400 12.5px var(--ui);
                 cursor: pointer; border-bottom: 1px solid var(--line-2); }
   button.more:hover { color: var(--brass); border-bottom-color: var(--brass); }
+  /* The nexus is a second gate on making something, and the skill level
+     on its own reads as the only one. */
+  .nx { display: block; font-family: var(--sans); font-size: var(--t-xs);
+        color: var(--dim); letter-spacing: .02em; margin-top: 1px; }
   .gate { font-size: 11.5px; color: var(--rust); border: 1px solid #4e2e26;
           border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
   .ing { display: grid; grid-template-columns: 2.4rem 1fr auto auto;
@@ -2413,9 +2422,11 @@ function renderOneItem(view, count, name) {
   const madeBlock = !made ? "" : `
     <h2 class="group">How it is made</h2>
     <p class="note">${esc(made.skill)} level ${made.level}${
+      made.nexus ? `, <b>${esc(made.nexus)} nexus ${made.nexusLvl}</b>` : ""}${
       made.exp ? `, ${fmt(made.exp)} experience` : ""}${
       made.makes > 1 ? `. One mix makes <b>${fmt(made.makes)}</b>` : ""}${
-      made.vendor ? `. A vendor pays ${fmt(made.vendor)} each.` : "."}</p>
+      made.vendor ? `. A vendor pays ${fmt(made.vendor)} each.` : "."}${
+      made.knows ? ` Needs <b>${esc(made.knows)}</b> read first.` : ""}</p>
     <table class="itab"><thead><tr><th class="num">Need</th>
       <th class="wide">Ingredient</th>
       <th class="num">At cheapest</th></tr></thead>
