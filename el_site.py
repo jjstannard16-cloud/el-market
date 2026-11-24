@@ -1670,6 +1670,14 @@ const qty = q => q === UNLIMITED ? "no limit" : q.toLocaleString("en-GB");
 const fmt = n => n == null ? "–" : n === Infinity ? "∞"
   : (Math.abs(n) >= 1000 ? Math.round(n).toLocaleString("en-GB")
                          : (+n.toFixed(2)).toLocaleString("en-GB"));
+/* A number to so many places, or a dash. Some of these are genuinely
+   absent - a PK score for someone the game has not ranked, a change
+   with nothing to compare against - and calling toFixed on null throws.
+   One such throw stopped the whole page rendering rather than spoiling
+   one cell, which left 202 player pages completely blank. */
+const dec = (v, places) =>
+  (typeof v === "number" && isFinite(v)) ? v.toFixed(places) : "\u2013";
+
 const esc = s => String(s).replace(/[&<>"]/g,
   c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 
@@ -1996,7 +2004,9 @@ function renderHome(view, count) {
       <td>${esc(mv.item)}</td>
       <td class="num sm">${fmt(mv.was)} \u2192 ${fmt(mv.now)}</td>
       <td class="num ${mv.pct > 0 ? "t-sea" : "patina"}">${
-        mv.pct > 0 ? "+" : ""}${mv.pct.toFixed(0)}%</td></tr>`).join("")}</table>`
+        typeof mv.pct === "number" && isFinite(mv.pct)
+          ? `${mv.pct > 0 ? "+" : ""}${mv.pct.toFixed(0)}%`
+          : "\u2013"}</td></tr>`).join("")}</table>`
       : `<div class="caveat">Nothing has shifted by more than 1%.</div>`}</div>`;
 
   const upsPanel = `<div><h3>Levelled up <span class="sm">recently</span></h3>
@@ -2100,7 +2110,9 @@ function axis(it) {
   const at = p => {
     const f = log ? (Math.log(p) - Math.log(lo)) / (Math.log(hi) - Math.log(lo))
                   : (p - lo) / (hi - lo);
-    return (f * 100).toFixed(2);
+    // hi and lo are equal when every price is the same, and the
+    // fraction is then 0/0.
+    return isFinite(f) ? (f * 100).toFixed(2) : "0.00";
   };
   const s = it.best.sell, b = it.best.buy;
   const gap = s && b && b.price > s.price
@@ -3530,12 +3542,12 @@ function renderPk(view, count, q) {
       return `<tr>
         <td class="num rank">${i + 1}</td>
         <td>${playerLink(p.name)}</td>
-        <td class="num brass">${k.score.toFixed(2)}</td>
+        <td class="num brass">${dec(k.score, 2)}</td>
         <td class="num">${k.f.toLocaleString("en-GB")}</td>
         <td class="num sm hide-sm">${k.w.toLocaleString("en-GB")}</td>
         <td class="num sm hide-sm">${k.l.toLocaleString("en-GB")}</td>
         <td class="num ${rate >= 80 ? "patina" : rate < 50 ? "t-sea" : ""}">${
-          rate.toFixed(0)}%</td>
+          isFinite(rate) ? rate.toFixed(0) + "%" : "\u2013"}</td>
         <td class="num ${df ? "patina" : "sm"}">${
           df == null ? "\u2013" : df === 0 ? "\u2013"
           : `+${df} fight${df === 1 ? "" : "s"}${dw ? `, ${dw} won` : ""}`}</td>
@@ -3871,6 +3883,11 @@ function renderOnePlayer(view, count) {
     </div>
     ${p.private ? `<div class="caveat">This player has hidden their stats.
       Only their achievements are public.</div>` : ""}
+    ${!p.private && !p.overall && !p.pk
+      && !Object.keys(p.stats || {}).length ? `<div class="caveat">We have
+      seen this player in game but have not read their stats yet. They
+      are read daily, so this should fill in within a day or two.</div>`
+      : ""}
     <div class="cols">
       ${table(group("skill"), "Skills", true)}
       <div>
@@ -3879,12 +3896,14 @@ function renderOnePlayer(view, count) {
         ${daysPanel(p.name).replace("<div>", "").replace(/<\/div>$/, "")}
         ${achPanel(p.name)}
         ${p.pk ? `<h3 style="margin-top:18px">PK</h3><table>
-          <tr><td>Score</td><td class="num brass">${p.pk.score.toFixed(2)}</td></tr>
+          <tr><td>Score</td><td class="num brass">${
+            dec(p.pk.score, 2)}</td></tr>
           <tr><td>Fights</td><td class="num">${p.pk.f}</td></tr>
           <tr><td>Won</td><td class="num patina">${p.pk.w}</td></tr>
           <tr><td>Lost</td><td class="num">${p.pk.l}</td></tr>
           <tr><td>Win rate</td><td class="num">${
-            (p.pk.w / p.pk.f * 100).toFixed(0)}%</td></tr></table>` : ""}
+            p.pk.f ? (p.pk.w / p.pk.f * 100).toFixed(0) + "%"
+                   : "\u2013"}</td></tr></table>` : ""}
       </div>
       ${table(group("cross"), "Cross attributes", false)}
     </div>
