@@ -21,22 +21,22 @@ Answers found so far, recorded so nobody goes looking twice:
   How many a recipe makes is the ManuInfo template's "resamount". The
   template says so itself. No resamount means one. el_recipes.py reads it.
 
-  A creature's own picture, where it has one, is File:Creature <Name>.png
-  under a "Creature" heading. Plain File:<Name>.png does not exist. Of
-  Yeti, Feros, Red Dragon and Rabbit, only Yeti had one, so coverage is
-  the open question and this measures it.
+  A creature's picture is File:Creature <Name>.png, or the same as .jpg,
+  or Creature_<NameRunTogether>.jpg, or the small <Name> 25px.png.
+  Trying all four found 86 of 108.
 
-Asking now: how many of our creatures have a picture at all, and under
-which name? Two shapes are in use - "Creature <Name>.png" for the full
-portrait and "<Name> 25px.png" for the little ones on index pages - so
-this asks the wiki for every file of either shape and reports what is
-matched, what is missed, and how big the files are.
+Asking now: why the other 22? They look like three different problems -
+variant spawns named "Black Bear (mana burn)" whose base creature has a
+picture, names whose capitals differ from the wiki's, and invasion
+bosses that may have no art at all. Rather than guess at more name
+shapes, this pulls every file name on the wiki and reports the closest
+thing to each creature we could not place.
 """
 
 import json
 import re
 import time
-from collections import Counter
+from difflib import get_close_matches
 
 import requests
 
@@ -52,12 +52,11 @@ def api(**params):
     return r.json()
 
 
-def all_images(prefix):
-    """Every file whose name starts with prefix, with size and url."""
+def every_image():
     out, cont = {}, None
-    for _ in range(40):
-        kw = {"action": "query", "list": "allimages", "aiprefix": prefix,
-              "ailimit": 500, "aiprop": "url|size|mime"}
+    for _ in range(200):
+        kw = {"action": "query", "list": "allimages", "ailimit": 500,
+              "aiprop": "url|size", "aisort": "name"}
         if cont:
             kw["aicontinue"] = cont
         body = api(**kw)
@@ -66,64 +65,53 @@ def all_images(prefix):
         cont = body.get("continue", {}).get("aicontinue")
         if not cont:
             break
-        time.sleep(0.3)
+        time.sleep(0.25)
     return out
 
 
-names = [c["name"] for c in json.load(open("creatures.json"))["creatures"]]
-print(f"{len(names)} creatures to find a picture for")
+creatures = json.load(open("creatures.json"))["creatures"]
+have = json.load(open("creature_images.json"))["images"]
+missing = [c["name"] for c in creatures if c["name"] not in have]
 
-portraits = all_images("Creature ")
-print(f"\n{len(portraits)} files named 'Creature ...'")
-sizes = Counter((im.get("width"), im.get("height"))
-                for im in portraits.values())
-print("their sizes:", sizes.most_common(8))
+files = every_image()
+print(f"{len(files)} files on the wiki in all")
+print(f"{len(missing)} creatures still without a picture\n")
 
-# The little ones are not under a shared prefix, so ask per creature in
-# one batch of titles rather than listing the whole wiki.
-small = {}
-for i in range(0, len(names), 40):
-    chunk = names[i:i + 40]
-    titles = "|".join(f"File:{n} 25px.png" for n in chunk)
-    body = api(action="query", titles=titles, prop="imageinfo",
-               iiprop="url|size|mime")
-    for pg in body.get("query", {}).get("pages", []):
-        if not pg.get("missing"):
-            for info in pg.get("imageinfo", []):
-                small[pg["title"][5:]] = info
-    time.sleep(0.3)
-print(f"{len(small)} files named '<Name> 25px.png'")
+# Strip an extension and the decoration our names do not share.
+plain = {}
+for name in files:
+    stem = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
+    stem = re.sub(r"^Creature[ _]", "", stem)
+    stem = re.sub(r"[ _]25px$", "", stem)
+    plain.setdefault(stem.replace("_", " ").lower(), name)
 
-
-def key(s):
-    return re.sub(r"[^a-z0-9]", "", s.lower())
-
-
-by_key = {key(n): n for n in portraits}
-small_key = {key(n): n for n in small}
-
-have_big, have_small, have_none = [], [], []
-for n in names:
-    if key("Creature " + n + ".png") in by_key:
-        have_big.append(n)
-    elif key(n + " 25px.png") in small_key:
-        have_small.append(n)
+for name in missing:
+    base = re.sub(r"\s*\(.*?\)\s*$", "", name).strip()
+    note = ""
+    if base != name:
+        note = (f"   [variant of {base}: "
+                f"{'base HAS art' if base in have else 'base has none'}]")
+    near = get_close_matches(name.lower(), plain, n=3, cutoff=0.72)
+    near += [m for m in get_close_matches(base.lower(), plain, n=3,
+                                          cutoff=0.72) if m not in near]
+    print(f"{name}{note}")
+    if near:
+        for m in near[:4]:
+            print(f"     could be {plain[m]}")
     else:
-        have_none.append(n)
+        print("     nothing on the wiki looks like it")
 
-print(f"\n{len(have_big)} have a portrait, {len(have_small)} only a small "
-      f"one, {len(have_none)} have neither")
-print("\nportraits, with size:")
-for n in have_big[:12]:
-    im = portraits[by_key[key('Creature ' + n + '.png')]]
-    print(f"   {n[:28]:30} {im.get('width')}x{im.get('height')} "
-          f"{im.get('size')} bytes {im.get('mime')}")
-print("\nonly a small one:", ", ".join(have_small[:18]))
-print("\nneither:", ", ".join(have_none[:30]))
-
-# Are the unmatched ones named differently rather than absent?
-print("\nfiles named 'Creature ...' that matched no creature of ours:")
-unused = [n for k, n in by_key.items()
-          if not any(key("Creature " + c + ".png") == k for c in names)]
-print("   " + ", ".join(sorted(unused)[:30]))
-print(f"   ({len(unused)} in all)")
+# Do the bracket variants really share the base creature's page?
+print("\n--- do variants redirect to the base creature? ---")
+for name in missing:
+    base = re.sub(r"\s*\(.*?\)\s*$", "", name).strip()
+    if base == name:
+        continue
+    body = api(action="query", titles=name, redirects=1)
+    q = body.get("query", {})
+    red = q.get("redirects") or []
+    pages = q.get("pages") or [{}]
+    print(f"  {name}: "
+          f"{'page missing' if pages[0].get('missing') else 'page exists'}"
+          f"{' -> ' + red[0]['to'] if red else ''}")
+    time.sleep(0.25)
