@@ -1208,7 +1208,10 @@ HTML = r"""<!doctype html>
   .years h3, .ranks + h3 { font-family: var(--display); font-weight: 500;
                            font-size: 17px; color: var(--ink); margin: 0 0 4px; }
   @media (max-width: 620px) {
-    .yearbars { height: 84px; gap: 3px; }
+    /* Twenty-four labelled bars will not fit a phone whatever the font,
+       so the chart scrolls inside its own box rather than the page. */
+    .yearbars { height: 84px; gap: 3px; overflow-x: auto; padding-bottom: 2px; }
+    .yb { flex: 0 0 26px; }
     .yb b { font-size: 9.5px; }
     .yb span { font-size: 9px; }
     table.ranks td:first-child { width: auto; }
@@ -1216,7 +1219,10 @@ HTML = r"""<!doctype html>
   }
   .yearbars { display: flex; align-items: flex-end; gap: 6px; height: 110px;
               margin-top: 10px; }
-  .yb { flex: 1; display: flex; flex-direction: column;
+  /* A flex child will not shrink below its own content unless it is
+     told it may, so the hour labels were holding the chart wider than
+     the screen once there were enough of them to matter. */
+  .yb { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
         align-items: center; justify-content: flex-end; height: 100%; }
   .ybstack { width: 100%; max-width: 46px; background: var(--brass);
              opacity: .62; border-radius: 2px 2px 0 0; min-height: 2px; }
