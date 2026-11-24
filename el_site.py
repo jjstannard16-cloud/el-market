@@ -149,6 +149,8 @@ def load(db_path):
                 "level": r["level"], "exp": r["exp"] or 0,
                 "tool": r["tool"], "food": r["food"],
                 "vendor": r["vendor_pays"],
+                "makes": r["makes"] if "makes" in r.keys()
+                         and r["makes"] else 1,
                 "ings": ings.get(r["item"], []),
             })
     if "harvestable" in tables:
@@ -1477,13 +1479,21 @@ function cost(r, mode) {
     }
   }
   const p = PRICE[r.item.toLowerCase()] || {};
-  let sells = p.buy, where = "bot", who = p.buyBot;
-  if (sells == null && r.vendor != null) { sells = r.vendor; where = "vendor"; who = null; }
-  if (sells == null) { sells = 0; where = "nobody"; }
+  let each = p.buy, where = "bot", who = p.buyBot;
+  if (each == null && r.vendor != null) { each = r.vendor; where = "vendor"; who = null; }
+  if (each == null) { each = 0; where = "nobody"; }
+  // A mix of magic arrows takes fifty of each ingredient and gives back
+  // seventy-five arrows. The cost above is for the whole mix, so what it
+  // is worth has to be for the whole mix too; comparing it with the
+  // price of one arrow had the tab reporting a 45,000 loss on a batch
+  // that sells for 2,625. The wiki calls the number resamount, and a
+  // recipe without one makes a single item.
+  const makes = r.makes > 1 ? r.makes : 1;
+  const sells = each * makes;
   const profit = sells - total;
   return {
     cost: total, lines, missing, gathered: anyGathered,
-    gate, tools, sells, where, who, profit,
+    gate, tools, sells, each, makes, where, who, profit,
     margin: total > 0 ? profit / total * 100 : null,
     perXp: r.exp > 0 ? -profit / r.exp : null,
   };
@@ -2115,7 +2125,8 @@ function renderOneItem(view, count, name) {
     <h2 class="group">How it is made</h2>
     <p class="note">${esc(made.skill)} level ${made.level}${
       made.exp ? `, ${fmt(made.exp)} experience` : ""}${
-      made.vendor ? `. A vendor pays ${fmt(made.vendor)}.` : "."}</p>
+      made.makes > 1 ? `. One mix makes <b>${fmt(made.makes)}</b>` : ""}${
+      made.vendor ? `. A vendor pays ${fmt(made.vendor)} each.` : "."}</p>
     <table class="itab"><thead><tr><th class="num">Need</th>
       <th class="wide">Ingredient</th>
       <th class="num">At cheapest</th></tr></thead>
@@ -2135,10 +2146,14 @@ function renderOneItem(view, count, name) {
         const sub = itemByKey(g.n);
         return sub && sub.best.sell; });
       if (!cost) return "";
+      // The cost above is for one mix, so what the mix is worth has to
+      // be the price of everything the mix gives back, not of one of it.
+      const n = made.makes > 1 ? made.makes : 1;
+      const take = b ? b.price * n : null;
       return `<p class="note">${known ? "" : "At least "}<b>${fmt(cost)}</b>
-        in ingredients at today's cheapest${b
-          ? `, against <b class="patina">${fmt(b.price)}</b> a bot pays.` : "."}
-        </p>`;
+        in ingredients at today's cheapest${take
+          ? `, against <b class="patina">${fmt(take)}</b> a bot pays for the
+             ${n > 1 ? `${fmt(n)} you get` : "one you get"}.` : "."}</p>`;
     })()}`;
 
   // A bar goes into dozens of things. Show enough to be useful and say
@@ -3507,7 +3522,8 @@ function renderCraft(view, count, q) {
       <td class="sm">${esc(r.skill)}</td>
       <td class="num sm hide-sm">${r.level ?? "\u2013"}</td>
       <td class="num">${fmt(c.cost)}</td>
-      <td class="num patina">${fmt(c.sells)}${c.where === "vendor"
+      <td class="num patina">${fmt(c.sells)}${c.makes > 1
+        ? `<span class="sm"> (${c.makes})</span>` : ""}${c.where === "vendor"
         ? ` <span class="sm">shop</span>` : ""}</td>
       <td class="num ${c.profit > 0 ? "brass" : "sm"}">${fmt(c.profit)}</td>
       <td class="num sm hide-sm">${c.margin == null ? "\u2013"

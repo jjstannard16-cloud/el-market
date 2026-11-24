@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS recipe (
     ingredients_emu REAL,
     stackable       TEXT,
     vendor_pays     REAL,
+    makes           INTEGER,
     imported        TEXT
 );
 
@@ -117,7 +118,8 @@ LATER_COLUMNS = {
     "harvestable": {"tool": "TEXT", "emu": "REAL", "food": "REAL",
                     "notes": "TEXT", "nexus_level": "REAL",
                     "needs_item": "TEXT", "action_points": "REAL"},
-    "recipe": {"knowledge": "TEXT", "vendor_pays": "REAL"},
+    "recipe": {"knowledge": "TEXT", "vendor_pays": "REAL",
+               "makes": "INTEGER"},
 }
 
 
@@ -263,6 +265,11 @@ def parse_page(title, text):
         "ingredients_emu": number(after("Ingredients Weight") or ""),
         "stackable": after("Stackable"),
         "vendor_pays": vendor,
+        # "resamount" is the wiki's own word for how many one mix gives.
+        # The template spells it out: "Note: The recipe produces
+        # {{{resamount}}} {{{item}}} at once". Most recipes leave it out
+        # and give one; arrows give sixty to eighty, a Ring of Power six.
+        "makes": int(number(fields.get("resamount")) or 1) or 1,
         "ingredients": ings,
     }
 
@@ -515,8 +522,8 @@ def do_import(args):
             con.execute("""
                 INSERT INTO recipe (item, skill, level, exp, tool, food, nexus,
                     nexus_level, knowledge, product_emu, ingredients_emu,
-                    stackable, vendor_pays, imported)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    stackable, vendor_pays, makes, imported)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(item) DO UPDATE SET
                     skill=excluded.skill, level=excluded.level,
                     exp=excluded.exp, tool=excluded.tool, food=excluded.food,
@@ -525,11 +532,12 @@ def do_import(args):
                     product_emu=excluded.product_emu,
                     ingredients_emu=excluded.ingredients_emu,
                     stackable=excluded.stackable,
-                    vendor_pays=excluded.vendor_pays, imported=excluded.imported
+                    vendor_pays=excluded.vendor_pays,
+                    makes=excluded.makes, imported=excluded.imported
             """, (rec["item"], rec["skill"], rec["level"], rec["exp"],
                   rec["tool"], rec["food"], rec["nexus"], rec["nexus_level"],
                   rec["knowledge"], rec["product_emu"], rec["ingredients_emu"],
-                  rec["stackable"], rec["vendor_pays"], ts))
+                  rec["stackable"], rec["vendor_pays"], rec["makes"], ts))
 
             con.execute("DELETE FROM recipe_ingredient WHERE item=?",
                         (rec["item"],))
