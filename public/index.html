@@ -85,6 +85,11 @@
   nav button:hover { color: var(--ink); }
   nav button.on { color: var(--brass); border-bottom-color: var(--brass); }
   .spacer { flex: 1; }
+  /* Sits in the space the search box leaves on its own row, so it is on
+     every page without taking a line of its own or asking to be read. */
+  .saysomething { margin-left: auto; font-size: var(--t-sm);
+                  color: var(--dim); white-space: nowrap; }
+  .saysomething b { font-weight: 500; color: var(--brass); }
   /* Eleven tabs do not fit a phone. They scroll sideways rather than
      wrapping into two rows, and the search box drops below them. */
   @media (max-width: 860px) {
@@ -96,6 +101,10 @@
     nav button:last-child { margin-right: 2px; }
     input[type=search] { width: 100%; }
     .spacer { display: none; }
+    /* On a phone it goes under the search box rather than beside it,
+       and loses the half of the sentence that was only politeness. */
+    .saysomething { margin-left: 0; flex: 1 1 100%; white-space: normal;
+                    font-size: var(--t-xs); padding-bottom: 8px; }
   }
   input[type=search] {
     width: 260px; padding: 7px 11px; border-radius: 3px;
@@ -715,6 +724,8 @@
   <span id="toolbar" style="display:contents">
     <input type="search" id="q" placeholder="Item, bot, map or player">
   </span>
+  <span class="saysomething">Something wrong, or missing?
+    Tell <b>stann</b> in game.</span>
 </div></div>
 
 <main><div class="wrap">
