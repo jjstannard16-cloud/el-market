@@ -1,0 +1,435 @@
+{
+ "_comment": "Creature artwork mirrored from the EL wiki by el_creature_images.py.",
+ "images": {
+  "Arctic Chimeran": {
+   "file": "arctic-chimeran.png",
+   "from": "Arctic Chimeran 25px.png",
+   "small": true
+  },
+  "Armed Female Orc": {
+   "file": "armed-female-orc.png",
+   "from": "Armed Female Orc 25px.png",
+   "small": true
+  },
+  "Armed Goblin": {
+   "file": "armed-goblin.png",
+   "from": "Armed Goblin 25px.png",
+   "small": true
+  },
+  "Armed Male Orc": {
+   "file": "armed-male-orc.png",
+   "from": "Armed Male Orc 25px.png",
+   "small": true
+  },
+  "Armed Skeleton": {
+   "file": "armed-skeleton.png",
+   "from": "Armed Skeleton 25px.png",
+   "small": true
+  },
+  "Beaver": {
+   "file": "beaver.jpg",
+   "from": "Creature Beaver.png",
+   "small": false
+  },
+  "Black Bear": {
+   "file": "black-bear.png",
+   "from": "Black Bear 25px.png",
+   "small": true
+  },
+  "Black Dragon": {
+   "file": "black-dragon.png",
+   "from": "Black Dragon 25px.png",
+   "small": true
+  },
+  "Black Panther": {
+   "file": "black-panther.png",
+   "from": "Black Panther 25px.png",
+   "small": true
+  },
+  "Blue Dragon": {
+   "file": "blue-dragon.png",
+   "from": "Blue Dragon 25px.png",
+   "small": true
+  },
+  "Boar": {
+   "file": "boar.png",
+   "from": "Boar 25px.png",
+   "small": true
+  },
+  "Brown Rabbit": {
+   "file": "brown-rabbit.png",
+   "from": "Brown Rabbit 25px.png",
+   "small": true
+  },
+  "Brown Snake": {
+   "file": "brown-snake.png",
+   "from": "Brown Snake 25px.png",
+   "small": true
+  },
+  "Brownie": {
+   "file": "brownie.jpg",
+   "from": "Creature Brownie.png",
+   "small": false
+  },
+  "Bulangiu": {
+   "file": "bulangiu.png",
+   "from": "Bulangiu 25px.png",
+   "small": true
+  },
+  "Castellan": {
+   "file": "castellan.png",
+   "from": "Castellan 25px.png",
+   "small": true
+  },
+  "Chinstrap Penguin": {
+   "file": "chinstrap-penguin.jpg",
+   "from": "Creature Chinstrap Penguin.png",
+   "small": false
+  },
+  "Chitros": {
+   "file": "chitros.png",
+   "from": "Chitros 25px.png",
+   "small": true
+  },
+  "Cockatrice": {
+   "file": "cockatrice.png",
+   "from": "Cockatrice 25px.png",
+   "small": true
+  },
+  "Cyclops": {
+   "file": "cyclops.jpg",
+   "from": "Creature Cyclops.png",
+   "small": false
+  },
+  "Deer": {
+   "file": "deer.png",
+   "from": "Creature Deer.png",
+   "small": false
+  },
+  "Desert Chimeran": {
+   "file": "desert-chimeran.png",
+   "from": "Desert Chimeran 25px.png",
+   "small": true
+  },
+  "Dilimac": {
+   "file": "dilimac.png",
+   "from": "Dilimac 25px.png",
+   "small": true
+  },
+  "Falcon": {
+   "file": "falcon.png",
+   "from": "Falcon 25px.png",
+   "small": true
+  },
+  "Female Goblin": {
+   "file": "female-goblin.png",
+   "from": "Female Goblin 25px.png",
+   "small": true
+  },
+  "Female Orc": {
+   "file": "female-orc.png",
+   "from": "Female Orc 25px.png",
+   "small": true
+  },
+  "Feran": {
+   "file": "feran.png",
+   "from": "Creature Feran.png",
+   "small": false
+  },
+  "Feros": {
+   "file": "feros.png",
+   "from": "Feros 25px.png",
+   "small": true
+  },
+  "Fluffy Rabbit": {
+   "file": "fluffy-rabbit.png",
+   "from": "Fluffy Rabbit 25px.png",
+   "small": true
+  },
+  "Forest Chimeran": {
+   "file": "forest-chimeran.png",
+   "from": "Forest Chimeran 25px.png",
+   "small": true
+  },
+  "Fox": {
+   "file": "fox.png",
+   "from": "Fox 25px.png",
+   "small": true
+  },
+  "Frost Troll": {
+   "file": "frost-troll.png",
+   "from": "Frost Troll 25px.png",
+   "small": true
+  },
+  "Gentoo Penguin": {
+   "file": "gentoo-penguin.png",
+   "from": "Gentoo Penguin 25px.png",
+   "small": true
+  },
+  "Giant": {
+   "file": "giant.png",
+   "from": "Giant 25px.png",
+   "small": true
+  },
+  "Green Snake": {
+   "file": "green-snake.png",
+   "from": "Green Snake 25px.png",
+   "small": true
+  },
+  "Grizzly Bear": {
+   "file": "grizzly-bear.png",
+   "from": "Grizzly Bear 25px.png",
+   "small": true
+  },
+  "Hawk": {
+   "file": "hawk.jpg",
+   "from": "Creature Hawk.jpg",
+   "small": false
+  },
+  "Hobgoblin": {
+   "file": "hobgoblin.png",
+   "from": "Hobgoblin 25px.png",
+   "small": true
+  },
+  "Ice Dragon": {
+   "file": "ice-dragon.png",
+   "from": "Ice Dragon 25px.png",
+   "small": true
+  },
+  "Imp": {
+   "file": "imp.jpg",
+   "from": "Creature Imp.png",
+   "small": false
+  },
+  "Invdrag": {
+   "file": "invdrag.jpg",
+   "from": "Creature Invdrag.png",
+   "small": false
+  },
+  "Invisible Rat": {
+   "file": "invisible-rat.png",
+   "from": "Creature Invisible Rat.png",
+   "small": false
+  },
+  "Japita": {
+   "file": "japita.png",
+   "from": "Japita 25px.png",
+   "small": true
+  },
+  "Jegos": {
+   "file": "jegos.png",
+   "from": "Jegos 25px.png",
+   "small": true
+  },
+  "King Penguin": {
+   "file": "king-penguin.jpg",
+   "from": "Creature King Penguin.png",
+   "small": false
+  },
+  "Labagiu": {
+   "file": "labagiu.png",
+   "from": "Labagiu 25px.png",
+   "small": true
+  },
+  "Large Spider": {
+   "file": "large-spider.png",
+   "from": "Large Spider 25px.png",
+   "small": true
+  },
+  "Legionnaire Orc": {
+   "file": "legionnaire-orc.png",
+   "from": "Legionnaire Orc 25px.png",
+   "small": true
+  },
+  "Leopard": {
+   "file": "leopard.jpg",
+   "from": "Creature Leopard.jpg",
+   "small": false
+  },
+  "Leprechaun": {
+   "file": "leprechaun.jpg",
+   "from": "Creature Leprechaun.png",
+   "small": false
+  },
+  "Lion": {
+   "file": "lion.png",
+   "from": "Lion 25px.png",
+   "small": true
+  },
+  "Male Goblin": {
+   "file": "male-goblin.png",
+   "from": "Male Goblin 25px.png",
+   "small": true
+  },
+  "Male Ogre": {
+   "file": "male-ogre.png",
+   "from": "Male Ogre 25px.png",
+   "small": true
+  },
+  "Male Orc": {
+   "file": "male-orc.png",
+   "from": "Male Orc 25px.png",
+   "small": true
+  },
+  "Mare Bulangiu": {
+   "file": "mare-bulangiu.png",
+   "from": "Mare Bulangiu 25px.png",
+   "small": true
+  },
+  "Medium Gargoyle": {
+   "file": "medium-gargoyle.png",
+   "from": "Medium Gargoyle 25px.png",
+   "small": true
+  },
+  "Meltean": {
+   "file": "meltean.png",
+   "from": "Meltean 25px.png",
+   "small": true
+  },
+  "Mountain Chimeran": {
+   "file": "mountain-chimeran.png",
+   "from": "Mountain Chimeran 25px.png",
+   "small": true
+  },
+  "Nasparliu": {
+   "file": "nasparliu.png",
+   "from": "Nasparliu 25px.png",
+   "small": true
+  },
+  "Nenorocit": {
+   "file": "nenorocit.png",
+   "from": "Nenorocit 25px.png",
+   "small": true
+  },
+  "Panda Bear": {
+   "file": "panda-bear.png",
+   "from": "Panda Bear 25px.png",
+   "small": true
+  },
+  "Phantom Warrior": {
+   "file": "phantom-warrior.png",
+   "from": "Phantom Warrior 25px.png",
+   "small": true
+  },
+  "Polar Bear": {
+   "file": "polar-bear.png",
+   "from": "Polar Bear 25px.png",
+   "small": true
+  },
+  "Puma": {
+   "file": "puma.jpg",
+   "from": "Creature Puma.png",
+   "small": false
+  },
+  "Racoon": {
+   "file": "racoon.jpg",
+   "from": "Creature Racoon.jpg",
+   "small": false
+  },
+  "Rat": {
+   "file": "rat.png",
+   "from": "Creature Rat.png",
+   "small": false
+  },
+  "Red Dragon": {
+   "file": "red-dragon.png",
+   "from": "Red Dragon 25px.png",
+   "small": true
+  },
+  "Red Snake": {
+   "file": "red-snake.png",
+   "from": "Red Snake 25px.png",
+   "small": true
+  },
+  "Scarba": {
+   "file": "scarba.png",
+   "from": "Scarba 25px.png",
+   "small": true
+  },
+  "Shy Rat": {
+   "file": "shy-rat.png",
+   "from": "Shy Rat 25px.png",
+   "small": true
+  },
+  "Skeleton": {
+   "file": "skeleton.png",
+   "from": "Skeleton 25px.png",
+   "small": true
+  },
+  "Skunk": {
+   "file": "skunk.png",
+   "from": "Creature Skunk.png",
+   "small": false
+  },
+  "Small Gargoyle": {
+   "file": "small-gargoyle.png",
+   "from": "Small Gargoyle 25px.png",
+   "small": true
+  },
+  "Small Spider": {
+   "file": "small-spider.png",
+   "from": "Small Spider 25px.png",
+   "small": true
+  },
+  "Snow Leopard": {
+   "file": "snow-leopard.png",
+   "from": "Snow Leopard 25px.png",
+   "small": true
+  },
+  "Sslessar": {
+   "file": "sslessar.png",
+   "from": "Sslessar 25px.png",
+   "small": true
+  },
+  "Tall Gargoyle": {
+   "file": "tall-gargoyle.png",
+   "from": "Tall Gargoyle 25px.png",
+   "small": true
+  },
+  "Tank Rabbit": {
+   "file": "tank-rabbit.png",
+   "from": "Tank Rabbit 25px.png",
+   "small": true
+  },
+  "Tiger": {
+   "file": "tiger.png",
+   "from": "Tiger 25px.png",
+   "small": true
+  },
+  "Troll": {
+   "file": "troll.png",
+   "from": "Troll 25px.png",
+   "small": true
+  },
+  "Unicorn": {
+   "file": "unicorn.png",
+   "from": "Unicorn 25px.png",
+   "small": true
+  },
+  "White Rabbit": {
+   "file": "white-rabbit.png",
+   "from": "White Rabbit 25px.png",
+   "small": true
+  },
+  "White Tiger": {
+   "file": "white-tiger.png",
+   "from": "White Tiger 25px.png",
+   "small": true
+  },
+  "Wolf": {
+   "file": "wolf.jpg",
+   "from": "Creature Wolf.png",
+   "small": false
+  },
+  "Wood Sprite": {
+   "file": "wood-sprite.png",
+   "from": "Wood Sprite 25px.png",
+   "small": true
+  },
+  "Yeti": {
+   "file": "yeti.jpg",
+   "from": "Creature Yeti.png",
+   "small": false
+  }
+ }
+}
