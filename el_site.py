@@ -2843,6 +2843,8 @@ function renderInstances(view, count, q) {
           ? `, the ${esc(inst.nick)}` : ""}</span></h2>
       <div class="facts">${facts.map(f =>
         `<span class="fact">${esc(f)}</span>`).join("")}</div>
+      ${(inst.notes || []).length ? `<div class="grouphint">${
+        inst.notes.map(esc).join(" ")}</div>` : ""}
       ${money ? `<div class="grouphint">A clear carries <b
         class="brass">${money.low === money.high ? fmt(money.high)
           : `${fmt(money.low)}–${fmt(money.high)}`}</b> gold at
@@ -2866,11 +2868,27 @@ function renderInstances(view, count, q) {
           <td class="num sm hide-sm">${esc(o.health || "–")}</td>
           <td class="num ${o.worth ? "brass" : "sm"}">${o.worth
             ? fmt(countTop(o.count) * o.worth) : "–"}</td>
-        </tr>`).join("")).join("")}</tbody></table></div>
-      ${(inst.notes || []).length ? `<div class="grouphint">${
-        inst.notes.map(esc).join(" ")}</div>` : ""}`;
+        </tr>`).join("")).join("")}</tbody></table></div>`;
     }).join("")}`;
   wireFightPicker(view);
+}
+
+/* A creature that fights in an instance and in an invasion has a drop
+   table for each, and they are not the same table: a Castellan killed
+   in the Dungeon carries about 835,000 gold, and the same Castellan in
+   an invasion about 340,000. Listing both as one run of rows read as
+   one creature dropping everything twice. */
+function killWorth(c) {
+  return Math.max(c.worth || 0, c.worthInst || 0);
+}
+
+function dropGroups(drops) {
+  const LABEL = { instance: "Drops in an instance",
+                  invasion: "Drops in an invasion" };
+  const kinds = [...new Set(drops.map(d => d.where || ""))];
+  if (kinds.length < 2) return drops.length ? [["Drops", drops]] : [];
+  return ["instance", "invasion", ""].filter(k => kinds.includes(k))
+    .map(k => [LABEL[k] || "Drops", drops.filter(d => (d.where || "") === k)]);
 }
 
 function renderFight(view, count, q) {
@@ -2883,7 +2901,7 @@ function renderFight(view, count, q) {
   }
   let list = all.filter(c => beastMatches(c, q));
   if (fkind) list = list.filter(c => (c.kinds || []).includes(fkind));
-  list = sortRows(list, "worth");
+  list = sortRows(list, killWorth);
 
   count.textContent = `${fmt(list.length)} creature${
     list.length === 1 ? "" : "s"}${fkind && KINDS[fkind]
@@ -2898,7 +2916,7 @@ function renderFight(view, count, q) {
     { t: "Health", k: c => num(c.material), num: 1, hide: 1 },
     { t: "Respawn", k: c => num(c.respawn), num: 1, hide: 1 },
     { t: "Drops" },
-    { t: "Worth", k: "worth", num: 1 },
+    { t: "Worth", k: killWorth, num: 1 },
   ])}<tbody>${list.map(c => `<tr>
       <td><div class="nm">${c.img
           ? `<img class="beast" src="${m.beastImgBase}${c.imgThumb}"
@@ -2915,7 +2933,7 @@ function renderFight(view, count, q) {
       <td class="sm">${(c.drops || []).slice(0, 3).map(d =>
         `${d.n ? esc(d.n) + " " : ""}${esc(d.item)}`).join(", ")}${
         (c.drops || []).length > 3 ? " \u2026" : ""}</td>
-      <td class="num brass">${c.worth ? fmt(c.worth) : ""}</td>
+      <td class="num brass">${killWorth(c) ? fmt(killWorth(c)) : ""}</td>
     </tr>`).join("")}</tbody></table></div>
     ${list.length ? `<div class="caveat">Worth is the most a kill can be
       carrying, not an average: a drop written 0-35 gold coins is counted
@@ -2937,7 +2955,9 @@ function renderOneBeast(view, count) {
   const dropTable = rows => !rows.length ? "" : `<table>${rows.map(d => `<tr>
       <td><div class="nm">${nameIcon(d.item)}<span>${
         d.n ? `<span class="sm muted">${esc(d.n)}</span> ` : ""}${
-        itemLink(d.item)}</span></div></td>
+        itemLink(d.item)}${d.note
+          ? ` <span class="sm muted">(${esc(d.note)})</span>` : ""
+        }</span></div></td>
       <td class="num ${d.pays ? "brass" : "sm muted"}">${
         d.pays ? fmt(d.most) : "no bot buys it"}</td>
       <td class="sm">${d.bot ? botLink(d.bot) : ""}</td>
@@ -2959,8 +2979,12 @@ function renderOneBeast(view, count) {
       ordinary <a href="#fight/${encodeURIComponent(c.imgOf)}">${
       esc(c.imgOf)}</a>, whose picture it is borrowing; it has none of
       its own.</p>` : ""}
-    ${c.worth ? `<div class="qnpc">A kill is carrying at most
-      <b>${fmt(c.worth)}</b> gold, before rare drops.</div>` : ""}
+    ${c.worth || c.worthInst ? `<div class="qnpc">A kill is carrying at
+      most <b>${fmt(Math.max(c.worth || 0, c.worthInst || 0))}</b> gold,
+      before rare drops.${c.worthInst && c.worth
+        && c.worthInst !== c.worth ? ` That is inside an instance; in an
+      invasion it carries ${fmt(Math.min(c.worth, c.worthInst))}.` : ""
+      }</div>` : ""}
     <div class="cols">
       <div>
         ${stats.length ? `<div class="qblock"><h3>Statistics</h3>
@@ -2975,8 +2999,9 @@ function renderOneBeast(view, count) {
             `<li>${esc(i)}</li>`).join("")}</ul></div>` : ""}
       </div>
       <div style="flex: 2 1 420px">
-        ${(c.drops || []).length ? `<div class="qblock"><h3>Drops</h3>
-          ${dropTable(c.drops)}</div>` : ""}
+        ${dropGroups(c.drops || []).map(([label, rows]) =>
+          `<div class="qblock"><h3>${esc(label)}</h3>
+            ${dropTable(rows)}</div>`).join("")}
         ${(c.rare || []).length ? `<div class="qblock"><h3>Rare drops</h3>
           <div class="panelhint">Players confirm these on the wiki as they
             find them, so the list grows and nobody knows the odds.</div>
