@@ -27,14 +27,16 @@ Answers found so far, recorded so nobody goes looking twice:
   name with capitals, spaces, underscores and extension stripped. That
   found 98 of 108. The remaining ten have no artwork anywhere.
 
-  view_user.php has no pictures on it at all. The whole page is about
-  2,300 bytes and holds not one img tag; the achievements on it are
-  plain text separated by two non-breaking spaces. So badge artwork,
-  if it exists, has to come from somewhere else.
+  view_user.php has no pictures on it at all - about 2,300 bytes and
+  not one img tag.
 
-Asking now: does the wiki have the achievement badges? Looking for a
-page about them and for any file whose name resembles one, against the
-30 badge names we have actually seen on players.
+  Achievement badges are on the wiki's Achievements page, one heading
+  each with the files under it giving the tiers in order. el_badges.py
+  reads it. The wiki and the game disagree on two spellings.
+
+Asking now: is there a picture for a quest's NPC? The quest guide names
+61 of them. Looking for a category or page listing NPCs, and for any
+file resembling each name, the same way the creatures were found.
 """
 
 import json
@@ -46,13 +48,6 @@ import requests
 
 API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-
-# Every badge name seen across the players we have read.
-NAMES = ["Tutorial completed", "Vanquisher", "Church donator", "Alchemist",
-         "Professor of Potioning", "Crafter", "Armorer", "Big belly",
-         "Child of Stars", "Mushroomer", "Herbalist", "Miner",
-         "Mother nature hates me", "Lucky finder", "Lucky crafter",
-         "Exterminator"]
 
 
 def api(**params):
@@ -80,41 +75,66 @@ def every_image():
     return out
 
 
-print("--- is there a page about achievements? ---")
-body = api(action="query", list="search", srsearch="achievements",
-           srlimit=12)
-for hit in body.get("query", {}).get("search", []):
-    print(f"   {hit['title']}  ({hit.get('wordcount')} words)")
+# "Elle, Valley of the Dwarves" and "Bob the Gob, Portland [wandering]"
+# carry a place; the name is what comes before the comma or bracket.
+def bare(npc):
+    return re.split(r"\s*[,\[(]", npc)[0].strip()
 
-for title in ("Achievements", "Achievement", "Medals"):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    pages = body.get("query", {}).get("pages", [])
-    if pages and not pages[0].get("missing"):
-        text = (pages[0]["revisions"][0]["slots"]["main"]["content"])
-        print(f"\n--- page '{title}' exists, {len(text)} bytes ---")
-        print(text[:1200])
-        files = re.findall(r"\[\[File:([^\]|]+)", text, re.I)
-        print(f"   files it uses: {files[:20]}")
-        break
-else:
-    print("\n   no Achievements page under any of those titles")
+
+def key(text):
+    return re.sub(r"[^a-z0-9]", "", text.lower())
+
+
+quests = json.load(open("quests.json"))["quests"]
+npcs = sorted({bare(q["npc"]) for q in quests if q.get("npc")})
+print(f"{len(npcs)} distinct NPCs named by the quest guide")
+
+print("\n--- categories whose name mentions NPC ---")
+body = api(action="query", list="allcategories", acprefix="", aclimit=500)
+cats = [c["category"] for c in body.get("query", {}).get("allcategories", [])]
+print("   " + ", ".join(c for c in cats if re.search(r"npc|character|people",
+                                                     c, re.I)) or "   none")
+
+for cat in ("NPCs", "NPC", "Characters", "Priest NPCs"):
+    body = api(action="query", list="categorymembers",
+               cmtitle=f"Category:{cat}", cmlimit=500)
+    members = [m["title"] for m in
+               body.get("query", {}).get("categorymembers", [])]
+    if members:
+        print(f"\n--- Category:{cat} has {len(members)} members ---")
+        print("   " + ", ".join(members[:30]))
 
 files = every_image()
 print(f"\n{len(files)} files on the wiki")
 
-print("\n--- files whose name mentions an achievement-ish word ---")
-for name in sorted(files):
-    if re.search(r"achiev|badge|medal|trophy", name, re.I):
-        im = files[name]
-        print(f"   {name}  {im.get('width')}x{im.get('height')}")
-
-print("\n--- nearest file to each badge name ---")
 plain = {}
 for name in files:
     stem = re.sub(r"\.(png|jpe?g|gif|webp)$", "", name, flags=re.I)
-    plain.setdefault(stem.replace("_", " ").lower(), name)
-for badge in NAMES:
-    near = get_close_matches(badge.lower(), plain, n=2, cutoff=0.8)
-    print(f"   {badge:26} -> "
+    plain.setdefault(key(stem), name)
+
+hit, miss = [], []
+for npc in npcs:
+    k = key(npc)
+    found = None
+    for prefix in ("npc", "", "character", "quest"):
+        if prefix + k in plain:
+            found = plain[prefix + k]
+            break
+    (hit if found else miss).append((npc, found))
+
+print(f"\n{len(hit)} NPCs have a file, {len(miss)} do not")
+for npc, f in hit[:20]:
+    im = files[f]
+    print(f"   {npc:22} {f}  {im.get('width')}x{im.get('height')} "
+          f"{im.get('size')}b")
+
+print("\n--- nearest file to each miss ---")
+for npc, _ in miss[:25]:
+    near = get_close_matches(key(npc), plain, n=2, cutoff=0.78)
+    print(f"   {npc:22} -> "
           + (", ".join(plain[m] for m in near) if near else "nothing close"))
+
+print("\n--- files whose name mentions npc or quest ---")
+for name in sorted(files):
+    if re.search(r"\bnpc|quest", name, re.I):
+        print(f"   {name}")
