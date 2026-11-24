@@ -37,51 +37,73 @@ Answers found so far, recorded so nobody goes looking twice:
   Quest NPC portraits are a plain <Name>.png on the wiki at 96 pixels,
   found the same way as the creatures. 55 of the 61 NPCs have one.
 
-Asking now: two holes in the instance pages.
+  Drops were being read from the section headed exactly "Drops", and
+  from cells carrying no layout. 94 creature pages suit that and 14 do
+  not: Castellan keeps its best drops under "Instance Drops", a Shy Rat
+  styles the item cell as well as the icon cell, a Badaran uses a list
+  instead of a table. el_creatures.py now reads the word "drop" in any
+  heading, strips a cell's attributes, and reads bullets where there is
+  no table.
 
-  Nineteen creatures have no drops at all in creatures.json, Castellan
-  among them, and a player says Castellan is the best dropper in the
-  game. So either its page lays drops out in a shape read_creature does
-  not read, or the drops live somewhere else entirely.
+  There are no per-instance pages. One Instances page carries all six,
+  with the five waves of each, the counts, the a/d range to get in, the
+  wait between visits and the time limit, in level order - which is not
+  the order the nicknames suggest. el_instances.py reads it.
 
-  Instance membership is built from each creature page's own Locations
-  table, which gives only 6 to 11 creatures per instance. That smells
-  short. Looking for a page per instance that lists what is inside.
+Asking now: nothing. The run below re-reads the creature pages with the
+drop fixes and prints what changed, creature by creature, so the fix
+can be checked against the old numbers before it lands.
 """
 
-import re
-import time
+import json
+import subprocess
+import sys
 
-import requests
-
-API = "https://el-wiki.holy-eternalland.de/api.php"
-UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-
-
-def api(**params):
-    params.setdefault("format", "json")
-    params.setdefault("formatversion", 2)
-    r = requests.get(API, params=params, headers=UA, timeout=30)
-    r.raise_for_status()
-    return r.json()
+OLD = "creatures.json"
+NEW = "/tmp/creatures-new.json"
 
 
-def page_text(title):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    for pg in body.get("query", {}).get("pages", []):
-        if pg.get("missing"):
-            return None
-        revs = pg.get("revisions") or [{}]
-        return (revs[0].get("slots", {}).get("main", {}).get("content")
-                or revs[0].get("content") or "")
-    return None
+def rows(path):
+    out = {}
+    for c in json.load(open(path, encoding="utf-8"))["creatures"]:
+        out[c["name"]] = (c.get("drops") or [], c.get("rare") or [])
+    return out
 
 
-print("===== Instances, the whole page =====")
-print(page_text("Instances"))
+print("re-reading every creature page with the drop fixes")
+subprocess.run([sys.executable, "el_creatures.py", "--out", NEW], check=True)
 
-for name in ("Leonard", "Invdrag", "Nasparliu", "Mare Bulangiu"):
-    print(f"\n===== {name} =====")
-    print(page_text(name))
-    time.sleep(0.3)
+old, new = rows(OLD), rows(NEW)
+print("\n" + "=" * 70)
+print("what changed")
+print("=" * 70)
+same = 0
+for name in sorted(new):
+    od, orr = old.get(name, ([], []))
+    nd, nr = new[name]
+    if len(od) == len(nd) and len(orr) == len(nr):
+        same += 1
+        continue
+    print(f"\n{name}: drops {len(od)} -> {len(nd)}, "
+          f"rare {len(orr)} -> {len(nr)}")
+    was = {(d.get("n"), d["item"]) for d in od}
+    for d in nd:
+        if (d.get("n"), d["item"]) not in was:
+            where = f"  [{d['where']}]" if d.get("where") else ""
+            print(f"   + normal  {d.get('n') or '1':>16}  "
+                  f"{d['item']}{where}")
+    now = {(d.get("n"), d["item"]) for d in nd}
+    for d in od:
+        if (d.get("n"), d["item"]) not in now:
+            print(f"   - normal  {d.get('n') or '1':>16}  {d['item']}")
+    wasr = {(d.get("n"), d["item"]) for d in orr}
+    for d in nr:
+        if (d.get("n"), d["item"]) not in wasr:
+            print(f"   + rare    {d.get('n') or '1':>16}  {d['item']}")
+
+print(f"\n{same} creatures unchanged, {len(new) - same} changed")
+
+print("\n" + "=" * 70)
+print("and what is in each instance")
+print("=" * 70)
+subprocess.run([sys.executable, "el_instances.py", "--dump"], check=False)

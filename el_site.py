@@ -56,6 +56,7 @@ SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
 GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
+INSTANCES_FILE = "instances.json"
 CREATURE_IMG_FILE = "creature_images.json"
 BADGES_FILE = "badges.json"
 NPC_IMG_FILE = "npc_images.json"
@@ -515,10 +516,32 @@ def load(db_path):
                 GROUP BY i.item_id"""):
             pays[r["n"]] = {"price": r["p"], "bot": r["b"]}
 
-        def price_drops(rows):
+        def how_many(text):
+            """
+            The most a drop count can mean. The wiki writes a number
+            however it likes - "4", "0-35", "2,800", "~200k-835k" - and
+            a Castellan's whole worth is in the k.
+            """
+            top = str(text or "1").split("-")[-1].strip().lower()
+            mult = 1
+            if top.endswith("k"):
+                mult, top = 1_000, top[:-1]
+            elif top.endswith("m"):
+                mult, top = 1_000_000, top[:-1]
+            top = top.replace(",", "").replace(" ", "")
+            try:
+                return int(float(top) * mult)
+            except ValueError:
+                return 1
+
+        def price_drops(rows, skip=None):
             """
             What a drop is worth, and the most it can be worth, since
             a drop of "0-35 Gold coins" is a range rather than a number.
+
+            A creature that fights in both an instance and an invasion
+            has a drop table for each, and the two must not be added
+            together: skip says which fight is not being counted.
             """
             worth = 0
             for d in rows:
@@ -531,19 +554,53 @@ def load(db_path):
                     continue
                 d["pays"] = hit["price"]
                 d["bot"] = hit["bot"]
-                top = str(d.get("n") or "1").split("-")[-1]
-                d["most"] = hit["price"] * (int(top) if top.isdigit() else 1)
-                worth += d["most"]
+                d["most"] = hit["price"] * how_many(d.get("n"))
+                if d.get("where") != skip:
+                    worth += d["most"]
             return worth
 
         priced = 0
         for c in creatures:
-            c["worth"] = price_drops(c.get("drops", []))
+            # Two figures, because the same creature pays differently
+            # inside an instance. They are equal for everything whose
+            # page lists one drop table, which is nearly everything.
+            c["worth"] = price_drops(c.get("drops", []), skip="instance")
+            c["worthInst"] = price_drops(c.get("drops", []), skip="invasion")
             price_drops(c.get("rare", []))
-            if c["worth"]:
+            if c["worth"] or c["worthInst"]:
                 priced += 1
         print(f"  {len(creatures)} creatures, {priced} with a price on "
               f"their drops")
+
+    # What is behind each instance door, wave by wave, from the wiki's
+    # Instances page. The creature pages name which instances a creature
+    # turns up in, but not how many spawn, nor who may go in, and the
+    # order they implied was wrong - the Second Swamp is for 100-120 and
+    # the Second Mountain for 120-140, not the other way about.
+    instances = []
+    if os.path.exists(INSTANCES_FILE):
+        with open(INSTANCES_FILE, encoding="utf-8") as f:
+            instances = json.load(f).get("instances", [])
+        by_name = {c["name"]: c for c in creatures}
+        creatures_in = 0
+        for one in instances:
+            for wave in one.get("waves", []):
+                for opt in wave:
+                    c = by_name.get(opt["creature"])
+                    if not c:
+                        continue
+                    creatures_in += 1
+                    # Enough to draw the row without carrying the whole
+                    # creature again; the link goes to the full page.
+                    opt["worth"] = c.get("worthInst") or c.get("worth") or 0
+                    opt["health"] = c.get("material")
+                    opt["att"] = c.get("attack")
+                    opt["def"] = c.get("defense")
+                    if c.get("imgThumb"):
+                        opt["img"] = c["imgThumb"]
+        waves = sum(len(one.get("waves", [])) for one in instances)
+        print(f"  {len(instances)} instances, {waves} waves, "
+              f"{creatures_in} creature slots priced")
 
     # Guild rosters. Who is in which guild is not published anywhere, so
     # this comes from guild.txt, which someone keeps by hand.
@@ -887,6 +944,7 @@ def load(db_path):
         "eventTotals": event_totals,
         "online": online,
         "creatures": creatures,
+        "instances": instances,
         "achPlayers": ach_players,
         "achKinds": ach_kinds,
         "guilds": guilds,
@@ -1215,6 +1273,16 @@ HTML = r"""<!doctype html>
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .chips .tag { font-size: var(--t-xs); border: 1px solid var(--line-2);
           border-radius: 10px; padding: 2px 9px; color: var(--muted); }
+  /* The handful of facts that decide whether you can go in at all:
+     level range, how many people, how long, how often. */
+  .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
+  .facts .fact { font-size: var(--t-xs); border: 1px solid var(--line-2);
+                 border-radius: 3px; padding: 3px 9px; color: var(--muted);
+                 background: var(--panel); }
+  /* "130x" in front of a creature. Lining figures, so a wave of 130
+     and a wave of 1 line up down the column. */
+  .many { color: var(--brass); font-variant-numeric: tabular-nums;
+          margin-right: 1px; }
   h2.group { font-family: var(--display); font-weight: 500; font-size: 19px;
              color: var(--ink); margin: 34px 0 12px; letter-spacing: -.01em;
              border-bottom: 1px solid var(--line); padding-bottom: 8px; }
@@ -2670,7 +2738,7 @@ function beastMatches(c, q) {
    so the question is answerable by turning that round. */
 function fightPicker() {
   const all = DATA.creatures || [];
-  const nInst = new Set(all.flatMap(c => c.instances || [])).size;
+  const nInst = (DATA.instances || []).length;
   return `<div class="pills">
     <button class="pill${fkind ? "" : " on"}" data-fkind="">Everything</button>
     ${Object.entries(KINDS).map(([k, label]) => {
@@ -2688,87 +2756,121 @@ function wireFightPicker(view) {
   });
 }
 
-function instanceGroups(all) {
-  const by = new Map();
-  all.forEach(c => (c.instances || []).forEach(name => {
-    if (!by.has(name)) by.set(name, []);
-    by.get(name).push(c);
-  }));
-  // The names carry the order, which the creatures inside do not: the
-  // Noob Instance holds something with more health than anything in the
-  // Advanced one, so sorting on that put them back to front. Anything
-  // not named here falls to the end, by its toughest creature.
-  const ORDER = ["noob", "advanced", "pr0 farm", "almost pr0", "pr0",
-                 "wtf"];
-  const rank = name => {
-    const low = name.toLowerCase();
-    // Longest match wins, or "pr0" would claim "pr0 farm".
-    let best = -1, at = ORDER.length;
-    ORDER.forEach((k, i) => {
-      if (low.includes(k) && k.length > best) { best = k.length; at = i; }
+/* An instance is six to eight people behind one door against five
+   waves of whatever the game picks, so the question is never what a
+   Blue Dragon is worth on its own. It is what is in there, how many,
+   and whether the clear pays. The wiki's Instances page says all three;
+   el_instances.py reads it. */
+function countTop(text) {
+  // "1-2" means at most two, "150" means 150.
+  const last = String(text == null ? "" : text).split("-").pop();
+  const n = parseInt(last.replace(/[^0-9]/g, ""), 10);
+  return isFinite(n) ? n : 1;
+}
+
+function instanceWorth(inst) {
+  /* The game picks one option per wave when the instance starts, so a
+     clear is worth somewhere between the cheapest run of choices and
+     the richest. Both are "at most", since a drop written 0-35 gold is
+     counted at 35. */
+  let low = 0, high = 0, known = false;
+  (inst.waves || []).forEach(wave => {
+    const each = wave.map(o => countTop(o.count) * (o.worth || 0));
+    const有 = each.some(v => v > 0);
+    if (any) known = true;
+    low += Math.min(...each);
+    high += Math.max(...each);
+  });
+  return known ? { low, high } : null;
+}
+
+function instanceRares(inst) {
+  const byName = new Map((DATA.creatures || []).map(c => [c.name, c]));
+  const best = new Map();
+  (inst.waves || []).forEach(wave => wave.forEach(o => {
+    const c = byName.get(o.creature);
+    (c && c.rare || []).forEach(d => {
+      const was = best.get(d.item);
+      if (!was || (d.most || 0) > (was.most || 0)) best.set(d.item, d);
     });
-    return at;
-  };
-  return [...by.entries()].map(([name, rows]) => {
-    const rare = new Map();
-    rows.forEach(c => (c.rare || []).forEach(d => {
-      const was = rare.get(d.item);
-      if (!was || (d.most || 0) > (was.most || 0)) rare.set(d.item, d);
-    }));
-    const best = [...rare.values()].sort((a, b) => (b.most || 0) - (a.most || 0));
-    return {
-      name, rows: rows.slice().sort((a, b) => num(b.material) - num(a.material)),
-      rare: best,
-      top: Math.max(...rows.map(c => num(c.material) || 0), 0),
-      gold: rows.reduce((t, c) => t + (c.worth || 0), 0),
-    };
-  }).sort((a, b) => rank(a.name) - rank(b.name) || a.top - b.top);
+  }));
+  return [...best.values()].sort((a, b) => (b.most || 0) - (a.most || 0));
+}
+
+function whoMayEnter(inst) {
+  if (!inst.adFrom) return "";
+  if (inst.adTo) return `${inst.adFrom}–${inst.adTo} a/d`;
+  return `${inst.adFrom}+ a/d`;
+}
+
+function instanceMatches(inst, q) {
+  if (!q) return true;
+  return [inst.player, inst.name, inst.nick, inst.short,
+          (inst.waves || []).flat().map(o => o.creature).join(" ")]
+    .join(" ").toLowerCase().includes(q);
 }
 
 function renderInstances(view, count, q) {
-  const groups = instanceGroups(DATA.creatures || [])
-    .filter(g => !q || g.name.toLowerCase().includes(q)
-                 || g.rows.some(c => c.name.toLowerCase().includes(q)));
-  count.textContent = `${groups.length} instance${
-    groups.length === 1 ? "" : "s"}`;
-  if (!groups.length) {
+  const all = (DATA.instances || []).filter(i => instanceMatches(i, q));
+  count.textContent = `${all.length} instance${all.length === 1 ? "" : "s"}`;
+  if (!all.length) {
     view.innerHTML = fightPicker() +
-      `<div class="empty">Nothing matches that.</div>`;
+      `<div class="empty">${(DATA.instances || []).length
+        ? "Nothing matches that."
+        : "No instance data yet."}</div>`;
+    wireFightPicker(view);
     return;
   }
   view.innerHTML = fightPicker() + `
-    <div class="grouphint">What is behind each door, easiest first. The
-      wiki says which instances a creature turns up in; this is that
-      turned round. Worth is what one kill carries before rare drops,
-      priced at what bots pay today.</div>
-    ${groups.map(g => `
-      <h2 class="group">${esc(g.name)} <span class="count">${
-        g.rows.length} creature${g.rows.length === 1 ? "" : "s"}</span></h2>
-      ${g.rare.length ? `<div class="grouphint">Best rare drop in here:
-        ${g.rare.slice(0, 3).map(d => `${itemLink(d.item)}${
-          d.most ? ` at <b class="brass">${fmt(d.most)}</b>` : ""}`)
-          .join(", ")}.</div>` : ""}
+    <div class="grouphint">Five waves behind every door, in the order
+      the game sends them, easiest instance first. A wave written with
+      "or" is a choice the game makes when the instance starts, so a
+      clear is worth somewhere between the two. Everything is priced at
+      what bots pay today, before rare drops, and a drop written
+      0–35 gold is counted at 35.</div>
+    ${all.map(inst => {
+      const money = instanceWorth(inst);
+      const rare = instanceRares(inst).slice(0, 3);
+      const facts = [
+        whoMayEnter(inst),
+        inst.people ? `${inst.people} people` : "",
+        inst.minutes ? `${inst.minutes} minutes to clear it` : "",
+        inst.wait ? `${inst.wait} hours between visits` : "",
+      ].filter(Boolean);
+      return `
+      <h2 class="group">${esc(inst.player || inst.name)}
+        <span class="count">${esc(inst.name)} map${inst.nick
+          && inst.nick.toLowerCase() !== (inst.player || "").toLowerCase()
+          ? `, the ${esc(inst.nick)}` : ""}</span></h2>
+      <div class="facts">${facts.map(f =>
+        `<span class="fact">${esc(f)}</span>`).join("")}</div>
+      ${money ? `<div class="grouphint">A clear carries <b
+        class="brass">${money.low === money.high ? fmt(money.high)
+          : `${fmt(money.low)}–${fmt(money.high)}`}</b> gold at
+        most, before rare drops.${rare.length ? ` Best rare drop in
+        here: ${rare.map(d => `${itemLink(d.item)}${d.most
+          ? ` at <b class="brass">${fmt(d.most)}</b>` : ""}`)
+          .join(", ")}.` : ""}</div>` : ""}
       <div class="scroller"><table><thead><tr>
-        <th>Creature</th><th class="num hide-sm">Att</th>
-        <th class="num hide-sm">Def</th><th class="num">Health</th>
-        <th class="num">A kill is worth</th><th>Best rare drop</th>
-      </tr></thead><tbody>${g.rows.map(c => {
-        const top = (c.rare || []).slice().sort(
-          (a, b) => (b.most || 0) - (a.most || 0))[0];
-        return `<tr>
-        <td><div class="nm">${c.img
-          ? `<img class="beast" src="${m.beastImgBase}${c.imgThumb}"
-               loading="lazy" alt="">` : `<span class="noimg"></span>`
-          }<a class="lnk blnk" href="#fight/${encodeURIComponent(c.name)}">${
-          esc(c.name)}</a></div></td>
-        <td class="num sm hide-sm">${esc(c.attack || "\u2013")}</td>
-        <td class="num sm hide-sm">${esc(c.defense || "\u2013")}</td>
-        <td class="num sm">${esc(c.material || "\u2013")}</td>
-        <td class="num ${c.worth ? "brass" : "sm"}">${
-          c.worth ? fmt(c.worth) : "\u2013"}</td>
-        <td class="sm">${top ? `${itemLink(top.item)}${top.most
-          ? ` <span class="brass">${fmt(top.most)}</span>` : ""}` : ""}</td>
-      </tr>`;}).join("")}</tbody></table></div>`).join("")}`;
+        <th class="num">Wave</th><th>What comes through</th>
+        <th class="num hide-sm">Health each</th>
+        <th class="num">Worth</th>
+      </tr></thead><tbody>${(inst.waves || []).map((wave, i) =>
+        wave.map((o, j) => `<tr>
+          <td class="num sm">${j ? `<span class="sm">or</span>` : i + 1}</td>
+          <td><div class="nm">${o.img
+            ? `<img class="beast" src="${m.beastImgBase}${o.img}"
+                 loading="lazy" alt="">` : `<span class="noimg"></span>`
+            }<span class="many">${esc(o.count || "?")}×</span>
+            <a class="lnk blnk" href="#fight/${
+              encodeURIComponent(o.creature)}">${esc(o.creature)}</a></div></td>
+          <td class="num sm hide-sm">${esc(o.health || "–")}</td>
+          <td class="num ${o.worth ? "brass" : "sm"}">${o.worth
+            ? fmt(countTop(o.count) * o.worth) : "–"}</td>
+        </tr>`).join("")).join("")}</tbody></table></div>
+      ${(inst.notes || []).length ? `<div class="grouphint">${
+        inst.notes.map(esc).join(" ")}</div>` : ""}`;
+    }).join("")}`;
   wireFightPicker(view);
 }
 

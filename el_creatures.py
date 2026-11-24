@@ -57,8 +57,31 @@ SECTION = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 CELL = re.compile(r"^\s*\|(?![-}])\s*(.+?)\s*$", re.M)
 # "* [[File:X.png|25px]] 4 [[Invisibility Potion|Invisibility Potions]]"
 BULLET = re.compile(r"^\*\s*(.+?)\s*$", re.M)
-# "0-35 Gold coins" / "4 Invisibility Potions"
-AMOUNT = re.compile(r"^\s*([\d]+(?:\s*-\s*\d+)?)\s+(.+?)\s*$")
+# "0-35 Gold coins", "4 Invisibility Potions", "150,000-340,213 Gold
+# Coins", "~200k-835k Gold Coins". The wiki writes big numbers however
+# it likes and a Castellan's whole worth hangs on reading them.
+AMOUNT = re.compile(r"""^\s*~?\s*
+     (\d[\d,.]*\s*[km]?
+      (?:\s*(?:-|to|\u2013)\s*~?\s*\d[\d,.]*\s*[km]?)?)
+     \s+(.+?)\s*$""", re.X | re.I)
+# A table cell may carry its layout before the content it holds:
+#   | style="width: 95%;" | 1 [[Bones]]
+# The attributes are not the drop. Reading them as one lost every drop
+# on every page that styles the item cell as well as the icon cell.
+CELL_ATTRS = re.compile(r"""^\s*
+     [A-Za-z-]+\s*=\s*"[^"]*"
+     (?:\s+[A-Za-z-]+\s*=\s*"[^"]*")*
+     \s*\|(?!\|)""", re.X)
+# Any heading that mentions drops is a drops section. 94 creature pages
+# call it "Drops" and the rest do not: "Invasion Drops", "Instance
+# Drops", "Normal drops", "Additional drops", "Possible Special Drops".
+# Matching the word rather than the heading is what finds Castellan's.
+DROPS = re.compile(r"drop", re.I)
+# A heading or a table header saying these means a drop you cannot
+# count on. "Normal" outranks them, because Castellan's instance table
+# is headed "Normal Drops" inside a section headed "Instance Drops".
+RARE_WORDS = ("rare", "other", "additional", "special", "unusual",
+              "chance", "possible")
 
 
 def page_text(s, title):
@@ -98,6 +121,52 @@ def section_of(wikitext, name):
             stop = heads[i + 1][0] if i + 1 < len(heads) else len(wikitext)
             return wikitext[end:stop]
     return ""
+
+
+def cell_text(raw):
+    """One table cell, without the layout it carries."""
+    return clean_cell(CELL_ATTRS.sub("", raw))
+
+
+def drop_sections(wikitext):
+    """Every section whose heading mentions drops, with that heading."""
+    heads = [(m.start(), m.end(), m.group(1))
+             for m in SECTION.finditer(wikitext)]
+    for i, (start, end, title) in enumerate(heads):
+        if DROPS.search(title):
+            stop = heads[i + 1][0] if i + 1 < len(heads) else len(wikitext)
+            yield title.strip(), wikitext[end:stop]
+
+
+def is_rare(heading, header):
+    """
+    Whether a table holds drops you cannot count on. The table's own
+    header is believed before the heading above it, because Castellan's
+    instance table is headed "Normal Drops" under a heading that says
+    "Instance Drops", and a plain "Drops" with nothing said either way
+    means the ordinary ones.
+    """
+    for text in (header or "", heading):
+        low = text.lower()
+        if "normal" in low:
+            return False
+        if any(w in low for w in RARE_WORDS):
+            return True
+    return False
+
+
+def where_of(heading, header):
+    """
+    Which fight these drops are for. A Castellan killed in an instance
+    carries ~200k-835k gold; the same Castellan in an invasion carries
+    150,000-340,213, and its page keeps the two apart.
+    """
+    low = f"{heading} {header}".lower()
+    if "instance" in low:
+        return "instance"
+    if "invasion" in low or "invance" in low:
+        return "invasion"
+    return None
 
 
 def split_amount(text):
@@ -151,35 +220,70 @@ def read_creature(s, title):
         header = re.search(r"^\s*!\s*(?:colspan=\"\d+\"\s*\|)?\s*(.+?)\s*$",
                            chunk, re.M)
         label = clean_cell(header.group(1)) if header else ""
-        cells = [clean_cell(c) for c in CELL.findall(chunk)]
-        cells = [c for c in cells
-                 if c and c != "}" and not c.lower().startswith("style")]
+        cells = [cell_text(c) for c in CELL.findall(chunk)]
+        cells = [c for c in cells if c and c != "}"]
         if label.lower().startswith("instance"):
             instances += cells
         else:
             places += [{"where": c, "region": label} for c in cells]
 
-    # The drops section holds a table per kind - "Normal Drops" and
-    # "Rare Drops" - and only the heading tells them apart. A rare drop
-    # listed as a normal one would be badly misleading, so the heading
-    # is read rather than assumed.
+    # A drops section holds a table per kind - "Normal Drops" and "Rare
+    # Drops" - and only the header tells them apart. A rare drop listed
+    # as a normal one would be badly misleading, so the header is read
+    # rather than assumed. Some pages use no table at all and write the
+    # drops as a bulleted list, which is read when there is no table.
     drops, rare_here = [], []
-    for m in TABLE.finditer(section_of(body, "Drops")):
-        chunk = m.group()
-        header = re.search(r"^\s*!\s*(?:colspan=\"\d+\"\s*\|)?\s*(.+?)\s*$",
-                           chunk, re.M)
-        label = clean_cell(header.group(1)) if header else ""
-        into = rare_here if "rare" in label.lower() else drops
-        for cell in CELL.findall(chunk):
-            clean = clean_cell(cell)
-            if not clean or clean == "}" or clean.lower().startswith("style"):
-                continue
-            n, what = split_amount(clean)
-            if what:
-                into.append({"n": n, "item": what})
+    for heading, text in drop_sections(body):
+        tables = list(TABLE.finditer(text))
+        for m in tables:
+            chunk = m.group()
+            header = re.search(
+                r"^\s*!\s*(?:colspan=\"\d+\"\s*\|)?\s*(.+?)\s*$", chunk, re.M)
+            label = cell_text(header.group(1)) if header else ""
+            into = rare_here if is_rare(heading, label) else drops
+            where = where_of(heading, label)
+            for cell in CELL.findall(chunk):
+                clean = cell_text(cell)
+                if not clean or clean == "}":
+                    continue
+                n, what = split_amount(clean)
+                if what:
+                    one = {"n": n, "item": what}
+                    if where:
+                        one["where"] = where
+                    into.append(one)
+        if not tables:
+            into = rare_here if is_rare(heading, "") else drops
+            where = where_of(heading, "")
+            for one in bullet_drops(text):
+                if where:
+                    one["where"] = where
+                into.append(one)
 
     return {"stats": stats, "places": places, "instances": instances,
             "drops": drops, "rareOnPage": rare_here}
+
+
+def bullet_drops(text):
+    """
+    Drops written as a list rather than a table, which is how a Badaran
+    says it carries 50k-150k gold. Only the top level is read: a bullet
+    ending in a colon introduces alternatives - "One of the following
+    Day Stones:" - and counting all seven as dropping would make the
+    kill look worth several times what it is.
+    """
+    out = []
+    for line in text.splitlines():
+        if not line.startswith("*") or line.startswith("**"):
+            continue
+        clean = clean_cell(line.lstrip("* "))
+        if not clean or clean.endswith(":") or len(clean) > 60:
+            continue
+        n, what = split_amount(clean)
+        if not what or what.lower() in ("none", "nothing", "unknown", "n/a"):
+            continue
+        out.append({"n": n, "item": what})
+    return out
 
 
 def read_rare(s, creature):

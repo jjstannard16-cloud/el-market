@@ -1,0 +1,342 @@
+{
+ "_comment": "What is in each instance, from the EL wiki's Instances page, by el_instances.py. In the page's own order, which is by level.",
+ "instances": [
+  {
+   "name": "Swamp",
+   "player": "Noob Instance",
+   "adFrom": 60,
+   "adTo": 80,
+   "adPlus": false,
+   "wait": 180,
+   "nick": "n00b",
+   "short": "60+",
+   "minutes": 180,
+   "people": null,
+   "notes": [],
+   "waves": [
+    [
+     {
+      "count": "40",
+      "creature": "Feros"
+     },
+     {
+      "count": "30",
+      "creature": "Desert Chimeran"
+     }
+    ],
+    [
+     {
+      "count": "25-30",
+      "creature": "Meltean"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Scarba"
+     }
+    ],
+    [
+     {
+      "count": "3-4",
+      "creature": "Yeti"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Dilimac"
+     }
+    ]
+   ]
+  },
+  {
+   "name": "Mountain",
+   "player": "Advanced Instance",
+   "adFrom": 80,
+   "adTo": 100,
+   "adPlus": false,
+   "wait": 160,
+   "nick": "advanced",
+   "short": "80+",
+   "minutes": 180,
+   "people": null,
+   "notes": [],
+   "waves": [
+    [
+     {
+      "count": "20",
+      "creature": "Yeti"
+     },
+     {
+      "count": "40",
+      "creature": "Forest Chimeran"
+     }
+    ],
+    [
+     {
+      "count": "30-40",
+      "creature": "Chitros"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Japita"
+     }
+    ],
+    [
+     {
+      "count": "8-9",
+      "creature": "Nasparliu"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Labagiu"
+     }
+    ]
+   ]
+  },
+  {
+   "name": "Second Swamp",
+   "player": "Almost Pr0 Instance",
+   "adFrom": 100,
+   "adTo": 120,
+   "adPlus": false,
+   "wait": 180,
+   "nick": "almost pr0",
+   "short": "100+",
+   "minutes": 180,
+   "people": null,
+   "notes": [],
+   "waves": [
+    [
+     {
+      "count": "37",
+      "creature": "Arctic Chimeran"
+     },
+     {
+      "count": "27",
+      "creature": "Cockatrice"
+     }
+    ],
+    [
+     {
+      "count": "22",
+      "creature": "Nasparliu"
+     },
+     {
+      "count": "16",
+      "creature": "Giant"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Jegos"
+     },
+     {
+      "count": "30",
+      "creature": "Legionnaire Orc"
+     }
+    ],
+    [
+     {
+      "count": "1",
+      "creature": "Red Dragon"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Cocalar"
+     }
+    ]
+   ]
+  },
+  {
+   "name": "Second Mountain",
+   "player": "Pr0 Farm Instance",
+   "adFrom": 120,
+   "adTo": 140,
+   "adPlus": false,
+   "wait": 160,
+   "nick": "pr0 farm",
+   "short": "120+",
+   "minutes": 180,
+   "people": null,
+   "notes": [],
+   "waves": [
+    [
+     {
+      "count": "150",
+      "creature": "Yeti"
+     },
+     {
+      "count": "110",
+      "creature": "Arctic Chimeran"
+     }
+    ],
+    [
+     {
+      "count": "55",
+      "creature": "Nasty giant"
+     },
+     {
+      "count": "85",
+      "creature": "Nasparliu"
+     }
+    ],
+    [
+     {
+      "count": "4",
+      "creature": "Ice Dragon"
+     },
+     {
+      "count": "5",
+      "creature": "Black Dragon"
+     }
+    ],
+    [
+     {
+      "count": "1",
+      "creature": "Mare Bulangiu"
+     },
+     {
+      "count": "1",
+      "creature": "Bulangiu"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Cocalar"
+     }
+    ]
+   ]
+  },
+  {
+   "name": "Ice",
+   "player": "Pr0 Instance",
+   "adFrom": 120,
+   "adTo": null,
+   "adPlus": true,
+   "wait": 150,
+   "nick": "pr0",
+   "short": "120++",
+   "minutes": 240,
+   "people": null,
+   "notes": [],
+   "waves": [
+    [
+     {
+      "count": "45",
+      "creature": "Giant"
+     },
+     {
+      "count": "80",
+      "creature": "Arctic Chimeran"
+     },
+     {
+      "count": "25",
+      "creature": "Little Dragon Blue"
+     }
+    ],
+    [
+     {
+      "count": "90",
+      "creature": "Nasparliu"
+     }
+    ],
+    [
+     {
+      "count": "4",
+      "creature": "Blue Dragon"
+     },
+     {
+      "count": "6",
+      "creature": "Ice Dragon"
+     },
+     {
+      "count": "10",
+      "creature": "Black Dragon"
+     }
+    ],
+    [
+     {
+      "count": "1",
+      "creature": "MuieLaFermieri"
+     }
+    ],
+    [
+     {
+      "count": "2",
+      "creature": "Mare Bulangiu"
+     },
+     {
+      "count": "2",
+      "creature": "Bulangiu"
+     }
+    ]
+   ]
+  },
+  {
+   "name": "Dungeon",
+   "player": "WTF???111?! Instance",
+   "adFrom": 110,
+   "adTo": null,
+   "adPlus": true,
+   "wait": 96,
+   "nick": "WTF??111?!",
+   "short": null,
+   "minutes": 240,
+   "people": 8,
+   "notes": [
+    "Requires 8 people to enter.",
+    "96 hour wait time is mandatory. Waiting time cannot be removed with scales, etc."
+   ],
+   "waves": [
+    [
+     {
+      "count": "10",
+      "creature": "Ice Dragon"
+     },
+     {
+      "count": "6",
+      "creature": "Blue Dragon"
+     }
+    ],
+    [
+     {
+      "count": "1-2",
+      "creature": "Mare Bulangiu"
+     }
+    ],
+    [
+     {
+      "count": "1",
+      "creature": "MuieLaFermieri"
+     }
+    ],
+    [
+     {
+      "count": "130",
+      "creature": "Nasparliu"
+     },
+     {
+      "count": "80",
+      "creature": "Nasty giant"
+     }
+    ],
+    [
+     {
+      "count": "1",
+      "creature": "Castellan"
+     }
+    ]
+   ]
+  }
+ ]
+}
