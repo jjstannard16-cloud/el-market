@@ -319,9 +319,12 @@
   .today .warning { font-family: var(--sans); font-size: 13px;
     color: var(--rust); margin-top: 10px; padding-top: 10px;
     border-top: 1px solid var(--line); }
-  .tier { font-family: var(--sans); font-size: 10px; letter-spacing: .06em;
-          color: var(--brass); border: 1px solid var(--line-2);
-          border-radius: 2px; padding: 0 4px; vertical-align: 1px; }
+  .tier { font-family: var(--sans); font-size: 10px; letter-spacing: .08em;
+          color: var(--brass); padding: 0 1px; vertical-align: 1px; }
+  /* In a chip the tier sits under the name, where a box around it read
+     as an empty text field rather than a rank. */
+  .namegrid .chip .tier { display: block; margin-top: 1px;
+                          letter-spacing: .14em; }
   .unsure { font-family: var(--sans); font-size: 11px; font-weight: 500;
             letter-spacing: .04em; color: var(--muted);
             border: 1px solid var(--line-2); border-radius: 2px;
@@ -755,7 +758,8 @@ document.getElementById("foot").innerHTML = `
       Player stats from <a href="https://www.eternal-lands.com/">eternal-lands.com</a>.
       The in-game calendar and the record of every special day come from
       <a href="https://mercator.holy-eternalland.de/">Mercator</a>.
-      Item artwork is from Eternal Lands, copied here so visiting this
+      Item artwork is from Eternal Lands; the creature and achievement
+      pictures are the wiki's. All of it is copied here so visiting this
       site costs them nothing. Thanks to everyone who maintains them.
     </div>
     <div>
@@ -2590,7 +2594,7 @@ function achPanel(name) {
       `<span class="chip">${g.img
         ? `<img class="badge" src="${m.badgeBase}${g.img}" loading="lazy"
              alt="">` : ""}<span>${esc(g.name)}${g.tier
-        ? ` <span class="tier">${ROMAN[g.tier]}</span>` : ""}</span></span>`)
+        ? `<span class="tier">${ROMAN[g.tier]}</span>` : ""}</span></span>`)
       .join("")}</div></div>`;
 }
 
