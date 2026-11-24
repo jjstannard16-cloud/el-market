@@ -309,6 +309,11 @@
   .k-bad .dayname  { color: var(--rust); }
   .k-mixed    { border-left-color: var(--brass); }
   .k-mixed .dayname { color: var(--brass); }
+  .dayic { width: 17px; height: 17px; flex: none; margin-top: 2px; }
+  .dayic.k-good { color: var(--patina); }
+  .dayic.k-bad { color: var(--rust); }
+  .dayic.k-mixed { color: var(--brass); }
+  .dayic.k-ordinary, .dayic.k-unknown { color: var(--dim); }
   .k-ordinary, .k-unknown { border-left-color: var(--line-2); }
   .k-ordinary .dayname, .k-unknown .dayname { color: var(--ink); }
   .daylog td:first-child { white-space: nowrap; }
@@ -632,6 +637,32 @@
     <circle cx="12" cy="12" r="4.2"/>
     <path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6
              M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24">
+    <path d="M20.5 3.5c0 9.5-5.5 15.5-13.5 16.5 0-9.5 5.5-15.5 13.5-16.5z"/>
+    <path d="M6 21c2.2-5.5 5.4-9 9.5-11.2"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24">
+    <path d="M10 3v6.5l-5 8.3A2 2 0 006.7 21h10.6a2 2 0 001.7-3.2L14 9.5V3"/>
+    <path d="M9 3h6M7.6 14.5h8.8"/></symbol>
+  <symbol id="i-magic" viewBox="0 0 24 24">
+    <path d="M3.5 20.5L14 10"/>
+    <path d="M17.8 3l1.1 2.6 2.6 1.1-2.6 1.1-1.1 2.6-1.1-2.6L14.1 6.7l2.6-1.1z"/>
+    <path d="M6 4.2l.6 1.4 1.4.6-1.4.6L6 8.2l-.6-1.4L4 6.2l1.4-.6z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24">
+    <path d="M4 5.5A2.5 2.5 0 016.5 3H20v14.5H6.5A2.5 2.5 0 004 20z"/>
+    <path d="M20 17.5H6.5a2.5 2.5 0 000 3.5H20"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24">
+    <path d="M12 8.2c-1.7-1.6-4-1.7-5.6-.3C4.3 9.6 4 13 5.6 16c1.3 2.5 3 4.3 4.4 4.3.8 0 1.4-.4 2-.4s1.2.4 2 .4c1.4 0 3.1-1.8 4.4-4.3 1.6-3 1.3-6.4-.8-8.1-1.6-1.4-3.9-1.3-5.6.3z"/>
+    <path d="M12 8.2c0-2.3 1.4-4 3.6-4.4"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M12 20.3S3.8 15.2 3.8 9.8A4.2 4.2 0 0112 7.6a4.2 4.2 0 018.2 2.2c0 5.4-8.2 10.5-8.2 10.5z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.6"/><path d="M12 6.8V12l3.7 2.2"/></symbol>
+  <symbol id="i-bow" viewBox="0 0 24 24">
+    <path d="M3.6 20.4L20 4M20 4h-6.2M20 4v6.2"/>
+    <path d="M3.6 20.4l1.6-4.6 3 3z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24">
+    <path d="M12 3.4l9.6 16.6H2.4z"/>
+    <path d="M12 9.6v4.6M12 17.1v.1"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24">
     <path d="M12 2.8l2 6.2 6.2 2-6.2 2-2 6.2-2-6.2-6.2-2 6.2-2z"/></symbol>
   <symbol id="i-joker" viewBox="0 0 24 24">
@@ -1811,6 +1842,70 @@ function renderOneBeast(view, count) {
    players tab, narrowed to one roster, which is the only way to see
    where someone stands among the people they actually play with.    */
 
+/* What a day does, as a picture. The rules read the day's own
+   description rather than its name, because the names say nothing: the
+   Day of Aleksei Stakhanov is a harvesting day and the Day of Joule is
+   a manufacturing one, and only the effect text tells you so. Order
+   matters - eating is checked before fighting, or the Day of Bones
+   would be a combat day on the strength of "creatures drop more". */
+const DAY_ICONS = [
+  // Weather first: an acid rain day destroys worn items, which would
+  // otherwise read as a manufacturing day.
+  [/acid rain|solar flare/, "warn"],
+  [/ranging/, "bow"],
+  [/summon/, "magic"],
+  // "No book knowledge needed for harvesting, manufacturing, alchemy"
+  // is about books, not any of the three skills it lists.
+  [/book knowledge/, "book"],
+  // Narrow: the Day of Fasting stops regeneration, which is a day
+  // about not eating rather than a day about healing.
+  [/healing|health restored/, "heart"],
+  // The named skill beats the "4x at school" tacked on the end of it,
+  // or every skill day would come out as a school day.
+  [/tailor|manufactur|engineer/, "craft"],
+  [/alchem|potion|\bmana\b/, "flask"],
+  [/\bmagic\b/, "magic"],
+  [/harvest/, "leaf"],
+  // \b matters: without it "eat" is inside "creatures" and the Day of
+  // Faster Respawns becomes a day about food. Food comes before books
+  // because the Day of Fasting stops research as a side effect.
+  [/\beat\b|\beating\b|\bfood\b|hunger|bones|mushroom|toadstool|fasting/,
+   "food"],
+  [/book|school|knowledge|read|scholar|scientist|research|print/, "book"],
+  [/mixing|mix window|craft|ingredient|rare result|recycl|used items|break|destroyed/, "craft"],
+  [/attack|defen[cs]e|combat|armour|armor|invasion|monster|animal|flee|fight|respawn|dies|drops|weapon|kill/, "fight"],
+  [/cooldown|action point|twice as fast|faster|horses|beam|last longer/,
+   "clock"],
+];
+
+function dayIcon(name, what, kind) {
+  const text = `${name} ${what || ""}`.toLowerCase();
+  for (const [re, id] of DAY_ICONS) {
+    if (re.test(text)) return id;
+  }
+  if (kind === "bad") return "warn";
+  return "days";
+}
+
+/* The league tables and the reference disagree on capitals - one says
+   "Reconstruction day" and the other "Reconstruction Day" - so looking
+   a day up by its exact name silently found nothing and drew the blank
+   fallback icon. */
+let DAY_BY_NAME = null;
+function dayRefOf(name) {
+  if (!DAY_BY_NAME) {
+    DAY_BY_NAME = {};
+    Object.entries(DATA.dayRef || {}).forEach(([k, v]) => {
+      DAY_BY_NAME[k.toLowerCase()] = v;
+    });
+  }
+  return DAY_BY_NAME[String(name || "").toLowerCase()] || {};
+}
+
+const dayMark = (name, v) => `<svg class="ic dayic k-${
+  esc(v.kind || "unknown")}"><use href="#i-${
+  dayIcon(name, v.what, v.kind)}"/></svg>`;
+
 const guildTag = g => `<span class="gtag"${g.colour
   ? ` style="color:${esc(g.colour)};border-color:${esc(g.colour)}44"` : ""
   }>${esc(g.tag)}</span>`;
@@ -2264,8 +2359,8 @@ function renderDays(view, count, q) {
         ${summonable ? `<th class="stonecell">Stone to start it</th>` : ""}
       </tr></thead>
       <tbody>${rows.map(([name, v]) => `<tr>
-        <td><span class="daydot k-${esc(kind)}"></span>${esc(name)}
-          ${seenLine(v)}</td>
+        <td><div class="nm">${dayMark(name, v)}<span>${esc(name)}
+          ${seenLine(v)}</span></div></td>
         <td class="sm">${esc(v.what || "")}</td>
         ${summonable ? `<td class="stonecell">${stoneLine(v)}</td>` : ""}
       </tr>`).join("")}</tbody></table></div>`;
@@ -2281,11 +2376,14 @@ function renderDays(view, count, q) {
     const max = Math.max(...rows.map(r => r[key]));
     return `<div><h3>${title}</h3>
       <div class="panelhint">${hint}</div>
-      <table class="ranks">${rows.map(r => `<tr>
-        <td>${esc(r.name)}</td>
+      <table class="ranks">${rows.map(r => {
+        const v = dayRefOf(r.name);
+        return `<tr>
+        <td><div class="nm">${dayMark(r.name, v)}<span>${
+          esc(r.name)}</span></div></td>
         <td class="barcell">${bar(r[key], max)}</td>
         <td class="num">${fmt(r[key])}</td>
-      </tr>`).join("")}</table></div>`;
+      </tr>`;}).join("")}</table></div>`;
   };
   // The number of days a year barely moves - the game sends roughly the
   // same number every year. What moves is how many players paid for, so
