@@ -162,6 +162,29 @@
   .put.inventory { color: var(--brass); border-color: var(--brass); }
   .put.storage { color: var(--patina, var(--muted)); }
   .qnpc { font-size: 14.5px; margin: 2px 0 12px; }
+  /* The item page's tables are narrow lists of two or three columns, so
+     they are laid out to the content rather than stretched to the page. */
+  table.itab { border-collapse: collapse; font-size: var(--t-md);
+               margin-bottom: 4px; min-width: 340px; max-width: 620px; }
+  table.itab th { text-align: left; color: var(--dim); font-weight: 500;
+                  font-size: var(--t-sm); padding: 0 16px 7px 0;
+                  border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.itab td { padding: 8px 16px 8px 0;
+                  border-bottom: 1px solid var(--line); }
+  table.itab th.num, table.itab td.num { text-align: right;
+                  font-variant-numeric: tabular-nums; }
+  table.itab .wide { width: 99%; }
+  table.itab th:last-child, table.itab td:last-child { padding-right: 0; }
+  @media (max-width: 620px) {
+    table.itab { min-width: 0; width: 100%; }
+    table.itab th, table.itab td { padding-right: 9px; }
+  }
+  .note { color: var(--muted); font-size: var(--t-md); line-height: 1.55;
+          max-width: 74ch; margin: -2px 0 14px; }
+  .note b { color: var(--ink); }
+  a.iname { color: inherit; text-decoration: none;
+            border-bottom: 1px solid var(--line-2); }
+  a.iname:hover { color: var(--brass); border-bottom-color: var(--brass); }
   .qnpc b { color: var(--brass); font-weight: 500; }
   .coord { font-family: var(--mono, monospace); font-size: 12.5px;
            color: var(--muted); }
@@ -209,6 +232,8 @@
              color: var(--ink); margin: 34px 0 12px; letter-spacing: -.01em;
              border-bottom: 1px solid var(--line); padding-bottom: 8px; }
   h2.group:first-child { margin-top: 6px; }
+  h2.group .count { color: var(--dim); font-size: var(--t-sm);
+                    font-weight: 400; }
   .today { border: 1px solid var(--line-2); border-left-width: 3px;
            border-radius: 3px; padding: 15px 18px; margin: 2px 0 6px;
            background: var(--panel); }
@@ -603,6 +628,7 @@ let pview = "skills", pskill = "", focusPlayer = null;   // "" = every skill
 let focusQuest = null, qsection = "";                    // "" = every section
 let findersShown = 25, eboard = "found";
 let focusBeast = null, fkind = "";
+let focusItem = null;
 let focusGuild = null, gskill = "";       // "" = the roster, not one skill
 const PRICE = {};
 for (const it of DATA.items) {
@@ -950,6 +976,7 @@ function applyRoute() {
   focusQuest = tab === "quests" && sub ? sub : null;
   focusGuild = tab === "guilds" && sub ? sub : null;
   focusBeast = tab === "fight" && sub ? sub : null;
+  focusItem = tab === "market" && sub ? sub : null;
   sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === tab));
@@ -967,7 +994,7 @@ document.querySelectorAll("nav button").forEach(btn =>
   });
 document.getElementById("q").oninput = () => {
   focusBot = null; focusPlayer = null; focusQuest = null;
-  focusGuild = null; focusBeast = null; render();
+  focusGuild = null; focusBeast = null; focusItem = null; render();
 };
 document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".modes button").forEach(x =>
@@ -1114,6 +1141,8 @@ function render() {
   if (tab === "days")   return renderDays(view, count, q);
   if (tab === "fight" && focusBeast) return renderOneBeast(view, count);
   if (tab === "fight")  return renderFight(view, count, q);
+  if (tab === "market" && focusItem)
+    return renderOneItem(view, count, focusItem);
   if (tab === "craft")  return renderCraft(view, count, q);
   if (tab === "players") return renderPlayers(view, count, q);
 
@@ -1124,6 +1153,236 @@ function render() {
     return;
   }
   return renderMarket(view, count, items, q);
+}
+
+/* one item, everything ------------------------------------------------
+   The market knows what an item costs, the wiki knows what drops it, the
+   recipes know what it makes and what makes it, and the quest guide
+   knows who wants it. Each of those already travels with the page, so
+   the join happens here rather than in the data: it costs nothing to
+   ship and is built once, the first time somebody opens an item.      */
+const ikey = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "")
+                           .replace(/s$/, "");
+
+/* Place names that begin with the name of an item: a quest sending you
+   to Emerald Valley is not a quest about emeralds. Map names are mostly
+   two words, so the first two of a longer one count as a place too.   */
+let PLACES = null;
+function places() {
+  if (PLACES) return PLACES;
+  const out = new Set();
+  const add = name => {
+    if (!name) return;
+    const low = String(name).toLowerCase().trim();
+    if (low) out.add(low);
+    const words = low.split(/\s+/);
+    if (words.length > 2) out.add(words.slice(0, 2).join(" "));
+  };
+  (DATA.creatures || []).forEach(c => (c.places || []).forEach(pl => {
+    add(pl.where); add(pl.region); }));
+  (DATA.bots || []).forEach(b => {
+    add(b.map); add(String(b.location || "").split(" - ")[0]); });
+  PLACES = [...out];
+  return PLACES;
+}
+
+/* A plain substring would have Bone matching Bonefish and Sword matching
+   Swordsman, so the characters on either side have to be non-letters. */
+function hasWord(hay, needle) {
+  let at = 0;
+  for (;;) {
+    const i = hay.indexOf(needle, at);
+    if (i < 0) return false;
+    const before = i === 0 ? " " : hay[i - 1];
+    const after = hay[i + needle.length] || " ";
+    const clean = !/[a-z0-9]/.test(before) && !/[a-z0-9]/.test(after);
+    // Something longer and place-shaped starting right here wins.
+    const isPlace = clean && places().some(pl =>
+      pl.length > needle.length && hay.startsWith(pl, i));
+    if (clean && !isPlace) return true;
+    at = i + 1;
+  }
+}
+
+let IDX = null;
+function itemIndex() {
+  if (IDX) return IDX;
+  const drops = {}, made = {}, uses = {}, inQuest = {};
+  const push = (map, key, val) => {
+    const k = ikey(key);
+    if (k) (map[k] = map[k] || []).push(val);
+  };
+  (DATA.creatures || []).forEach(c => {
+    (c.drops || []).forEach(d => push(drops, d.item,
+      { who: c.name, n: d.n, rare: 0 }));
+    (c.rare || []).forEach(d => push(drops, d.item,
+      { who: c.name, n: d.n, rare: 1 }));
+  });
+  (DATA.recipes || []).forEach(r => {
+    made[ikey(r.item)] = r;
+    (r.ings || []).forEach(g => push(uses, g.n, { item: r.item, a: g.a }));
+  });
+  // Short names throw up too much noise to be worth matching on.
+  const named = DATA.items.filter(i => i.name.length >= 5)
+                          .map(i => [i.name.toLowerCase(), i.name]);
+  // A quest's text is not all strings: a reward is {amount, what} and a
+   // step is {n, text, sub}. Joining those gives "[object Object]" and
+   // loses the steps, which is exactly where the items are named. So
+   // every string anywhere inside the quest is collected instead, which
+   // also survives the shape changing again.
+  const allText = (v, out) => {
+    if (v == null) return out;
+    if (typeof v === "string") out.push(v);
+    else if (Array.isArray(v)) v.forEach(x => allText(x, out));
+    else if (typeof v === "object") Object.values(v).forEach(x => allText(x, out));
+    return out;
+  };
+  (DATA.quests || []).forEach(qu => {
+    const blob = allText(qu, []).join(" ").toLowerCase();
+    named.forEach(([low, real]) => {
+      if (hasWord(blob, low)) push(inQuest, real, qu.name);
+    });
+  });
+  IDX = { drops, made, uses, inQuest };
+  return IDX;
+}
+
+const itemByKey = name =>
+  DATA.items.find(i => ikey(i.name) === ikey(name));
+
+function itemLink(name) {
+  const it = itemByKey(name);
+  return it ? `<a href="#market/${encodeURIComponent(it.name)}">${
+    esc(name)}</a>` : esc(name);
+}
+
+function renderOneItem(view, count, name) {
+  const it = itemByKey(name);
+  if (!it) {
+    count.textContent = "";
+    view.innerHTML = `<div class="empty">No item called ${esc(name)}.
+      <a href="#market">Back to the market</a>.</div>`;
+    return;
+  }
+  const X = itemIndex(), k = ikey(it.name);
+  const drops = X.drops[k] || [], made = X.made[k];
+  const uses = X.uses[k] || [], quests = X.inQuest[k] || [];
+  const harvest = (DATA.harvestables || {})[it.name];
+  const s = it.best.sell, b = it.best.buy;
+  count.textContent = `${it.sell.length + it.buy.length} offer${
+    it.sell.length + it.buy.length === 1 ? "" : "s"}`;
+
+  // A popular stone has thirty bots wanting it, and what drops it
+  // matters more than the thirtieth offer, so the lists are cut off.
+  const OFFERS_SHOWN = 12;
+  const side = (rows, title, cls, empty) => `
+    <div><h3>${title} <span>${rows.length}</span></h3>
+      ${rows.length ? `<table>${rows.slice(0, OFFERS_SHOWN).map(l => `<tr>
+        <td class="num ${cls}">${fmt(l.price)}</td>
+        <td class="num sm">${qty(l.qty)}</td>
+        <td>${botLink(l.bot)}</td>
+        <td class="sm">${esc(l.loc)}</td></tr>`).join("")}</table>
+        ${rows.length > OFFERS_SHOWN ? `<p class="note">and ${
+          rows.length - OFFERS_SHOWN} more.</p>` : ""}`
+        : `<div class="sm">${empty}</div>`}</div>`;
+  const money = `<div class="cols">
+    ${side(it.sell, "On sale", "brass", "Nobody is selling it.")}
+    ${side(it.buy, "Wanted", "patina", "No bot is buying it.")}</div>`;
+
+  const dropBlock = !drops.length ? "" : `
+    <h2 class="group">What drops it</h2>
+    <table class="itab"><thead><tr><th class="wide">Creature</th>
+      <th class="num">Drops</th><th></th></tr></thead>
+    <tbody>${drops.slice().sort((a, b2) =>
+      a.rare - b2.rare || a.who.localeCompare(b2.who)).map(d => `<tr>
+      <td><a href="#fight/${encodeURIComponent(d.who)}">${esc(d.who)}</a></td>
+      <td class="num sm">${d.n ? esc(d.n) : ""}</td>
+      <td>${d.rare
+        ? `<span class="evkind"><svg class="ic"><use href="#i-find"/></svg
+           >rare</span>` : ""}</td></tr>`).join("")}</tbody></table>`;
+
+  const madeBlock = !made ? "" : `
+    <h2 class="group">How it is made</h2>
+    <p class="note">${esc(made.skill)} level ${made.level}${
+      made.exp ? `, ${fmt(made.exp)} experience` : ""}${
+      made.vendor ? `. A vendor pays ${fmt(made.vendor)}.` : "."}</p>
+    <table class="itab"><thead><tr><th class="num">Need</th>
+      <th class="wide">Ingredient</th>
+      <th class="num">At cheapest</th></tr></thead>
+    <tbody>${(made.ings || []).map(g => {
+      const sub = itemByKey(g.n);
+      const line = sub && sub.best.sell ? sub.best.sell.price * g.a : null;
+      return `<tr><td class="num sm">${g.a}</td><td>${itemLink(g.n)}</td>
+      <td class="num ${line ? "brass" : "sm"}">${
+        line ? fmt(line) : "no bot sells it"}</td></tr>`;
+    }).join("")}</tbody></table>
+    ${(() => {
+      const cost = (made.ings || []).reduce((t, g) => {
+        const sub = itemByKey(g.n);
+        return sub && sub.best.sell ? t + sub.best.sell.price * g.a : t;
+      }, 0);
+      const known = (made.ings || []).every(g => {
+        const sub = itemByKey(g.n);
+        return sub && sub.best.sell; });
+      if (!cost) return "";
+      return `<p class="note">${known ? "" : "At least "}<b>${fmt(cost)}</b>
+        in ingredients at today's cheapest${b
+          ? `, against <b class="patina">${fmt(b.price)}</b> a bot pays.` : "."}
+        </p>`;
+    })()}`;
+
+  // A bar goes into dozens of things. Show enough to be useful and say
+  // how many more there are rather than running down the page.
+  const USES_SHOWN = 15;
+  const sortedUses = uses.slice().sort((a, b2) =>
+    a.item.localeCompare(b2.item));
+  const usesBlock = !uses.length ? "" : `
+    <h2 class="group">What it goes into <span class="count">${
+      uses.length}</span></h2>
+    <table class="itab"><thead><tr><th class="wide">Recipe</th>
+      <th class="num">Needs</th></tr></thead>
+    <tbody>${sortedUses.slice(0, USES_SHOWN).map(u => `<tr>
+      <td>${itemLink(u.item)}</td>
+      <td class="num sm">${u.a}</td></tr>`).join("")}</tbody></table>
+    ${uses.length > USES_SHOWN ? `<p class="note">and ${
+      uses.length - USES_SHOWN} more.</p>` : ""}`;
+
+  const harvestBlock = !harvest ? "" : `
+    <h2 class="group">Harvesting it</h2>
+    <p class="note">${esc(harvest.kind || "Harvestable")}${
+      harvest.level ? `, level ${harvest.level}` : ""}${
+      harvest.exp ? `, ${harvest.exp} experience each` : ""}.${
+      harvest.needs_item ? ` Needs ${esc(harvest.needs_item)}.` : ""}</p>`;
+
+  const questBlock = !quests.length ? "" : `
+    <h2 class="group">Quests that mention it</h2>
+    <div class="namegrid">${[...new Set(quests)].map(n =>
+      `<a class="chip" href="#quests/${encodeURIComponent(n)}">${esc(n)}</a>`
+      ).join("")}</div>`;
+
+  const nothing = !drops.length && !made && !uses.length && !harvest
+    && !quests.length;
+
+  view.innerHTML = `
+    <div class="bothead">
+      <button class="back">All items</button>
+      <h2>${esc(it.name)}</h2>
+    </div>
+    <div class="qnpc">${s && b
+      ? `Cheapest is <b class="brass">${fmt(s.price)}</b> from ${
+          botLink(s.bot)}; the best buyer is ${botLink(b.bot)} at
+         <b class="patina">${fmt(b.price)}</b>.`
+      : s ? `On sale from <b class="brass">${fmt(s.price)}</b>. No bot is
+             buying it.`
+      : b ? `No bot is selling it. ${botLink(b.bot)} pays
+             <b class="patina">${fmt(b.price)}</b>.`
+      : "No bot is trading it right now."}</div>
+    ${money}${dropBlock}${madeBlock}${usesBlock}${harvestBlock}${questBlock}
+    ${nothing ? `<p class="note">Nothing else is known about this one:
+      no creature on the wiki drops it, no recipe makes it, and no quest
+      names it.</p>` : ""}`;
+  view.querySelector(".back").onclick = () => go("market");
+  wireBotLinks();
 }
 
 function renderMarket(view, count, items, q) {
@@ -1143,7 +1402,8 @@ function renderMarket(view, count, items, q) {
       esc(l.map || "")}</span>` : "–";
     return `<tr class="item ${isOpen(it, items.length, q) ? "open" : ""}"
         data-id="${it.id}">
-      <td><div class="nm">${icon(it)}<span>${esc(it.name)}</span></div></td>
+      <td><div class="nm">${icon(it)}<a class="iname"
+        href="#market/${encodeURIComponent(it.name)}">${esc(it.name)}</a></div></td>
       <td class="num brass">${s ? fmt(s.price) : "–"}</td>
       <td>${who(s)}</td>
       <td class="num sm hide-sm">${s ? qty(s.qty) : "–"}</td>
