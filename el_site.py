@@ -1265,6 +1265,13 @@ HTML = r"""<!doctype html>
   .bothead h2 { font-family: var(--display); font-weight: 600; font-size: 26px;
                 margin: 0; }
   .bothead .where { color: var(--muted); font-size: 13.5px; }
+  /* The artwork is a 32px game sprite. Doubling it with smoothing turns
+     it to mush, so it is kept on the pixel grid and shown as drawn. */
+  .bothead.withpic { align-items: center; }
+  .bothead .pic { width: 64px; height: 64px; flex: none; padding: 7px;
+                  object-fit: contain; image-rendering: pixelated;
+                  background: var(--panel); border: 1px solid var(--line);
+                  border-radius: 3px; }
   .back { background: none; border: 1px solid var(--line-2); color: var(--muted);
           padding: 5px 11px; border-radius: 3px; cursor: pointer;
           font: 400 13px var(--ui); }
@@ -2189,8 +2196,9 @@ function renderOneItem(view, count, name) {
     && !quests.length;
 
   view.innerHTML = `
-    <div class="bothead">
+    <div class="bothead withpic">
       <button class="back">All items</button>
+      ${it.img ? `<img class="pic" src="${m.imgBase}${it.img}" alt="">` : ""}
       <h2>${esc(it.name)}</h2>
     </div>
     <div class="qnpc">${s && b

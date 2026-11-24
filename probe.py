@@ -19,27 +19,29 @@ Answers found so far, recorded so nobody goes looking twice:
   bucketed version of the same numbers, which is what we read instead.
 
   How many a recipe makes is the ManuInfo template's "resamount". The
-  template says so itself: "Note: The recipe produces {{{resamount}}}
-  {{{item}}} at once". No resamount means one. el_recipes.py reads it.
+  template says so itself. No resamount means one. el_recipes.py reads it.
 
-Asking now: where is a creature's picture? Item artwork comes from
-bots.el-services.net and is mirrored by el_images.py, but creatures have
-none at all. Their wiki pages carry [[File:...]] links - for the
-creature itself, but also for every drop - so this prints each one with
-the heading it sits under, to find which is the creature's own, and
-checks what the API gives back for the real file.
+  A creature's own picture, where it has one, is File:Creature <Name>.png
+  under a "Creature" heading. Plain File:<Name>.png does not exist. Of
+  Yeti, Feros, Red Dragon and Rabbit, only Yeti had one, so coverage is
+  the open question and this measures it.
+
+Asking now: how many of our creatures have a picture at all, and under
+which name? Two shapes are in use - "Creature <Name>.png" for the full
+portrait and "<Name> 25px.png" for the little ones on index pages - so
+this asks the wiki for every file of either shape and reports what is
+matched, what is missed, and how big the files are.
 """
 
+import json
 import re
+import time
+from collections import Counter
 
 import requests
 
 API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-
-PAGES = ["Yeti", "Feros", "Red Dragon", "Rabbit", "Nasty Giant"]
-FILE = re.compile(r"\[\[File:([^\]|]+)[^\]]*\]\]", re.I)
-HEAD = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 
 
 def api(**params):
@@ -50,50 +52,78 @@ def api(**params):
     return r.json()
 
 
-def page_text(title):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    pages = body.get("query", {}).get("pages", [])
-    if not pages or pages[0].get("missing"):
-        return None
-    revs = pages[0].get("revisions") or [{}]
-    return (revs[0].get("slots", {}).get("main", {}).get("content")
-            or revs[0].get("content") or "")
+def all_images(prefix):
+    """Every file whose name starts with prefix, with size and url."""
+    out, cont = {}, None
+    for _ in range(40):
+        kw = {"action": "query", "list": "allimages", "aiprefix": prefix,
+              "ailimit": 500, "aiprop": "url|size|mime"}
+        if cont:
+            kw["aicontinue"] = cont
+        body = api(**kw)
+        for im in body.get("query", {}).get("allimages", []):
+            out[im["name"]] = im
+        cont = body.get("continue", {}).get("aicontinue")
+        if not cont:
+            break
+        time.sleep(0.3)
+    return out
 
 
-for title in PAGES:
-    text = page_text(title)
-    print(f"\n{'=' * 70}\n===== {title}: "
-          f"{'missing' if text is None else str(len(text)) + ' bytes'}")
-    if not text:
-        continue
-    heads = [(m.start(), m.group(1)) for m in HEAD.finditer(text)]
-    for m in FILE.finditer(text):
-        under = ""
-        for pos, name in heads:
-            if pos < m.start():
-                under = name
-        print(f"  @{m.start():>5} under {under or '(top of page)':24} "
-              f"{m.group(1).strip()}")
-    print("  --- first 300 bytes of the page ---")
-    print("  " + text[:300].replace("\n", "\n  "))
+names = [c["name"] for c in json.load(open("creatures.json"))["creatures"]]
+print(f"{len(names)} creatures to find a picture for")
 
-# What does the API hand back for a file, and how big is it?
-print(f"\n{'=' * 70}\n===== imageinfo")
-names = ["File:Yeti.png", "File:Yeti.jpg", "File:Yeti.gif"]
-body = api(action="query", titles="|".join(names), prop="imageinfo",
-           iiprop="url|size|mime")
-for pg in body.get("query", {}).get("pages", []):
-    if pg.get("missing"):
-        print(f"  {pg.get('title')}: missing")
-        continue
-    for info in pg.get("imageinfo", []):
-        print(f"  {pg['title']}: {info.get('width')}x{info.get('height')} "
-              f"{info.get('mime')} {info.get('url')}")
+portraits = all_images("Creature ")
+print(f"\n{len(portraits)} files named 'Creature ...'")
+sizes = Counter((im.get("width"), im.get("height"))
+                for im in portraits.values())
+print("their sizes:", sizes.most_common(8))
 
-# And is there a tidier way to ask - every image used on one page?
-print(f"\n{'=' * 70}\n===== images used on the Yeti page, in page order")
-body = api(action="query", titles="Yeti", prop="images", imlimit=50)
-for pg in body.get("query", {}).get("pages", []):
-    for im in pg.get("images", []) or []:
-        print("  " + im.get("title", ""))
+# The little ones are not under a shared prefix, so ask per creature in
+# one batch of titles rather than listing the whole wiki.
+small = {}
+for i in range(0, len(names), 40):
+    chunk = names[i:i + 40]
+    titles = "|".join(f"File:{n} 25px.png" for n in chunk)
+    body = api(action="query", titles=titles, prop="imageinfo",
+               iiprop="url|size|mime")
+    for pg in body.get("query", {}).get("pages", []):
+        if not pg.get("missing"):
+            for info in pg.get("imageinfo", []):
+                small[pg["title"][5:]] = info
+    time.sleep(0.3)
+print(f"{len(small)} files named '<Name> 25px.png'")
+
+
+def key(s):
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+by_key = {key(n): n for n in portraits}
+small_key = {key(n): n for n in small}
+
+have_big, have_small, have_none = [], [], []
+for n in names:
+    if key("Creature " + n + ".png") in by_key:
+        have_big.append(n)
+    elif key(n + " 25px.png") in small_key:
+        have_small.append(n)
+    else:
+        have_none.append(n)
+
+print(f"\n{len(have_big)} have a portrait, {len(have_small)} only a small "
+      f"one, {len(have_none)} have neither")
+print("\nportraits, with size:")
+for n in have_big[:12]:
+    im = portraits[by_key[key('Creature ' + n + '.png')]]
+    print(f"   {n[:28]:30} {im.get('width')}x{im.get('height')} "
+          f"{im.get('size')} bytes {im.get('mime')}")
+print("\nonly a small one:", ", ".join(have_small[:18]))
+print("\nneither:", ", ".join(have_none[:30]))
+
+# Are the unmatched ones named differently rather than absent?
+print("\nfiles named 'Creature ...' that matched no creature of ours:")
+unused = [n for k, n in by_key.items()
+          if not any(key("Creature " + c + ".png") == k for c in names)]
+print("   " + ", ".join(sorted(unused)[:30]))
+print(f"   ({len(unused)} in all)")
