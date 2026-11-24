@@ -1,0 +1,176 @@
+{
+ "_comment": "Achievement badges from the EL wiki, by el_badges.py. Keyed on the name with capitals and punctuation removed, because the wiki and the game spell some of them differently.",
+ "badges": {
+  "alchemist": {
+   "name": "Alchemist",
+   "tiers": [
+    "award-tutorial-alchemy-png.png"
+   ]
+  },
+  "armorer": {
+   "name": "Armorer",
+   "tiers": [
+    "award-armorer-png.png"
+   ]
+  },
+  "armorpiercer": {
+   "name": "Armor piercer",
+   "tiers": [
+    "award-tutorial-archery-png.png"
+   ]
+  },
+  "bigbelly": {
+   "name": "Big belly",
+   "tiers": [
+    "award-bigbelly-png.png"
+   ]
+  },
+  "childofstars": {
+   "name": "Child of stars",
+   "tiers": [
+    "award-tutorial-manu-png.png"
+   ]
+  },
+  "churchdonator": {
+   "name": "Church donator",
+   "tiers": [
+    "award-donatebrick-png.png"
+   ]
+  },
+  "crafter": {
+   "name": "Crafter",
+   "tiers": [
+    "award-tutorial-crafting-png.png"
+   ]
+  },
+  "exterminator": {
+   "name": "Exterminator",
+   "tiers": [
+    "award-haidir1-png.png",
+    "award-haidir2-png.png",
+    "award-haidir3-png.png"
+   ]
+  },
+  "herbalist": {
+   "name": "Herbalist",
+   "tiers": [
+    "award-harvest1-png.png",
+    "award-harvest2-png.png",
+    "award-harvest3-png.png"
+   ]
+  },
+  "highlevelmonsterskiller": {
+   "name": "High level monsters killer",
+   "tiers": [
+    "award-monsters-high1-png.png",
+    "award-monsters-high2-png.png",
+    "award-monsters-high3-png.png"
+   ]
+  },
+  "instancer": {
+   "name": "Instancer",
+   "tiers": [
+    "award-instancer1-png.png",
+    "award-instancer2-png.png",
+    "award-instancer3-png.png"
+   ]
+  },
+  "knowledgeable": {
+   "name": "Knowledgeable",
+   "tiers": [
+    "award-book1-png.png",
+    "award-book2-png.png"
+   ]
+  },
+  "lowlevelmonsterskiller": {
+   "name": "Low level monsters killer",
+   "tiers": [
+    "award-monsters-low1-png.png",
+    "award-monsters-low2-png.png",
+    "award-monsters-low3-png.png"
+   ]
+  },
+  "luckycrafter": {
+   "name": "Lucky crafter",
+   "tiers": [
+    "award-rareitems1-png.png",
+    "award-rareitems2-png.png",
+    "award-rareitems3-png.png"
+   ]
+  },
+  "luckyfinder": {
+   "name": "Lucky finder",
+   "tiers": [
+    "award-rarestone1-png.png",
+    "award-rarestone2-png.png",
+    "award-rarestone3-png.png"
+   ]
+  },
+  "mason": {
+   "name": "Mason",
+   "tiers": [
+    "award-mason1-png.png",
+    "award-mason2-png.png",
+    "award-mason3-png.png"
+   ]
+  },
+  "mediumlevelmonsterskiller": {
+   "name": "Medium level monsters killer",
+   "tiers": [
+    "award-monsters-med1-png.png",
+    "award-monsters-med2-png.png",
+    "award-monsters-med3-png.png"
+   ]
+  },
+  "miner": {
+   "name": "Miner",
+   "tiers": [
+    "award-mine1-png.png",
+    "award-mine2-png.png",
+    "award-mine3-png.png"
+   ]
+  },
+  "mushroomer": {
+   "name": "Mushroomer",
+   "tiers": [
+    "award-mushrooms1-png.png",
+    "award-mushrooms2-png.png",
+    "award-mushrooms3-png.png"
+   ]
+  },
+  "naturehatesme": {
+   "name": "Nature hates me",
+   "tiers": [
+    "award-naturehatesme1-png.png",
+    "award-naturehatesme2-png.png",
+    "award-naturehatesme3-png.png"
+   ]
+  },
+  "professorofpotions": {
+   "name": "Professor of potions",
+   "tiers": [
+    "award-tutorial-potion-png.png"
+   ]
+  },
+  "tutorialcompleted": {
+   "name": "Tutorial completed",
+   "tiers": [
+    "award-tutorial-newbie-png.png"
+   ]
+  },
+  "vanquisher": {
+   "name": "Vanquisher",
+   "tiers": [
+    "award-tutorial-fighting-png.png"
+   ]
+  },
+  "veryhighlevelmonsterskiller": {
+   "name": "Very High level monsters killer",
+   "tiers": [
+    "award-dragons1-png.png",
+    "award-dragons2-png.png",
+    "award-dragons3-png.png"
+   ]
+  }
+ }
+}
