@@ -49,7 +49,6 @@ Asking now: two holes in the instance pages.
   short. Looking for a page per instance that lists what is inside.
 """
 
-import json
 import re
 import time
 
@@ -57,14 +56,6 @@ import requests
 
 API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-
-NO_DROPS = ["Castellan", "Bulangiu", "Badaran", "Frozen Dragon", "Leonard",
-            "Sslessar", "Bricker", "Small dragon", "Tank Rabbit", "Shy Rat",
-            "Nenorocit"]
-INSTANCES = ["Noob Instance", "Advanced Instance", "Pr0 Farm Instance",
-             "Almost Pr0 Instance", "Pr0 Instance", "WTF???111?! Instance"]
-
-HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 
 
 def api(**params):
@@ -87,65 +78,10 @@ def page_text(title):
     return None
 
 
-print("=" * 70)
-print("PART 1 - pages whose title mentions instance")
-print("=" * 70)
-body = api(action="query", list="search", srsearch="instance",
-           srlimit=50, srwhat="title")
-for hit in body.get("query", {}).get("search", []):
-    print(f"   {hit['title']}")
+print("===== Instances, the whole page =====")
+print(page_text("Instances"))
 
-print("\n--- Category:Instances and friends ---")
-for cat in ("Instances", "Instance", "Instance creatures", "Invance",
-            "Invances", "Instance maps"):
-    body = api(action="query", list="categorymembers",
-               cmtitle=f"Category:{cat}", cmlimit=500)
-    members = [m["title"] for m in
-               body.get("query", {}).get("categorymembers", [])]
-    print(f"   Category:{cat}: {len(members)}"
-          + ("  " + ", ".join(members) if members else ""))
-
-print("\n" + "=" * 70)
-print("PART 2 - the instance pages themselves, in full")
-print("=" * 70)
-for title in INSTANCES + ["Instances", "Instance"]:
-    text = page_text(title)
-    print(f"\n----- {title} -----")
-    if text is None:
-        print("   no such page")
-        continue
-    print(f"   {len(text)} bytes, headings: "
-          + ", ".join(HEADING.findall(text)))
-    print(text[:4000])
+for name in ("Leonard", "Invdrag", "Nasparliu", "Mare Bulangiu"):
+    print(f"\n===== {name} =====")
+    print(page_text(name))
     time.sleep(0.3)
-
-print("\n" + "=" * 70)
-print("PART 3 - the creatures with no drops, in full")
-print("=" * 70)
-for name in NO_DROPS:
-    text = page_text(name)
-    print(f"\n----- {name} -----")
-    if text is None:
-        print("   no such page")
-        continue
-    print(f"   {len(text)} bytes, headings: "
-          + ", ".join(HEADING.findall(text)))
-    print(text[:2500])
-    time.sleep(0.3)
-
-print("\n" + "=" * 70)
-print("PART 4 - every heading used on a creature page, counted")
-print("=" * 70)
-creatures = [c["name"] for c in
-             json.load(open("creatures.json"))["creatures"]]
-seen = {}
-for name in creatures:
-    text = page_text(name)
-    if not text:
-        continue
-    for h in HEADING.findall(text):
-        seen.setdefault(h.strip(), []).append(name)
-    time.sleep(0.2)
-for h, who in sorted(seen.items(), key=lambda kv: -len(kv[1])):
-    sample = "" if len(who) > 20 else "  " + ", ".join(who)
-    print(f"   {len(who):4}  {h}{sample}")
