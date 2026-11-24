@@ -287,10 +287,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Steel Long Sword of Fire"
-    },
-    {
-     "n": "1",
      "item": "Iron Axe Construction"
     },
     {
@@ -300,6 +296,10 @@
     {
      "n": "1",
      "item": "Padded Leather Armor"
+    },
+    {
+     "n": "1",
+     "item": "Male Goblin Token"
     },
     {
      "n": "5",
@@ -336,6 +336,10 @@
     {
      "n": "1",
      "item": "Book of Potion of Manufacturing"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Long Sword of Fire"
     }
    ]
   },
@@ -571,7 +575,12 @@
    },
    "places": [],
    "instances": [],
-   "drops": [],
+   "drops": [
+    {
+     "n": "50k-150k",
+     "item": "gold coins"
+    }
+   ],
    "rare": []
   },
   {
@@ -806,6 +815,14 @@
    },
    "places": [
     {
+     "where": "Aeth Aelfan",
+     "region": "Irilion (C2)"
+    },
+    {
+     "where": "Kusamura Jungle",
+     "region": "Irilion (C2)"
+    },
+    {
      "where": "Sedicolis 72,157",
      "region": "Irilion (C2)"
     },
@@ -891,6 +908,10 @@
    "rare": [
     {
      "n": "1",
+     "item": "Enriched Fire Essence"
+    },
+    {
+     "n": "1",
      "item": "Enriched Life Essence"
     },
     {
@@ -935,6 +956,10 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Morcraven Marsh",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Portland",
      "region": "Seridia (C1)"
@@ -1005,7 +1030,7 @@
     },
     {
      "n": null,
-     "item": "0-700(?) Gold coins"
+     "item": "0-700 Gold coins"
     }
    ],
    "rare": [
@@ -1039,8 +1064,36 @@
     }
    ],
    "instances": [],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "200,000-500,000",
+     "item": "Gold Coins",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Staff of Protection",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Golden Star Mace",
+     "where": "invasion"
+    },
+    {
+     "n": "2,000",
+     "item": "Point Defense",
+     "where": "invasion"
+    }
+   ],
+   "rare": [
+    {
+     "n": "1",
+     "item": "Human Removal Stone",
+     "note": "20% chance",
+     "where": "invasion"
+    }
+   ]
   },
   {
    "name": "Brown Rabbit",
@@ -1063,6 +1116,14 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
+     "where": "Isla Prima",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Nordcarn",
      "region": "Seridia (C1)"
@@ -1143,6 +1204,10 @@
    },
    "places": [
     {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
      "where": "Morcraven Marsh",
      "region": "Seridia (C1)"
     },
@@ -1205,6 +1270,14 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
+     "where": "Isla Prima",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Portland",
      "region": "Seridia (C1)"
@@ -1293,8 +1366,49 @@
     "Pr0 Farm Instance",
     "WTF???111?! Instance"
    ],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "0-50k",
+     "item": "Gold Coins",
+     "where": "invasion"
+    },
+    {
+     "n": "0-78628",
+     "item": "Gold Coins",
+     "where": "instance"
+    },
+    {
+     "n": "2",
+     "item": "Orange",
+     "where": "instance"
+    }
+   ],
+   "rare": [
+    {
+     "n": "1",
+     "item": "Scythe"
+    },
+    {
+     "n": "4",
+     "item": "Bronze Sword"
+    },
+    {
+     "n": "2",
+     "item": "Red Dragon Helm of Life and Mana"
+    },
+    {
+     "n": "1",
+     "item": "P2P Coupon"
+    },
+    {
+     "n": "1",
+     "item": "Monster Magnetism Removal"
+    },
+    {
+     "n": "1",
+     "item": "Vegetal Removal Stone"
+    }
+   ]
   },
   {
    "name": "Castellan",
@@ -1323,8 +1437,83 @@
    "instances": [
     "WTF???111?! Instance"
    ],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "150,000-340,213",
+     "item": "Gold Coins",
+     "where": "invasion"
+    },
+    {
+     "n": "12",
+     "item": "Poison Antidote",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Staff of Protection",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Golden Star Mace",
+     "where": "invasion"
+    },
+    {
+     "n": "2,800",
+     "item": "Point Defense",
+     "where": "invasion"
+    },
+    {
+     "n": "200k-835k",
+     "item": "Gold Coins",
+     "where": "instance"
+    },
+    {
+     "n": "4-7",
+     "item": "Oranges",
+     "where": "instance"
+    },
+    {
+     "n": "12",
+     "item": "Poison Antidote",
+     "where": "instance"
+    },
+    {
+     "n": "1",
+     "item": "Staff of Protection",
+     "where": "instance"
+    },
+    {
+     "n": "1",
+     "item": "Golden Star Mace",
+     "where": "instance"
+    },
+    {
+     "n": "2,800",
+     "item": "Point Defense",
+     "where": "instance"
+    }
+   ],
+   "rare": [
+    {
+     "n": "1",
+     "item": "Human Removal Stone",
+     "note": "20% chance",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Bad Day Removal Stone",
+     "note": "25% chance",
+     "where": "instance"
+    },
+    {
+     "n": "1",
+     "item": "Special Day Stone",
+     "note": "25% chance",
+     "where": "instance"
+    }
+   ]
   },
   {
    "name": "Chinstrap Penguin",
@@ -1395,7 +1584,7 @@
    "drops": [
     {
      "n": "0-1000",
-     "item": "(?) Gold Coins"
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -1443,8 +1632,8 @@
    ],
    "drops": [
     {
-     "n": null,
-     "item": "0-70k Gold Coins"
+     "n": "0-70k",
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -1690,6 +1879,10 @@
     },
     {
      "n": "1",
+     "item": "Titanium Chain Mail Construction"
+    },
+    {
+     "n": "1",
      "item": "Steel Axe Construction"
     },
     {
@@ -1759,6 +1952,10 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Nordcarn",
      "region": "Seridia (C1)"
@@ -2108,10 +2305,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Iron Broad Sword of Ice"
-    },
-    {
-     "n": "1",
      "item": "Isla Prima Ring Building"
     },
     {
@@ -2129,6 +2322,10 @@
     {
      "n": "5",
      "item": "Potion of Spirit Restoration"
+    },
+    {
+     "n": "1",
+     "item": "Female Goblin Token"
     },
     {
      "n": "5",
@@ -2149,6 +2346,10 @@
     {
      "n": "5",
      "item": "Potion of Summoning"
+    },
+    {
+     "n": "1",
+     "item": "Book of Iron Broad Sword of Ice"
     }
    ]
   },
@@ -2209,10 +2410,6 @@
     }
    ],
    "rare": [
-    {
-     "n": "1",
-     "item": "Book of Steel long sword of magic"
-    },
     {
      "n": "1",
      "item": "Pickaxe"
@@ -2279,6 +2476,10 @@
     },
     {
      "n": "1",
+     "item": "Female Orc Token"
+    },
+    {
+     "n": "1",
      "item": "Steel Axe Construction"
     },
     {
@@ -2308,6 +2509,14 @@
     "Achievement": "Medium"
    },
    "places": [
+    {
+     "where": "Arius",
+     "region": "Irilion (C2)"
+    },
+    {
+     "where": "Egratia Point",
+     "region": "Irilion (C2)"
+    },
     {
      "where": "Emerald Valley Trade Route",
      "region": "Irilion (C2)"
@@ -2781,6 +2990,10 @@
    },
    "places": [
     {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
      "where": "Nordcarn",
      "region": "Seridia (C1)"
     },
@@ -2922,8 +3135,40 @@
     }
    ],
    "instances": [],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "280,000-480,000",
+     "item": "Gold Coins",
+     "where": "invasion"
+    },
+    {
+     "n": "12",
+     "item": "Poison Antidote",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Staff of Protection",
+     "where": "invasion"
+    },
+    {
+     "n": "1",
+     "item": "Golden Star Mace",
+     "where": "invasion"
+    },
+    {
+     "n": "2800",
+     "item": "Point Defense",
+     "where": "invasion"
+    }
+   ],
+   "rare": [
+    {
+     "n": "1",
+     "item": "Human Removal Stone",
+     "where": "invasion"
+    }
+   ]
   },
   {
    "name": "Gentoo Penguin",
@@ -3074,6 +3319,10 @@
    },
    "places": [
     {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
      "where": "Morcraven Marsh",
      "region": "Seridia (C1)"
     },
@@ -3152,6 +3401,10 @@
     "Achievement": "Medium"
    },
    "places": [
+    {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Morcraven Marsh",
      "region": "Seridia (C1)"
@@ -3239,6 +3492,10 @@
     {
      "where": "Kilaran Field (PK)",
      "region": "Seridia (C1)"
+    },
+    {
+     "where": "Bethel",
+     "region": "Irilion (C2)"
     },
     {
      "where": "Hurquin",
@@ -3420,10 +3677,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Steel Long Sword of Fire"
-    },
-    {
-     "n": "1",
      "item": "Book of Iron Axe Construction"
     },
     {
@@ -3453,6 +3706,10 @@
     {
      "n": "1",
      "item": "Isla Prima Ring Building"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Long Sword of Fire"
     }
    ]
   },
@@ -3653,8 +3910,8 @@
    "instances": [],
    "drops": [
     {
-     "n": null,
-     "item": "0-30k Gold coins"
+     "n": "0-30k",
+     "item": "Gold coins"
     },
     {
      "n": "0-20",
@@ -3665,7 +3922,40 @@
      "item": "Little Blue Dragon Scale"
     }
    ],
-   "rare": []
+   "rare": [
+    {
+     "n": "1",
+     "item": "Banana"
+    },
+    {
+     "n": "2",
+     "item": "Grapes"
+    },
+    {
+     "n": "2",
+     "item": "Orange"
+    },
+    {
+     "n": "3",
+     "item": "Daily cooldown reducer"
+    },
+    {
+     "n": "3",
+     "item": "Binding Stone"
+    },
+    {
+     "n": "3",
+     "item": "Serpent Stone"
+    },
+    {
+     "n": "1",
+     "item": "Reconstruction Day Stone"
+    },
+    {
+     "n": "1",
+     "item": "Vegetal Removal Stone"
+    }
+   ]
   },
   {
    "name": "Invisible Rat",
@@ -3701,42 +3991,22 @@
    "instances": [],
    "drops": [
     {
-     "n": null,
-     "item": "10k Gold Coins"
+     "n": "1",
+     "item": "Bones"
     },
     {
-     "n": null,
-     "item": "Invasion Token"
+     "n": "1",
+     "item": "Raw Meat"
     },
     {
-     "n": null,
-     "item": "Antisocial Removal Stone"
-    },
-    {
-     "n": null,
-     "item": "I Can't Dance Removal Stone"
-    },
-    {
-     "n": null,
-     "item": "Gelatine Bones Removal Stone"
-    },
-    {
-     "n": null,
-     "item": "Hellspawn Removal Stone"
-    },
-    {
-     "n": null,
-     "item": "I Eat Dead People Removal Stone"
-    },
-    {
-     "n": null,
-     "item": "Fast Regeneration Removal Stone"
+     "n": "1",
+     "item": "Rat Tail"
     }
    ],
    "rare": [
     {
-     "n": null,
-     "item": "10k gold coins"
+     "n": "10k",
+     "item": "gold coins"
     },
     {
      "n": null,
@@ -3753,6 +4023,21 @@
     {
      "n": null,
      "item": "Hellspawn Removal Stone"
+    },
+    {
+     "n": null,
+     "item": "Invasion Token",
+     "where": "invasion"
+    },
+    {
+     "n": null,
+     "item": "I Eat Dead People Removal Stone",
+     "where": "invasion"
+    },
+    {
+     "n": null,
+     "item": "Fast Regeneration Removal Stone",
+     "where": "invasion"
     }
    ]
   },
@@ -3974,6 +4259,10 @@
    },
    "places": [
     {
+     "where": "Crystal Caverns",
+     "region": "Seridia (C1)"
+    },
+    {
      "where": "Morcraven Marsh Caves",
      "region": "Seridia (C1)"
     },
@@ -4152,8 +4441,34 @@
    },
    "places": [],
    "instances": [],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "3",
+     "item": "Bones"
+    },
+    {
+     "n": "3",
+     "item": "Raw Meat"
+    },
+    {
+     "n": "1",
+     "item": "Leonard fur"
+    }
+   ],
+   "rare": [
+    {
+     "n": "0-30",
+     "item": "Ring of Disengagement"
+    },
+    {
+     "n": "0-20",
+     "item": "Potion of Great Healing"
+    },
+    {
+     "n": "0-30",
+     "item": "Potion of Body Restoration"
+    }
+   ]
   },
   {
    "name": "Leopard",
@@ -4175,6 +4490,10 @@
     "Achievement": "Medium"
    },
    "places": [
+    {
+     "where": "Aeth Aelfan",
+     "region": "Irilion (C2)"
+    },
     {
      "where": "Arius",
      "region": "Irilion (C2)"
@@ -4366,7 +4685,7 @@
     },
     {
      "n": "0-300",
-     "item": "(?) Gold Coins"
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -4404,7 +4723,7 @@
    "drops": [
     {
      "n": "0-300",
-     "item": "(?) Gold Coins"
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -4438,6 +4757,10 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Morcraven Marsh",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Morcraven Marsh Caves",
      "region": "Seridia (C1)"
@@ -4533,7 +4856,7 @@
     },
     {
      "n": "1",
-     "item": "Book of Iron Broad Sword of Fire"
+     "item": "Male Goblin Token"
     },
     {
      "n": "5",
@@ -4562,6 +4885,10 @@
     {
      "n": "5",
      "item": "Potion of Spirit Restoration"
+    },
+    {
+     "n": "1",
+     "item": "Book of Iron Broad Sword of Fire"
     }
    ]
   },
@@ -4728,6 +5055,10 @@
     },
     {
      "n": "1",
+     "item": "Ogre Token"
+    },
+    {
+     "n": "1",
      "item": "Stars Medallion Building"
     }
    ]
@@ -4828,10 +5159,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Steel Long Sword of Ice"
-    },
-    {
-     "n": "1",
      "item": "Unicorn Medallion Building"
     },
     {
@@ -4845,6 +5172,14 @@
     {
      "n": "1",
      "item": "Sun Medallion Building"
+    },
+    {
+     "n": "1",
+     "item": "Male Orc Token"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Long Sword of Ice"
     }
    ]
   },
@@ -4879,8 +5214,8 @@
    ],
    "drops": [
     {
-     "n": null,
-     "item": "~10k-130k Gold Coins"
+     "n": "10k-130k",
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -4986,15 +5321,15 @@
     },
     {
      "n": "1",
-     "item": "Book of Steel Two Edged Sword of Magic"
-    },
-    {
-     "n": "1",
      "item": "Stars Medallion"
     },
     {
      "n": "1",
      "item": "Unicorn Medallion Building"
+    },
+    {
+     "n": "1",
+     "item": "Book of Potion of Feasting"
     },
     {
      "n": "1",
@@ -5007,6 +5342,10 @@
     {
      "n": "1",
      "item": "Naralik Ring Building"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Two Edged Sword of Magic"
     },
     {
      "n": "1",
@@ -5124,10 +5463,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Titanium/Steel Long Sword of Fire"
-    },
-    {
-     "n": "1",
      "item": "Mirror Cloak"
     },
     {
@@ -5144,6 +5479,10 @@
     },
     {
      "n": "1",
+     "item": "Moon Medallion"
+    },
+    {
+     "n": "1",
      "item": "Stars Medallion"
     },
     {
@@ -5153,6 +5492,10 @@
     {
      "n": "1",
      "item": "Fur Boots"
+    },
+    {
+     "n": "1",
+     "item": "Book of Titanium/Steel Long Sword of Fire"
     }
    ]
   },
@@ -5186,8 +5529,8 @@
    ],
    "drops": [
     {
-     "n": null,
-     "item": "0-150k (?) Gold Coins"
+     "n": "0-150k",
+     "item": "Gold Coins"
     }
    ],
    "rare": [
@@ -5506,6 +5849,10 @@
    },
    "places": [
     {
+     "where": "Glacmor",
+     "region": "Irilion (C2)"
+    },
+    {
      "where": "Hulda (PK)",
      "region": "Irilion (C2)"
     },
@@ -5669,6 +6016,14 @@
     {
      "where": "Desert Pines",
      "region": "Seridia (C1)"
+    },
+    {
+     "where": "Arius",
+     "region": "Irilion (C2)"
+    },
+    {
+     "where": "Emerald Valley Trade Route",
+     "region": "Irilion (C2)"
     },
     {
      "where": "Idaloran",
@@ -5902,6 +6257,10 @@
    },
    "places": [
     {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
+    {
      "where": "Morcraven Marsh",
      "region": "Seridia (C1)"
     },
@@ -6038,8 +6397,26 @@
     }
    ],
    "instances": [],
-   "drops": [],
-   "rare": []
+   "drops": [
+    {
+     "n": "1",
+     "item": "Bones"
+    },
+    {
+     "n": "1",
+     "item": "Raw Meat"
+    },
+    {
+     "n": "1",
+     "item": "Rat Tail"
+    }
+   ],
+   "rare": [
+    {
+     "n": "1",
+     "item": "Invasion Token"
+    }
+   ]
   },
   {
    "name": "Skeleton",
@@ -6197,10 +6574,6 @@
     },
     {
      "n": "1",
-     "item": "Book of Steel Two Edged Sword of Fire"
-    },
-    {
-     "n": "1",
      "item": "Skeleton Token"
     },
     {
@@ -6214,6 +6587,10 @@
     {
      "n": "5",
      "item": "Potion of Spirit Restoration"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Two Edged Sword of Fire"
     }
    ]
   },
@@ -6240,6 +6617,14 @@
     {
      "where": "White Stone",
      "region": "Seridia (C1)"
+    },
+    {
+     "where": "Arius",
+     "region": "Irilion (C2)"
+    },
+    {
+     "where": "Palon Vertas",
+     "region": "Irilion (C2)"
     },
     {
      "where": "Idaloran",
@@ -6354,10 +6739,6 @@
    "rare": [
     {
      "n": "1",
-     "item": "Book of Steel Two Edged Sword of Thermal"
-    },
-    {
-     "n": "1",
      "item": "Stars Medallion"
     },
     {
@@ -6398,6 +6779,10 @@
     },
     {
      "n": "1",
+     "item": "Book of Bear Fighting"
+    },
+    {
+     "n": "1",
      "item": "Book of Cyclops Fighting"
     },
     {
@@ -6415,6 +6800,10 @@
     {
      "n": "10",
      "item": "Ring of Disengagement"
+    },
+    {
+     "n": "1",
+     "item": "Book of Steel Two Edged Sword of Thermal"
     }
    ]
   },
@@ -6438,6 +6827,14 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Crystal Caverns",
+     "region": "Seridia (C1)"
+    },
+    {
+     "where": "Isla Prima Spider Cave",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Naralik",
      "region": "Seridia (C1)"
@@ -6523,6 +6920,10 @@
    },
    "places": [
     {
+     "where": "Glacmor",
+     "region": "Irilion (C2)"
+    },
+    {
      "where": "Irinveron",
      "region": "Irilion (C2)"
     },
@@ -6580,7 +6981,16 @@
    "places": [],
    "instances": [],
    "drops": [],
-   "rare": []
+   "rare": [
+    {
+     "n": "1",
+     "item": "Snake Token"
+    },
+    {
+     "n": "1",
+     "item": "Book of Fire Sword"
+    }
+   ]
   },
   {
    "name": "Tall Gargoyle",
@@ -6691,6 +7101,14 @@
     {
      "n": "1",
      "item": "Titanium Long Sword Construction"
+    },
+    {
+     "n": "2",
+     "item": "Potion of Defense"
+    },
+    {
+     "n": "1",
+     "item": "Isla Prima Ring Building"
     },
     {
      "n": "1",
@@ -7174,6 +7592,10 @@
     "Achievement": "Low"
    },
    "places": [
+    {
+     "where": "Desert Pines",
+     "region": "Seridia (C1)"
+    },
     {
      "where": "Nordcarn",
      "region": "Seridia (C1)"
