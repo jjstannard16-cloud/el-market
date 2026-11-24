@@ -148,11 +148,28 @@
                text-overflow: ellipsis; padding: 0 3px; border-radius: 2px; }
   .names a:hover { color: var(--brass); background: var(--panel); }
   .names span { color: var(--dim); }
-  .maprow { margin-bottom: 14px; }
+  /* The map label sits beside its bots, not above them: most maps have
+     only a few bots on, and a heading of its own doubled their height. */
+  .land { margin-bottom: 18px; }
+  .land > h3 { font-family: var(--display); font-weight: 500;
+               font-size: var(--t-lg); color: var(--ink);
+               margin: 0 0 6px; padding-bottom: 5px;
+               border-bottom: 1px solid var(--line); }
+  .land > h3 em { font-style: normal; font-family: var(--ui);
+                  font-size: var(--t-xs); color: var(--dim);
+                  letter-spacing: .06em; margin-left: 5px; }
+  .land > h3 .count { color: var(--dim); font-size: var(--t-sm);
+                      font-weight: 400; margin-left: 7px; }
+  .maprow { display: grid; grid-template-columns: 136px 1fr; gap: 0 18px;
+            align-items: baseline; padding: 3px 0; }
   .maprow h4 { font-family: var(--ui); font-size: var(--t-xs);
                font-weight: 500; letter-spacing: .04em; color: var(--dim);
-               margin: 0 0 2px; text-transform: none; }
-  .maprow h4 span { color: var(--line-2); margin-left: 6px; }
+               margin: 0; text-align: right; white-space: nowrap; }
+  .maprow h4 span { color: var(--line-2); margin-left: 5px; }
+  @media (max-width: 760px) {
+    .maprow { grid-template-columns: 1fr; gap: 0; }
+    .maprow h4 { text-align: left; margin-bottom: 1px; }
+  }
   @media (max-width: 620px) {
     .names, .names.big {
       grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
@@ -2584,31 +2601,50 @@ function renderOnline(view, count, q) {
   // of saying the same dozen words. Grouped under the map instead, the
   // list is shorter and answers the question people actually have,
   // which is who is standing where.
+  // Grouped by map, then those maps gathered under their continent, so
+  // the two lands read as two lands instead of thirteen scattered
+  // places sorted by size. The map label sits beside its names rather
+  // than above them, which saves a line for every one of them - and
+  // most maps have only a handful of bots on.
+  const LANDS = [["Seridia", "C1"], ["Irilion", "C2"],
+                 [null, ""], ["idle", ""]];
   const byMap = new Map();
   bots.forEach(b => {
-    const key = !b.trades ? "\u0000idle"
-      : (String(b.where || "").split(" - ")[0].trim() || "Somewhere else");
-    if (!byMap.has(key)) byMap.set(key, []);
-    byMap.get(key).push(b);
+    const land = !b.trades ? "idle" : (b.land || null);
+    const key = !b.trades ? "idle"
+      : (b.map || "Somewhere else");
+    if (!byMap.has(key)) byMap.set(key, { land, rows: [] });
+    byMap.get(key).rows.push(b);
   });
-  const mapOrder = [...byMap.keys()].sort((a, b) =>
-    a === "\u0000idle" ? 1 : b === "\u0000idle" ? -1
-      : byMap.get(b).length - byMap.get(a).length || a.localeCompare(b));
+  const section = (land, label) => {
+    const maps = [...byMap.entries()]
+      .filter(([, v]) => v.land === land)
+      .sort((a, b) => b[1].rows.length - a[1].rows.length
+                      || a[0].localeCompare(b[0]));
+    if (!maps.length) return "";
+    const total = maps.reduce((n, [, v]) => n + v.rows.length, 0);
+    return `<div class="land">
+      <h3>${land === "idle" ? "Not trading" : esc(land || "Somewhere else")}
+        ${label ? `<em>${label}</em>` : ""}
+        <span class="count">${fmt(total)}</span></h3>
+      ${maps.map(([name, v]) => `<div class="maprow">
+        <h4>${land === "idle" ? "" : esc(name)}${land === "idle" ? ""
+          : ` <span>${v.rows.length}</span>`}</h4>
+        <div class="names">${v.rows.map(b => b.trades
+          ? `<a href="#bots/${encodeURIComponent(b.name)}"
+               title="${esc(b.where || "")}">${esc(b.name)}</a>`
+          : `<span title="not a trading bot">${esc(b.name)}</span>`
+          ).join("")}</div></div>`).join("")}</div>`;
+  };
 
   const botGrid = !bots.length ? "" : `
     <h2 class="group">Bots up now <span class="count">${
       fmt(bots.length)}</span></h2>
     <div class="grouphint">${fmt(o.trading)} of the ${fmt(o.bots)} bots in
-      the game are trading ones we have prices for, grouped by where they
-      are standing. The rest are running for some other reason.</div>
-    ${mapOrder.map(key => `<div class="maprow">
-      <h4>${key === "\u0000idle" ? "Not trading" : esc(key)}
-        <span>${byMap.get(key).length}</span></h4>
-      <div class="names">${byMap.get(key).map(b => b.trades
-        ? `<a href="#bots/${encodeURIComponent(b.name)}"
-             title="${esc(b.where || "")}">${esc(b.name)}</a>`
-        : `<span title="not a trading bot">${esc(b.name)}</span>`
-        ).join("")}</div></div>`).join("")}`;
+      the game are trading ones we have prices for, by the land and the
+      map they are standing on. The rest are running for some other
+      reason.</div>
+    ${LANDS.map(([land, label]) => section(land, label)).join("")}`;
 
   const playerGrid = !players.length ? "" : `
     <h2 class="group">Players in the game <span class="count">${
