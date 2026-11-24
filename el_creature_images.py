@@ -53,7 +53,15 @@ UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 IN_JSON = "creatures.json"
 OUT_DIR = os.path.join("public", "img", "c")
 MANIFEST = "creature_images.json"
-BOX = (240, 240)
+# Two sizes, because one file cannot serve both jobs. The creature page
+# shows the picture properly and wants the pixels; the Fight list shows
+# a hundred of them at twenty pixels and must not drag half a megabyte
+# down the wire to do it.
+BOX = (520, 520)
+BOX_SMALL = (96, 96)
+# Bumped whenever those change, so the weekly run re-fetches at the new
+# size instead of keeping whatever was right last time.
+SIZE_VERSION = 2
 PAUSE = 0.25
 TIMEOUT = 30
 MAX_BYTES = 8_000_000
@@ -118,29 +126,36 @@ def pick(files, name):
     return None, False, None
 
 
-def shrink(raw, keep_as_is):
-    """
-    Fit the picture in a box and hand back the bytes to write. A
-    thumbnail that is already small is returned untouched, since
-    re-encoding a 25 pixel image only makes it worse.
-    """
-    if keep_as_is:
-        return raw, "png"
-    im = Image.open(io.BytesIO(raw))
-    if im.width <= BOX[0] and im.height <= BOX[1]:
-        return raw, "png" if im.format == "PNG" else "jpg"
-    # A transparent picture needs something behind it before it is JPEG.
+def flatten(im):
+    """A transparent picture needs something behind it before it is JPEG."""
     if im.mode in ("RGBA", "LA", "P"):
         im = im.convert("RGBA")
         flat = Image.new("RGB", im.size, (23, 32, 25))
         flat.paste(im, mask=im.split()[-1])
-        im = flat
-    else:
-        im = im.convert("RGB")
-    im.thumbnail(BOX, Image.LANCZOS)
+        return flat
+    return im.convert("RGB")
+
+
+def fit(im, box):
+    out = flatten(im.copy())
+    out.thumbnail(box, Image.LANCZOS)
     buf = io.BytesIO()
-    im.save(buf, "JPEG", quality=JPEG_QUALITY, optimize=True)
-    return buf.getvalue(), "jpg"
+    out.save(buf, "JPEG", quality=JPEG_QUALITY, optimize=True)
+    return buf.getvalue()
+
+
+def shrink(raw, keep_as_is):
+    """
+    The bytes to write for the page and for the list. A 25px thumbnail
+    is already smaller than either box, so it is kept exactly as it came
+    and used for both - re-encoding a 25 pixel image only spoils it.
+    """
+    if keep_as_is:
+        return raw, "png", None
+    im = Image.open(io.BytesIO(raw))
+    if im.width <= BOX_SMALL[0] and im.height <= BOX_SMALL[1]:
+        return raw, "png" if im.format == "PNG" else "jpg", None
+    return fit(im, BOX), "jpg", fit(im, BOX_SMALL)
 
 
 def main():
@@ -177,8 +192,9 @@ def main():
         if not hit:
             continue
         was = old.get(n)
-        # Already mirrored from this very file, and still on disk.
+        # Already mirrored from this very file, at the sizes we want now.
         if (was and was.get("from") == hit["name"]
+                and was.get("v") == SIZE_VERSION
                 and os.path.exists(os.path.join(a.out, was["file"]))):
             have[n] = was
             skipped += 1
@@ -194,11 +210,17 @@ def main():
             if not r.headers.get("content-type", "").startswith("image/"):
                 failed += 1
                 continue
-            data, kind = shrink(r.content, keep_as_is=small)
+            data, kind, thumb = shrink(r.content, keep_as_is=small)
             fname = f"{slug(n)}.{kind}"
             with open(os.path.join(a.out, fname), "wb") as f:
                 f.write(data)
-            have[n] = {"file": fname, "from": hit["name"], "small": small}
+            tname = fname
+            if thumb:
+                tname = f"{slug(n)}-sm.jpg"
+                with open(os.path.join(a.out, tname), "wb") as f:
+                    f.write(thumb)
+            have[n] = {"file": fname, "thumb": tname, "from": hit["name"],
+                       "small": small, "v": SIZE_VERSION}
             if stand_in:
                 have[n]["of"] = stand_in
             got += 1
