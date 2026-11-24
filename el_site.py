@@ -1224,6 +1224,18 @@ HTML = r"""<!doctype html>
     th:first-child, td:first-child { padding-left: 0; }
     th:last-child, td:last-child { padding-right: 0; }
   }
+  /* A table laid out automatically hands its spare width to whichever
+     column holds the widest content, which here is the item name - so
+     a short name ended up marooned half a screen from its own price.
+     Naming the shares puts the slack in the two columns that vary, the
+     seller and the buyer, and brings the prices back to the names. */
+  table.mkt th:nth-child(1) { width: 26%; }
+  table.mkt th:nth-child(2), table.mkt th:nth-child(5) { width: 10%; }
+  table.mkt th:nth-child(3), table.mkt th:nth-child(6) { width: 17%; }
+  table.mkt th:nth-child(4), table.mkt th:nth-child(7) { width: 8%; }
+  @media (max-width: 860px) {
+    table.mkt th { width: auto; }
+  }
   /* Long tables are easier to track across with a faint banding than
      with a border alone, which at this contrast all but disappears. */
   tbody tr:nth-child(even) > td { background: rgba(255, 255, 255, .017); }
@@ -2276,7 +2288,7 @@ function renderOneItem(view, count, name) {
 function renderMarket(view, count, items, q) {
   items = sortRows(items, "name");
   count.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
-  view.innerHTML = `<div class="scroller"><table>${head([
+  view.innerHTML = `<div class="scroller"><table class="mkt">${head([
     { t: "Item", k: "name" },
     { t: "Cheapest", k: it => it.best.sell?.price, num: 1 },
     { t: "Seller" },
