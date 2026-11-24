@@ -2664,7 +2664,116 @@ function beastMatches(c, q) {
     .join(" ").toLowerCase().includes(q);
 }
 
+/* An instance is a fixed set of creatures behind one door, which is
+   why people ask what is in one rather than what a Blue Dragon is worth
+   on its own. The wiki names which instances each creature appears in,
+   so the question is answerable by turning that round. */
+function fightPicker() {
+  const all = DATA.creatures || [];
+  const nInst = new Set(all.flatMap(c => c.instances || [])).size;
+  return `<div class="pills">
+    <button class="pill${fkind ? "" : " on"}" data-fkind="">Everything</button>
+    ${Object.entries(KINDS).map(([k, label]) => {
+      const n = all.filter(c => (c.kinds || []).includes(k)).length;
+      return n ? `<button class="pill${fkind === k ? " on" : ""}"
+        data-fkind="${k}">${esc(label)}</button>` : "";
+    }).join("")}
+    ${nInst ? `<button class="pill${fkind === "_inst" ? " on" : ""}"
+      data-fkind="_inst">By instance</button>` : ""}</div>`;
+}
+
+function wireFightPicker(view) {
+  view.querySelectorAll("[data-fkind]").forEach(b => b.onclick = () => {
+    fkind = b.dataset.fkind; render();
+  });
+}
+
+function instanceGroups(all) {
+  const by = new Map();
+  all.forEach(c => (c.instances || []).forEach(name => {
+    if (!by.has(name)) by.set(name, []);
+    by.get(name).push(c);
+  }));
+  // The names carry the order, which the creatures inside do not: the
+  // Noob Instance holds something with more health than anything in the
+  // Advanced one, so sorting on that put them back to front. Anything
+  // not named here falls to the end, by its toughest creature.
+  const ORDER = ["noob", "advanced", "pr0 farm", "almost pr0", "pr0",
+                 "wtf"];
+  const rank = name => {
+    const low = name.toLowerCase();
+    // Longest match wins, or "pr0" would claim "pr0 farm".
+    let best = -1, at = ORDER.length;
+    ORDER.forEach((k, i) => {
+      if (low.includes(k) && k.length > best) { best = k.length; at = i; }
+    });
+    return at;
+  };
+  return [...by.entries()].map(([name, rows]) => {
+    const rare = new Map();
+    rows.forEach(c => (c.rare || []).forEach(d => {
+      const was = rare.get(d.item);
+      if (!was || (d.most || 0) > (was.most || 0)) rare.set(d.item, d);
+    }));
+    const best = [...rare.values()].sort((a, b) => (b.most || 0) - (a.most || 0));
+    return {
+      name, rows: rows.slice().sort((a, b) => num(b.material) - num(a.material)),
+      rare: best,
+      top: Math.max(...rows.map(c => num(c.material) || 0), 0),
+      gold: rows.reduce((t, c) => t + (c.worth || 0), 0),
+    };
+  }).sort((a, b) => rank(a.name) - rank(b.name) || a.top - b.top);
+}
+
+function renderInstances(view, count, q) {
+  const groups = instanceGroups(DATA.creatures || [])
+    .filter(g => !q || g.name.toLowerCase().includes(q)
+                 || g.rows.some(c => c.name.toLowerCase().includes(q)));
+  count.textContent = `${groups.length} instance${
+    groups.length === 1 ? "" : "s"}`;
+  if (!groups.length) {
+    view.innerHTML = fightPicker() +
+      `<div class="empty">Nothing matches that.</div>`;
+    return;
+  }
+  view.innerHTML = fightPicker() + `
+    <div class="grouphint">What is behind each door, easiest first. The
+      wiki says which instances a creature turns up in; this is that
+      turned round. Worth is what one kill carries before rare drops,
+      priced at what bots pay today.</div>
+    ${groups.map(g => `
+      <h2 class="group">${esc(g.name)} <span class="count">${
+        g.rows.length} creature${g.rows.length === 1 ? "" : "s"}</span></h2>
+      ${g.rare.length ? `<div class="grouphint">Best rare drop in here:
+        ${g.rare.slice(0, 3).map(d => `${itemLink(d.item)}${
+          d.most ? ` at <b class="brass">${fmt(d.most)}</b>` : ""}`)
+          .join(", ")}.</div>` : ""}
+      <div class="scroller"><table><thead><tr>
+        <th>Creature</th><th class="num hide-sm">Att</th>
+        <th class="num hide-sm">Def</th><th class="num">Health</th>
+        <th class="num">A kill is worth</th><th>Best rare drop</th>
+      </tr></thead><tbody>${g.rows.map(c => {
+        const top = (c.rare || []).slice().sort(
+          (a, b) => (b.most || 0) - (a.most || 0))[0];
+        return `<tr>
+        <td><div class="nm">${c.img
+          ? `<img class="beast" src="${m.beastImgBase}${c.imgThumb}"
+               loading="lazy" alt="">` : `<span class="noimg"></span>`
+          }<a class="lnk blnk" href="#fight/${encodeURIComponent(c.name)}">${
+          esc(c.name)}</a></div></td>
+        <td class="num sm hide-sm">${esc(c.attack || "\u2013")}</td>
+        <td class="num sm hide-sm">${esc(c.defense || "\u2013")}</td>
+        <td class="num sm">${esc(c.material || "\u2013")}</td>
+        <td class="num ${c.worth ? "brass" : "sm"}">${
+          c.worth ? fmt(c.worth) : "\u2013"}</td>
+        <td class="sm">${top ? `${itemLink(top.item)}${top.most
+          ? ` <span class="brass">${fmt(top.most)}</span>` : ""}` : ""}</td>
+      </tr>`;}).join("")}</tbody></table></div>`).join("")}`;
+  wireFightPicker(view);
+}
+
 function renderFight(view, count, q) {
+  if (fkind === "_inst") return renderInstances(view, count, q);
   const all = DATA.creatures || [];
   if (!all.length) {
     count.textContent = "";
@@ -2676,16 +2785,10 @@ function renderFight(view, count, q) {
   list = sortRows(list, "worth");
 
   count.textContent = `${fmt(list.length)} creature${
-    list.length === 1 ? "" : "s"}${fkind ? ", " + KINDS[fkind].toLowerCase()
-    : ""}`;
+    list.length === 1 ? "" : "s"}${fkind && KINDS[fkind]
+    ? ", " + KINDS[fkind].toLowerCase() : ""}`;
 
-  const picker = `<div class="pills">
-    <button class="pill${fkind ? "" : " on"}" data-fkind="">Everything</button>
-    ${Object.entries(KINDS).map(([k, label]) => {
-      const n = all.filter(c => (c.kinds || []).includes(k)).length;
-      return n ? `<button class="pill${fkind === k ? " on" : ""}"
-        data-fkind="${k}">${esc(label)}</button>` : "";
-    }).join("")}</div>`;
+  const picker = fightPicker();
 
   view.innerHTML = picker + `<div class="scroller"><table>${head([
     { t: "Creature", k: "name" },
@@ -2719,9 +2822,7 @@ function renderFight(view, count, q) {
       from the EL wiki, prices from the bots.</div>`
       : `<div class="empty">Nothing matches that.</div>`}`;
   wireSort();
-  view.querySelectorAll("[data-fkind]").forEach(b => b.onclick = () => {
-    fkind = b.dataset.fkind; render();
-  });
+  wireFightPicker(view);
 }
 
 function renderOneBeast(view, count) {
