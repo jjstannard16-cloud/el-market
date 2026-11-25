@@ -55,53 +55,8 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import re
+import subprocess
+import sys
 
-import requests
-from bs4 import BeautifulSoup
-
-BASE = "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/"
-UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-
-PAGES = {
-    "Summoning Daily": "14-maja-daily-summoning.html",
-    "Combat Daily": "4-haidir-daily-fighting-quests.html",
-    "Clothes Breaking Daily": "13-daily-breakage-quest-of-clothes.html",
-    "Engineering Daily": "9-minel-engenering-daily.html",
-    "Harvesting Daily": "6-xaquelina-daily-quest.html",
-    "Armor and Weapon Supply Daily":
-        "5-darithas-daily-quest-manufacture-items.html",
-    "Dung Harvesting Quest": "10-kaleb-dung-daily.html",
-    "Mule Daily": "8-tatu-mule-daily.html",
-    "Temps R Us Daily": "7-dorel-tempr-us.html",
-}
-
-for name, slug in PAGES.items():
-    url = BASE + slug
-    print("\n" + "=" * 70)
-    print(name, "   ", url)
-    print("=" * 70)
-    try:
-        r = requests.get(url, headers=UA, timeout=30)
-        r.raise_for_status()
-    except Exception as e:
-        print("   failed:", e)
-        continue
-    soup = BeautifulSoup(r.text, "lxml")
-    body = (soup.select_one(".com-content-article__body")
-            or soup.select_one("[itemprop=articleBody]")
-            or soup.select_one(".item-page") or soup)
-    tables = body.find_all("table")
-    print(f"   {len(r.text)} bytes, {len(tables)} tables in the article")
-    for i, t in enumerate(tables):
-        rows = t.find_all("tr")
-        print(f"   --- table {i}: {len(rows)} rows ---")
-        for tr in rows[:40]:
-            cells = [" ".join(c.get_text(" ", strip=True).split())
-                     for c in tr.find_all(["td", "th"])]
-            if any(cells):
-                print("      ", cells)
-    if not tables:
-        text = body.get_text("\n", strip=True)
-        print("   no tables; first 2500 characters of the article:")
-        print(re.sub(r"\n{3,}", "\n\n", text[:2500]))
+subprocess.run([sys.executable, "el_dailies.py", "--dump",
+                "--out", "/tmp/dailies.json"], check=False)
