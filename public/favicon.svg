@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img"
+     aria-label="EL Headquarters">
+  <!-- A tab is 16 pixels tall and sits next to twenty others, so this
+       has to be findable at a glance and unmistakable once found. A
+       keep and a shield were both drawn first and both turn to mush at
+       that size; two letters do not, and they say which site it is
+       rather than leaving you to remember.
+
+       The brass is the site's own, and it carries against a white tab
+       strip and a dark one alike. Letters are plain rectangles rather
+       than text, so the file needs no font and renders the same
+       everywhere. -->
+  <rect width="32" height="32" rx="7" fill="#dcb04a"/>
+  <g fill="#0f1512">
+    <rect x="5.5" y="6" width="4.5" height="20"/>
+    <rect x="5.5" y="6" width="10" height="4.5"/>
+    <rect x="5.5" y="13.75" width="9" height="4.5"/>
+    <rect x="5.5" y="21.5" width="10" height="4.5"/>
+    <rect x="18.5" y="6" width="4.5" height="20"/>
+    <rect x="18.5" y="21.5" width="8" height="4.5"/>
+  </g>
+</svg>
