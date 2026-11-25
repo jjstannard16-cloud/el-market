@@ -83,12 +83,29 @@ def page_text(title):
     return None
 
 
-# Five creatures whose gold drop came out with no amount on it. The
-# characters matter here, so every line is printed as Python sees it.
-for name in ("Meltean", "Breaker", "Nasty giant", "Brownie", "Wood Sprite"):
-    text = page_text(name) or ""
-    print(f"\n===== {name} =====")
-    m = re.search(r"^=+[^=\n]*[Dd]rop", text, re.M)
-    for line in text[m.start():m.start() + 900].splitlines() if m else []:
-        if "old" in line or "|" in line or line.startswith("="):
-            print("   ", repr(line))
+print("===== titles mentioning daily =====")
+for hit in api(action="query", list="search", srsearch="daily",
+               srlimit=40, srwhat="text")["query"]["search"]:
+    print("   ", hit["title"])
+
+print("\n===== Category:Daily Quests and friends =====")
+for cat in ("Daily Quests", "Daily quests", "Dailies", "Quests"):
+    body = api(action="query", list="categorymembers",
+               cmtitle=f"Category:{cat}", cmlimit=500)
+    members = [m["title"] for m in
+               body.get("query", {}).get("categorymembers", [])]
+    print(f"   Category:{cat}: {len(members)}")
+    if members:
+        print("      " + ", ".join(members))
+
+for title in ("Daily Quests", "Daily quests", "Summoning Daily",
+              "Summoning daily", "Maia", "Harvesting Daily",
+              "Combat Daily", "Engineering Daily",
+              "Clothes Breaking Daily", "Armor and Weapon Supply Daily"):
+    text = page_text(title)
+    print(f"\n===== {title} =====")
+    if text is None:
+        print("   no such page")
+        continue
+    print(f"   ({len(text)} bytes)")
+    print(text[:6000])
