@@ -60,7 +60,7 @@ HEADERS = [
     (r"^location|^where|^spawns?$", "where"),
     (r"base\s*xp", "xpBase"),
     (r"xp|experience", "xpPer"),
-    (r"^gc$|reward\s*\(gc\)|^gold", "gc"),
+    (r"\bgc\b|^gold", "gc"),
     (r"level\s*requirement|^req", "needs"),
 ]
 
@@ -69,9 +69,13 @@ NUMBER = re.compile(r"(\d[\d,.]*)\s*([km])?", re.I)
 COUNT_FIRST = re.compile(r"^\s*#?0*(\d+)\s+(.+?)\s*$")
 # Maia's page is laid out with spaces rather than a table:
 #   100 wolf furs    3000xp SUM +   140xp per SUM level      130gc
-MAIA = re.compile(r"""^\s*\#?0*(?P<n>\d+)\s+(?P<what>[A-Za-z][A-Za-z' ]+?)\s{2,}
+# The columns are lined up with spaces, but not reliably - the last
+# row has a single space where the rest have ten - so the item name
+# runs up to wherever a number followed by "xp" starts. Item names
+# carry no digits, so there is nowhere else for it to stop.
+MAIA = re.compile(r"""^\s*\#?0*(?P<n>\d+)\s+(?P<what>[A-Za-z][A-Za-z' ]+?)\s+
      (?P<base>[\d,]+)\s*xp\s*\w*\s*\+\s*(?P<per>[\d,]+)\s*xp\s*per
-     [^\d]*?(?:\s{2,}|\s)(?P<gc>[\d,]+)\s*gc""", re.X | re.I)
+     [^\d]*?\s+(?P<gc>[\d,]+)\s*gc""", re.X | re.I)
 
 
 def number(text):

@@ -54,6 +54,7 @@ MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
+DAILIES_FILE = "dailies.json"
 GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
 INSTANCES_FILE = "instances.json"
@@ -484,6 +485,9 @@ def load(db_path):
     # Creatures and what they drop. The drops are joined to what bots
     # pay, which is the whole point: nothing else puts a price on a kill.
     creatures = []
+    # What the bots pay for each item, built once and wanted twice:
+    # by the creature drops and by the daily quest tasks.
+    pays = {}
     if os.path.exists(CREATURES_FILE):
         with open(CREATURES_FILE, encoding="utf-8") as f:
             creatures = json.load(f).get("creatures", [])
@@ -505,7 +509,6 @@ def load(db_path):
                 # the artwork is of this exact spawn.
                 if a.get("of"):
                     c["imgOf"] = a["of"]
-        pays = {}
         for r in con.execute("""
                 SELECT LOWER(i.name) n, MAX(l.price) p,
                        (SELECT bot FROM listing x WHERE x.item_id = i.item_id
@@ -683,6 +686,62 @@ def load(db_path):
                     q["npcName"] = who
                     drawn += 1
             print(f"  portraits on {drawn} of {len(quests)} quests")
+
+        # The guide says a daily "provides a number of furs, skins and
+        # other creature parts", which is true and no use. The lists do
+        # exist and el_dailies.py fetches them. Each task is priced at
+        # what the bots are paying, which is the one thing the lists
+        # cannot tell you and the thing that decides whether a task is
+        # worth doing.
+        if os.path.exists(DAILIES_FILE):
+            with open(DAILIES_FILE, encoding="utf-8") as f:
+                dailies = json.load(f).get("dailies", {})
+
+            def as_item(text):
+                """
+                A task's wording to an item we hold a price for.
+
+                The lists are written as a player speaks - "100 wolf
+                furs", "03 Titanium chainmail" - and the bots sell a
+                "Wolf Fur". Plurals are tried off the last word only,
+                so "deer antlers" still finds Deer Antlers if that is
+                how the item is named.
+                """
+                low = " ".join((text or "").lower().split())
+                tries = [low]
+                words = low.split()
+                if words and len(words[-1]) > 3:
+                    last = words[-1]
+                    for cut in ("ies", "es", "s"):
+                        if last.endswith(cut):
+                            stem = last[:-len(cut)] + ("y" if cut == "ies"
+                                                       else "")
+                            tries.append(" ".join(words[:-1] + [stem]))
+                for one in tries:
+                    hit = pays.get(one)
+                    if hit:
+                        return one, hit
+                return None, None
+
+            tasks = priced_tasks = 0
+            for quest, one in dailies.items():
+                for row in one.get("asks", []):
+                    tasks += 1
+                    name, hit = as_item(row.get("what"))
+                    if not hit:
+                        continue
+                    row["item"] = name
+                    row["each"] = hit["price"]
+                    if row.get("n"):
+                        row["cost"] = hit["price"] * row["n"]
+                        priced_tasks += 1
+            for q in quests:
+                if q["name"] in dailies:
+                    q["asks"] = dailies[q["name"]]["asks"]
+                    q["asksSkill"] = dailies[q["name"]]["skill"]
+                    q["asksFrom"] = dailies[q["name"]]["source"]
+            print(f"  {len(dailies)} dailies with their lists, {tasks} "
+                  f"tasks, {priced_tasks} priced at today's bots")
         print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
@@ -1324,6 +1383,14 @@ HTML = r"""<!doctype html>
                  background: var(--panel); }
   /* "130x" in front of a creature. Lining figures, so a wave of 130
      and a wave of 1 line up down the column. */
+  /* A daily's task list: long and read by scanning down one column,
+     so the rows are tight and the place is small. */
+  .asks td, .asks th { padding: 7px 10px; vertical-align: top; }
+  .asks td:first-child { width: 42%; }
+  .asks .nm img, .asks .nm .noimg { width: 26px; height: 26px; }
+  .asks td.num { text-align: right; }
+  .asks td.sm { font-size: var(--t-sm); color: var(--muted);
+                text-align: left; max-width: 260px; }
   .many { color: var(--brass); font-variant-numeric: tabular-nums;
           margin-right: 1px; white-space: nowrap; }
   h2.group { font-family: var(--display); font-weight: 500; font-size: 19px;
@@ -3475,6 +3542,57 @@ function renderQuests(view, count, q) {
   });
 }
 
+/* A daily never asks the same thing twice running, so the guide says
+   only that it wants "a number of furs, skins and other creature
+   parts". The whole list is known and el_dailies.py fetches it. What
+   nobody else can tell you is the part this site holds: what those
+   furs would have fetched at a bot, which is what the experience is
+   really costing. */
+function asksTable(qu) {
+  const asks = qu.asks || [];
+  if (!asks.length) return "";
+  const has = key => asks.some(r => r[key] != null && r[key] !== "");
+  const kill = /combat/i.test(qu.name);
+  const show = { where: has("where"), gc: has("gc"), cost: has("cost"),
+                 needs: has("needs") };
+  const head = [
+    "What", show.where ? "Where" : "",
+    `Experience${qu.asksSkill ? ` (${esc(qu.asksSkill)})` : ""}`,
+    show.gc ? "Gold" : "", show.cost ? "Worth at bots" : "",
+    show.needs ? "Needs" : "",
+  ];
+  const xpOf = r => {
+    const per = r.xpPer ? `${fmt(r.xpPer)} a level` : "";
+    const base = r.xpBase ? fmt(r.xpBase) : "";
+    if (base && per) return `${base} <span class="sm muted">+ ${per}</span>`;
+    return per ? `<span class="sm">${per}</span>` : base || "\u2013";
+  };
+  return `<table class="asks"><thead><tr>${head.filter(Boolean)
+    .map((h, i) => `<th${i ? ` class="num"` : ""}>${h}</th>`).join("")
+    }</tr></thead><tbody>${asks.map(r => `<tr>
+    <td><div class="nm">${r.item ? nameIcon(r.item) : ""}${r.n
+      ? `<span class="many">${esc(String(r.n))}\u00d7</span>` : ""}
+      ${kill ? `<a class="lnk blnk" href="#fight/${
+          encodeURIComponent(r.what)}">${esc(r.what)}</a>`
+        : r.item ? itemLink(r.item) : esc(r.what)}</div></td>
+    ${show.where ? `<td class="num sm">${esc(r.where || "")}${r.spawns
+      ? `<div class="sm muted">${esc(r.spawns)}</div>` : ""}</td>` : ""}
+    <td class="num">${xpOf(r)}</td>
+    ${show.gc ? `<td class="num brass">${r.gc ? fmt(r.gc) : "\u2013"}</td>`
+      : ""}
+    ${show.cost ? `<td class="num ${r.cost ? "" : "sm muted"}">${r.cost
+      ? fmt(r.cost) : "no bot buys it"}</td>` : ""}
+    ${show.needs ? `<td class="num sm">${esc(r.needs || "")}</td>` : ""}
+  </tr>`).join("")}</tbody></table>
+  <div class="caveat">The list is from the quest pages at
+    holy-eternalland.de${qu.asksFrom ? "" : ""}. ${show.cost
+    ? `"Worth at bots" is what the items would fetch today if you sold
+       them instead, so the difference between that and the gold is
+       what the experience is costing you.`
+    : `The experience is multiplied by your own level in the skill.`}
+    What you are asked for changes from day to day.</div>`;
+}
+
 function renderOneQuest(view, count) {
   const qu = questBy(focusQuest);
   count.textContent = "";
@@ -3525,7 +3643,8 @@ function renderOneQuest(view, count) {
       column that says where the items go: handing them over from the
       wrong place is the usual mistake.</div>`;
 
-  const right = block("Ranks of worship", rankTable)
+  const right = block("What it can ask for", asksTable(qu))
+              + block("Ranks of worship", rankTable)
               + block("Steps", steps ? `<ol class="steps">${steps}</ol>` : "")
               + block("Notes", notes);
 
