@@ -1,0 +1,1128 @@
+{
+ "_comment": "What each daily quest can ask for, from the quest pages at holy-eternalland.de, by el_dailies.py. Keyed on the quest name as quests.json writes it.",
+ "dailies": {
+  "Summoning Daily": {
+   "skill": "Summoning",
+   "source": "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/14-maja-daily-summoning.html",
+   "asks": [
+    {
+     "n": 100,
+     "what": "rat tails",
+     "xpBase": 3000,
+     "xpPer": 100,
+     "gc": 100
+    },
+    {
+     "n": 100,
+     "what": "beaver furs",
+     "xpBase": 3000,
+     "xpPer": 110,
+     "gc": 110
+    },
+    {
+     "n": 100,
+     "what": "fox furs",
+     "xpBase": 3000,
+     "xpPer": 120,
+     "gc": 110
+    },
+    {
+     "n": 100,
+     "what": "wolf furs",
+     "xpBase": 3000,
+     "xpPer": 140,
+     "gc": 130
+    },
+    {
+     "n": 100,
+     "what": "deer antlers",
+     "xpBase": 3000,
+     "xpPer": 180,
+     "gc": 150
+    },
+    {
+     "n": 80,
+     "what": "green snake skins",
+     "xpBase": 3000,
+     "xpPer": 200,
+     "gc": 160
+    },
+    {
+     "n": 80,
+     "what": "red snake skins",
+     "xpBase": 3000,
+     "xpPer": 220,
+     "gc": 180
+    },
+    {
+     "n": 80,
+     "what": "brown snake skins",
+     "xpBase": 3000,
+     "xpPer": 250,
+     "gc": 200
+    },
+    {
+     "n": 80,
+     "what": "skunk furs",
+     "xpBase": 3000,
+     "xpPer": 280,
+     "gc": 220
+    },
+    {
+     "n": 80,
+     "what": "puma furs",
+     "xpBase": 3000,
+     "xpPer": 310,
+     "gc": 240
+    },
+    {
+     "n": 50,
+     "what": "racoon furs",
+     "xpBase": 3000,
+     "xpPer": 360,
+     "gc": 250
+    },
+    {
+     "n": 50,
+     "what": "feran horns",
+     "xpBase": 3000,
+     "xpPer": 380,
+     "gc": 260
+    },
+    {
+     "n": 70,
+     "what": "bear furs",
+     "xpBase": 3000,
+     "xpPer": 400,
+     "gc": 260
+    },
+    {
+     "n": 70,
+     "what": "polar bear furs",
+     "xpBase": 3000,
+     "xpPer": 480,
+     "gc": 300
+    },
+    {
+     "n": 60,
+     "what": "snow leopard furs",
+     "xpBase": 3000,
+     "xpPer": 520,
+     "gc": 320
+    },
+    {
+     "n": 60,
+     "what": "leopard furs",
+     "xpBase": 3000,
+     "xpPer": 560,
+     "gc": 340
+    },
+    {
+     "n": 50,
+     "what": "black panther furs",
+     "xpBase": 3000,
+     "xpPer": 600,
+     "gc": 360
+    },
+    {
+     "n": 60,
+     "what": "white tiger furs",
+     "xpBase": 3000,
+     "xpPer": 640,
+     "gc": 380
+    },
+    {
+     "n": 60,
+     "what": "tiger furs",
+     "xpBase": 3000,
+     "xpPer": 680,
+     "gc": 400
+    },
+    {
+     "n": 50,
+     "what": "hawk feathers",
+     "xpBase": 3000,
+     "xpPer": 720,
+     "gc": 380
+    },
+    {
+     "n": 50,
+     "what": "falcon feathers",
+     "xpBase": 3000,
+     "xpPer": 750,
+     "gc": 410
+    },
+    {
+     "n": 40,
+     "what": "cockatrice feathers",
+     "xpBase": 3000,
+     "xpPer": 820,
+     "gc": 450
+    },
+    {
+     "n": 50,
+     "what": "white rabbit furs",
+     "xpBase": 3000,
+     "xpPer": 1000,
+     "gc": 3500
+    },
+    {
+     "n": 1,
+     "what": "red dragon scale",
+     "xpBase": 3000,
+     "xpPer": 1000,
+     "gc": 1000
+    },
+    {
+     "n": 5,
+     "what": "leonard furs",
+     "xpBase": 3000,
+     "xpPer": 1000,
+     "gc": 5000
+    },
+    {
+     "n": 5,
+     "what": "little dragon blue scales",
+     "xpBase": 3000,
+     "xpPer": 1000,
+     "gc": 10000
+    }
+   ]
+  },
+  "Combat Daily": {
+   "skill": "Attack/Defense",
+   "source": "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/4-haidir-daily-fighting-quests.html",
+   "asks": [
+    {
+     "npc": "Kane",
+     "where": "Desert Pines Whitestone Ship",
+     "what": "Rats",
+     "xpPer": 130,
+     "gc": 400,
+     "spawns": "Inside WS ship",
+     "n": 30
+    },
+    {
+     "npc": "Reca",
+     "where": "Isla Prima tavern",
+     "what": "small spiders",
+     "xpPer": 250,
+     "gc": 400,
+     "spawns": "Click on the middle Barrel in IP Tavern to get to them",
+     "n": 30
+    },
+    {
+     "npc": "Corina",
+     "where": "WS Grams Village Tavern",
+     "what": "snakes",
+     "xpPer": 300,
+     "gc": 300,
+     "spawns": "Room inside tavern",
+     "n": 30
+    },
+    {
+     "npc": "Jandir",
+     "where": "Valley of the Dwarves Blacksmith Flower Shop",
+     "what": "Beavers",
+     "xpPer": 300,
+     "gc": 450,
+     "spawns": "VOTD 114,152 and between toads and small pond",
+     "n": 30
+    },
+    {
+     "npc": "Laura",
+     "where": "Portland tavern",
+     "what": "Boars",
+     "xpPer": 300,
+     "gc": 300,
+     "spawns": "(coords needed) north exit, [192,253] and mine entrance",
+     "n": 30
+    },
+    {
+     "npc": "Megera",
+     "where": "Valley of the Dwarves in a house in the second level of the gold mine [177,31]",
+     "what": "Goblins",
+     "xpPer": 340,
+     "gc": 2000,
+     "spawns": "In Gold Mine First level",
+     "n": 30
+    },
+    {
+     "npc": "Oana",
+     "where": "Nordcarn Tavern",
+     "what": "wolves",
+     "xpPer": 400,
+     "gc": 500,
+     "spawns": "Between SKF and ws exit and fort entrance",
+     "n": 30
+    },
+    {
+     "npc": "Serpa",
+     "where": "Naralik",
+     "what": "Large spiders",
+     "xpPer": 400,
+     "gc": 300,
+     "spawns": "All over map (coords needed)",
+     "n": 30
+    },
+    {
+     "npc": "Kalana",
+     "where": "Desert Pines 220,350",
+     "what": "Rabbits",
+     "xpPer": 500,
+     "gc": 600,
+     "spawns": "Just inside the woods - all the way north of crafting school",
+     "n": 30
+    },
+    {
+     "npc": "Druppel",
+     "where": "Nordcarn lake",
+     "what": "Armed Skeleton in Ruby Mine",
+     "xpPer": 540,
+     "gc": 500,
+     "spawns": "secluded part where the rubies are (coords needed)",
+     "n": 30
+    },
+    {
+     "npc": "Gazhanar",
+     "where": "SKF summ Arena [15,161]",
+     "what": "trolls",
+     "xpPer": 600,
+     "gc": 500,
+     "spawns": "SKF[37,132]",
+     "n": 30
+    },
+    {
+     "npc": "Ghita",
+     "where": "Tarsengaard Tavern",
+     "what": "Orcs (male, female)",
+     "xpPer": 600,
+     "gc": 500,
+     "spawns": "secret cave close to VOTD exit use a handle (coords needed)",
+     "n": 30
+    },
+    {
+     "npc": "Nyeald",
+     "where": "Portland Mayor (about 92,53)",
+     "what": "Skeletons",
+     "xpPer": 750,
+     "gc": 600,
+     "spawns": "PL Titanium Mine 1st level",
+     "n": 30
+    },
+    {
+     "npc": "Thom",
+     "where": "Palon Vertas",
+     "what": "Hawks",
+     "xpPer": 600,
+     "gc": 500,
+     "spawns": "Palon Vertas 220.75 and",
+     "n": 30
+    },
+    {
+     "npc": "Vaesura",
+     "where": "White Stone Tirnwood Vale [301,319]",
+     "what": "Skunks",
+     "xpPer": 600,
+     "gc": 600,
+     "spawns": "White Stone 210,490 and 658 254",
+     "n": 5
+    },
+    {
+     "npc": "Jacinta",
+     "where": "Iris Tavern",
+     "what": "Ferans",
+     "xpPer": 750,
+     "gc": 500,
+     "spawns": "2 spawns at the beach closest to tavern",
+     "n": 30
+    },
+    {
+     "npc": "Vixen",
+     "where": "Morcraven Marsh South Cave",
+     "what": "Female Goblins",
+     "xpPer": 650,
+     "gc": 550,
+     "spawns": "2 spawns, use boat between them",
+     "n": 30
+    },
+    {
+     "npc": "Gallyanne",
+     "where": "Hurquin tavern",
+     "what": "Leopards",
+     "xpPer": 700,
+     "gc": 600,
+     "spawns": "All around the Tavern; Haidir says: She is the taverner in Hurquin..",
+     "n": 30
+    },
+    {
+     "npc": "Gallyanne",
+     "where": "Hurquin tavern",
+     "what": "Falcons",
+     "xpPer": 600,
+     "gc": 600,
+     "spawns": "Haidir says: You will find her in Hurquin..",
+     "n": 30
+    },
+    {
+     "npc": "Winston",
+     "where": "Sedicolis 53,68",
+     "what": "Black Panthers",
+     "xpPer": 700,
+     "gc": 600,
+     "spawns": "Sedicolis 45,150 (2 spawns)",
+     "n": 30
+    },
+    {
+     "npc": "Morton",
+     "where": "Palon Vertas [192, 160]",
+     "what": "Ogres",
+     "xpPer": 740,
+     "gc": 800,
+     "spawns": "In the Blacksmith cave between sedicolis and Tehlinor exit",
+     "n": 30
+    },
+    {
+     "npc": "Talon",
+     "where": "Whitestone City 230,421 inside",
+     "what": "Hobgoblins (in the underground)",
+     "xpPer": 750,
+     "gc": 550,
+     "spawns": "Tirnwood Valley underground not all spawns work",
+     "n": 20
+    },
+    {
+     "npc": "Xaquelina",
+     "where": "Portland Tarsengaard Boat",
+     "what": "Foxes",
+     "xpPer": 750,
+     "gc": 600,
+     "spawns": "Portland next to fisher hut (tit mine)",
+     "n": 20
+    },
+    {
+     "npc": "Aliester",
+     "where": "Portland Magic shop back room",
+     "what": "imps in sewers",
+     "xpPer": 800,
+     "gc": 500,
+     "spawns": "ws sewers: 319,313",
+     "n": 30
+    },
+    {
+     "npc": "Daritha",
+     "where": "Tarsengaard Casern",
+     "what": "armed Gobs",
+     "xpPer": 800,
+     "gc": 600,
+     "n": 30
+    },
+    {
+     "npc": "Elvey",
+     "where": "Valley of the Dwarves Gold Mine 2nd level 342,55",
+     "what": "Fem. Orcs",
+     "xpPer": 800,
+     "gc": 400,
+     "n": 30
+    },
+    {
+     "npc": "Thorron",
+     "where": "Ruins of Tirnym North west of map",
+     "what": "Phantom Warriors",
+     "xpPer": 800,
+     "gc": 400,
+     "n": 30
+    },
+    {
+     "npc": "Cagdas",
+     "where": "Aeth Aelfan Tavern",
+     "what": "Cyclops in Egratia Point",
+     "xpPer": 840,
+     "gc": 1000,
+     "n": 30
+    },
+    {
+     "npc": "Wert",
+     "where": "South Redmoon [197,264] Tavern",
+     "what": "Tigers",
+     "xpPer": 840,
+     "gc": 500,
+     "n": 30
+    },
+    {
+     "npc": "Vesine",
+     "where": "Morcraven Marsh",
+     "what": "Grizzly Bears",
+     "xpPer": 850,
+     "gc": 600,
+     "spawns": "one spawn near MM-mine",
+     "n": 20
+    },
+    {
+     "npc": "Poco",
+     "where": "Arius Village tavern",
+     "what": "Pandas",
+     "xpPer": 900,
+     "gc": 600,
+     "n": 30
+    },
+    {
+     "npc": "Roua",
+     "where": "Desert Pines tavern",
+     "what": "Raccoons",
+     "xpPer": 900,
+     "gc": 300,
+     "n": 10
+    },
+    {
+     "npc": "Zenith",
+     "where": "Naralik Catacombs at 86,71",
+     "what": "armed male orcs",
+     "xpPer": 900,
+     "gc": 600,
+     "n": 30
+    },
+    {
+     "npc": "Bertan",
+     "where": "Desert Pines",
+     "what": "Wood Sprites",
+     "xpPer": 1000,
+     "gc": 500,
+     "spawns": "Evergreen Woods",
+     "n": 20
+    },
+    {
+     "npc": "Gingirel",
+     "where": "Zirakinbar Taverner",
+     "what": "Bears",
+     "xpPer": 1100,
+     "gc": 800,
+     "spawns": "Zirakinbar [183,349]",
+     "n": 30
+    },
+    {
+     "npc": "Shantir",
+     "where": "Glacmor Magic Shop",
+     "what": "Polar Bears",
+     "xpPer": 1200,
+     "gc": 700,
+     "spawns": "343,205 and 342,27 and 216,125",
+     "n": 30
+    },
+    {
+     "npc": "Lehha",
+     "where": "Tahraji Desert",
+     "what": "armed female orcs",
+     "xpPer": 1500,
+     "gc": 600,
+     "spawns": "Tahraji Desert [356,22] 320,40",
+     "n": 20
+    },
+    {
+     "npc": "Rocky",
+     "where": "North Redmoon tavern",
+     "what": "Feroses",
+     "xpPer": 1600,
+     "gc": 1200,
+     "n": 30
+    },
+    {
+     "npc": "Closca",
+     "where": "Melinis close to south exit of city",
+     "what": "Fluffy Rabbits",
+     "xpPer": 2000,
+     "gc": 1200,
+     "n": 30
+    },
+    {
+     "npc": "Dragburn",
+     "where": "Grubani Peninsula, at [63,127]",
+     "what": "Mountain Chimerans",
+     "xpPer": 2000,
+     "gc": 1000,
+     "spawns": "Grubani Peninsula [122,206]",
+     "n": 20
+    },
+    {
+     "npc": "Luvela",
+     "where": "Irinveron Tavern",
+     "what": "Frost Trolls Haidir says in Text She is the taverner from Irinveron.",
+     "xpPer": 2000,
+     "gc": 1500,
+     "spawns": "Irinveron Frost trolls",
+     "n": 30
+    },
+    {
+     "npc": "Vulca",
+     "where": "evtr tavern",
+     "what": "Forest Chimerans in WF",
+     "xpPer": 2100,
+     "gc": 1300,
+     "spawns": "Willowvine Forest 300,308",
+     "n": 30
+    },
+    {
+     "npc": "Gynmor",
+     "where": "Bethel Tavern",
+     "what": "Desert Chimeras",
+     "xpPer": 2200,
+     "gc": 1000,
+     "n": 30
+    },
+    {
+     "npc": "Kerlyn",
+     "where": "Iscalrith tavern",
+     "what": "Yetis",
+     "xpPer": 2400,
+     "gc": 1200,
+     "spawns": "Iscalrith 284,199 322,97 and 173,187",
+     "n": 30
+    },
+    {
+     "npc": "Vulca",
+     "where": "evtr tavern",
+     "what": "cockatrices",
+     "xpPer": 2500,
+     "gc": 1800,
+     "spawns": "WVF, double or triple spawns in area around [195,251] [278,111] single spawns around [350,253],[162,183],[305,304],[66,248] do not use [171,307]",
+     "n": 30
+    },
+    {
+     "npc": "Termopan",
+     "where": "Idaloran tavern",
+     "what": "Lions",
+     "xpPer": 3500,
+     "gc": 1500,
+     "spawns": "Idaloran [131,152] and wheat field near pumping on pole",
+     "n": 15
+    },
+    {
+     "npc": "Luvela",
+     "where": "Irinveron Tavern",
+     "what": "white Tigers Haidir says in text She usually spends most of the time in the Irinveron",
+     "xpPer": 3600,
+     "gc": 1500,
+     "spawns": "Irinveron 277,443 and 257,354",
+     "n": 20
+    }
+   ]
+  },
+  "Engineering Daily": {
+   "skill": "Engineering",
+   "source": "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/9-minel-engenering-daily.html",
+   "asks": [
+    {
+     "npc": "King Gondric (VotD gold mine 254,276)",
+     "what": "pois. caltrops",
+     "where": "around the table 255,254",
+     "xpPer": 120,
+     "gc": 400,
+     "n": 10
+    },
+    {
+     "npc": "Arbella (TG mag school 27,248)",
+     "what": "invisi rem. wards",
+     "where": "Library",
+     "xpPer": 220,
+     "gc": 1200,
+     "n": 5
+    },
+    {
+     "npc": "Buni (NC 6,29)",
+     "what": "caltrops",
+     "where": "SKF (at exit to NC)",
+     "xpPer": 230,
+     "gc": 300,
+     "n": 20
+    },
+    {
+     "npc": "Nevina (DP 48,345)",
+     "what": "snares",
+     "where": "Elandria temple (DP 75,329)",
+     "xpPer": 230,
+     "gc": 500,
+     "n": 20
+    },
+    {
+     "npc": "Apala (PV 118,22)",
+     "what": "RC mines",
+     "where": "PV cave (317,283)",
+     "xpPer": 340,
+     "gc": 1500,
+     "n": 4
+    },
+    {
+     "npc": "Zenith (Naralik catacombs 86,72)",
+     "what": "MI rem. Wards",
+     "where": "Naralik catacombs (57,76)",
+     "xpPer": 400,
+     "gc": 1500,
+     "n": 5
+    },
+    {
+     "npc": "Talon (WS 230,421 inside)",
+     "what": "medium mines",
+     "where": "WS maze exit (WS 540,415)",
+     "xpPer": 450,
+     "gc": 500,
+     "n": 10
+    },
+    {
+     "npc": "Shantir (Glac mag shop)",
+     "what": "small mines",
+     "where": "outside mag shop (301,48)",
+     "xpPer": 450,
+     "gc": 500,
+     "n": 10
+    },
+    {
+     "npc": "Sloan (PL 130,93)",
+     "what": "invisi rem. wards",
+     "where": "PL (130,93)",
+     "xpPer": 480,
+     "gc": 2500,
+     "n": 5
+    },
+    {
+     "npc": "Flynt (PV 366,277)",
+     "what": "small mines",
+     "where": "Thelinor (at exit to PV)",
+     "xpPer": 500,
+     "gc": 200,
+     "n": 10
+    }
+   ]
+  },
+  "Harvesting Daily": {
+   "skill": "Harvesting",
+   "source": "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/6-xaquelina-daily-quest.html",
+   "asks": [
+    {
+     "what": "tiger lilies",
+     "where": "IP (115,43)",
+     "xpPer": 80,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "impatiens",
+     "where": "DP Crystal Cave (140,81)",
+     "xpPer": 90,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "impatiens",
+     "where": "PL (232,153)",
+     "xpPer": 100,
+     "gc": 200,
+     "n": 50
+    },
+    {
+     "what": "cactus",
+     "where": "DP (242,125)",
+     "xpPer": 120,
+     "gc": 300,
+     "n": 40
+    },
+    {
+     "what": "red snapdragons",
+     "where": "WS (323,476)",
+     "xpPer": 130,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "white asiatic lilies",
+     "where": "MM (340,61)",
+     "xpPer": 140,
+     "gc": 300,
+     "n": 70
+    },
+    {
+     "what": "tiger lilies",
+     "where": "Naralik (135,151)",
+     "xpPer": 180,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "lilacs",
+     "where": "VotD (137,122)",
+     "xpPer": 200,
+     "gc": 300,
+     "n": 80
+    },
+    {
+     "what": "chrysanthemums",
+     "where": "TG (317,26)",
+     "xpPer": 220,
+     "gc": 300,
+     "n": 80
+    },
+    {
+     "what": "blue star flowers",
+     "where": "SKF (129,128)",
+     "xpPer": 240,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "blue star flowers",
+     "where": "Grubani (76,240)",
+     "xpPer": 240,
+     "gc": 300,
+     "n": 60
+    },
+    {
+     "what": "white asiatic lilies",
+     "where": "KF (50,58)",
+     "xpPer": 250,
+     "gc": 300,
+     "n": 70
+    },
+    {
+     "what": "rue",
+     "where": "NC (39,18)",
+     "xpPer": 260,
+     "gc": 300,
+     "n": 80
+    },
+    {
+     "what": "cactus",
+     "where": "TD (312,367)",
+     "xpPer": 270,
+     "gc": 300,
+     "n": 70
+    },
+    {
+     "what": "poppies",
+     "where": "Ruins of Tirnym (136,167)",
+     "xpPer": 280,
+     "gc": 300,
+     "n": 90
+    },
+    {
+     "what": "red roses",
+     "where": "IotF (98,97)",
+     "xpPer": 300,
+     "gc": 400,
+     "n": 110
+    },
+    {
+     "what": "dandelions",
+     "where": "IDA (303,207)",
+     "xpPer": 300,
+     "gc": 400,
+     "n": 90
+    },
+    {
+     "what": "impatiens",
+     "where": "Trassian (104,50)",
+     "xpPer": 300,
+     "gc": 400,
+     "n": 100
+    },
+    {
+     "what": "tulips",
+     "where": "Hurquin (49,137)",
+     "xpPer": 310,
+     "gc": 400,
+     "n": 110
+    },
+    {
+     "what": "red currants",
+     "where": "EVTR (63,44)",
+     "xpPer": 320,
+     "gc": 400,
+     "n": 110
+    },
+    {
+     "what": "wormwood",
+     "where": "NRM (62,67)",
+     "xpPer": 320,
+     "gc": 400,
+     "n": 150
+    },
+    {
+     "what": "daffodils",
+     "where": "Irinveron (481,115)",
+     "xpPer": 330,
+     "gc": 400,
+     "n": 100
+    },
+    {
+     "what": "ogre toes",
+     "where": "Iscalrith (305,202)",
+     "xpPer": 340,
+     "gc": 400,
+     "n": 140
+    },
+    {
+     "what": "poison ivy",
+     "where": "KJ (23,89)",
+     "xpPer": 340,
+     "gc": 400,
+     "n": 100
+    },
+    {
+     "what": "yarrow",
+     "where": "Sedicolis (128,141)",
+     "xpPer": 360,
+     "gc": 400,
+     "n": 120
+    },
+    {
+     "what": "mugwort",
+     "where": "Melinis/Thelinor cave (172,411)",
+     "xpPer": 380,
+     "gc": 400,
+     "n": 140
+    },
+    {
+     "what": "wormwood",
+     "where": "Thelinor (279,82)",
+     "xpPer": 400,
+     "gc": 400,
+     "n": 120
+    },
+    {
+     "what": "mullein",
+     "where": "Glacmor (105,221)",
+     "xpPer": 420,
+     "gc": 400,
+     "n": 120
+    },
+    {
+     "what": "blue berries",
+     "where": "Zirakinbar (123,44)",
+     "xpPer": 440,
+     "gc": 400,
+     "n": 150
+    },
+    {
+     "what": "valerian",
+     "where": "PV (350,154)",
+     "xpPer": 460,
+     "gc": 400,
+     "n": 150
+    }
+   ]
+  },
+  "Armor and Weapon Supply Daily": {
+   "skill": "Attack/Defense",
+   "source": "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/5-darithas-daily-quest-manufacture-items.html",
+   "asks": [
+    {
+     "what": "Leather helm",
+     "xpBase": 3000,
+     "xpPer": 250,
+     "gc": 250,
+     "n": 30
+    },
+    {
+     "what": "Leather gloves",
+     "xpBase": 3000,
+     "xpPer": 300,
+     "gc": 300,
+     "n": 30
+    },
+    {
+     "what": "Iron shield",
+     "xpBase": 3000,
+     "xpPer": 350,
+     "gc": 3200,
+     "n": 12
+    },
+    {
+     "what": "Leather pants",
+     "xpBase": 3000,
+     "xpPer": 400,
+     "gc": 800,
+     "n": 30
+    },
+    {
+     "what": "Golden Star Mace",
+     "xpBase": 3000,
+     "xpPer": 400,
+     "gc": 10000,
+     "needs": "?? probably the manu lvl 60+ required, (shadowgate got it at manu 62 the first time)",
+     "n": 1
+    },
+    {
+     "what": "Wooden shield",
+     "xpBase": 3000,
+     "xpPer": 450,
+     "gc": 800,
+     "n": 15
+    },
+    {
+     "what": "Leather torso",
+     "xpBase": 3000,
+     "xpPer": 500,
+     "gc": 600,
+     "n": 20
+    },
+    {
+     "what": "Steel chainmail",
+     "xpBase": 3000,
+     "xpPer": 750,
+     "gc": 600,
+     "n": 12
+    },
+    {
+     "what": "Iron chainmail",
+     "xpBase": 3000,
+     "xpPer": 600,
+     "gc": 400,
+     "n": 10
+    },
+    {
+     "what": "Iron Sword",
+     "xpBase": 3000,
+     "xpPer": 600,
+     "gc": 1000,
+     "n": 10
+    },
+    {
+     "what": "Leather boots",
+     "xpBase": 3000,
+     "xpPer": 650,
+     "gc": 600,
+     "n": 30
+    },
+    {
+     "what": "Steel shield",
+     "xpBase": 3000,
+     "xpPer": 650,
+     "gc": 1400,
+     "n": 15
+    },
+    {
+     "what": "Titanium short sword",
+     "xpBase": 3000,
+     "xpPer": 800,
+     "gc": 1000,
+     "n": 10
+    },
+    {
+     "what": "Point Defence",
+     "xpBase": 3000,
+     "xpPer": 900,
+     "gc": 3000,
+     "n": 150
+    },
+    {
+     "what": "Iron Helm",
+     "xpBase": 3000,
+     "xpPer": 1200,
+     "gc": 1200,
+     "n": 20
+    },
+    {
+     "what": "Titanium chainmail",
+     "xpBase": 3000,
+     "xpPer": 1400,
+     "gc": 1000,
+     "n": 3
+    },
+    {
+     "what": "Steel Greave",
+     "xpBase": 3000,
+     "xpPer": 3000,
+     "gc": 36000,
+     "needs": "50",
+     "n": 1
+    },
+    {
+     "what": "Steel Cuisses",
+     "xpBase": 3000,
+     "xpPer": 3000,
+     "gc": 36000,
+     "needs": "50",
+     "n": 1
+    },
+    {
+     "what": "Iron Plate Mail",
+     "xpBase": 3000,
+     "xpPer": 3200,
+     "gc": 40000,
+     "needs": "? (Ant got it at manu 62 the first time)",
+     "n": 1
+    },
+    {
+     "what": "Titanium Greaves",
+     "xpBase": 3000,
+     "xpPer": 3200,
+     "gc": 42000,
+     "needs": "55",
+     "n": 1
+    },
+    {
+     "what": "Titanium Shield",
+     "xpBase": 3000,
+     "xpPer": 3250,
+     "gc": 34000,
+     "needs": "60",
+     "n": 1
+    },
+    {
+     "what": "Titanium Axe",
+     "xpBase": 3000,
+     "xpPer": 3450,
+     "gc": 40000,
+     "needs": "65",
+     "n": 1
+    },
+    {
+     "what": "Bronze Shield",
+     "xpBase": 3000,
+     "xpPer": 3500,
+     "gc": 55000,
+     "needs": "60",
+     "n": 1
+    },
+    {
+     "what": "Titanium Plate",
+     "xpBase": 3000,
+     "xpPer": 4450,
+     "gc": 110000,
+     "needs": "70",
+     "n": 1
+    },
+    {
+     "what": "Bronze Plate",
+     "xpBase": 3000,
+     "xpPer": 5000,
+     "gc": 140000,
+     "needs": "?",
+     "n": 1
+    },
+    {
+     "what": "Dragon Blade",
+     "xpBase": 3000,
+     "xpPer": 5000,
+     "gc": 160000,
+     "needs": "? (Ant got it at manu 66 the first time)",
+     "n": 1
+    },
+    {
+     "what": "Ice Dragon Mail",
+     "xpBase": 3000,
+     "xpPer": 900,
+     "gc": 0,
+     "needs": "70 (NB:reward - Elven Bow of Wilhelm Hood)",
+     "n": 1
+    },
+    {
+     "what": "Blue Dragon Mail",
+     "xpBase": 3000,
+     "xpPer": 900,
+     "gc": 0,
+     "needs": "70 (NB: reward - Dragon Blade of Mirroring)",
+     "n": 1
+    }
+   ]
+  }
+ }
+}
