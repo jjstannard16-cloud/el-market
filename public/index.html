@@ -2494,10 +2494,16 @@ function asksTable(qu) {
   if (!asks.length) return "";
   const has = key => asks.some(r => r[key] != null && r[key] !== "");
   const kill = /combat/i.test(qu.name);
-  const show = { where: has("where"), gc: has("gc"), cost: has("cost"),
-                 needs: has("needs") };
+  /* Haidir's table carries two places: where the person who wants the
+     job is, and where the creatures are. They are not the same place
+     and putting both under "Where" was useless. */
+  const place = r => r.spawns || (r.npc ? "" : r.where) || "";
+  const show = { npc: has("npc"), gc: has("gc"), cost: has("cost"),
+                 needs: has("needs"),
+                 place: asks.some(r => place(r)) };
   const head = [
-    "What", show.where ? "Where" : "",
+    "What", show.npc ? "For" : "",
+    show.place ? (kill ? "Where they are" : "Where") : "",
     `Experience${qu.asksSkill ? ` (${esc(qu.asksSkill)})` : ""}`,
     show.gc ? "Gold" : "", show.cost ? "Worth at bots" : "",
     show.needs ? "Needs" : "",
@@ -2516,8 +2522,9 @@ function asksTable(qu) {
       ${kill ? `<a class="lnk blnk" href="#fight/${
           encodeURIComponent(r.what)}">${esc(r.what)}</a>`
         : r.item ? itemLink(r.item) : esc(r.what)}</div></td>
-    ${show.where ? `<td class="num sm">${esc(r.where || "")}${r.spawns
-      ? `<div class="sm muted">${esc(r.spawns)}</div>` : ""}</td>` : ""}
+    ${show.npc ? `<td class="num sm">${esc(r.npc || "")}${r.npc && r.where
+      ? `<div class="sm muted">${esc(r.where)}</div>` : ""}</td>` : ""}
+    ${show.place ? `<td class="num sm">${esc(place(r))}</td>` : ""}
     <td class="num">${xpOf(r)}</td>
     ${show.gc ? `<td class="num brass">${r.gc ? fmt(r.gc) : "\u2013"}</td>`
       : ""}

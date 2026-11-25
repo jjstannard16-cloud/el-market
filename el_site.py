@@ -510,14 +510,21 @@ def load(db_path):
                 if a.get("of"):
                     c["imgOf"] = a["of"]
         for r in con.execute("""
-                SELECT LOWER(i.name) n, MAX(l.price) p,
+                SELECT LOWER(i.name) n, i.name real, MAX(l.price) p,
                        (SELECT bot FROM listing x WHERE x.item_id = i.item_id
                          AND x.side='buy' AND IFNULL(x.quantity,0) <> 0
                         ORDER BY x.price DESC LIMIT 1) b
                 FROM item i JOIN listing l ON l.item_id = i.item_id
                 WHERE l.side='buy' AND IFNULL(l.quantity,0) <> 0
                 GROUP BY i.item_id"""):
-            pays[r["n"]] = {"price": r["p"], "bot": r["b"]}
+            pays[r["n"]] = {"price": r["p"], "bot": r["b"],
+                            "name": r["real"]}
+        # Every item the bots have ever carried, not only the ones
+        # somebody is buying today. A daily can ask for something with
+        # no live offer, and that item still has a name and a picture.
+        known_items = {}
+        for r in con.execute("SELECT name FROM item"):
+            known_items[r["name"].lower()] = r["name"]
 
         def how_many(text):
             """
@@ -697,40 +704,95 @@ def load(db_path):
             with open(DAILIES_FILE, encoding="utf-8") as f:
                 dailies = json.load(f).get("dailies", {})
 
-            def as_item(text):
-                """
-                A task's wording to an item we hold a price for.
+            # "Chain Mail" and "chainmail", "Lily" and the game's
+            # own "Lilly", "Defence" and "Defense": the quest pages and
+            # the bots do not spell alike, so names are matched with
+            # the punctuation and spacing taken out and a few known
+            # disagreements folded together first.
+            def squash(text):
+                low = re.sub(r"[^a-z0-9 ]", " ", (text or "").lower())
+                low = low.replace("defence", "defense")
+                low = low.replace("raccoon", "racoon")
+                return "".join(low.split())
 
-                The lists are written as a player speaks - "100 wolf
-                furs", "03 Titanium chainmail" - and the bots sell a
-                "Wolf Fur". Plurals are tried off the last word only,
-                so "deer antlers" still finds Deer Antlers if that is
-                how the item is named.
+            def forms(text):
                 """
-                low = " ".join((text or "").lower().split())
-                tries = [low]
-                words = low.split()
-                if words and len(words[-1]) > 3:
-                    last = words[-1]
-                    for cut in ("ies", "es", "s"):
-                        if last.endswith(cut):
-                            stem = last[:-len(cut)] + ("y" if cut == "ies"
-                                                       else "")
-                            tries.append(" ".join(words[:-1] + [stem]))
-                for one in tries:
-                    hit = pays.get(one)
+                The spellings a task's wording might be filed under.
+
+                A job often carries where to do it - "imps in sewers",
+                "Armed Skeleton in Ruby Mine" - and that belongs in
+                the place column, not in the creature's name. No EL
+                creature or item has " in " inside its name.
+                """
+                plain = re.sub(r"[^a-z0-9 ]", " ", (text or "").lower())
+                plain = re.sub(r"\s+in\s+\w.*$", "", plain)
+                words = plain.split()
+                if not words:
+                    return []
+                out = [" ".join(words)]
+                last = words[-1]
+                stems = []
+                if last.endswith("ies") and len(last) > 4:
+                    stems += [last[:-3] + "y", last[:-3] + "ly"]
+                if last.endswith("ves") and len(last) > 4:
+                    stems += [last[:-3] + "f", last[:-3] + "fe"]
+                if last.endswith("es") and len(last) > 3:
+                    stems.append(last[:-2])
+                if last.endswith("s") and len(last) > 3:
+                    stems.append(last[:-1])
+                out += [" ".join(words[:-1] + [s]) for s in stems]
+                return out
+
+            def index_of(names):
+                by_key, by_bag = {}, {}
+                for real in names:
+                    by_key.setdefault(squash(real), real)
+                    bag = tuple(sorted(w.rstrip("s") for w in
+                                       re.sub(r"[^a-z0-9 ]", " ",
+                                              real.lower()).split()))
+                    if len(bag) >= 3:
+                        by_bag.setdefault(bag, real)
+                return by_key, by_bag
+
+            item_key, item_bag = index_of(known_items.values())
+            beast_key, beast_bag = index_of(c["name"] for c in creatures)
+
+            def match(text, by_key, by_bag):
+                """A task's wording to a name we hold, or None."""
+                for one in forms(text):
+                    hit = by_key.get(squash(one))
                     if hit:
-                        return one, hit
-                return None, None
+                        return hit
+                # Last resort: the same words in another order. "little
+                # dragon blue scales" is a Little Blue Dragon Scale.
+                # Three words or more only, where two different things
+                # sharing a word bag is unlikely.
+                for one in forms(text):
+                    bag = tuple(sorted(w.rstrip("s") for w in one.split()))
+                    if len(bag) >= 3 and bag in by_bag:
+                        return by_bag[bag]
+                return None
 
-            tasks = priced_tasks = 0
+            tasks = priced_tasks = named = 0
             for quest, one in dailies.items():
                 for row in one.get("asks", []):
                     tasks += 1
-                    name, hit = as_item(row.get("what"))
+                    # Haidir sends you to kill things; everyone else
+                    # wants things handed over.
+                    beast = match(row.get("what"), beast_key, beast_bag)
+                    if beast:
+                        row["creature"] = beast
+                        named += 1
+                        continue
+                    name = match(row.get("what"), item_key, item_bag)
+                    if not name:
+                        continue
+                    # The bots' own spelling, not the quest page's.
+                    row["item"] = name
+                    named += 1
+                    hit = pays.get(name.lower())
                     if not hit:
                         continue
-                    row["item"] = name
                     row["each"] = hit["price"]
                     if row.get("n"):
                         row["cost"] = hit["price"] * row["n"]
@@ -741,7 +803,8 @@ def load(db_path):
                     q["asksSkill"] = dailies[q["name"]]["skill"]
                     q["asksFrom"] = dailies[q["name"]]["source"]
             print(f"  {len(dailies)} dailies with their lists, {tasks} "
-                  f"tasks, {priced_tasks} priced at today's bots")
+                  f"tasks, {named} matched to an item or creature, "
+                  f"{priced_tasks} priced at today's bots")
         print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
@@ -3553,10 +3616,16 @@ function asksTable(qu) {
   if (!asks.length) return "";
   const has = key => asks.some(r => r[key] != null && r[key] !== "");
   const kill = /combat/i.test(qu.name);
-  const show = { where: has("where"), gc: has("gc"), cost: has("cost"),
-                 needs: has("needs") };
+  /* Haidir's table carries two places: where the person who wants the
+     job is, and where the creatures are. They are not the same place
+     and putting both under "Where" was useless. */
+  const place = r => r.spawns || (r.npc ? "" : r.where) || "";
+  const show = { npc: has("npc"), gc: has("gc"), cost: has("cost"),
+                 needs: has("needs"),
+                 place: asks.some(r => place(r)) };
   const head = [
-    "What", show.where ? "Where" : "",
+    "What", show.npc ? "For" : "",
+    show.place ? (kill ? "Where they are" : "Where") : "",
     `Experience${qu.asksSkill ? ` (${esc(qu.asksSkill)})` : ""}`,
     show.gc ? "Gold" : "", show.cost ? "Worth at bots" : "",
     show.needs ? "Needs" : "",
@@ -3575,8 +3644,9 @@ function asksTable(qu) {
       ${kill ? `<a class="lnk blnk" href="#fight/${
           encodeURIComponent(r.what)}">${esc(r.what)}</a>`
         : r.item ? itemLink(r.item) : esc(r.what)}</div></td>
-    ${show.where ? `<td class="num sm">${esc(r.where || "")}${r.spawns
-      ? `<div class="sm muted">${esc(r.spawns)}</div>` : ""}</td>` : ""}
+    ${show.npc ? `<td class="num sm">${esc(r.npc || "")}${r.npc && r.where
+      ? `<div class="sm muted">${esc(r.where)}</div>` : ""}</td>` : ""}
+    ${show.place ? `<td class="num sm">${esc(place(r))}</td>` : ""}
     <td class="num">${xpOf(r)}</td>
     ${show.gc ? `<td class="num brass">${r.gc ? fmt(r.gc) : "\u2013"}</td>`
       : ""}

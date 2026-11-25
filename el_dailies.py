@@ -93,10 +93,17 @@ def number(text):
     return int(n)
 
 
+# Haidir's table has the NPC's own words run on to the end of a job:
+# "30 Frost Trolls Haidir says in Text She is the taverner from
+# Irinveron." The aside belongs with the location, not in the name.
+ASIDE = re.compile(r"\s+(?:Haidir says|NB\s*:|Note\s*:).*$", re.I)
+
+
 def split_count(text):
     """'100 rat tails' -> (100, 'rat tails')."""
-    m = COUNT_FIRST.match(text or "")
-    return (int(m.group(1)), m.group(2)) if m else (None, (text or "").strip())
+    text = ASIDE.sub("", text or "").strip()
+    m = COUNT_FIRST.match(text)
+    return (int(m.group(1)), m.group(2)) if m else (None, text)
 
 
 def article(soup):
