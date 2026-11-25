@@ -546,7 +546,7 @@
     {
      "npc": "Luvela",
      "where": "Irinveron Tavern",
-     "what": "Frost Trolls Haidir says in Text She is the taverner from Irinveron.",
+     "what": "Frost Trolls",
      "xpPer": 2000,
      "gc": 1500,
      "spawns": "Irinveron Frost trolls",
@@ -599,7 +599,7 @@
     {
      "npc": "Luvela",
      "where": "Irinveron Tavern",
-     "what": "white Tigers Haidir says in text She usually spends most of the time in the Irinveron",
+     "what": "white Tigers",
      "xpPer": 3600,
      "gc": 1500,
      "spawns": "Irinveron 277,443 and 257,354",
