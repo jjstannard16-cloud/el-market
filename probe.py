@@ -58,54 +58,50 @@ can be checked against the old numbers before it lands.
 import re
 
 import requests
+from bs4 import BeautifulSoup
 
-API = "https://el-wiki.holy-eternalland.de/api.php"
+BASE = "https://holy-eternalland.de/en/eternal-lands-quests/haidir-daily/"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
+PAGES = {
+    "Summoning Daily": "14-maja-daily-summoning.html",
+    "Combat Daily": "4-haidir-daily-fighting-quests.html",
+    "Clothes Breaking Daily": "13-daily-breakage-quest-of-clothes.html",
+    "Engineering Daily": "9-minel-engenering-daily.html",
+    "Harvesting Daily": "6-xaquelina-daily-quest.html",
+    "Armor and Weapon Supply Daily":
+        "5-darithas-daily-quest-manufacture-items.html",
+    "Dung Harvesting Quest": "10-kaleb-dung-daily.html",
+    "Mule Daily": "8-tatu-mule-daily.html",
+    "Temps R Us Daily": "7-dorel-tempr-us.html",
+}
 
-def api(**params):
-    params.setdefault("format", "json")
-    params.setdefault("formatversion", 2)
-    r = requests.get(API, params=params, headers=UA, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def page_text(title):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    for pg in body.get("query", {}).get("pages", []):
-        if pg.get("missing"):
-            return None
-        revs = pg.get("revisions") or [{}]
-        return (revs[0].get("slots", {}).get("main", {}).get("content")
-                or revs[0].get("content") or "")
-    return None
-
-
-print("===== titles mentioning daily =====")
-for hit in api(action="query", list="search", srsearch="daily",
-               srlimit=40, srwhat="text")["query"]["search"]:
-    print("   ", hit["title"])
-
-print("\n===== Category:Daily Quests and friends =====")
-for cat in ("Daily Quests", "Daily quests", "Dailies", "Quests"):
-    body = api(action="query", list="categorymembers",
-               cmtitle=f"Category:{cat}", cmlimit=500)
-    members = [m["title"] for m in
-               body.get("query", {}).get("categorymembers", [])]
-    print(f"   Category:{cat}: {len(members)}")
-    if members:
-        print("      " + ", ".join(members))
-
-for title in ("Daily Quests", "Daily quests", "Summoning Daily",
-              "Summoning daily", "Maia", "Harvesting Daily",
-              "Combat Daily", "Engineering Daily",
-              "Clothes Breaking Daily", "Armor and Weapon Supply Daily"):
-    text = page_text(title)
-    print(f"\n===== {title} =====")
-    if text is None:
-        print("   no such page")
+for name, slug in PAGES.items():
+    url = BASE + slug
+    print("\n" + "=" * 70)
+    print(name, "   ", url)
+    print("=" * 70)
+    try:
+        r = requests.get(url, headers=UA, timeout=30)
+        r.raise_for_status()
+    except Exception as e:
+        print("   failed:", e)
         continue
-    print(f"   ({len(text)} bytes)")
-    print(text[:6000])
+    soup = BeautifulSoup(r.text, "lxml")
+    body = (soup.select_one(".com-content-article__body")
+            or soup.select_one("[itemprop=articleBody]")
+            or soup.select_one(".item-page") or soup)
+    tables = body.find_all("table")
+    print(f"   {len(r.text)} bytes, {len(tables)} tables in the article")
+    for i, t in enumerate(tables):
+        rows = t.find_all("tr")
+        print(f"   --- table {i}: {len(rows)} rows ---")
+        for tr in rows[:40]:
+            cells = [" ".join(c.get_text(" ", strip=True).split())
+                     for c in tr.find_all(["td", "th"])]
+            if any(cells):
+                print("      ", cells)
+    if not tables:
+        text = body.get_text("\n", strip=True)
+        print("   no tables; first 2500 characters of the article:")
+        print(re.sub(r"\n{3,}", "\n\n", text[:2500]))
