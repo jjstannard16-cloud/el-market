@@ -388,6 +388,31 @@
   h2.group.withicon .ic { width: 19px; height: 19px; color: var(--brass); }
   h2.group.withicon img { width: 24px; height: 24px; object-fit: contain;
                           image-rendering: pixelated; }
+  /* The day and the invasion, side by side: both answer "what is going
+     on right now", and the day is the wider of the two because it is
+     a sentence and the invasion is a number. */
+  .toprow { display: flex; gap: 18px; align-items: flex-start; }
+  .toprow > .today { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+  .invbox { flex: 0 0 290px; border: 1px solid var(--line-2);
+            border-left: 3px solid var(--brass); border-radius: 3px;
+            padding: 13px 16px; background: var(--panel); margin: 2px 0 6px; }
+  .invbox h3 { display: flex; align-items: center; gap: 7px; margin: 0;
+               font-family: var(--sans); font-size: 11px; font-weight: 500;
+               letter-spacing: .09em; text-transform: uppercase;
+               color: var(--muted); }
+  .invbox h3 .ic { width: 13px; height: 13px; fill: currentColor;
+                   stroke: none; color: var(--brass); }
+  .invbox .state { font-family: var(--display); font-size: 23px;
+                   line-height: 1.1; margin-top: 7px; color: var(--brass); }
+  .invbox .lastone { margin-top: 11px; padding-top: 10px;
+                     border-top: 1px solid var(--line); font-size: 13px; }
+  .invbox .seeall { margin-top: 10px; }
+  .invbox.up { border-left-color: var(--rust); }
+  .invbox.up h3 .ic, .invbox.up .state { color: var(--rust); }
+  @media (max-width: 760px) {
+    .toprow { display: block; }
+    .invbox { flex: none; margin-top: 14px; }
+  }
   .today { border: 1px solid var(--line-2); border-left-width: 3px;
            border-radius: 3px; padding: 15px 18px; margin: 2px 0 6px;
            background: var(--panel); }
@@ -1172,6 +1197,35 @@ function stoneLine(v) {
 const ordinal = n => n + (["th","st","nd","rd"][
   (n % 100 - 20) % 10] || ["th","st","nd","rd"][n % 100] || "th");
 
+/* Beside the day, because the two answer the same question - what is
+   going on in the game right now - and a player checking one wants the
+   other in the same glance. Short on purpose: the state, who ran the
+   last one and where, and a way through to the rest. */
+function invasionBox() {
+  const clock = DATA.clock || {};
+  const last = (DATA.modInvasions || [])[0];
+  const read = (clock.at || "").slice(0, 16).replace("T", " ");
+  if (clock.monsters == null && !last) return "";
+  const ago = last
+    ? Math.round((Date.now() - Date.parse(last.to + "Z")) / 60000) : null;
+  return `<aside class="invbox${clock.monsters ? " up" : ""}">
+    <h3><svg class="ic"><use href="#i-moon"/></svg>Invasion</h3>
+    <div class="state">${clock.monsters == null ? "Not known"
+      : clock.monsters ? `${fmt(clock.monsters)} still up` : "All quiet"}</div>
+    <div class="sm muted">${clock.monsters == null
+      ? "the game did not say"
+      : `when we last looked<br>${esc(read)} UTC`}</div>
+    ${last ? `<div class="lastone">
+      <div class="sm muted">Last one a moderator ran</div>
+      <div>${last.mods.map(playerLink).join(", ")}${last.maps.length
+        ? ` \u00b7 ${esc(last.maps.join(", "))}` : ""}</div>
+      <div class="sm muted">${ago != null && ago >= 0
+        ? gapWords(ago) + " ago" : esc(last.from.replace("T", " "))}</div>
+    </div>` : ""}
+    <a class="seeall" href="#events/invasions">Every invasion \u2192</a>
+  </aside>`;
+}
+
 function renderHome(view, count) {
   count.textContent = "";
   const moves = (DATA.moves || []).slice(0, 8);
@@ -1212,7 +1266,10 @@ function renderHome(view, count) {
     <a class="seeall" href="#days">All ${
       fmt((DATA.summoners || []).length)} of them \u2192</a></div>`;
 
-  view.innerHTML = todayBanner()
+  const box = invasionBox();
+  view.innerHTML = (box
+      ? `<div class="toprow">${todayBanner()}${box}</div>`
+      : todayBanner())
     + `<div class="cols" style="margin-top:26px">${movesPanel}${upsPanel}${
         stonesPanel}</div>`
     + `<h2 class="group">Everything here</h2>
@@ -1250,6 +1307,10 @@ function applyRoute() {
   focusGuild = tab === "guilds" && sub ? sub : null;
   focusBeast = tab === "fight" && sub ? sub : null;
   focusItem = tab === "market" && sub ? sub : null;
+  // #events/invasions opens the invasion board rather than a leaderboard,
+  // so the front page can link straight to it.
+  if (tab === "events") eboard = sub === "invasions" ? "_inv"
+    : (sub || eboard);
   sortKey = null;
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("on", b.dataset.tab === tab));
@@ -2593,7 +2654,13 @@ function eventPicker() {
 
 function wireEventPicker(view) {
   view.querySelectorAll("[data-board]").forEach(b => b.onclick = () => {
-    eboard = b.dataset.board; findersShown = 25; render();
+    eboard = b.dataset.board; findersShown = 25;
+    // Written into the address so the board can be linked to and comes
+    // back on a reload, without going through the router.
+    history.replaceState(null, "", eboard === "_inv"
+      ? "#events/invasions" : eboard === "found" ? "#events"
+      : `#events/${eboard}`);
+    render();
   });
 }
 
