@@ -1545,16 +1545,17 @@ HTML = r"""<!doctype html>
      a bad day, and nothing else does. */
   .invstate { display: flex; align-items: center; gap: 18px;
               border: 1px solid var(--line-2); border-left: 3px solid
-              var(--line-2); border-radius: 4px; padding: 16px 20px;
+              var(--brass); border-radius: 4px; padding: 16px 20px;
               background: var(--panel); margin: 2px 0 14px; }
   /* Solid, not outlined: a crescent drawn in 1.6px strokes at 40px
      reads as a scribble. The small ones in the chips keep the outline
      the rest of the icons use. */
   .invstate .moon { width: 40px; height: 40px; flex: none;
-                    color: var(--muted); fill: currentColor;
+                    color: var(--brass); fill: currentColor;
                     stroke: none; }
   .invstate .big { font-family: var(--display); font-size: 30px;
-                   line-height: 1; font-variant-numeric: tabular-nums; }
+                   line-height: 1; color: var(--brass);
+                   font-variant-numeric: tabular-nums; }
   .invstate .says { color: var(--muted); font-size: var(--t-sm);
                     margin-top: 5px; }
   .invstate.up { border-left-color: var(--rust); }
