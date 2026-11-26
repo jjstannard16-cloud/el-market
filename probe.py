@@ -55,8 +55,42 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import subprocess
-import sys
+import json
+import re
 
-subprocess.run([sys.executable, "el_maps.py", "--dump",
-                "--out", "/tmp/maps.json"], check=False)
+import requests
+
+API = "https://el-wiki.holy-eternalland.de/api.php"
+UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
+
+
+def api(**params):
+    params.setdefault("format", "json")
+    params.setdefault("formatversion", 2)
+    r = requests.get(API, params=params, headers=UA, timeout=30)
+    r.raise_for_status()
+    return r.json()
+
+
+def page_text(title):
+    body = api(action="query", prop="revisions", titles=title,
+               rvprop="content", rvslots="main", redirects=1)
+    for pg in body.get("query", {}).get("pages", []):
+        if pg.get("missing"):
+            return None
+        revs = pg.get("revisions") or [{}]
+        return (revs[0].get("slots", {}).get("main", {}).get("content")
+                or revs[0].get("content") or "")
+    return None
+
+
+# Maps our reader found no harvestables on. Some are temples and sewers
+# with none to find; the rest are laid out in a way we do not read.
+for name in ("Desert Pines", "Magic School", "Gargoyles Cave",
+             "Nordcarn", "Portland"):
+    text = page_text(name) or ""
+    print("=" * 70)
+    print(name, "  headings:", " | ".join(HEADING.findall(text)))
+    for m in re.finditer(r"^=+\s*(.*[Hh]arvest.*?)\s*=+\s*$", text, re.M):
+        print(text[m.start():m.start() + 700])

@@ -45,6 +45,19 @@ MAX_BYTES = 12_000_000
 JPEG_QUALITY = 82
 
 
+def norm(name):
+    """
+    A file name as MediaWiki keeps it.
+
+    A page writes map_whitestone_0512px.png; the wiki files it under
+    "Map whitestone 0512px.png", with the underscores turned to spaces
+    and the first letter capitalised. Asking with one spelling and
+    looking the answer up under the other found nothing at all.
+    """
+    name = name.replace("_", " ").strip()
+    return name[:1].upper() + name[1:]
+
+
 def urls_for(session, names):
     """Where each named file actually lives."""
     found = {}
@@ -52,12 +65,12 @@ def urls_for(session, names):
         chunk = names[i:i + 40]
         body = api(session, action="query", prop="imageinfo",
                    iiprop="url|size|mime",
-                   titles="|".join(f"File:{n}" for n in chunk))
+                   titles="|".join(f"File:{norm(n)}" for n in chunk))
         for pg in body.get("query", {}).get("pages", []):
             if pg.get("missing"):
                 continue
             for info in pg.get("imageinfo", []):
-                found[pg["title"][len("File:"):]] = info
+                found[norm(pg["title"][len("File:"):])] = info
         time.sleep(PAUSE)
     return found
 
@@ -100,7 +113,7 @@ def main():
 
     have, got, failed, skipped = {}, 0, 0, 0
     for name, filename in want.items():
-        info = urls.get(filename)
+        info = urls.get(norm(filename))
         if not info:
             continue
         was = old.get(name)

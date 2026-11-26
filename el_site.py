@@ -76,6 +76,8 @@ MAP_SHORT = {
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
 DAILIES_FILE = "dailies.json"
+MAPS_FILE = "maps.json"
+MAP_IMAGES_FILE = "map_images.json"
 GODS_FILE = "gods.json"
 CREATURES_FILE = "creatures.json"
 INSTANCES_FILE = "instances.json"
@@ -83,6 +85,7 @@ CREATURE_IMG_FILE = "creature_images.json"
 BADGES_FILE = "badges.json"
 NPC_IMG_FILE = "npc_images.json"
 NPC_IMG_BASE = "img/n/"   # our own copies; see el_npc_images.py
+MAP_IMG_BASE = "img/m/"   # our own copies; see el_map_images.py
 BADGE_BASE = "img/a/"   # our own copies; see el_badges.py
 # The wiki and the game do not spell every achievement the same way.
 BADGE_ALIAS = {"mothernaturehatesme": "naturehatesme",
@@ -731,6 +734,11 @@ def load(db_path):
         print(f"  {len(instances)} instances, {waves} waves, "
               f"{creatures_in} creature slots priced")
 
+    # The maps. Every page lists what harvests there, what hunts there,
+    # who stands where and which maps it leads to; this joins that to
+    # what we already hold - what a harvestable is worth at a bot, what
+    # a creature is worth to kill, which NPC starts a quest - because
+    # the joining is the only part the wiki cannot do for itself.
     # Guild rosters. Who is in which guild is not published anywhere, so
     # this comes from guild.txt, which someone keeps by hand.
     guilds = []
@@ -902,6 +910,79 @@ def load(db_path):
             print(f"  {len(dailies)} dailies with their lists, {tasks} "
                   f"tasks, {named} matched to an item or creature, "
                   f"{priced_tasks} priced at today's bots")
+
+    npc_pics = {}
+    if os.path.exists(NPC_IMG_FILE):
+        with open(NPC_IMG_FILE, encoding="utf-8") as f:
+            npc_pics = {k: v["file"] for k, v in
+                        json.load(f).get("npcs", {}).items() if v.get("file")}
+
+    maps = []
+    if os.path.exists(MAPS_FILE):
+        with open(MAPS_FILE, encoding="utf-8") as f:
+            maps = json.load(f).get("maps", [])
+        pics = {}
+        if os.path.exists(MAP_IMAGES_FILE):
+            with open(MAP_IMAGES_FILE, encoding="utf-8") as f:
+                pics = json.load(f).get("maps", {})
+        beasts = {c["name"].lower(): c for c in creatures}
+        quest_npc = {}
+        for q in quests:
+            bare = re.split(r"\s*[,\[(]", q.get("npc") or "")[0].strip()
+            if bare:
+                quest_npc.setdefault(bare.lower(), q["name"])
+        # Which bots stand on which map. A bot's location is the map
+        # name, sometimes with the town after a dash.
+        here = {}
+        for r in con.execute("""SELECT name, location, map_x, map_y, online
+                                FROM bot WHERE location IS NOT NULL"""):
+            key = r["location"].split(" - ")[0].strip().lower()
+            here.setdefault(key, []).append(
+                {"name": r["name"], "where": r["location"],
+                 "x": r["map_x"], "y": r["map_y"], "online": r["online"]})
+
+        joined = 0
+        for m in maps:
+            art = pics.get(m["name"])
+            if art:
+                m["img"], m["thumb"] = art["file"], art["thumb"]
+            for h in m.get("harvest", []):
+                low = h["name"].lower()
+                known = harvestables.get(low)
+                if known:
+                    h["lvl"] = known.get("lvl")
+                    joined += 1
+                hit = pays.get(low) or pays.get(low.rstrip("s"))
+                if hit:
+                    h["pays"] = hit["price"]
+                    h["item"] = hit.get("name") or h["name"]
+            for c in m.get("creatures", []):
+                beast = beasts.get(c["name"].lower())
+                if not beast:
+                    continue
+                joined += 1
+                c["att"] = beast.get("attack")
+                c["def"] = beast.get("defense")
+                c["health"] = beast.get("material")
+                c["worth"] = max(beast.get("worth") or 0,
+                                 beast.get("worthInst") or 0)
+                if beast.get("imgThumb"):
+                    c["img"] = beast["imgThumb"]
+            for n in m.get("npcs", []):
+                got = quest_npc.get(n["name"].lower())
+                if got:
+                    n["quest"] = got
+                    joined += 1
+            m["bots"] = here.get(m["name"].lower(), [])
+            # A storage NPC is the thing everybody is actually walking
+            # towards, so it is worth saying out loud.
+            m["storage"] = [n for n in m.get("npcs", [])
+                            if re.search(r"\bstorage\b",
+                                         n.get("what") or "", re.I)]
+        print(f"  {len(maps)} maps, {joined} of their entries joined to "
+              f"something we already knew, "
+              f"{sum(1 for m in maps if m.get('img'))} with a drawing")
+
         print(f"  {len(quests)} quests in {len(quest_sections)} sections")
 
     # What each special day does, and what a stone to start it costs.
@@ -1187,6 +1268,8 @@ def load(db_path):
         "online": online,
         "creatures": creatures,
         "instances": instances,
+        "maps": maps,
+        "npcPics": npc_pics,
         "achPlayers": ach_players,
         "achKinds": ach_kinds,
         "guilds": guilds,
@@ -1209,6 +1292,7 @@ def load(db_path):
             "badgeBase": BADGE_BASE,
             "mapOrder": [m for maps in CONTINENTS.values() for m in maps],
             "npcBase": NPC_IMG_BASE,
+            "mapBase": MAP_IMG_BASE,
             "unknownMaps": sorted(unknown_maps),
             "recipeCount": len(recipes),
             "playerCount": sum(1 for p in players if not p["private"]),
@@ -1539,6 +1623,32 @@ HTML = r"""<!doctype html>
   /* The handful of facts that decide whether you can go in at all:
      level range, how many people, how long, how often. */
   .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
+  /* maps ------------------------------------------------------------
+     A map is a picture first: somebody opening one wants to see the
+     shape of the place, then what is on it. */
+  .mapgrid { display: grid; gap: 14px; margin-bottom: 8px;
+             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .mapcard { display: flex; flex-direction: column; gap: 3px;
+             padding: 10px; text-decoration: none; color: inherit;
+             border: 1px solid var(--line); border-radius: 3px;
+             background: var(--panel); }
+  .mapcard:hover { border-color: var(--brass); }
+  .mapcard img, .mapcard .maptile { width: 100%; height: 108px;
+            object-fit: cover; border-radius: 2px; margin-bottom: 5px;
+            background: var(--ground); display: block; }
+  .mapcard .mapname { font-family: var(--display); font-size: 16px; }
+  .maphead { display: flex; align-items: baseline; gap: 14px;
+             flex-wrap: wrap; margin: 2px 0 16px; }
+  .maphead h2 { font-family: var(--display); font-weight: 600;
+                font-size: 26px; margin: 0; }
+  .mapbig { max-width: 100%; border: 1px solid var(--line-2);
+            border-radius: 3px; display: block; margin-bottom: 16px; }
+  .mapabout { max-width: 70ch; margin-bottom: 18px; }
+  .mapt td, .mapt th { padding: 6px 12px 6px 0; }
+  .mapt .nm img, .mapt .nm .noimg { width: 26px; height: 26px; }
+  /* A coordinate is read as a pair of numbers, so it is set as one. */
+  .tile { font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo,
+          monospace); font-size: 12px; color: var(--muted); }
   /* The invasion board. Everywhere else on this site is brass on
      near-black and deliberately calm; this is the one page where
      something is on fire, so it gets the rust the special days use for
@@ -1972,6 +2082,9 @@ HTML = r"""<!doctype html>
   <!-- "The moon is turning red" is how a moderator says an invasion is
        coming, in those words, every time. It is the one image this
        game already has for the thing, so the board is built on it. -->
+  <symbol id="i-maps" viewBox="0 0 24 24">
+    <path d="M9 4.5L3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z"/>
+    <path d="M9 4.5v12.7M15 6.8v12.7"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24">
     <path d="M20 14.6A8.6 8.6 0 019.4 4 8.6 8.6 0 1020 14.6z"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24">
@@ -2040,6 +2153,7 @@ HTML = r"""<!doctype html>
     <button data-tab="market"><svg class="ic"><use href="#i-market"/></svg>Market</button>
     <button data-tab="craft"><svg class="ic"><use href="#i-craft"/></svg>Craft</button>
     <button data-tab="fight"><svg class="ic"><use href="#i-fight"/></svg>Fight</button>
+    <button data-tab="maps"><svg class="ic"><use href="#i-maps"/></svg>Maps</button>
     <button data-tab="players"><svg class="ic"><use href="#i-players"/></svg>Players</button>
     <button data-tab="quests"><svg class="ic"><use href="#i-quests"/></svg>Quests</button>
     <button data-tab="events"><svg class="ic"><use href="#i-events"/></svg>Events</button>
@@ -2135,6 +2249,7 @@ let focusQuest = null, qsection = "";                    // "" = every section
 let findersShown = 25, eboard = "found";
 let focusBeast = null, fkind = "";
 let focusItem = null;
+let focusMap = null, mland = "";   // "" = both continents
 let focusGuild = null, gskill = "";       // "" = the roster, not one skill
 const PRICE = {};
 for (const it of DATA.items) {
@@ -2506,8 +2621,8 @@ function renderHome(view, count) {
 /* navigation ----------------------------------------------------------
    The address bar carries where you are, so a page can be pasted into
    game chat: #craft, #players/stann, #bots/Keruma.                     */
-const TABS = ["home", "market", "craft", "fight", "players", "quests",
-              "events", "guilds", "online", "days", "bots"];
+const TABS = ["home", "market", "craft", "fight", "maps", "players",
+              "quests", "events", "guilds", "online", "days", "bots"];
 
 function go(tab, sub) {
   const want = "#" + tab + (sub ? "/" + encodeURIComponent(sub) : "");
@@ -2527,6 +2642,7 @@ function applyRoute() {
   focusGuild = tab === "guilds" && sub ? sub : null;
   focusBeast = tab === "fight" && sub ? sub : null;
   focusItem = tab === "market" && sub ? sub : null;
+  focusMap = tab === "maps" && sub ? sub : null;
   // #events/invasions opens the invasion board rather than a leaderboard,
   // so the front page can link straight to it.
   if (tab === "events") eboard = sub === "invasions" ? "_inv"
@@ -2548,7 +2664,8 @@ document.querySelectorAll("nav button").forEach(btn =>
   });
 document.getElementById("q").oninput = () => {
   focusBot = null; focusPlayer = null; focusQuest = null;
-  focusGuild = null; focusBeast = null; focusItem = null; render();
+  focusGuild = null; focusBeast = null; focusItem = null;
+  focusMap = null; render();
 };
 document.querySelectorAll(".modes button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".modes button").forEach(x =>
@@ -2696,6 +2813,8 @@ function render() {
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
+  if (tab === "maps" && focusMap) return renderOneMap(view, count);
+  if (tab === "maps")   return renderMaps(view, count, q);
   if (tab === "fight" && focusBeast) return renderOneBeast(view, count);
   if (tab === "fight")  return renderFight(view, count, q);
   if (tab === "market" && focusItem)
@@ -3287,6 +3406,204 @@ function dropGroups(drops) {
   if (kinds.length < 2) return drops.length ? [["Drops", drops]] : [];
   return ["instance", "invasion", ""].filter(k => kinds.includes(k))
     .map(k => [LABEL[k] || "Drops", drops.filter(d => (d.where || "") === k)]);
+}
+
+/* maps ----------------------------------------------------------------
+   The wiki keeps a page per map and they are all laid out alike, so
+   el_maps.py reads the lot: what harvests there, what hunts there, who
+   stands where, and which maps it leads to. What this adds is the join
+   - a lilac is worth something at a bot, a wolf is worth something to
+   kill, and the map page cannot know either.                         */
+
+const mapBy = name => (DATA.maps || []).find(m =>
+  m.name.toLowerCase() === String(name || "").toLowerCase());
+
+const mapLink = name => mapBy(name)
+  ? `<a class="lnk mlnk" href="#maps/${encodeURIComponent(name)}">${
+      esc(name)}</a>`
+  : esc(name || "");
+
+// "[84,39]" for one, "[84,39] and 3 more" for a handful. The wiki marks
+// its own pick in bold and that is the one worth leading with.
+function spotList(at) {
+  if (!at || !at.length) return "";
+  const pick = at.find(p => p.pick) || at[0];
+  const rest = at.length - 1;
+  return `<span class="tile">[${pick.x},${pick.y}]</span>${rest
+    ? ` <span class="sm muted">and ${rest} more</span>` : ""}`;
+}
+
+function renderMaps(view, count, q) {
+  const all = (DATA.maps || []).filter(m => {
+    if (mland && m.land !== mland) return false;
+    if (!q) return true;
+    return [m.name, m.short, m.land, m.about,
+            (m.harvest || []).map(h => h.name).join(" "),
+            (m.creatures || []).map(c => c.name).join(" "),
+            (m.npcs || []).map(n => n.name).join(" ")]
+      .join(" ").toLowerCase().includes(q);
+  });
+  count.textContent = `${all.length} map${all.length === 1 ? "" : "s"}`;
+  const pills = `<div class="pills">${
+    [["", "Everywhere"], ["Seridia", "Seridia"], ["Irilion", "Irilion"]]
+      .map(([k, label]) => `<button class="pill${mland === k ? " on" : ""}"
+        data-land="${k}">${label}</button>`).join("")}</div>`;
+  if (!all.length) {
+    view.innerHTML = pills + `<div class="empty">${(DATA.maps || []).length
+      ? "Nothing matches that." : "No map data yet."}</div>`;
+    wireLand(view);
+    return;
+  }
+  // The big outdoor maps first, then the caves and buildings inside
+  // them, because that is the order somebody looks for them in.
+  const outside = all.filter(m => !m.inside_of);
+  const inside = all.filter(m => m.inside_of);
+  const card = m => `<a class="mapcard" href="#maps/${
+    encodeURIComponent(m.name)}">
+    ${m.thumb ? `<img src="${m.mapBase || DATA.meta.mapBase}${m.thumb}"
+        loading="lazy" alt="">`
+      : `<span class="noimg maptile"></span>`}
+    <span class="mapname">${esc(m.name)}${m.short
+      ? ` <span class="sm muted">${esc(m.short)}</span>` : ""}</span>
+    <span class="sm muted">${[
+      (m.harvest || []).length ? `${(m.harvest || []).length} to harvest` : "",
+      (m.creatures || []).length ? `${(m.creatures || []).length} creatures` : "",
+      (m.npcs || []).length ? `${(m.npcs || []).length} NPCs` : "",
+    ].filter(Boolean).join(" · ") || "nothing listed yet"}</span>
+    ${m.inside_of ? `<span class="sm muted">inside ${esc(m.inside_of)}</span>`
+      : ""}</a>`;
+  view.innerHTML = pills
+    + `<div class="mapgrid">${outside.map(card).join("")}</div>`
+    + (inside.length ? `<h2 class="group">Caves, buildings and the
+        underworld<span class="count">${inside.length}</span></h2>
+       <div class="mapgrid">${inside.map(card).join("")}</div>` : "");
+  wireLand(view);
+}
+
+function wireLand(view) {
+  view.querySelectorAll("[data-land]").forEach(b => b.onclick = () => {
+    mland = b.dataset.land; render();
+  });
+}
+
+function renderOneMap(view, count) {
+  const m = mapBy(focusMap);
+  if (!m) {
+    view.innerHTML = `<div class="empty">No map by that name.</div>`;
+    count.textContent = "";
+    return;
+  }
+  count.textContent = esc(m.land);
+  const base = DATA.meta.mapBase;
+  const faces = DATA.npcPics || {};
+
+  const harvest = !(m.harvest || []).length ? "" : `
+    <h2 class="group withicon"><svg class="ic"><use href="#i-leaf"/></svg>
+      <span>What harvests here</span>
+      <span class="count">${m.harvest.length}</span></h2>
+    <div class="scroller"><table class="mapt"><thead><tr>
+      <th>What</th><th class="num">Level</th><th>Best spot</th>
+      <th class="num">Bots pay</th><th class="num">Time</th>
+    </tr></thead><tbody>${m.harvest.map(h => `<tr>
+      <td><div class="nm">${nameIcon(h.item || h.name)}${
+        h.item ? itemLink(h.item) : esc(h.name)}</div></td>
+      <td class="num sm">${h.lvl != null ? fmt(h.lvl) : "–"}</td>
+      <td class="sm">${spotList(h.at)}${h.what
+        ? ` <span class="sm muted">${esc(h.what)}</span>` : ""}</td>
+      <td class="num ${h.pays ? "brass" : "sm muted"}">${h.pays
+        ? fmt(h.pays) : "no bot buys it"}</td>
+      <td class="num sm">${esc(h.clock || "")}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  const beasts = !(m.creatures || []).length ? "" : `
+    <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
+      <span>What hunts here</span>
+      <span class="count">${m.creatures.length}</span></h2>
+    <div class="scroller"><table class="mapt"><thead><tr>
+      <th>Creature</th><th class="num">Att</th><th class="num">Def</th>
+      <th class="num">Health</th><th class="num">A kill is worth</th>
+      <th>Seen at</th>
+    </tr></thead><tbody>${m.creatures.map(c => `<tr>
+      <td><div class="nm">${c.img
+        ? `<img class="beast" src="${DATA.meta.beastImgBase}${c.img}"
+             loading="lazy" alt="">` : `<span class="noimg"></span>`}
+        <a class="lnk blnk" href="#fight/${encodeURIComponent(c.name)}">${
+          esc(c.name)}</a></div></td>
+      <td class="num sm">${c.att != null ? c.att : "–"}</td>
+      <td class="num sm">${c.def != null ? c.def : "–"}</td>
+      <td class="num sm">${c.health != null ? c.health : "–"}</td>
+      <td class="num ${c.worth ? "brass" : "sm muted"}">${c.worth
+        ? fmt(c.worth) : "–"}</td>
+      <td class="sm">${spotList(c.at)}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  const people = !(m.npcs || []).length ? "" : `
+    <h2 class="group withicon"><svg class="ic"><use href="#i-players"/></svg>
+      <span>Who is here</span><span class="count">${m.npcs.length}</span></h2>
+    <div class="scroller"><table class="mapt"><tbody>${m.npcs.map(n => `<tr>
+      <td><div class="nm">${faces[n.name]
+        ? `<img class="face sm" src="${DATA.meta.npcBase}${faces[n.name]}"
+             loading="lazy" alt="">` : `<span class="noimg"></span>`}
+        <span>${esc(n.name)}</span></div></td>
+      <td class="sm">${esc(n.what || "")}${n.quest
+        ? ` · ${questLink(n.quest)}` : ""}</td>
+      <td class="sm nowrap">${spotList(n.at)}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  const ways = !(m.exits || []).length ? "" : `
+    <h2 class="group withicon"><svg class="ic"><use href="#i-maps"/></svg>
+      <span>Where you can go from here</span></h2>
+    <div class="scroller"><table class="mapt"><tbody>${m.exits.map(x => `<tr>
+      <td><div class="nm">${mapLink(x.name)}${x.pk
+        ? ` <span class="gate">PK</span>` : ""}</div></td>
+      <td class="sm">${esc(x.how)}</td>
+      <td class="sm nowrap">${spotList(x.at)}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  const within = !(m.inside || []).length ? "" : `
+    <h2 class="group">Inside this map</h2>
+    <div class="scroller"><table class="mapt"><tbody>${m.inside.map(x => `<tr>
+      <td>${mapLink(x.name)}</td>
+      <td class="sm nowrap">${spotList(x.at)}</td></tr>`).join("")}
+    </tbody></table></div>`;
+
+  const extras = !(m.specials || []).length ? "" : `
+    <h2 class="group">Worth knowing about</h2>
+    <div class="scroller"><table class="mapt"><tbody>${
+      m.specials.map(x => `<tr><td>${esc(x.name)}</td>
+        <td class="sm">${esc(x.what || "")}</td>
+        <td class="sm nowrap">${spotList(x.at)}</td></tr>`).join("")}
+    </tbody></table></div>`;
+
+  const traders = !(m.bots || []).length ? "" : `
+    <h2 class="group withicon"><svg class="ic"><use href="#i-bots"/></svg>
+      <span>Bots standing here</span></h2>
+    <div class="facts">${m.bots.map(b =>
+      `<span class="fact"><a class="lnk" data-bot="${esc(b.name)}"
+        href="#bots/${encodeURIComponent(b.name)}">${esc(b.name)}</a>${
+        b.x != null ? ` <span class="tile">[${b.x},${b.y}]</span>` : ""
+        }</span>`).join("")}</div>`;
+
+  view.innerHTML = `
+    <div class="maphead">
+      <a class="pill" href="#maps">All maps</a>
+      <h2>${esc(m.name)}</h2>
+      ${m.short ? `<span class="count">${esc(m.short)}</span>` : ""}
+      <span class="count">${esc(m.land)}</span>
+      ${m.inside_of ? `<span class="count">inside ${
+        mapLink(m.inside_of)}</span>` : ""}
+    </div>
+    ${m.img ? `<img class="mapbig" src="${base}${m.img}" alt="Map of ${
+      esc(m.name)}">` : ""}
+    ${m.about ? `<div class="mapabout">${esc(m.about)}</div>` : ""}
+    ${(m.storage || []).length ? `<div class="facts">${m.storage.map(s =>
+      `<span class="fact"><svg class="ic"><use href="#i-chest"/></svg>
+        Storage at ${spotList(s.at) || esc(s.name)}</span>`).join("")}</div>`
+      : ""}
+    ${harvest}${beasts}${people}${extras}${within}${traders}${ways}
+    <div class="caveat">Written up by the Eternal Lands community on the
+      wiki. The levels, prices and what a kill is worth are ours.</div>`;
+  wireBotLinks();
 }
 
 function renderFight(view, count, q) {
