@@ -2123,6 +2123,27 @@ function dropGroups(drops) {
    - a lilac is worth something at a bot, a wolf is worth something to
    kill, and the map page cannot know either.                         */
 
+/* Where a map sits in the walk round the world. The wiki spells a few
+   of them differently from the list - Kusamura Jungle for Kusamura,
+   Crystal Caverns for Crystal Cavern - so a name counts as a match
+   when either one starts with the other. */
+function walkRank(name) {
+  const order = (DATA.meta || {}).mapOrder || [];
+  const low = String(name || "").toLowerCase();
+  let best = order.length;
+  order.forEach((m, i) => {
+    if ((low.startsWith(m) || m.startsWith(low)) && i < best) best = i;
+  });
+  return best;
+}
+
+function byWalk(a, b) {
+  // Seridia is where everybody starts, so it comes first.
+  if (a.land !== b.land) return a.land === "Seridia" ? -1 : 1;
+  const ra = walkRank(a.name), rb = walkRank(b.name);
+  return ra - rb || a.name.localeCompare(b.name);
+}
+
 const mapBy = name => (DATA.maps || []).find(m =>
   m.name.toLowerCase() === String(name || "").toLowerCase());
 
@@ -2162,10 +2183,16 @@ function renderMaps(view, count, q) {
     wireLand(view);
     return;
   }
-  // The big outdoor maps first, then the caves and buildings inside
-  // them, because that is the order somebody looks for them in.
-  const outside = all.filter(m => !m.inside_of);
-  const inside = all.filter(m => m.inside_of);
+  /* Walk order, not alphabetical. The same list the bots are grouped
+     by: Isla Prima, White Stone, Desert Pines and on round, because
+     that is the order a player holds the world in their head and an
+     alphabet puts Naralik between Morcraven and Nordcarn by accident.
+     A map the list has never heard of goes after the ones it has,
+     alphabetically, rather than at the front. */
+  const outside = all.filter(m => !m.inside_of).sort(byWalk);
+  const inside = all.filter(m => m.inside_of)
+    .sort((a, b) => byWalk(mapBy(a.inside_of) || a, mapBy(b.inside_of) || b)
+                    || a.name.localeCompare(b.name));
   const card = m => `<a class="mapcard" href="#maps/${
     encodeURIComponent(m.name)}">
     ${m.thumb ? `<img src="${m.mapBase || DATA.meta.mapBase}${m.thumb}"
@@ -2180,8 +2207,14 @@ function renderMaps(view, count, q) {
     ].filter(Boolean).join(" · ") || "nothing listed yet"}</span>
     ${m.inside_of ? `<span class="sm muted">inside ${esc(m.inside_of)}</span>`
       : ""}</a>`;
+  const byLand = land => outside.filter(m => m.land === land);
+  const block = (land, rows) => !rows.length ? "" : `
+    ${mland ? "" : `<h2 class="group">${esc(land)} <span class="count">${
+      rows.length} maps</span></h2>`}
+    <div class="mapgrid">${rows.map(card).join("")}</div>`;
   view.innerHTML = pills
-    + `<div class="mapgrid">${outside.map(card).join("")}</div>`
+    + block("Seridia", byLand("Seridia"))
+    + block("Irilion", byLand("Irilion"))
     + (inside.length ? `<h2 class="group">Caves, buildings and the
         underworld<span class="count">${inside.length}</span></h2>
        <div class="mapgrid">${inside.map(card).join("")}</div>` : "");
