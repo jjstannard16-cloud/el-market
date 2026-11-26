@@ -337,9 +337,15 @@
              flex-wrap: wrap; margin: 2px 0 16px; }
   .maphead h2 { font-family: var(--display); font-weight: 600;
                 font-size: 26px; margin: 0; }
-  .mapbig { max-width: 100%; border: 1px solid var(--line-2);
-            border-radius: 3px; display: block; margin-bottom: 16px; }
-  .mapabout { max-width: 70ch; margin-bottom: 18px; }
+  /* The drawing and the description read together, so they sit
+     together; the drawing is capped because past about 560px it stops
+     telling you anything more. */
+  .maptop { display: flex; gap: 26px; align-items: flex-start;
+            margin-bottom: 22px; flex-wrap: wrap; }
+  .mapbig { width: min(100%, 560px); border: 1px solid var(--line-2);
+            border-radius: 3px; display: block; }
+  .mapside { flex: 1 1 320px; min-width: 0; }
+  .mapabout { max-width: 62ch; margin-bottom: 14px; }
   .mapt td, .mapt th { padding: 6px 12px 6px 0; }
   .mapt .nm img, .mapt .nm .noimg { width: 26px; height: 26px; }
   /* A coordinate is read as a pair of numbers, so it is set as one. */
@@ -2182,6 +2188,20 @@ function wireLand(view) {
   });
 }
 
+/* The one number on the wiki that answers "is it worth going" - how
+   long you walk from a storage to the nearest patch of the stuff, and
+   which storage that is when it is not this map's own. */
+function walkCell(h) {
+  const say = (w, where) => `<span class="tile">[${w.x},${w.y}]</span>${
+    w.walk ? ` <b>${esc(w.walk)}</b>` : ""}${where
+    ? ` <span class="sm muted">to ${mapLink(where)}</span>` : ""}`;
+  const bits = [];
+  if (h.near) bits.push(say(h.near, null));
+  if (h.off) bits.push(say(h.off, h.off.map));
+  return bits.join("<br>")
+    || `<span class="sm muted">not worked out</span>`;
+}
+
 function renderOneMap(view, count) {
   const m = mapBy(focusMap);
   if (!m) {
@@ -2189,7 +2209,7 @@ function renderOneMap(view, count) {
     count.textContent = "";
     return;
   }
-  count.textContent = esc(m.land);
+  count.textContent = "";
   const base = DATA.meta.mapBase;
   const faces = DATA.npcPics || {};
 
@@ -2198,18 +2218,21 @@ function renderOneMap(view, count) {
       <span>What harvests here</span>
       <span class="count">${m.harvest.length}</span></h2>
     <div class="scroller"><table class="mapt"><thead><tr>
-      <th>What</th><th class="num">Level</th><th>Best spot</th>
-      <th class="num">Bots pay</th><th class="num">Time</th>
+      <th>What</th><th class="num">Level</th><th>Spots</th>
+      <th>Closest to a storage</th><th class="num">Bots pay</th>
     </tr></thead><tbody>${m.harvest.map(h => `<tr>
       <td><div class="nm">${nameIcon(h.item || h.name)}${
         h.item ? itemLink(h.item) : esc(h.name)}</div></td>
       <td class="num sm">${h.lvl != null ? fmt(h.lvl) : "–"}</td>
       <td class="sm">${spotList(h.at)}${h.what
         ? ` <span class="sm muted">${esc(h.what)}</span>` : ""}</td>
+      <td class="sm">${walkCell(h)}</td>
       <td class="num ${h.pays ? "brass" : "sm muted"}">${h.pays
         ? fmt(h.pays) : "no bot buys it"}</td>
-      <td class="num sm">${esc(h.clock || "")}</td>
-    </tr>`).join("")}</tbody></table></div>`;
+    </tr>`).join("")}</tbody></table></div>
+    ${m.harvest.some(h => (h.near || {}).walk || h.off) ? `<div
+      class="caveat">The walk is from this map's storage unless another
+      is named.</div>` : ""}`;
 
   const beasts = !(m.creatures || []).length ? "" : `
     <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
@@ -2289,13 +2312,24 @@ function renderOneMap(view, count) {
       ${m.inside_of ? `<span class="count">inside ${
         mapLink(m.inside_of)}</span>` : ""}
     </div>
-    ${m.img ? `<img class="mapbig" src="${base}${m.img}" alt="Map of ${
-      esc(m.name)}">` : ""}
-    ${m.about ? `<div class="mapabout">${esc(m.about)}</div>` : ""}
-    ${(m.storage || []).length ? `<div class="facts">${m.storage.map(s =>
-      `<span class="fact"><svg class="ic"><use href="#i-chest"/></svg>
-        Storage at ${spotList(s.at) || esc(s.name)}</span>`).join("")}</div>`
-      : ""}
+    <div class="maptop">
+      ${m.img ? `<img class="mapbig" src="${base}${m.img}" alt="Map of ${
+        esc(m.name)}">` : ""}
+      <div class="mapside">
+        ${m.about ? `<div class="mapabout">${esc(m.about)}</div>` : ""}
+        <div class="facts">
+          ${(m.storage || []).map(s =>
+            `<span class="fact"><svg class="ic"><use href="#i-chest"/></svg>
+              Storage at ${spotList(s.at) || esc(s.name)}</span>`).join("")}
+          ${(m.exits || []).length ? `<span class="fact"><svg class="ic">
+            <use href="#i-maps"/></svg>${m.exits.length} way${
+            m.exits.length === 1 ? "" : "s"} out</span>` : ""}
+          ${(m.bots || []).length ? `<span class="fact"><svg class="ic">
+            <use href="#i-bots"/></svg>${m.bots.length} bot${
+            m.bots.length === 1 ? "" : "s"}</span>` : ""}
+        </div>
+      </div>
+    </div>
     ${harvest}${beasts}${people}${extras}${within}${traders}${ways}
     <div class="caveat">Written up by the Eternal Lands community on the
       wiki. The levels, prices and what a kill is worth are ours.</div>`;

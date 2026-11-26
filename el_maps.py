@@ -309,7 +309,14 @@ def read_map(s, title, land):
         "land": land,
         "full": (head.group(1).strip() if head and head.group(1) else None),
         "short": (head.group(2).strip() if head and head.group(2) else None),
-        "about": plain(re.sub(r"\[\[File:[^\]]*\]\]", "", overview))[:900],
+        "about": plain(re.sub(r"\[\[File:[^\]]*\]\]", "",
+                              re.sub(r"^\*.*$", "", overview, flags=re.M)
+                              ))[:900],
+        # The overview's bullets are asides - where a portal drops you,
+        # which gate is locked - and reading as one paragraph with the
+        # prose they left a stray asterisk mid-sentence.
+        "notes": [plain(line) for line in bullets(overview)
+                  if len(plain(line)) > 12][:6],
         "pic": pic.group(1) if pic else None,
         "photo": photo,
         "npcs": [], "harvest": [], "creatures": [], "specials": [],
