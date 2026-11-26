@@ -1,6 +1,12 @@
 {
  "_comment": "Map drawings mirrored from the EL wiki by el_map_images.py.",
  "maps": {
+  "Aeth Aelfan Cave": {
+   "file": "aeth-aelfan-cave.jpg",
+   "from": "map_aeth_aelfan_cave_0512px.png",
+   "thumb": "aeth-aelfan-cave-sm.jpg",
+   "v": 1
+  },
   "Arius": {
    "file": "arius.jpg",
    "from": "map_arius_0512px.png",
@@ -11,6 +17,18 @@
    "file": "bethel.jpg",
    "from": "map_bethel_0512px.png",
    "thumb": "bethel-sm.jpg",
+   "v": 1
+  },
+  "Bethel Cave": {
+   "file": "bethel-cave.jpg",
+   "from": "map_bethel_caves_0512px.png",
+   "thumb": "bethel-cave-sm.jpg",
+   "v": 1
+  },
+  "Bethel Mine": {
+   "file": "bethel-mine.jpg",
+   "from": "map_bethel_caves_0512px.png",
+   "thumb": "bethel-mine-sm.jpg",
    "v": 1
   },
   "Carmien Manor": {
@@ -35,6 +53,12 @@
    "file": "egratia-point.jpg",
    "from": "map_egratia_point_0512px.png",
    "thumb": "egratia-point-sm.jpg",
+   "v": 1
+  },
+  "Emerald Valley Caves": {
+   "file": "emerald-valley-caves.jpg",
+   "from": "map_emerald_valley_caves_0512px.png",
+   "thumb": "emerald-valley-caves-sm.jpg",
    "v": 1
   },
   "Emerald Valley Trade Route": {
@@ -73,10 +97,22 @@
    "thumb": "hurquin-sm.jpg",
    "v": 1
   },
+  "Hurquin Crypt": {
+   "file": "hurquin-crypt.jpg",
+   "from": "map_hurquin_crypt_0512px.png",
+   "thumb": "hurquin-crypt-sm.jpg",
+   "v": 1
+  },
   "Idaloran": {
    "file": "idaloran.jpg",
    "from": "map_idaloran_0512px.png",
    "thumb": "idaloran-sm.jpg",
+   "v": 1
+  },
+  "Idaloran Mines": {
+   "file": "idaloran-mines.jpg",
+   "from": "map_idaloran_mines_0512px.png",
+   "thumb": "idaloran-mines-sm.jpg",
    "v": 1
   },
   "Imbroglio Islands": {
@@ -133,6 +169,12 @@
    "thumb": "isle-of-the-forgotten-sm.jpg",
    "v": 1
   },
+  "Jahir Beach Cave": {
+   "file": "jahir-beach-cave.jpg",
+   "from": "map_idaloran_caves_0512px.png",
+   "thumb": "jahir-beach-cave-sm.jpg",
+   "v": 1
+  },
   "Kilaran Field": {
    "file": "kilaran-field.jpg",
    "from": "map_kilaran_field_0512px.png",
@@ -143,6 +185,12 @@
    "file": "kusamura-jungle.jpg",
    "from": "map_kusamura_0512px.png",
    "thumb": "kusamura-jungle-sm.jpg",
+   "v": 1
+  },
+  "Lothalith Fortress": {
+   "file": "lothalith-fortress.jpg",
+   "from": "map_lothalith_fortress_0512px.png",
+   "thumb": "lothalith-fortress-sm.jpg",
    "v": 1
   },
   "Magic School Garden": {
@@ -169,6 +217,12 @@
    "thumb": "morcraven-marsh-caves-sm.jpg",
    "v": 1
   },
+  "Mount of Sorrow": {
+   "file": "mount-of-sorrow.jpg",
+   "from": "map_mount_of_sorrow_0512px.png",
+   "thumb": "mount-of-sorrow-sm.jpg",
+   "v": 1
+  },
   "Naralik": {
    "file": "naralik.jpg",
    "from": "map_naralik_0512px.png",
@@ -193,10 +247,22 @@
    "thumb": "north-redmoon-sm.jpg",
    "v": 1
   },
+  "Nymorq Wood Cave": {
+   "file": "nymorq-wood-cave.jpg",
+   "from": "map_idaloran_caves_0512px.png",
+   "thumb": "nymorq-wood-cave-sm.jpg",
+   "v": 1
+  },
   "Orvimon's Crypt": {
    "file": "orvimon-s-crypt.jpg",
    "from": "map_orvimon_crypt_0512px.png",
    "thumb": "orvimon-s-crypt-sm.jpg",
+   "v": 1
+  },
+  "Palon Vertas Underground": {
+   "file": "palon-vertas-underground.jpg",
+   "from": "map_palon_vertas_underground_0512px.png",
+   "thumb": "palon-vertas-underground-sm.jpg",
    "v": 1
   },
   "Port Anitora": {
@@ -277,6 +343,12 @@
    "thumb": "thelinor-sm.jpg",
    "v": 1
   },
+  "Thelinor Caves": {
+   "file": "thelinor-caves.jpg",
+   "from": "map_thelinor_caves_0512px.png",
+   "thumb": "thelinor-caves-sm.jpg",
+   "v": 1
+  },
   "Trassian": {
    "file": "trassian.jpg",
    "from": "map_trassian_0512px.png",
@@ -301,6 +373,12 @@
    "thumb": "white-stone-sm.jpg",
    "v": 1
   },
+  "White Stone City Castle": {
+   "file": "white-stone-city-castle.jpg",
+   "from": "map_seridia_portal_room_0512px.png",
+   "thumb": "white-stone-city-castle-sm.jpg",
+   "v": 1
+  },
   "White Stone City Palace": {
    "file": "white-stone-city-palace.jpg",
    "from": "map_seridia_portal_room_0512px.png",
@@ -311,6 +389,12 @@
    "file": "willowvine-forest.jpg",
    "from": "map_willowvine_forest_0512px.png",
    "thumb": "willowvine-forest-sm.jpg",
+   "v": 1
+  },
+  "Yeti Cave": {
+   "file": "yeti-cave.jpg",
+   "from": "map_irinveron_caves_0512px.png",
+   "thumb": "yeti-cave-sm.jpg",
    "v": 1
   },
   "Zirakinbar": {

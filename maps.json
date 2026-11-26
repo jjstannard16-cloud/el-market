@@ -30525,6 +30525,8213 @@
    ],
    "short": null,
    "inside_of": null
+  },
+  {
+   "name": "Glacmor Skill Academy",
+   "land": "Seridia",
+   "full": "Glacmor Skill Academy",
+   "about": "The Glacmor Skill Academy specializes in alchemy, crafting and potions. There is a reading room and storage area.",
+   "notes": [],
+   "pic": null,
+   "photo": "Glacmor.png",
+   "npcs": [
+    {
+     "name": "Betty",
+     "page": "Betty",
+     "at": [
+      {
+       "x": 292,
+       "y": 316,
+       "pick": false
+      }
+     ],
+     "what": "Book Buyer inside Glacmor Skills Academy"
+    },
+    {
+     "name": "Lytrus",
+     "page": "Lytrus",
+     "at": [
+      {
+       "x": 330,
+       "y": 232,
+       "pick": false
+      }
+     ],
+     "what": "Storage inside Glacmor Skills Academy"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Skill Academy Sewers",
+     "page": "Skill Academy Sewers"
+    }
+   ],
+   "exits": [
+    {
+     "name": "Glacmor",
+     "page": "Glacmor",
+     "at": [
+      {
+       "x": 294,
+       "y": 193,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Glacmor"
+  },
+  {
+   "name": "Clark",
+   "land": "Seridia",
+   "full": "Clark",
+   "about": "",
+   "notes": [],
+   "pic": null,
+   "photo": "Clark.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [],
+   "short": null,
+   "inside_of": null
+  },
+  {
+   "name": "White Stone City Castle",
+   "land": "Seridia",
+   "full": "White Stone City Palace",
+   "about": "Home of Lord Luxin, the ruler of White Stone City and the annexed territories.",
+   "notes": [],
+   "pic": "map_seridia_portal_room_0512px.png",
+   "photo": "White Stone.png",
+   "npcs": [
+    {
+     "name": "Gwen",
+     "page": "Gwen",
+     "at": [
+      {
+       "x": 360,
+       "y": 233,
+       "pick": false
+      }
+     ],
+     "what": "Chief engineer of Lord Luxin in a room connecting the Palace to the Sewers"
+    },
+    {
+     "name": "Jester",
+     "page": "Jester",
+     "at": [
+      {
+       "x": 85,
+       "y": 135,
+       "pick": false
+      }
+     ],
+     "what": "Court jester for Lady Luxin"
+    },
+    {
+     "name": "Orcelius",
+     "page": "Orcelius",
+     "at": [
+      {
+       "x": 92,
+       "y": 158,
+       "pick": false
+      }
+     ],
+     "what": "Game master for the Luxins"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "White Stone",
+     "page": "White Stone",
+     "at": [
+      {
+       "x": 92,
+       "y": 115,
+       "pick": false
+      },
+      {
+       "x": 280,
+       "y": 108,
+       "pick": false
+      },
+      {
+       "x": 150,
+       "y": 144,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "White Stone City Sewers",
+     "page": "White Stone City Sewers",
+     "at": [
+      {
+       "x": 361,
+       "y": 232,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "White Stone"
+  },
+  {
+   "name": "Aeth Aelfan Cave",
+   "land": "Irilion",
+   "full": "Aeth Aelfan Cave",
+   "about": "This small cave in Aeth Aelfan has many harvestables, and a fancy door to a fancy house that is locked (certain death locked within, beware). No creatures in this cave.",
+   "notes": [],
+   "pic": "map_aeth_aelfan_cave_0512px.png",
+   "photo": "Aeth Aelfan.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 23,
+       "y": 28,
+       "pick": false
+      }
+     ],
+     "clock": "1:15",
+     "near": {
+      "x": 23,
+      "y": 28,
+      "walk": "1:15"
+     }
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 72,
+       "y": 77,
+       "pick": false
+      }
+     ],
+     "clock": "1:22",
+     "near": {
+      "x": 72,
+      "y": 77,
+      "walk": "1:22"
+     }
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 25,
+       "y": 78,
+       "pick": false
+      }
+     ],
+     "clock": "1:23",
+     "near": {
+      "x": 25,
+      "y": 78,
+      "walk": "1:23"
+     }
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 25,
+       "y": 78,
+       "pick": false
+      }
+     ],
+     "clock": "1:23",
+     "near": {
+      "x": 25,
+      "y": 78,
+      "walk": "1:23"
+     }
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 20,
+       "y": 38,
+       "pick": false
+      }
+     ],
+     "clock": "1:15",
+     "near": {
+      "x": 20,
+      "y": 38,
+      "walk": "1:15"
+     }
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Aeth Aelfan Gloomy Cave",
+     "page": "Aeth Aelfan Gloomy Cave"
+    }
+   ],
+   "exits": [
+    {
+     "name": "Aeth Aelfan",
+     "page": "Aeth Aelfan",
+     "at": [
+      {
+       "x": 55,
+       "y": 18,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Aeth Aelfan"
+  },
+  {
+   "name": "Aeth Aelfan Gloomy Cave",
+   "land": "Irilion",
+   "full": "Aeth Aelfan Gloomy Cave",
+   "about": "The home of the evil Black Dragon. It has a good group of harvestables. Beware of the heat and poison damage in some areas.",
+   "notes": [],
+   "pic": null,
+   "photo": "Aeth Aelfan.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 556,
+       "y": 601,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 639,
+       "y": 602,
+       "pick": false
+      },
+      {
+       "x": 656,
+       "y": 615,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 687,
+       "y": 655,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 675,
+       "y": 615,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 658,
+       "y": 667,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 615,
+       "y": 657,
+       "pick": false
+      },
+      {
+       "x": 626,
+       "y": 627,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 565,
+       "y": 596,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Black Dragon",
+     "page": "Black Dragon"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Aeth Aelfan Cave",
+     "page": "Aeth Aelfan Cave",
+     "at": [
+      {
+       "x": 633,
+       "y": 598,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Aeth Aelfan"
+  },
+  {
+   "name": "Lothalith Fortress",
+   "land": "Irilion",
+   "full": "Lothalith Fortress",
+   "about": "This fortress has many rooms including a kitchen, hospital, library, and barracks to explore. Teleport essences may be useful at several points. There are no monsters, but walking into a wrong room unprepared can be dangerous. If you register in the entrance room, you must walk the entire way through the fortress to find the exit. The hospital offers fast healing if you remain near the beds. Following that, there is a large magma-laden shrine room dedicated to the only creature inside the fortress, a beaver. One green \"necromantic convergence\" room (summoning arena) inflicts 5 heat damage and appears to lack an exit. This is a bug in the game, however. If you zoom in and turn the camera so you can see inside the thick wall containing the door through which you entered the room, you will see 2 doors. Click the one closest to the green room to return to the hallway. This exit door for the ",
+   "notes": [],
+   "pic": "map_lothalith_fortress_0512px.png",
+   "photo": "Aeth Aelfan.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 156,
+       "y": 170,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 120,
+       "y": 33,
+       "pick": false
+      },
+      {
+       "x": 177,
+       "y": 35,
+       "pick": false
+      },
+      {
+       "x": 169,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 155,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 168,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 156,
+       "y": 170,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 37,
+       "y": 55,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Dandelion",
+     "page": "Dandelion",
+     "at": [
+      {
+       "x": 161,
+       "y": 135,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 177,
+       "y": 35,
+       "pick": false
+      },
+      {
+       "x": 159,
+       "y": 102,
+       "pick": false
+      },
+      {
+       "x": 171,
+       "y": 98,
+       "pick": false
+      },
+      {
+       "x": 134,
+       "y": 162,
+       "pick": false
+      },
+      {
+       "x": 134,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 130,
+       "y": 168,
+       "pick": false
+      },
+      {
+       "x": 130,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 127,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 120,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 113,
+       "y": 162,
+       "pick": false
+      },
+      {
+       "x": 113,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 106,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 65,
+       "y": 169,
+       "pick": false
+      },
+      {
+       "x": 68,
+       "y": 159,
+       "pick": false
+      }
+     ],
+     "what": "[123.166]"
+    },
+    {
+     "name": "Impatiens",
+     "page": "Impatiens",
+     "at": [
+      {
+       "x": 177,
+       "y": 45,
+       "pick": false
+      },
+      {
+       "x": 97,
+       "y": 148,
+       "pick": false
+      },
+      {
+       "x": 151,
+       "y": 139,
+       "pick": false
+      },
+      {
+       "x": 153,
+       "y": 137,
+       "pick": false
+      },
+      {
+       "x": 154,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 156,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 161,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 167,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 137,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 142,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 146,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 150,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 155,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 168,
+       "pick": false
+      },
+      {
+       "x": 168,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 162,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 156,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 153,
+       "y": 168,
+       "pick": false
+      },
+      {
+       "x": 153,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 165,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 165,
+       "y": 161,
+       "pick": false
+      },
+      {
+       "x": 151,
+       "y": 143,
+       "pick": false
+      },
+      {
+       "x": 152,
+       "y": 147,
+       "pick": false
+      },
+      {
+       "x": 156,
+       "y": 147,
+       "pick": false
+      },
+      {
+       "x": 158,
+       "y": 148,
+       "pick": false
+      },
+      {
+       "x": 162,
+       "y": 148,
+       "pick": false
+      },
+      {
+       "x": 163,
+       "y": 152,
+       "pick": false
+      },
+      {
+       "x": 161,
+       "y": 158,
+       "pick": false
+      },
+      {
+       "x": 158,
+       "y": 158,
+       "pick": false
+      },
+      {
+       "x": 154,
+       "y": 157,
+       "pick": false
+      },
+      {
+       "x": 64,
+       "y": 153,
+       "pick": false
+      },
+      {
+       "x": 50,
+       "y": 154,
+       "pick": false
+      },
+      {
+       "x": 20,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 31,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 25,
+       "y": 87,
+       "pick": false
+      },
+      {
+       "x": 67,
+       "y": 43,
+       "pick": false
+      },
+      {
+       "x": 95,
+       "y": 25,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 177,
+       "y": 55,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Poison Ivy",
+     "page": "Poison Ivy",
+     "at": [
+      {
+       "x": 177,
+       "y": 46,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 168,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 154,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 161,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 167,
+       "y": 135,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 137,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 150,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 168,
+       "pick": false
+      },
+      {
+       "x": 153,
+       "y": 168,
+       "pick": false
+      },
+      {
+       "x": 52,
+       "y": 100,
+       "pick": false
+      },
+      {
+       "x": 68,
+       "y": 142,
+       "pick": false
+      },
+      {
+       "x": 30,
+       "y": 99,
+       "pick": false
+      },
+      {
+       "x": 22,
+       "y": 99,
+       "pick": false
+      },
+      {
+       "x": 42,
+       "y": 31,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sunflower",
+     "page": "Sunflower",
+     "at": [
+      {
+       "x": 167,
+       "y": 135,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 120,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 106,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 43,
+       "y": 118,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Tree Mushroom",
+     "page": "Tree Mushroom",
+     "at": [
+      {
+       "x": 177,
+       "y": 55,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Tulips",
+     "page": "Tulips",
+     "at": [
+      {
+       "x": 177,
+       "y": 58,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 134,
+       "y": 162,
+       "pick": false
+      },
+      {
+       "x": 134,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 127,
+       "y": 162,
+       "pick": false
+      },
+      {
+       "x": 127,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 123,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 123,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 120,
+       "y": 161,
+       "pick": false
+      },
+      {
+       "x": 120,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 113,
+       "y": 166,
+       "pick": false
+      },
+      {
+       "x": 106,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 106,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 64,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 57,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 57,
+       "y": 169,
+       "pick": false
+      },
+      {
+       "x": 79,
+       "y": 77,
+       "pick": false
+      },
+      {
+       "x": 81,
+       "y": 77,
+       "pick": false
+      },
+      {
+       "x": 83,
+       "y": 77,
+       "pick": false
+      },
+      {
+       "x": 85,
+       "y": 77,
+       "pick": false
+      },
+      {
+       "x": 87,
+       "y": 77,
+       "pick": false
+      }
+     ],
+     "what": "[113.162]"
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly",
+     "at": [
+      {
+       "x": 26,
+       "y": 141,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wormwood",
+     "page": "Wormwood",
+     "at": [
+      {
+       "x": 170,
+       "y": 137,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose",
+     "at": [
+      {
+       "x": 170,
+       "y": 155,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 162,
+       "y": 170,
+       "pick": false
+      },
+      {
+       "x": 156,
+       "y": 170,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Beaver",
+     "page": "Beaver",
+     "at": [
+      {
+       "x": 150,
+       "y": 70,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "specials": [
+    {
+     "name": "Alchemy",
+     "page": "Alchemy",
+     "at": [
+      {
+       "x": 167,
+       "y": 119,
+       "pick": false
+      }
+     ],
+     "what": "school? - (not working - 12 December 2010)"
+    },
+    {
+     "name": "Archery Arena",
+     "page": "Archery Arena",
+     "at": [
+      {
+       "x": 85,
+       "y": 61,
+       "pick": false
+      }
+     ],
+     "what": "? - (not working - 1 May 2012)"
+    },
+    {
+     "name": "Manufacturing",
+     "page": "Manufacturing",
+     "at": [
+      {
+       "x": 44,
+       "y": 56,
+       "pick": false
+      }
+     ],
+     "what": "school? - (not working - 12 December 2010)"
+    }
+   ],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Aeth Aelfan",
+     "page": "Aeth Aelfan",
+     "at": [
+      {
+       "x": 98,
+       "y": 19,
+       "pick": false
+      },
+      {
+       "x": 40,
+       "y": 31,
+       "pick": false
+      }
+     ],
+     "what": "(entrance), (exit)",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Aeth Aelfan"
+  },
+  {
+   "name": "Wyrmgoth Underground",
+   "land": "Irilion",
+   "full": "Wyrmgoth Underground",
+   "about": "The passage into the Wyrmgoth Underground is a secret. This is a map full of resources and dangerous creatures. It can be used as a passage from the safe area to the PK area of Aeth Aelfan. It also contains a Life Essence factory and a Steel Bar factory. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Aeth Aelfan.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Diamond",
+     "page": "Diamond",
+     "at": [
+      {
+       "x": 95,
+       "y": 298,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 158,
+       "y": 115,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Irilium Ore",
+     "page": "Irilium Ore",
+     "at": [
+      {
+       "x": 24,
+       "y": 143,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Lilacs",
+     "page": "Lilacs",
+     "at": [
+      {
+       "x": 178,
+       "y": 30,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Mugwort",
+     "page": "Mugwort",
+     "at": [
+      {
+       "x": 40,
+       "y": 31,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 69,
+       "y": 268,
+       "pick": false
+      },
+      {
+       "x": 253,
+       "y": 141,
+       "pick": false
+      },
+      {
+       "x": 42,
+       "y": 303,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 22,
+       "y": 139,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Silver Ore",
+     "page": "Silver Ore",
+     "at": [
+      {
+       "x": 238,
+       "y": 208,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sunflower",
+     "page": "Sunflower",
+     "at": [
+      {
+       "x": 257,
+       "y": 151,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Titanium Ore",
+     "page": "Titanium Ore",
+     "at": [
+      {
+       "x": 180,
+       "y": 28,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 151,
+       "y": 200,
+       "pick": false
+      },
+      {
+       "x": 201,
+       "y": 247,
+       "pick": false
+      },
+      {
+       "x": 39,
+       "y": 31,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wolframite",
+     "page": "Wolframite",
+     "at": [
+      {
+       "x": 55,
+       "y": 187,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 252,
+       "y": 46,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 240,
+       "y": 31,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 240,
+       "y": 50,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Female Orc",
+     "page": "Armed Female Orc",
+     "at": [
+      {
+       "x": 67,
+       "y": 230,
+       "pick": false
+      },
+      {
+       "x": 45,
+       "y": 190,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc",
+     "at": [
+      {
+       "x": 148,
+       "y": 260,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Hobgoblin",
+     "page": "Hobgoblin",
+     "at": [
+      {
+       "x": 240,
+       "y": 184,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Large Spider",
+     "page": "Large Spider"
+    },
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre",
+     "at": [
+      {
+       "x": 32,
+       "y": 132,
+       "pick": false
+      },
+      {
+       "x": 124,
+       "y": 185,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rat",
+     "page": "Rat"
+    },
+    {
+     "name": "Skeleton",
+     "page": "Skeleton",
+     "at": [
+      {
+       "x": 30,
+       "y": 61,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Small Spider",
+     "page": "Small Spider"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Aeth Aelfan",
+     "page": "Aeth Aelfan",
+     "at": [
+      {
+       "x": 156,
+       "y": 118,
+       "pick": false
+      },
+      {
+       "x": 26,
+       "y": 43,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Aeth Aelfan"
+  },
+  {
+   "name": "Smuggler's Cave",
+   "land": "Irilion",
+   "full": "Smuggler's Cave",
+   "about": "",
+   "notes": [],
+   "pic": null,
+   "photo": "Aeth Aelfan.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 505,
+       "y": 380,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Swamp Candles",
+     "page": "Swamp Candles",
+     "at": [
+      {
+       "x": 628,
+       "y": 434,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 549,
+       "y": 499,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 515,
+       "y": 433,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 402,
+       "y": 381,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Titanium Ore",
+     "page": "Titanium Ore",
+     "at": [
+      {
+       "x": 474,
+       "y": 340,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Black Dragon",
+     "page": "Black Dragon",
+     "what": "The Black Dragon is in SC3 (Burn Maps). You can enter this part but not leave without teleport or ring."
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Egratia Point",
+     "page": "Egratia Point",
+     "at": [
+      {
+       "x": 726,
+       "y": 473,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Aeth Aelfan",
+     "page": "Aeth Aelfan",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Aeth Aelfan"
+  },
+  {
+   "name": "Arius Caves",
+   "land": "Irilion",
+   "full": "Arius Caves",
+   "about": "An old copper mine now inhabited by two hobgoblins. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Arius.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Copper Ore",
+     "page": "Copper Ore",
+     "at": [
+      {
+       "x": 269,
+       "y": 256,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Hobgoblin",
+     "page": "Hobgoblin"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Arius",
+     "page": "Arius",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Arius"
+  },
+  {
+   "name": "Arius Coal Cave",
+   "land": "Irilion",
+   "full": "Arius Coal Cave",
+   "about": "A small Cave in Arius with Coal. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Arius.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 60,
+       "y": 234,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Arius",
+     "page": "Arius",
+     "at": [
+      {
+       "x": 40,
+       "y": 251,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Arius"
+  },
+  {
+   "name": "Arius Magic School",
+   "land": "Irilion",
+   "full": "Arius Magic School",
+   "about": "",
+   "notes": [],
+   "pic": null,
+   "photo": "Arius.png",
+   "npcs": [
+    {
+     "name": "Pirquet",
+     "page": "Pirquet",
+     "what": "Allergen Researcher"
+    },
+    {
+     "name": "Eva",
+     "page": "Eva",
+     "what": "Engineering teacher"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [
+    {
+     "name": "Arius",
+     "page": "Arius",
+     "at": [
+      {
+       "x": 181,
+       "y": 62,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Arius",
+     "page": "Arius",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Arius"
+  },
+  {
+   "name": "Bethel Cave",
+   "land": "Irilion",
+   "full": "Bethel \"PK\" Cave",
+   "about": "A winding tunnel with lots of lava streams and pools. It has Emeralds and Sulfur that can be harvested, but there are safer areas to harvest these items. <!--",
+   "notes": [
+    "WARNING! This map is PK!",
+    "This cave does heat damage, so wearing leather armor is a good idea.",
+    "The lava pools can be walked into and will do 20 points damage!!"
+   ],
+   "pic": "map_bethel_caves_0512px.png",
+   "photo": "Bethel.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 172,
+       "y": 41,
+       "pick": false
+      }
+     ],
+     "what": "(under the stone bridge)"
+    },
+    {
+     "name": "Obsidian",
+     "page": "Obsidian",
+     "at": [
+      {
+       "x": 89,
+       "y": 62,
+       "pick": false
+      },
+      {
+       "x": 97,
+       "y": 53,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 63,
+       "y": 22,
+       "pick": false
+      },
+      {
+       "x": 70,
+       "y": 23,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel",
+     "page": "Bethel",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Bethel"
+  },
+  {
+   "name": "Bethel Mine",
+   "land": "Irilion",
+   "full": "Bethel Mine",
+   "about": "<!--",
+   "notes": [],
+   "pic": "map_bethel_caves_0512px.png",
+   "photo": "Bethel.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 74,
+       "y": 127,
+       "pick": false
+      },
+      {
+       "x": 145,
+       "y": 96,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 40,
+       "y": 133,
+       "pick": false
+      },
+      {
+       "x": 45,
+       "y": 126,
+       "pick": false
+      },
+      {
+       "x": 20,
+       "y": 112,
+       "pick": false
+      },
+      {
+       "x": 23,
+       "y": 110,
+       "pick": false
+      },
+      {
+       "x": 27,
+       "y": 109,
+       "pick": false
+      },
+      {
+       "x": 102,
+       "y": 138,
+       "pick": false
+      },
+      {
+       "x": 111,
+       "y": 132,
+       "pick": false
+      },
+      {
+       "x": 160,
+       "y": 153,
+       "pick": false
+      },
+      {
+       "x": 169,
+       "y": 164,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Nightshade",
+     "page": "Nightshade",
+     "at": [
+      {
+       "x": 28,
+       "y": 136,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 73,
+       "y": 130,
+       "pick": false
+      },
+      {
+       "x": 99,
+       "y": 99,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 76,
+       "y": 145,
+       "pick": false
+      },
+      {
+       "x": 77,
+       "y": 141,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Silver Ore",
+     "page": "Silver Ore",
+     "at": [
+      {
+       "x": 153,
+       "y": 126,
+       "pick": false
+      },
+      {
+       "x": 141,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 128,
+       "y": 169,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Feros",
+     "page": "Feros",
+     "at": [
+      {
+       "x": 62,
+       "y": 142,
+       "pick": false
+      },
+      {
+       "x": 34,
+       "y": 120,
+       "pick": false
+      },
+      {
+       "x": 134,
+       "y": 106,
+       "pick": false
+      },
+      {
+       "x": 139,
+       "y": 153,
+       "pick": false
+      }
+     ],
+     "what": "~25s, ~25s, ~25s"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel",
+     "page": "Bethel",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Bethel"
+  },
+  {
+   "name": "Sunken Ship",
+   "land": "Irilion",
+   "full": "Sunken Ship",
+   "about": "The interior of a sunken Ship in Bethel. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Bethel.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 33,
+       "y": 85,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 26,
+       "y": 85,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Diamond",
+     "page": "Diamond",
+     "at": [
+      {
+       "x": 30,
+       "y": 54,
+       "pick": false
+      }
+     ],
+     "what": "(crystal on statue)"
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 26,
+       "y": 85,
+       "pick": false
+      },
+      {
+       "x": 33,
+       "y": 85,
+       "pick": false
+      }
+     ],
+     "what": "[ (between the legs of either statue)"
+    },
+    {
+     "name": "Impatiens",
+     "page": "Impatiens",
+     "at": [
+      {
+       "x": 33,
+       "y": 85,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 26,
+       "y": 88,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 30,
+       "y": 54,
+       "pick": false
+      }
+     ],
+     "what": "(on either wand of statue)"
+    },
+    {
+     "name": "Sunflower",
+     "page": "Sunflower",
+     "at": [
+      {
+       "x": 33,
+       "y": 88,
+       "pick": false
+      }
+     ],
+     "what": "["
+    },
+    {
+     "name": "Tiger Lilly",
+     "page": "Tiger Lilly",
+     "at": [
+      {
+       "x": 26,
+       "y": 85,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 26,
+       "y": 85,
+       "pick": false
+      },
+      {
+       "x": 33,
+       "y": 85,
+       "pick": false
+      }
+     ],
+     "what": "(between the legs of either statue)"
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly",
+     "at": [
+      {
+       "x": 26,
+       "y": 85,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel",
+     "page": "Bethel",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Bethel"
+  },
+  {
+   "name": "Target Cave",
+   "land": "Irilion",
+   "full": "Target Cave, \"The bird is the word\"",
+   "about": "A secret cave in Bethel with a few dangerous creatures. \"The bird is the word\". <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Bethel.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Cockatrice",
+     "page": "Cockatrice"
+    },
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel Cave",
+     "page": "Bethel Cave",
+     "at": [
+      {
+       "x": 69,
+       "y": 57,
+       "pick": false
+      }
+     ],
+     "what": "(PK)",
+     "pk": true,
+     "how": "Land"
+    },
+    {
+     "name": "Bethel Mine",
+     "page": "Bethel Mine",
+     "at": [
+      {
+       "x": 101,
+       "y": 22,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Bethel"
+  },
+  {
+   "name": "Monster Lair",
+   "land": "Irilion",
+   "full": "Monster Lair",
+   "about": "A PK Cave full of monsters in the Barrenlands of Sorrow, Emerald Valley Trade Route. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Emerald Valley Trade Route.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Armed Goblin",
+     "page": "Armed Goblin",
+     "what": "(x2)"
+    },
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc",
+     "what": "(x2)"
+    },
+    {
+     "name": "Armed Female Orc",
+     "page": "Armed Female Orc",
+     "what": "(x2)"
+    },
+    {
+     "name": "Large Spider",
+     "page": "Large Spider",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Emerald Valley Trade Route",
+     "page": "Emerald Valley Trade Route",
+     "at": [
+      {
+       "x": 69,
+       "y": 97,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Emerald Valley Trade Route"
+  },
+  {
+   "name": "Tavern Cellar",
+   "land": "Irilion",
+   "full": "Tavern Cellar",
+   "about": "Just a dusty old Cellar beneath the Scarlett Wish Tavern in Emerald Valley Trade Route. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Emerald Valley Trade Route.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Rat",
+     "page": "Rat",
+     "what": "(x1)"
+    },
+    {
+     "name": "Small Spider",
+     "page": "Small Spider",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Emerald Valley Trade Route",
+     "page": "Emerald Valley Trade Route",
+     "at": [
+      {
+       "x": 16,
+       "y": 87,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Emerald Valley Trade Route"
+  },
+  {
+   "name": "Emerald Valley Caves",
+   "land": "Irilion",
+   "full": "Emerald Valley Caves",
+   "about": "This is a secret map, information on how to enter can be found on the [[https://smf.el-wiki.net/index.php?topic=288 forum](link does not work). Click the Tavern cellar door to enter the cellar, then in the back of the cellar room you will see a stack of barrels, click use on the upper left one or the first one in the row to enter the cave.",
+   "notes": [],
+   "pic": "map_emerald_valley_caves_0512px.png",
+   "photo": "Emerald Valley Trade Route.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Amber",
+     "page": "Amber",
+     "at": [
+      {
+       "x": 124,
+       "y": 83,
+       "pick": false
+      }
+     ],
+     "what": "(1 door, 1 secret passage)",
+     "clock": "0:20",
+     "near": {
+      "x": 124,
+      "y": 83,
+      "walk": "0:20"
+     }
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 134,
+       "y": 172,
+       "pick": false
+      }
+     ],
+     "what": "( 1 door, 1 secret passage)",
+     "clock": "01:00",
+     "near": {
+      "x": 134,
+      "y": 172,
+      "walk": "01:00"
+     }
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 153,
+       "y": 148,
+       "pick": false
+      },
+      {
+       "x": 160,
+       "y": 113,
+       "pick": false
+      },
+      {
+       "x": 151,
+       "y": 100,
+       "pick": false
+      },
+      {
+       "x": 157,
+       "y": 90,
+       "pick": false
+      },
+      {
+       "x": 138,
+       "y": 80,
+       "pick": true
+      }
+     ],
+     "what": "(1 door, 1 secret passage)",
+     "clock": "00:25",
+     "near": {
+      "x": 138,
+      "y": 80,
+      "walk": "00:25"
+     }
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 104,
+       "y": 132,
+       "pick": false
+      }
+     ],
+     "what": "(1 door, 1 secret passage)",
+     "clock": "00:45",
+     "near": {
+      "x": 104,
+      "y": 132,
+      "walk": "00:45"
+     }
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 106,
+       "y": 139,
+       "pick": false
+      }
+     ],
+     "what": "(1 door, 1 secret passage)",
+     "clock": "00:45",
+     "near": {
+      "x": 106,
+      "y": 139,
+      "walk": "00:45"
+     }
+    },
+    {
+     "name": "Teleport to Range Spell",
+     "page": "Teleport to Range Spell",
+     "what": "needed to get there)"
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 143,
+       "y": 39,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Titanium Ore",
+     "page": "Titanium Ore",
+     "at": [
+      {
+       "x": 149,
+       "y": 18,
+       "pick": false
+      },
+      {
+       "x": 138,
+       "y": 22,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Skeleton",
+     "page": "Armed Skeleton",
+     "what": "(x3)"
+    },
+    {
+     "name": "Teleport to Range Spell",
+     "page": "Teleport to Range Spell",
+     "what": "needed to get there)"
+    },
+    {
+     "name": "Armed Skeleton",
+     "page": "Armed Skeleton",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [
+    {
+     "name": "Alchemy School",
+     "page": "Skill Schools"
+    }
+   ],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Emerald Valley Trade Route",
+     "page": "Emerald Valley Trade Route",
+     "at": [
+      {
+       "x": 172,
+       "y": 168,
+       "pick": false
+      }
+     ],
+     "what": "Ancient Shrine",
+     "how": "Land"
+    },
+    {
+     "name": "Tavern Cellar",
+     "page": "Tavern Cellar",
+     "at": [
+      {
+       "x": 110,
+       "y": 85,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Emerald Valley Trade Route"
+  },
+  {
+   "name": "Waveneck Caves",
+   "land": "Irilion",
+   "full": "Waveneck Caves",
+   "about": "A cave system in northwest Glacmor on the coast of the Winterglace Sea. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Glacmor.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 170,
+       "y": 176,
+       "pick": false
+      }
+     ],
+     "clock": "2:12",
+     "near": {
+      "x": 170,
+      "y": 176,
+      "walk": "2:12"
+     }
+    },
+    {
+     "name": "Cinnabar",
+     "page": "Cinnabar",
+     "at": [
+      {
+       "x": 194,
+       "y": 233,
+       "pick": false
+      }
+     ],
+     "clock": "2:04",
+     "near": {
+      "x": 194,
+      "y": 233,
+      "walk": "2:04"
+     }
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 51,
+       "y": 194,
+       "pick": false
+      }
+     ],
+     "clock": "2:00",
+     "near": {
+      "x": 51,
+      "y": 194,
+      "walk": "2:00"
+     }
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 175,
+       "y": 178,
+       "pick": false
+      }
+     ],
+     "clock": "2:16",
+     "near": {
+      "x": 175,
+      "y": 178,
+      "walk": "2:16"
+     }
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 142,
+       "y": 178,
+       "pick": false
+      }
+     ],
+     "clock": "2:10",
+     "near": {
+      "x": 142,
+      "y": 178,
+      "walk": "2:10"
+     }
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 15,
+       "y": 250,
+       "pick": false
+      }
+     ],
+     "clock": "2:06",
+     "near": {
+      "x": 15,
+      "y": 250,
+      "walk": "2:06"
+     }
+    },
+    {
+     "name": "Turquoise",
+     "page": "Turquoise",
+     "at": [
+      {
+       "x": 140,
+       "y": 292,
+       "pick": false
+      }
+     ],
+     "clock": "1:58",
+     "near": {
+      "x": 140,
+      "y": 292,
+      "walk": "1:58"
+     }
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Glacmor",
+     "page": "Glacmor",
+     "at": [
+      {
+       "x": 107,
+       "y": 245,
+       "pick": false
+      },
+      {
+       "x": 126,
+       "y": 236,
+       "pick": false
+      },
+      {
+       "x": 107,
+       "y": 223,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Glacmor"
+  },
+  {
+   "name": "Galienne's Fashion Runway",
+   "land": "Irilion",
+   "full": "Galienne's Fashion Runway",
+   "about": "The Galienne's Fashion Runway in Glacmor is the most spectacular and fabulous runway in all of Draia. In the backstage you will find Kiyana, the High Priestess of Galienne, the Goddess of Tailoring, Fate, Inspiration and Perfection. There is a backdoor to the empty Galienne's Temple.",
+   "notes": [],
+   "pic": null,
+   "photo": "Glacmor.png",
+   "npcs": [
+    {
+     "name": "Kiyana",
+     "page": "Kiyana",
+     "at": [
+      {
+       "x": 161,
+       "y": 335,
+       "pick": false
+      }
+     ],
+     "what": "Priestess of Galienne"
+    },
+    {
+     "name": "Sergio",
+     "page": "Sergio",
+     "at": [
+      {
+       "x": 159,
+       "y": 362,
+       "pick": false
+      }
+     ],
+     "what": "Minor Priest of Galienne"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Glacmor",
+     "page": "Glacmor",
+     "at": [
+      {
+       "x": 105,
+       "y": 329,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Glacmor"
+  },
+  {
+   "name": "Hurquin Cave",
+   "land": "Irilion",
+   "full": "Hurquin Cave",
+   "about": "<!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Hurquin.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Berries",
+     "page": "Blue Berries",
+     "at": [
+      {
+       "x": 163,
+       "y": 167,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 137,
+       "y": 99,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Cotton",
+     "page": "Cotton",
+     "at": [
+      {
+       "x": 131,
+       "y": 89,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 137,
+       "y": 98,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Henbane",
+     "page": "Henbane",
+     "at": [
+      {
+       "x": 164,
+       "y": 153,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 164,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 139,
+       "y": 146,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Poison Ivy",
+     "page": "Poison Ivy",
+     "at": [
+      {
+       "x": 159,
+       "y": 131,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 137,
+       "y": 101,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Currants",
+     "page": "Red Currants",
+     "at": [
+      {
+       "x": 170,
+       "y": 165,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 169,
+       "y": 95,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 140,
+       "y": 146,
+       "pick": false
+      },
+      {
+       "x": 170,
+       "y": 163,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Tree Mushroom",
+     "page": "Tree Mushroom",
+     "at": [
+      {
+       "x": 171,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 138,
+       "y": 147,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 163,
+       "y": 164,
+       "pick": false
+      },
+      {
+       "x": 171,
+       "y": 163,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Hobgoblin",
+     "page": "Hobgoblin"
+    }
+   ],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Hurquin Crypt",
+     "page": "Hurquin Crypt",
+     "at": [
+      {
+       "x": 172,
+       "y": 80,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "Hurquin",
+     "page": "Hurquin",
+     "at": [
+      {
+       "x": 168,
+       "y": 168,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Hurquin"
+  },
+  {
+   "name": "Hurquin Crypt",
+   "land": "Irilion",
+   "full": "Hurquin Crypt",
+   "about": "A Crypt full of monsters deep inside Hurquin Cave. <!--",
+   "notes": [],
+   "pic": "map_hurquin_crypt_0512px.png",
+   "photo": "Hurquin.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "what": "Not currently harvestable"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Female Orc",
+     "page": "Armed Female Orc"
+    },
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc"
+    },
+    {
+     "name": "Armed Skeleton",
+     "page": "Armed Skeleton"
+    },
+    {
+     "name": "Large Spider",
+     "page": "Large Spider"
+    },
+    {
+     "name": "Phantom Warrior",
+     "page": "Phantom Warrior"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Hurquin Cave",
+     "page": "Hurquin Cave",
+     "at": [
+      {
+       "x": 25,
+       "y": 83,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Hurquin"
+  },
+  {
+   "name": "Rose Island",
+   "land": "Irilion",
+   "full": "Rose Island",
+   "about": "A deserted and isolated Island near Hurquin with just a few Roses to harvest. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Hurquin.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 198,
+       "y": 315,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 218,
+       "y": 330,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose",
+     "at": [
+      {
+       "x": 208,
+       "y": 308,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Hurquin",
+     "page": "Hurquin",
+     "at": [
+      {
+       "x": 214,
+       "y": 298,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Hurquin"
+  },
+  {
+   "name": "Nymorq Wood Cave",
+   "land": "Irilion",
+   "full": "Nymorq Wood Cave",
+   "about": "Besides its Mines, Idaloran has two cave with secret or blocked entrances, this one is called Nymorq Wood Cave.",
+   "notes": [],
+   "pic": "map_idaloran_caves_0512px.png",
+   "photo": "Idaloran.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 9,
+       "y": 69,
+       "pick": false
+      },
+      {
+       "x": 27,
+       "y": 47,
+       "pick": false
+      },
+      {
+       "x": 5,
+       "y": 28,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 10,
+       "y": 44,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Forest Chimeran",
+     "page": "Forest Chimeran",
+     "what": "(x2)"
+    },
+    {
+     "name": "Large Spider",
+     "page": "Large Spider",
+     "what": "(x2)"
+    },
+    {
+     "name": "Skeleton",
+     "page": "Skeleton",
+     "what": "(x2)"
+    },
+    {
+     "name": "Small Spider",
+     "page": "Small Spider",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Idaloran",
+     "page": "Idaloran",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Idaloran"
+  },
+  {
+   "name": "Jahir Beach Cave",
+   "land": "Irilion",
+   "full": "Jahir Beach Cave",
+   "about": "This secret Cave in Idaloran connects the main area of Idaloran to a isolated area of Idaloran.",
+   "notes": [],
+   "pic": "map_idaloran_caves_0512px.png",
+   "photo": "Idaloran.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Nightshade",
+     "page": "Nightshade",
+     "at": [
+      {
+       "x": 179,
+       "y": 164,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 150,
+       "y": 154,
+       "pick": false
+      },
+      {
+       "x": 136,
+       "y": 142,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Mountain Chimeran",
+     "page": "Mountain Chimeran",
+     "what": "(x1)"
+    },
+    {
+     "name": "Rat",
+     "page": "Rat",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Idaloran",
+     "page": "Idaloran",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Idaloran"
+  },
+  {
+   "name": "Idaloran Mines",
+   "land": "Irilion",
+   "full": "Idaloran Mines",
+   "about": "<!--",
+   "notes": [
+    "West entrance to Mines - [256,206]",
+    "East entrance to Mines - [702,192]",
+    "Climb the rope to the mines by \"pointing\" to it - [703,232] To get back down, do the same. You may have to zoom in to click the rope very precisely.",
+    "Once inside entrance, there is a ladder which you must descend before moving about the mine."
+   ],
+   "pic": "map_idaloran_mines_0512px.png",
+   "photo": "Idaloran.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 36,
+       "y": 375,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 185,
+       "y": 280,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Copper Ore",
+     "page": "Copper Ore",
+     "at": [
+      {
+       "x": 113,
+       "y": 168,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 61,
+       "y": 195,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Irilium Ore",
+     "page": "Irilium Ore",
+     "at": [
+      {
+       "x": 27,
+       "y": 279,
+       "pick": false
+      },
+      {
+       "x": 245,
+       "y": 261,
+       "pick": false
+      }
+     ],
+     "what": "Not yet a game harvestable"
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore"
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 367,
+       "y": 228,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 325,
+       "y": 194,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 261,
+       "y": 124,
+       "pick": false
+      }
+     ],
+     "clock": "03:40",
+     "near": {
+      "x": 261,
+      "y": 124,
+      "walk": "03:40"
+     }
+    },
+    {
+     "name": "Tin Ore",
+     "page": "Tin Ore",
+     "at": [
+      {
+       "x": 142,
+       "y": 315,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Female Orc",
+     "page": "Armed Female Orc"
+    },
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc"
+    },
+    {
+     "name": "Cyclops",
+     "page": "Cyclops"
+    },
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre"
+    },
+    {
+     "name": "Troll",
+     "page": "Troll"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Idaloran",
+     "page": "Idaloran",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Idaloran"
+  },
+  {
+   "name": "Imbroglio Fluffy Cave",
+   "land": "Irilion",
+   "full": "Imbroglio Fluffy Cave",
+   "about": "\"A cave that's very fluffy\" It connects the Isles of Tio and Moglo in the Imbroglio Islands. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Imbroglio Islands.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Fluffy Rabbit",
+     "page": "Fluffy Rabbit",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Imbroglio Islands",
+     "page": "Imbroglio Islands",
+     "at": [
+      {
+       "x": 136,
+       "y": 150,
+       "pick": false
+      }
+     ],
+     "what": "Tio Isle (PK)",
+     "pk": true,
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Imbroglio Islands"
+  },
+  {
+   "name": "Oblivion Fire Maze",
+   "land": "Irilion",
+   "full": "Oblivion Fire Maze",
+   "about": "This area is PK , and have Heat damage, this is your last challenge in the Hydro way. \"Find Our White Brother\" <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Imbroglio Islands.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Hydro Cave",
+     "page": "Hydro Cave",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Imbroglio Islands"
+  },
+  {
+   "name": "Hydro Cave",
+   "land": "Irilion",
+   "full": "Hydro Cave",
+   "about": "You reach the end of the hydro journey and can finally can harvest the precious Hydrogenium Ore, but be careful this cave deals high Radiation Damage!",
+   "notes": [],
+   "pic": null,
+   "photo": "Imbroglio Islands.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Hydrogenium Ore",
+     "page": "Hydrogenium Ore"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Imbroglio Islands",
+     "page": "Imbroglio Islands",
+     "at": [
+      {
+       "x": 54,
+       "y": 63,
+       "pick": false
+      }
+     ],
+     "what": "Sladoth's Isle (PK)",
+     "pk": true,
+     "how": "Land"
+    },
+    {
+     "name": "Oblivion Fire Maze",
+     "page": "Oblivion Fire Maze",
+     "at": [
+      {
+       "x": 48,
+       "y": 94,
+       "pick": false
+      }
+     ],
+     "what": "(PK)",
+     "pk": true,
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Imbroglio Islands"
+  },
+  {
+   "name": "Yeti Cave",
+   "land": "Irilion",
+   "full": "Yeti Cave",
+   "about": "In the southeast corner of Daa Gri, at [708,147], which contains several harvestables as well as Yeti and Fluffy Rabbit creatures. <!--",
+   "notes": [],
+   "pic": "map_irinveron_caves_0512px.png",
+   "photo": "Irinveron.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 347,
+       "y": 153,
+       "pick": false
+      }
+     ],
+     "clock": "2:28",
+     "near": {
+      "x": 347,
+      "y": 153,
+      "walk": "2:28"
+     }
+    },
+    {
+     "name": "Cinnabar",
+     "page": "Cinnabar",
+     "at": [
+      {
+       "x": 359,
+       "y": 120,
+       "pick": false
+      }
+     ],
+     "clock": "2:38",
+     "near": {
+      "x": 359,
+      "y": 120,
+      "walk": "2:38"
+     }
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 322,
+       "y": 131,
+       "pick": false
+      }
+     ],
+     "clock": "2:34",
+     "near": {
+      "x": 322,
+      "y": 131,
+      "walk": "2:34"
+     }
+    },
+    {
+     "name": "Diamond",
+     "page": "Diamond",
+     "at": [
+      {
+       "x": 323,
+       "y": 140,
+       "pick": false
+      }
+     ],
+     "clock": "2:31",
+     "near": {
+      "x": 323,
+      "y": 140,
+      "walk": "2:31"
+     }
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 338,
+       "y": 266,
+       "pick": false
+      }
+     ],
+     "clock": "2:15",
+     "near": {
+      "x": 338,
+      "y": 266,
+      "walk": "2:15"
+     }
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 331,
+       "y": 113,
+       "pick": false
+      }
+     ],
+     "clock": "2:37",
+     "near": {
+      "x": 331,
+      "y": 113,
+      "walk": "2:37"
+     }
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Yeti",
+     "page": "Yeti",
+     "what": "(x4)"
+    },
+    {
+     "name": "Fluffy Rabbit",
+     "page": "Fluffy Rabbit",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Irinveron",
+     "page": "Irinveron",
+     "at": [
+      {
+       "x": 171,
+       "y": 351,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Irinveron"
+  },
+  {
+   "name": "Daa Gri East Cave",
+   "land": "Irilion",
+   "full": "Daa Gri East Cave",
+   "about": "<!--",
+   "notes": [
+    "There are 2 Daa Gri caves in Irinveron, the East one, is the home of 2 Frost Trolls."
+   ],
+   "pic": null,
+   "photo": "Irinveron.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Frost Troll",
+     "page": "Frost Troll",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Irinveron",
+     "page": "Irinveron",
+     "at": [
+      {
+       "x": 317,
+       "y": 187,
+       "pick": false
+      },
+      {
+       "x": 340,
+       "y": 172,
+       "pick": false
+      },
+      {
+       "x": 340,
+       "y": 143,
+       "pick": false
+      },
+      {
+       "x": 280,
+       "y": 87,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Irinveron"
+  },
+  {
+   "name": "Blue Dragon Cave",
+   "land": "Irilion",
+   "full": "Blue Dragon Cave",
+   "about": "In the far southwest in Polar Bear Cove, at [84,98]. Contains the Blue Dragon, a pile of gold and leads to Iringold's temple. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Irinveron.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Blue Dragon",
+     "page": "Blue Dragon"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Irinveron",
+     "page": "Irinveron",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Irinveron"
+  },
+  {
+   "name": "Lastrii Temple Cave",
+   "land": "Irilion",
+   "full": "Lastrii Temple Cave",
+   "about": "Near the village of Lastrii in the southwest, at [161,183], is a C-shaped cave <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Irinveron.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 80,
+       "y": 57,
+       "pick": false
+      }
+     ],
+     "clock": "1:09",
+     "near": {
+      "x": 80,
+      "y": 57,
+      "walk": "1:09"
+     }
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Harvesting Cave",
+     "page": "Harvesting Cave",
+     "at": [
+      {
+       "x": 52,
+       "y": 93,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "Irinveron",
+     "page": "Irinveron",
+     "at": [
+      {
+       "x": 102,
+       "y": 112,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Irinveron"
+  },
+  {
+   "name": "Harvesting Cave",
+   "land": "Irilion",
+   "full": "Harvesting Cave",
+   "about": "A huge harvesting cave, entered via the C-shaped cave Lastrii Temple Cave, near the Lastrii village. Contains a variety of minerals and ores. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Irinveron.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Amber",
+     "page": "Amber",
+     "at": [
+      {
+       "x": 31,
+       "y": 257,
+       "pick": false
+      }
+     ],
+     "clock": "1:30",
+     "near": {
+      "x": 31,
+      "y": 257,
+      "walk": "1:30"
+     }
+    },
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 100,
+       "y": 272,
+       "pick": false
+      }
+     ],
+     "clock": "1:39",
+     "near": {
+      "x": 100,
+      "y": 272,
+      "walk": "1:39"
+     }
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 14,
+       "y": 118,
+       "pick": false
+      }
+     ],
+     "clock": "1:28",
+     "near": {
+      "x": 14,
+      "y": 118,
+      "walk": "1:28"
+     }
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 91,
+       "y": 372,
+       "pick": false
+      }
+     ],
+     "clock": "2:00",
+     "near": {
+      "x": 91,
+      "y": 372,
+      "walk": "2:00"
+     }
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 120,
+       "y": 304,
+       "pick": false
+      }
+     ],
+     "clock": "1:46",
+     "near": {
+      "x": 120,
+      "y": 304,
+      "walk": "1:46"
+     }
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 37,
+       "y": 171,
+       "pick": false
+      },
+      {
+       "x": 34,
+       "y": 183,
+       "pick": false
+      },
+      {
+       "x": 58,
+       "y": 314,
+       "pick": false
+      }
+     ],
+     "clock": "1:15",
+     "near": {
+      "x": 37,
+      "y": 171,
+      "walk": "1:15"
+     }
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 136,
+       "y": 359,
+       "pick": false
+      }
+     ],
+     "clock": "2:00",
+     "near": {
+      "x": 136,
+      "y": 359,
+      "walk": "2:00"
+     }
+    },
+    {
+     "name": "Turquoise",
+     "page": "Turquoise",
+     "at": [
+      {
+       "x": 135,
+       "y": 325,
+       "pick": false
+      }
+     ],
+     "clock": "1:54",
+     "near": {
+      "x": 135,
+      "y": 325,
+      "walk": "1:54"
+     }
+    },
+    {
+     "name": "Wood Logs",
+     "page": "Wood Logs",
+     "at": [
+      {
+       "x": 79,
+       "y": 186,
+       "pick": false
+      }
+     ],
+     "clock": "1:06",
+     "near": {
+      "x": 79,
+      "y": 186,
+      "walk": "1:06"
+     }
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Lastrii Temple Cave",
+     "page": "Lastrii Temple Cave",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Irinveron"
+  },
+  {
+   "name": "Draegoni Silver Cave",
+   "land": "Irilion",
+   "full": "Draegoni Silver Cave",
+   "about": "A cave with silver ore in Iscalrith City. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Iscalrith.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Silver Ore",
+     "page": "Silver Ore",
+     "at": [
+      {
+       "x": 296,
+       "y": 118,
+       "pick": false
+      },
+      {
+       "x": 323,
+       "y": 153,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Iscalrith",
+     "page": "Iscalrith",
+     "at": [
+      {
+       "x": 334,
+       "y": 89,
+       "pick": false
+      }
+     ],
+     "what": "City",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Iscalrith"
+  },
+  {
+   "name": "Iscalrith Dungeon",
+   "land": "Irilion",
+   "full": "Iscalrith Dungeon",
+   "about": "Iscalrith Dungeon is a complex Cave system under the Iscalrith City, most of the Caves have Yetis. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Iscalrith.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 150,
+       "y": 160,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 220,
+       "y": 250,
+       "pick": false
+      }
+     ],
+     "clock": "03:25",
+     "near": {
+      "x": 220,
+      "y": 250,
+      "walk": "03:25"
+     }
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 90,
+       "y": 320,
+       "pick": false
+      },
+      {
+       "x": 35,
+       "y": 200,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 150,
+       "y": 160,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 150,
+       "y": 160,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 240,
+       "y": 240,
+       "pick": false
+      }
+     ],
+     "clock": "03:25",
+     "near": {
+      "x": 240,
+      "y": 240,
+      "walk": "03:25"
+     }
+    },
+    {
+     "name": "Silver Ore",
+     "page": "Silver Ore",
+     "at": [
+      {
+       "x": 165,
+       "y": 160,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Yeti",
+     "page": "Yeti",
+     "at": [
+      {
+       "x": 60,
+       "y": 222,
+       "pick": false
+      },
+      {
+       "x": 69,
+       "y": 140,
+       "pick": false
+      },
+      {
+       "x": 140,
+       "y": 50,
+       "pick": false
+      },
+      {
+       "x": 260,
+       "y": 330,
+       "pick": false
+      },
+      {
+       "x": 313,
+       "y": 318,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Iscalrith",
+     "page": "Iscalrith",
+     "at": [
+      {
+       "x": 183,
+       "y": 144,
+       "pick": false
+      }
+     ],
+     "what": "City",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Iscalrith"
+  },
+  {
+   "name": "Iscalrith-Trassian Passage",
+   "land": "Irilion",
+   "full": "Iscalrith-Trassian Passage",
+   "about": "The old HE cave is now just the Iscalrith-Trassian Passage, with only some Blue Quartz <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Iscalrith.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 303,
+       "y": 109,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Iscalrith",
+     "page": "Iscalrith",
+     "at": [
+      {
+       "x": 279,
+       "y": 99,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "at": [
+      {
+       "x": 298,
+       "y": 143,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Iscalrith"
+  },
+  {
+   "name": "Iscalrith Storage Cave",
+   "land": "Irilion",
+   "full": "Iscalrith Storage Cave",
+   "about": "The Storage Cave of Iscalrith is a special storage cave because it hides a few secret passageways to other maps like Trassian, Iscalrith City and Dra Syn Caves.",
+   "notes": [],
+   "pic": null,
+   "photo": "Iscalrith.png",
+   "npcs": [
+    {
+     "name": "Destinta",
+     "page": "Destinta",
+     "at": [
+      {
+       "x": 623,
+       "y": 645,
+       "pick": false
+      }
+     ],
+     "what": "Storage"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Iscalrith",
+     "page": "Iscalrith",
+     "at": [
+      {
+       "x": 521,
+       "y": 674,
+       "pick": false
+      },
+      {
+       "x": 685,
+       "y": 717,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Special Cave",
+     "page": "Special Cave",
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Iscalrith"
+  },
+  {
+   "name": "Chimney Window",
+   "land": "Irilion",
+   "full": "Chimney Window",
+   "about": "A secret Cave with a few harvestables minerals and a couple Arctic Chimerans. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Isle of the Forgotten.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 110,
+       "y": 126,
+       "pick": false
+      },
+      {
+       "x": 119,
+       "y": 196,
+       "pick": false
+      }
+     ],
+     "what": "(to Iscalrith storage)",
+     "clock": "02:10",
+     "near": {
+      "x": 110,
+      "y": 126,
+      "walk": "02:10"
+     }
+    },
+    {
+     "name": "Turquoise",
+     "page": "Turquoise",
+     "at": [
+      {
+       "x": 119,
+       "y": 196,
+       "pick": false
+      }
+     ],
+     "what": "(to Iscalrith storage)",
+     "clock": "02:10",
+     "near": {
+      "x": 119,
+      "y": 196,
+      "walk": "02:10"
+     }
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Arctic Chimeran",
+     "page": "Arctic Chimeran",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Isle of the Forgotten",
+     "page": "Isle of the Forgotten",
+     "at": [
+      {
+       "x": 36,
+       "y": 211,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Isle of the Forgotten"
+  },
+  {
+   "name": "Oblivio Cave",
+   "land": "Irilion",
+   "full": "Oblivio Cave",
+   "about": "A secret access Cave guarded by Armed Skeletons with some ores and flowers. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Isle of the Forgotten.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 281,
+       "y": 315,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 276,
+       "y": 295,
+       "pick": false
+      }
+     ],
+     "what": "x2 inside the tent"
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 281,
+       "y": 331,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Snapdragons",
+     "page": "Red Snapdragons",
+     "at": [
+      {
+       "x": 272,
+       "y": 315,
+       "pick": false
+      }
+     ],
+     "what": "x2"
+    },
+    {
+     "name": "Silver Ore",
+     "page": "Silver Ore",
+     "at": [
+      {
+       "x": 286,
+       "y": 253,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 294,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Skeleton",
+     "page": "Armed Skeleton",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Isle of the Forgotten",
+     "page": "Isle of the Forgotten",
+     "at": [
+      {
+       "x": 349,
+       "y": 302,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Isle of the Forgotten"
+  },
+  {
+   "name": "Snowman Room",
+   "land": "Irilion",
+   "full": "Snowman Room",
+   "about": "A secret Cave with a few harvestables and a couple of Armed Orcs. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Isle of the Forgotten.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Cactus",
+     "page": "Cactus"
+    },
+    {
+     "name": "Cotton",
+     "page": "Cotton"
+    },
+    {
+     "name": "Poison Ivy",
+     "page": "Poison Ivy"
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Armed Female Orc",
+     "page": "Armed Female Orc",
+     "what": "(x1)"
+    },
+    {
+     "name": "Armed Male Orc",
+     "page": "Armed Male Orc",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Isle of the Forgotten",
+     "page": "Isle of the Forgotten",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Isle of the Forgotten"
+  },
+  {
+   "name": "Temple of Dryx",
+   "land": "Irilion",
+   "full": "Temple of Dryx",
+   "about": "The Temple of Dryx in the Southwest part of the Isle of the Forgotten holds many secrets. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Isle of the Forgotten.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Harvesting Room",
+     "page": "forum:766"
+    },
+    {
+     "name": "Dvarium",
+     "page": "Dvarium"
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 262,
+       "y": 206,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wolframite",
+     "page": "Wolframite"
+    },
+    {
+     "name": "Yarrow",
+     "page": "Yarrow",
+     "at": [
+      {
+       "x": 264,
+       "y": 207,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Island of Fruit",
+     "page": "forum:767"
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Isle of the Forgotten",
+     "page": "Isle of the Forgotten",
+     "at": [
+      {
+       "x": 85,
+       "y": 341,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Isle of the Forgotten"
+  },
+  {
+   "name": "Coal Mine",
+   "land": "Irilion",
+   "full": "Coal Mine",
+   "about": "This Coal mine connects Kusamura Jungle to South Zirakgunda. Some high level creatures live is this Cave.",
+   "notes": [],
+   "pic": null,
+   "photo": "Kusamura Jungle.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 55,
+       "y": 79,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Cockatrice",
+     "page": "Cockatrice",
+     "what": "(x1)"
+    },
+    {
+     "name": "Fluffy Rabbit",
+     "page": "Fluffy Rabbit",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Kusamura Jungle",
+     "page": "Kusamura Jungle",
+     "at": [
+      {
+       "x": 17,
+       "y": 45,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "South Zirakgunda",
+     "page": "South Zirakgunda",
+     "at": [
+      {
+       "x": 59,
+       "y": 66,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Kusamura Jungle"
+  },
+  {
+   "name": "Melinis Sewers",
+   "land": "Irilion",
+   "full": "Melinis Sewers",
+   "about": "The Hazardous Materials Storage in Irilion (C2) is beneath the City of Melinis, there are several entrances to the sewers.",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [
+    {
+     "name": "Hazardel",
+     "page": "Hazardel",
+     "at": [
+      {
+       "x": 648,
+       "y": 668,
+       "pick": false
+      }
+     ],
+     "what": "HazMat Storage"
+    }
+   ],
+   "harvest": [
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 738,
+       "y": 736,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 565,
+       "y": 717,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 565,
+       "y": 717,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 565,
+       "y": 717,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Diamond",
+     "page": "Diamond",
+     "at": [
+      {
+       "x": 565,
+       "y": 717,
+       "pick": false
+      }
+     ],
+     "what": "(Need Teleport to Range Spell to store.)",
+     "clock": "00:30",
+     "near": {
+      "x": 565,
+      "y": 717,
+      "walk": "00:30"
+     }
+    },
+    {
+     "name": "Wood Branches",
+     "page": "Wood Branches",
+     "at": [
+      {
+       "x": 680,
+       "y": 654,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wood Logs",
+     "page": "Wood Logs",
+     "at": [
+      {
+       "x": 627,
+       "y": 633,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Sulfur Cave",
+   "land": "Irilion",
+   "full": "Sulfur Cave",
+   "about": "Also called Fire Essence Cave, you can find here all that is needed to create those essences, Sulfur, Red Roses, Red Snapdragons and different types of Food. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "what": "near vegetables, zoom"
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 245,
+       "y": 91,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Snapdragons",
+     "page": "Red Snapdragons",
+     "at": [
+      {
+       "x": 205,
+       "y": 162,
+       "pick": false
+      }
+     ],
+     "what": "2x"
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 212,
+       "y": 30,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 197,
+       "y": 172,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 202,
+       "y": 112,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "at": [
+      {
+       "x": 147,
+       "y": 101,
+       "pick": false
+      }
+     ],
+     "what": "City",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Lava Cave",
+   "land": "Irilion",
+   "full": "Lave Cave",
+   "about": "This empty cave is the only way to access the Turquoise Cave, the entrance area is safe but the other half of the cave deal high heat damage, you will need gear with a total of +3 heat protection to be safe. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Turquoise Cave",
+     "page": "Turquoise Cave",
+     "at": [
+      {
+       "x": 115,
+       "y": 41,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "at": [
+      {
+       "x": 37,
+       "y": 36,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Turquoise Cave",
+   "land": "Irilion",
+   "full": "Turquoise Cave",
+   "about": "After surviving the high heat damage of the Fire Cave you are teleported to the Turquoise Cave, this cave is full of blue colored ores and crystals. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 65,
+       "y": 396,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Copper Ore",
+     "page": "Copper Ore",
+     "at": [
+      {
+       "x": 60,
+       "y": 376,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire",
+     "at": [
+      {
+       "x": 94,
+       "y": 365,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Turquoise",
+     "page": "Turquoise",
+     "at": [
+      {
+       "x": 101,
+       "y": 390,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "at": [
+      {
+       "x": 85,
+       "y": 149,
+       "pick": false
+      }
+     ],
+     "what": "Lava Cave",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Iron Cave",
+   "land": "Irilion",
+   "full": "Iron Cave",
+   "about": "This cave is also called Steel Cave, its a decent place to create Iron and Steel Bars, with Coal and Iron Ore close by. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 62,
+       "y": 204,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 129,
+       "y": 169,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Obsidian",
+     "page": "Obsidian",
+     "at": [
+      {
+       "x": 64,
+       "y": 270,
+       "pick": false
+      },
+      {
+       "x": 101,
+       "y": 252,
+       "pick": false
+      }
+     ],
+     "what": "Not yet harvestable - teleport over lava required at"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "at": [
+      {
+       "x": 69,
+       "y": 149,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Melinis-Thelinor Cave",
+   "land": "Irilion",
+   "full": "Melinis-Thelinor Cave",
+   "about": "This cave connects Melinis to the safe and no PK part of Thelinor, the City. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Mugwort",
+     "page": "Mugwort"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "at": [
+      {
+       "x": 128,
+       "y": 434,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Thelinor",
+     "page": "Thelinor",
+     "at": [
+      {
+       "x": 126,
+       "y": 445,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Melinis Ogre Cave",
+   "land": "Irilion",
+   "full": "Melinis Ogre Cave",
+   "about": "This secret cave is the home of a family of Ogres. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz"
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz"
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre",
+     "what": "(x3~30s)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Melinis Mountain Chimeran Cave",
+   "land": "Irilion",
+   "full": "Melinis Mountain Chimeran Cave",
+   "about": "This secret cave with a lonely Mountain Chimeran. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Melinis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz"
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Mountain Chimeran",
+     "page": "Mountain Chimeran",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Melinis",
+     "page": "Melinis",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Melinis"
+  },
+  {
+   "name": "Volcano Path",
+   "land": "Irilion",
+   "full": "Volcano Path",
+   "about": "The path to the center of the Volcano is guarded by Legionnaire Orcs. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "North Redmoon.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Legionnaire Orc",
+     "page": "Legionnaire Orc"
+    }
+   ],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Volcano",
+     "page": "Volcano",
+     "at": [
+      {
+       "x": 176,
+       "y": 241,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "North Redmoon",
+     "page": "North Redmoon",
+     "at": [
+      {
+       "x": 134,
+       "y": 27,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "North Redmoon"
+  },
+  {
+   "name": "Volcano",
+   "land": "Irilion",
+   "full": "Volcano",
+   "about": "The home of the Red Dragon. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "North Redmoon.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Diamond",
+     "page": "Diamond"
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald"
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby"
+    },
+    {
+     "name": "Sapphire",
+     "page": "Sapphire"
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 114,
+       "y": 331,
+       "pick": false
+      },
+      {
+       "x": 133,
+       "y": 336,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Dvarium Ore",
+     "page": "Dvarium Ore",
+     "at": [
+      {
+       "x": 110,
+       "y": 332,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Irilium Ore",
+     "page": "Irilium Ore",
+     "at": [
+      {
+       "x": 115,
+       "y": 318,
+       "pick": false
+      }
+     ],
+     "what": "(not harvestable)"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Legionnaire Orc",
+     "page": "Legionnaire Orc"
+    },
+    {
+     "name": "Red Dragon",
+     "page": "Red Dragon"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Volcano Path",
+     "page": "Volcano Path",
+     "at": [
+      {
+       "x": 33,
+       "y": 27,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "North Redmoon"
+  },
+  {
+   "name": "Cinnabar Cave",
+   "land": "Irilion",
+   "full": "Cinnabar Cave",
+   "about": "Just a secret cave in Palon Vertas with Cinnabar. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Palon Vertas.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Cinnabar",
+     "page": "Cinnabar"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Northern Cave",
+     "page": "Northern Cave",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Northern Cave",
+   "land": "Irilion",
+   "full": "Northern Cave",
+   "about": "Taurgis's Smithery contains three ogres that some people like to have fun with, Haidir refers to this area as Blacksmith Cave. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Palon Vertas.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Berries",
+     "page": "Blue Berries",
+     "at": [
+      {
+       "x": 87,
+       "y": 40,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 69,
+       "y": 74,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Obsidian",
+     "page": "Obsidian",
+     "at": [
+      {
+       "x": 85,
+       "y": 80,
+       "pick": false
+      }
+     ],
+     "what": "(Unharvestable)"
+    },
+    {
+     "name": "Tin Ore",
+     "page": "Tin Ore",
+     "at": [
+      {
+       "x": 93,
+       "y": 50,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 87,
+       "y": 40,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wood Logs",
+     "page": "Wood Logs"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre",
+     "what": "(x3)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Palon Vertas",
+     "page": "Palon Vertas",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Palon Vertas Underground",
+   "land": "Irilion",
+   "full": "Palon Vertas Underground",
+   "about": "This is a complex system of underground tunnels connecting to many different places. These tunnels were made as an escape route from the city of Palon Vertas.",
+   "notes": [],
+   "pic": "map_palon_vertas_underground_0512px.png",
+   "photo": "Palon Vertas.png",
+   "npcs": [
+    {
+     "name": "Barnes",
+     "page": "Barnes",
+     "at": [
+      {
+       "x": 180,
+       "y": 156,
+       "pick": false
+      }
+     ],
+     "what": "Treasure hunter"
+    },
+    {
+     "name": "David",
+     "page": "David",
+     "at": [
+      {
+       "x": 138,
+       "y": 333,
+       "pick": false
+      }
+     ],
+     "what": "Underground Maintenance"
+    }
+   ],
+   "harvest": [
+    {
+     "name": "Amber",
+     "page": "Amber",
+     "at": [
+      {
+       "x": 114,
+       "y": 136,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Dung",
+     "page": "Dung",
+     "at": [
+      {
+       "x": 252,
+       "y": 273,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Nightshade",
+     "page": "Nightshade",
+     "at": [
+      {
+       "x": 174,
+       "y": 302,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Poison Ivy",
+     "page": "Poison Ivy",
+     "at": [
+      {
+       "x": 130,
+       "y": 62,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Swamp Candles",
+     "page": "Swamp Candles",
+     "at": [
+      {
+       "x": 104,
+       "y": 288,
+       "pick": false
+      },
+      {
+       "x": 100,
+       "y": 67,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 342,
+       "y": 148,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wood Branches",
+     "page": "Wood Branches",
+     "at": [
+      {
+       "x": 277,
+       "y": 135,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Teleport to Range Spell",
+     "page": "Teleport to Range Spell",
+     "what": "needed to get there)"
+    },
+    {
+     "name": "Henbane",
+     "page": "Henbane",
+     "at": [
+      {
+       "x": 149,
+       "y": 120,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Mugwort",
+     "page": "Mugwort",
+     "at": [
+      {
+       "x": 149,
+       "y": 120,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel",
+     "page": "Bethel",
+     "at": [
+      {
+       "x": 120,
+       "y": 343,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Kusamura Jungle",
+     "page": "Kusamura Jungle",
+     "at": [
+      {
+       "x": 117,
+       "y": 70,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Palon Vertas",
+     "page": "Palon Vertas",
+     "at": [
+      {
+       "x": 40,
+       "y": 126,
+       "pick": false
+      },
+      {
+       "x": 343,
+       "y": 147,
+       "pick": false
+      },
+      {
+       "x": 324,
+       "y": 307,
+       "pick": false
+      },
+      {
+       "x": 48,
+       "y": 307,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Sedicolis",
+     "page": "Sedicolis",
+     "at": [
+      {
+       "x": 245,
+       "y": 345,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Zirakinbar",
+     "page": "Zirakinbar",
+     "at": [
+      {
+       "x": 192,
+       "y": 70,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Southern cave",
+   "land": "Irilion",
+   "full": "Southern Cave",
+   "about": "This small cave in the south area of Palon Vertas can be accessed at [116,23] and is a very good place for Gold Bar and Earth Essences.",
+   "notes": [],
+   "pic": null,
+   "photo": "Palon Vertas.png",
+   "npcs": [
+    {
+     "name": "Cozma",
+     "page": "Cozma",
+     "at": [
+      {
+       "x": 296,
+       "y": 282,
+       "pick": false
+      }
+     ],
+     "what": "Miner"
+    },
+    {
+     "name": "Miron",
+     "page": "Miron",
+     "at": [
+      {
+       "x": 270,
+       "y": 301,
+       "pick": false
+      }
+     ],
+     "what": "Miner"
+    }
+   ],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 259,
+       "y": 312,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 314,
+       "y": 304,
+       "pick": false
+      },
+      {
+       "x": 302,
+       "y": 320,
+       "pick": false
+      },
+      {
+       "x": 294,
+       "y": 309,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 257,
+       "y": 300,
+       "pick": false
+      },
+      {
+       "x": 291,
+       "y": 279,
+       "pick": false
+      },
+      {
+       "x": 321,
+       "y": 310,
+       "pick": false
+      },
+      {
+       "x": 303,
+       "y": 326,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 296,
+       "y": 313,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Dandelions",
+     "page": "Dandelions",
+     "at": [
+      {
+       "x": 273,
+       "y": 328,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 262,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Obsidian",
+     "page": "Obsidian",
+     "at": [
+      {
+       "x": 323,
+       "y": 285,
+       "pick": false
+      }
+     ],
+     "what": "(unharvestable)"
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "at": [
+      {
+       "x": 282,
+       "y": 321,
+       "pick": false
+      }
+     ],
+     "clock": "01:10",
+     "near": {
+      "x": 282,
+      "y": 321,
+      "walk": "01:10"
+     }
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 322,
+       "y": 330,
+       "pick": false
+      }
+     ],
+     "clock": "01:35",
+     "near": {
+      "x": 322,
+      "y": 330,
+      "walk": "01:35"
+     }
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 282,
+       "y": 321,
+       "pick": false
+      }
+     ],
+     "clock": "01:10",
+     "near": {
+      "x": 282,
+      "y": 321,
+      "walk": "01:10"
+     }
+    },
+    {
+     "name": "Tulips",
+     "page": "Tulips",
+     "at": [
+      {
+       "x": 281,
+       "y": 321,
+       "pick": false
+      }
+     ],
+     "clock": "01:10",
+     "near": {
+      "x": 281,
+      "y": 321,
+      "walk": "01:10"
+     }
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 282,
+       "y": 321,
+       "pick": false
+      }
+     ],
+     "clock": "01:10",
+     "near": {
+      "x": 282,
+      "y": 321,
+      "walk": "01:10"
+     }
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Rat",
+     "page": "Rat",
+     "what": "x2"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Palon Vertas",
+     "page": "Palon Vertas",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Emerald Cave",
+   "land": "Irilion",
+   "full": "Emerald Cave",
+   "about": "This small hidden cave used to be the home of a Ogre and a Cyclops but with the arrival of a couple ofForest Chimerans they left this place in a hurry. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Palon Vertas.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 261,
+       "y": 45,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 358,
+       "y": 67,
+       "pick": false
+      },
+      {
+       "x": 363,
+       "y": 23,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Forest Chimeran",
+     "page": "Forest Chimeran",
+     "what": "(x2)"
+    },
+    {
+     "name": "Skeleton",
+     "page": "Skeleton",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Palon Vertas",
+     "page": "Palon Vertas",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Graveyard Cave",
+   "land": "Irilion",
+   "full": "Graveyard Cave",
+   "about": "A cave full of graves and some suspicious statues in the center. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Palon Vertas.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose"
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose"
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose"
+    },
+    {
+     "name": "Tiger Lilly",
+     "page": "Tiger Lilly"
+    },
+    {
+     "name": "Tulips",
+     "page": "Tulips"
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum"
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Palon Vertas",
+     "page": "Palon Vertas",
+     "at": [
+      {
+       "x": 66,
+       "y": 265,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Palon Vertas"
+  },
+  {
+   "name": "Merciful Tears",
+   "land": "Irilion",
+   "full": "Cave of Merciful Tears",
+   "about": "Cave of Merciful Tears. If you still have other plans in life, don't enter. Small print reads: \"This sign sponsored by the Rat & The Snake-Eye\" <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Sedicolis.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 107,
+       "y": 88,
+       "pick": false
+      },
+      {
+       "x": 100,
+       "y": 88,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 111,
+       "y": 163,
+       "pick": false
+      },
+      {
+       "x": 77,
+       "y": 132,
+       "pick": false
+      },
+      {
+       "x": 65,
+       "y": 140,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Daffodils",
+     "page": "Daffodils"
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower"
+    },
+    {
+     "name": "Yarrow",
+     "page": "Yarrow"
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose"
+    },
+    {
+     "name": "Henbane",
+     "page": "Henbane"
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum"
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose"
+    },
+    {
+     "name": "Tiger Lilly",
+     "page": "Tiger Lilly"
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits"
+    },
+    {
+     "name": "Valerian",
+     "page": "Valerian"
+    },
+    {
+     "name": "Blue Lupine",
+     "page": "Blue Lupine"
+    },
+    {
+     "name": "Sunflower",
+     "page": "Sunflower"
+    },
+    {
+     "name": "Blue Berries",
+     "page": "Blue Berries"
+    },
+    {
+     "name": "Rue",
+     "page": "Rue"
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly"
+    },
+    {
+     "name": "Impatiens",
+     "page": "Impatiens"
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Medium Gargoyle",
+     "page": "Medium Gargoyle",
+     "what": "(x1)"
+    },
+    {
+     "name": "Tall Gargoyle",
+     "page": "Tall Gargoyle",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Sedicolis",
+     "page": "Sedicolis",
+     "at": [
+      {
+       "x": 104,
+       "y": 88,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Sedicolis"
+  },
+  {
+   "name": "South Redmoon Mines",
+   "land": "Irilion",
+   "full": "South Redmoon Mines",
+   "about": "Draia's original iron/steel bar production cave. Despite its becoming less safe for such activities as the population increased and other places sprouting up, it is still used today.",
+   "notes": [],
+   "pic": null,
+   "photo": "South Redmoon.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 110,
+       "y": 200,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ogre Toes",
+     "page": "Ogre Toes",
+     "what": "{79,140]"
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool",
+     "at": [
+      {
+       "x": 96,
+       "y": 193,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 111,
+       "y": 144,
+       "pick": false
+      },
+      {
+       "x": 86,
+       "y": 147,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 200,
+       "y": 190,
+       "pick": false
+      }
+     ],
+     "clock": "01:35",
+     "near": {
+      "x": 200,
+      "y": 190,
+      "walk": "01:35"
+     }
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 315,
+       "y": 165,
+       "pick": false
+      },
+      {
+       "x": 370,
+       "y": 130,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Healer's Mists",
+     "page": "Healer's Mists",
+     "at": [
+      {
+       "x": 72,
+       "y": 118,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Mount of Sorrow",
+     "page": "Mount of Sorrow",
+     "at": [
+      {
+       "x": 116,
+       "y": 132,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Dragon Path",
+     "page": "Red Dragon Path"
+    }
+   ],
+   "exits": [
+    {
+     "name": "South Redmoon",
+     "page": "South Redmoon",
+     "at": [
+      {
+       "x": 94,
+       "y": 84,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "South Redmoon"
+  },
+  {
+   "name": "Healer's Mists",
+   "land": "Irilion",
+   "full": "Healer's Mists",
+   "about": "<!--",
+   "notes": [],
+   "pic": null,
+   "photo": "South Redmoon.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "what": "{304,262]"
+    },
+    {
+     "name": "Nightshade",
+     "page": "Nightshade",
+     "what": ">"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "South Redmoon Mines",
+     "page": "South Redmoon Mines",
+     "what": "{366,220]",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "South Redmoon"
+  },
+  {
+   "name": "Mount of Sorrow",
+   "land": "Irilion",
+   "full": "Mount of Sorrow",
+   "about": "Mount of Sorrow is the freezing peak of Draia's highest accessible mountain, its located in South Redmoon and can only be accessed from the South Redmoon Mines. <!--",
+   "notes": [],
+   "pic": "map_mount_of_sorrow_0512px.png",
+   "photo": "South Redmoon.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 138,
+       "y": 102,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Mugwort",
+     "page": "Mugwort",
+     "at": [
+      {
+       "x": 74,
+       "y": 140,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Fluffy Rabbit",
+     "page": "Fluffy Rabbit",
+     "what": "(x1)"
+    },
+    {
+     "name": "Snow Leopard",
+     "page": "Snow Leopard",
+     "what": "(x2)"
+    },
+    {
+     "name": "White Rabbit",
+     "page": "White Rabbit"
+    },
+    {
+     "name": "White Tiger",
+     "page": "White Tiger",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Red Dragon Path",
+     "page": "Red Dragon Path"
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 27,
+       "y": 109,
+       "pick": false
+      }
+     ],
+     "what": "s inside."
+    }
+   ],
+   "exits": [
+    {
+     "name": "South Redmoon Mines",
+     "page": "South Redmoon Mines",
+     "at": [
+      {
+       "x": 57,
+       "y": 55,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "South Redmoon"
+  },
+  {
+   "name": "Red Dragon Path",
+   "land": "Irilion",
+   "full": "Red Dragon Path",
+   "about": "A path from the freezing peak of Draia's to the lair of the second Red Dragon. The path is full of Riddles <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "South Redmoon.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 87,
+       "y": 101,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 690,
+       "y": 262,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 577,
+       "y": 47,
+       "pick": false
+      },
+      {
+       "x": 727,
+       "y": 164,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 625,
+       "y": 114,
+       "pick": false
+      },
+      {
+       "x": 684,
+       "y": 182,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 740,
+       "y": 364,
+       "pick": false
+      },
+      {
+       "x": 693,
+       "y": 139,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 689,
+       "y": 143,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 421,
+       "y": 174,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Diamond",
+     "page": "Diamond",
+     "at": [
+      {
+       "x": 281,
+       "y": 138,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 224,
+       "y": 188,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 284,
+       "y": 154,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Red Dragon",
+     "page": "Red Dragon"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Mount of Sorrow",
+     "page": "Mount of Sorrow",
+     "at": [
+      {
+       "x": 137,
+       "y": 67,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "South Redmoon"
+  },
+  {
+   "name": "Thelinor Caves",
+   "land": "Irilion",
+   "full": "Thelinor Caves",
+   "about": "There is no connection between the Thelinor Caves. All the caves are PK , and only the Wolfram Cave can be accessed from a safe, No PK area. <!--",
+   "notes": [],
+   "pic": "map_thelinor_caves_0512px.png",
+   "photo": "Thelinor.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 34,
+       "y": 21,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 54,
+       "y": 108,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wolframite",
+     "page": "Wolframite",
+     "at": [
+      {
+       "x": 164,
+       "y": 148,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 174,
+       "y": 78,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 183,
+       "y": 36,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Fluffy Rabbit",
+     "page": "Fluffy Rabbit",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Thelinor",
+     "page": "Thelinor",
+     "at": [
+      {
+       "x": 129,
+       "y": 175,
+       "pick": false
+      },
+      {
+       "x": 104,
+       "y": 12,
+       "pick": false
+      }
+     ],
+     "what": "(PK) , (PK)",
+     "pk": true,
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Thelinor"
+  },
+  {
+   "name": "Special Cave",
+   "land": "Irilion",
+   "full": "Our Special Cave",
+   "about": "This cavern connects Deepstone Caverns, Trassian, Saret's Cave and the Iscalrith storage cavern. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 335,
+       "y": 425,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 335,
+       "y": 425,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 335,
+       "y": 425,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Iscalrith Storage Cave",
+     "page": "Iscalrith Storage Cave",
+     "at": [
+      {
+       "x": 321,
+       "y": 449,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Deepstone Caverns",
+     "page": "Deepstone Caverns",
+     "at": [
+      {
+       "x": 397,
+       "y": 450,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "at": [
+      {
+       "x": 360,
+       "y": 380,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Deepstone Caverns",
+   "land": "Irilion",
+   "full": "Deepstone Caverns",
+   "about": "This cavern is the home of the yeti and has a lot of harvestable minerals, ores and amber on it. It exits into the Special Cave from which Iscalrith Storage Cave can be accessed. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Amber",
+     "page": "Amber",
+     "at": [
+      {
+       "x": 564,
+       "y": 630,
+       "pick": false
+      },
+      {
+       "x": 659,
+       "y": 558,
+       "pick": false
+      },
+      {
+       "x": 715,
+       "y": 686,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 600,
+       "y": 671,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Cinnabar",
+     "page": "Cinnabar",
+     "at": [
+      {
+       "x": 696,
+       "y": 655,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 675,
+       "y": 617,
+       "pick": false
+      }
+     ],
+     "clock": "02:25",
+     "near": {
+      "x": 675,
+      "y": 617,
+      "walk": "02:25"
+     }
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 693,
+       "y": 741,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 501,
+       "y": 719,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 513,
+       "y": 659,
+       "pick": false
+      }
+     ],
+     "clock": "02:00",
+     "near": {
+      "x": 513,
+      "y": 659,
+      "walk": "02:00"
+     }
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 599,
+       "y": 685,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 599,
+       "y": 702,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 591,
+       "y": 736,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Titanium Ore",
+     "page": "Titanium Ore",
+     "at": [
+      {
+       "x": 680,
+       "y": 633,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Yeti",
+     "page": "Yeti",
+     "what": "x2"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Special Cave",
+     "page": "Special Cave",
+     "at": [
+      {
+       "x": 537,
+       "y": 672,
+       "pick": false
+      }
+     ],
+     "what": "to Iscalrith Storage Cave",
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "at": [
+      {
+       "x": 728,
+       "y": 726,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Saret's Cave",
+   "land": "Irilion",
+   "full": "Saret's Cave",
+   "about": "This beautiful cavern is the home of the Frost Trolls and has some harvestable minerals and ores on it. Getting around is a bit convoluted, so Teleport to Range Spell can save you significant time. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Amber",
+     "page": "Amber",
+     "at": [
+      {
+       "x": 290,
+       "y": 241,
+       "pick": false
+      },
+      {
+       "x": 175,
+       "y": 139,
+       "pick": false
+      }
+     ],
+     "what": "Outside and in small room"
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 367,
+       "y": 213,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Daffodils",
+     "page": "Daffodils",
+     "at": [
+      {
+       "x": 367,
+       "y": 213,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Emerald",
+     "page": "Emerald",
+     "at": [
+      {
+       "x": 185,
+       "y": 66,
+       "pick": false
+      }
+     ],
+     "what": "in small room"
+    },
+    {
+     "name": "Tree Mushroom",
+     "page": "Tree Mushroom",
+     "at": [
+      {
+       "x": 321,
+       "y": 55,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly",
+     "at": [
+      {
+       "x": 359,
+       "y": 165,
+       "pick": false
+      }
+     ],
+     "what": "(red)"
+    },
+    {
+     "name": "White Chanterelle",
+     "page": "White Chanterelle",
+     "at": [
+      {
+       "x": 321,
+       "y": 55,
+       "pick": false
+      },
+      {
+       "x": 159,
+       "y": 181,
+       "pick": false
+      },
+      {
+       "x": 362,
+       "y": 167,
+       "pick": false
+      },
+      {
+       "x": 359,
+       "y": 165,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Wood Logs",
+     "page": "Wood Logs",
+     "at": [
+      {
+       "x": 379,
+       "y": 203,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [
+    {
+     "name": "Frost Troll",
+     "page": "Frost Troll",
+     "at": [
+      {
+       "x": 285,
+       "y": 100,
+       "pick": false
+      }
+     ],
+     "what": "2 spawns of 2 each"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Bethel",
+     "page": "Bethel",
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "what": "via Tri-Caves",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Dra Syn Manufacturing School",
+   "land": "Irilion",
+   "full": "Dra Syn Manufacturing School",
+   "about": "Dra Syn Manufacturing School is the home of a couple of Breakers. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Breaker",
+     "page": "Breaker",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Knights Hall",
+     "page": "Knights Hall",
+     "at": [
+      {
+       "x": 529,
+       "y": 177,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "what": "{525,198]",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Knights Hall",
+   "land": "Irilion",
+   "full": "Knights Hall",
+   "about": "Knights Hall is a small Cave in the City of Dra Syn in Trassian and is the home of a few Legionnaire Trolls. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Legionnaire Troll",
+     "page": "Legionnaire Troll",
+     "what": "(x3)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Dra Syn Manufacturing School",
+     "page": "Dra Syn Manufacturing School",
+     "at": [
+      {
+       "x": 346,
+       "y": 620,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Dra Syn Passage",
+   "land": "Irilion",
+   "full": "Dra Syn Passage",
+   "about": "This underground passage connects two different levels of the city of Dra Syn, but is guarded by a couple of Arctic Chimeran. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Arctic Chimeran",
+     "page": "Arctic Chimeran",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "at": [
+      {
+       "x": 633,
+       "y": 293,
+       "pick": false
+      },
+      {
+       "x": 732,
+       "y": 308,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Trassian PK Cave",
+   "land": "Irilion",
+   "full": "Trassian PK Cave",
+   "about": "Deep in Dra Syn, a PK cave with some harvestable minerals. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Trassian.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 679,
+       "y": 151,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 646,
+       "y": 137,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 610,
+       "y": 150,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Turquoise",
+     "page": "Turquoise",
+     "at": [
+      {
+       "x": 645,
+       "y": 88,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Trassian",
+     "page": "Trassian",
+     "at": [
+      {
+       "x": 647,
+       "y": 206,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Trassian"
+  },
+  {
+   "name": "Temple of Suffering",
+   "land": "Irilion",
+   "full": "Temple of Suffering",
+   "about": "<!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Willowvine Forest.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 77,
+       "y": 312,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Willowvine Forest",
+     "page": "Willowvine Forest",
+     "at": [
+      {
+       "x": 107,
+       "y": 313,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Willowvine Forest"
+  },
+  {
+   "name": "Willowvine Forest Cave",
+   "land": "Irilion",
+   "full": "Willowvine Forest Cave",
+   "about": "This cave connects Willowvine Forest to Kusamura Jungle, and have some ores that can be harvested. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Willowvine Forest.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore"
+    },
+    {
+     "name": "Titanium Ore",
+     "page": "Titanium Ore"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Kusamura Jungle",
+     "page": "Kusamura Jungle",
+     "at": [
+      {
+       "x": 113,
+       "y": 118,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Willowvine Forest",
+     "page": "Willowvine Forest",
+     "at": [
+      {
+       "x": 25,
+       "y": 24,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Willowvine Forest"
+  },
+  {
+   "name": "Willowvine Forest Skill Academy",
+   "land": "Irilion",
+   "full": "Willowvine Forest Skill Academy",
+   "about": "The Willowvine Skill Academy is specialized in blacksmithing, summoning, and magic. There is also a meditation area and a storage.",
+   "notes": [],
+   "pic": null,
+   "photo": "Willowvine Forest.png",
+   "npcs": [
+    {
+     "name": "Daiye",
+     "page": "Daiye",
+     "at": [
+      {
+       "x": 338,
+       "y": 333,
+       "pick": false
+      }
+     ],
+     "what": "Storage keeper"
+    }
+   ],
+   "harvest": [],
+   "creatures": [],
+   "specials": [
+    {
+     "name": "Fast Regeneration",
+     "page": "Fast Regeneration Perk",
+     "at": [
+      {
+       "x": 284,
+       "y": 299,
+       "pick": false
+      }
+     ],
+     "what": "Area"
+    },
+    {
+     "name": "Magic",
+     "page": "Magic",
+     "at": [
+      {
+       "x": 339,
+       "y": 209,
+       "pick": false
+      }
+     ],
+     "what": "Arena"
+    },
+    {
+     "name": "Summoning",
+     "page": "Summoning",
+     "at": [
+      {
+       "x": 271,
+       "y": 305,
+       "pick": false
+      }
+     ],
+     "what": "Arena"
+    }
+   ],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Willowvine Forest",
+     "page": "Willowvine Forest",
+     "at": [
+      {
+       "x": 305,
+       "y": 270,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Willowvine Forest"
+  },
+  {
+   "name": "Azghal Castle",
+   "land": "Irilion",
+   "full": "Azghal Castle",
+   "about": "This castle is full of monsters and secret rooms.",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Armed Skeleton",
+     "page": "Armed Skeleton"
+    },
+    {
+     "name": "Medium Gargoyle",
+     "page": "Medium Gargoyle"
+    },
+    {
+     "name": "Phantom Warrior",
+     "page": "Phantom Warrior"
+    },
+    {
+     "name": "Skeleton",
+     "page": "Skeleton"
+    },
+    {
+     "name": "Small Gargoyle",
+     "page": "Small Gargoyle"
+    },
+    {
+     "name": "Tall Gargoyle",
+     "page": "Tall Gargoyle"
+    },
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre",
+     "what": "(x2)"
+    },
+    {
+     "name": "Male Ogre",
+     "page": "Male Ogre",
+     "what": "(x2)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Zirakinbar",
+     "page": "Zirakinbar",
+     "at": [
+      {
+       "x": 205,
+       "y": 177,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": null
+  },
+  {
+   "name": "Fisherman's Cave",
+   "land": "Irilion",
+   "full": "Fisherman's Cave",
+   "about": "Just a cave with 1 Rat, that connects Zirakinbar to South Zirakgunda, provides a fast access to South Zirakgunda and the Murky Cave.",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [],
+   "creatures": [
+    {
+     "name": "Rat",
+     "page": "Rat",
+     "what": "(x1)"
+    }
+   ],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "Zirakinbar",
+     "page": "Zirakinbar",
+     "at": [
+      {
+       "x": 185,
+       "y": 15,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "South Zirakgunda",
+     "page": "South Zirakgunda",
+     "at": [
+      {
+       "x": 168,
+       "y": 41,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Zirakinbar"
+  },
+  {
+   "name": "North Zirakgunda",
+   "land": "Irilion",
+   "full": "North Zirakgunda",
+   "about": "North Zirakgunda is an underground map of Zirakinbar. It is a subterranean city of the dwarves, full of resources for making iron and steel bars and matter essences. The dwarves have lived here since the creatures took over the surface, taking advantage of the surface where possible. Mining carts allow for faster movement among the sales points and harvestables. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Black Rose",
+     "page": "Black Rose",
+     "at": [
+      {
+       "x": 210,
+       "y": 351,
+       "pick": false
+      },
+      {
+       "x": 218,
+       "y": 353,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Lupine",
+     "page": "Blue Lupine",
+     "at": [
+      {
+       "x": 218,
+       "y": 353,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Quartz",
+     "page": "Blue Quartz",
+     "at": [
+      {
+       "x": 371,
+       "y": 236,
+       "pick": false
+      },
+      {
+       "x": 365,
+       "y": 246,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower",
+     "at": [
+      {
+       "x": 49,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum",
+     "at": [
+      {
+       "x": 50,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Coal",
+     "page": "Coal",
+     "at": [
+      {
+       "x": 121,
+       "y": 274,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Daffodils",
+     "page": "Daffodils",
+     "at": [
+      {
+       "x": 214,
+       "y": 352,
+       "pick": false
+      }
+     ],
+     "what": "in Garden Cave"
+    },
+    {
+     "name": "Dung",
+     "page": "Dung",
+     "at": [
+      {
+       "x": 205,
+       "y": 275,
+       "pick": false
+      },
+      {
+       "x": 305,
+       "y": 333,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits",
+     "at": [
+      {
+       "x": 147,
+       "y": 267,
+       "pick": false
+      },
+      {
+       "x": 8,
+       "y": 357,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Gold Ore",
+     "page": "Gold Ore",
+     "at": [
+      {
+       "x": 274,
+       "y": 236,
+       "pick": false
+      },
+      {
+       "x": 326,
+       "y": 277,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Impatiens",
+     "page": "Impatiens",
+     "at": [
+      {
+       "x": 46,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Iron Ore",
+     "page": "Iron Ore",
+     "at": [
+      {
+       "x": 359,
+       "y": 208,
+       "pick": false
+      },
+      {
+       "x": 11,
+       "y": 222,
+       "pick": false
+      },
+      {
+       "x": 230,
+       "y": 295,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Quartz",
+     "page": "Quartz",
+     "at": [
+      {
+       "x": 371,
+       "y": 236,
+       "pick": false
+      },
+      {
+       "x": 365,
+       "y": 246,
+       "pick": false
+      },
+      {
+       "x": 322,
+       "y": 347,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 48,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Snapdragons",
+     "page": "Red Snapdragons",
+     "at": [
+      {
+       "x": 34,
+       "y": 292,
+       "pick": false
+      },
+      {
+       "x": 61,
+       "y": 291,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Rose Quartz",
+     "page": "Rose Quartz",
+     "at": [
+      {
+       "x": 371,
+       "y": 236,
+       "pick": false
+      },
+      {
+       "x": 365,
+       "y": 246,
+       "pick": false
+      },
+      {
+       "x": 322,
+       "y": 347,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Ruby",
+     "page": "Ruby",
+     "at": [
+      {
+       "x": 166,
+       "y": 341,
+       "pick": false
+      }
+     ],
+     "what": "(using north cave entrance + mine cart)",
+     "clock": "1:20",
+     "near": {
+      "x": 166,
+      "y": 341,
+      "walk": "1:20"
+     }
+    },
+    {
+     "name": "Sulfur",
+     "page": "Sulfur",
+     "at": [
+      {
+       "x": 339,
+       "y": 224,
+       "pick": false
+      },
+      {
+       "x": 255,
+       "y": 316,
+       "pick": false
+      }
+     ],
+     "what": "(using north cave entrance)",
+     "clock": "1:30",
+     "near": {
+      "x": 339,
+      "y": 224,
+      "walk": "1:30"
+     }
+    },
+    {
+     "name": "Tiger Lilly",
+     "page": "Tiger Lilly",
+     "at": [
+      {
+       "x": 48,
+       "y": 336,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly",
+     "at": [
+      {
+       "x": 48,
+       "y": 282,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose",
+     "at": [
+      {
+       "x": 210,
+       "y": 351,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Garden Cave",
+     "page": "Garden Cave",
+     "at": [
+      {
+       "x": 214,
+       "y": 351,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "Zirakinbar",
+     "page": "Zirakinbar",
+     "at": [
+      {
+       "x": 278,
+       "y": 372,
+       "pick": false
+      },
+      {
+       "x": 44,
+       "y": 372,
+       "pick": false
+      }
+     ],
+     "what": "cave at , stairwell at , or via the general store, library, or tavern",
+     "how": "Land"
+    },
+    {
+     "name": "South Zirakgunda",
+     "page": "South Zirakgunda",
+     "at": [
+      {
+       "x": 69,
+       "y": 229,
+       "pick": false
+      }
+     ],
+     "what": "cave at",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Zirakinbar"
+  },
+  {
+   "name": "Garden Cave",
+   "land": "Irilion",
+   "full": "Garden Cave",
+   "about": "Living underground, the room was used in testing to bring parts of the surface down to Zirakgunda. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Blue Lupine",
+     "page": "Blue Lupine"
+    },
+    {
+     "name": "Blue Star Flower",
+     "page": "Blue Star Flower"
+    },
+    {
+     "name": "Chrysanthemum",
+     "page": "Chrysanthemum"
+    },
+    {
+     "name": "Daffodils",
+     "page": "Daffodils"
+    },
+    {
+     "name": "Fruits",
+     "page": "Fruits"
+    },
+    {
+     "name": "Impatiens",
+     "page": "Impatiens"
+    },
+    {
+     "name": "Poppies",
+     "page": "Poppies"
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose"
+    },
+    {
+     "name": "Red Snapdragons",
+     "page": "Red Snapdragons"
+    },
+    {
+     "name": "Tulips",
+     "page": "Tulips"
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "North Zirakgunda",
+     "page": "North Zirakgunda",
+     "at": [
+      {
+       "x": 312,
+       "y": 307,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Zirakinbar"
+  },
+  {
+   "name": "South Zirakgunda",
+   "land": "Irilion",
+   "full": "South Zirakgunda",
+   "about": "South Zirakgunda is an underground map of Zirakinbar. It is part of a subterranean city of the dwarves. Cleaner than North Zirakgunda, dwarves of higher status have homes here. <!--",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Dung",
+     "page": "Dung",
+     "at": [
+      {
+       "x": 49,
+       "y": 86,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Lilacs",
+     "page": "Lilacs",
+     "at": [
+      {
+       "x": 14,
+       "y": 77,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Rose",
+     "page": "Red Rose",
+     "at": [
+      {
+       "x": 16,
+       "y": 12,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Red Snapdragons",
+     "page": "Red Snapdragons",
+     "at": [
+      {
+       "x": 25,
+       "y": 13,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Swamp Candles",
+     "page": "Swamp Candles",
+     "at": [
+      {
+       "x": 104,
+       "y": 40,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Vegetables",
+     "page": "Vegetables",
+     "at": [
+      {
+       "x": 35,
+       "y": 92,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "White Asiatic Lilly",
+     "page": "White Asiatic Lilly",
+     "at": [
+      {
+       "x": 53,
+       "y": 62,
+       "pick": false
+      }
+     ]
+    },
+    {
+     "name": "Yellow Rose",
+     "page": "Yellow Rose",
+     "at": [
+      {
+       "x": 16,
+       "y": 12,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [
+    {
+     "name": "Murky Cave",
+     "page": "Murky Cave",
+     "at": [
+      {
+       "x": 55,
+       "y": 58,
+       "pick": false
+      }
+     ]
+    }
+   ],
+   "exits": [
+    {
+     "name": "North Zirakgunda",
+     "page": "North Zirakgunda",
+     "at": [
+      {
+       "x": 23,
+       "y": 101,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    },
+    {
+     "name": "Zirakinbar",
+     "page": "Zirakinbar",
+     "at": [
+      {
+       "x": 102,
+       "y": 15,
+       "pick": false
+      }
+     ],
+     "what": "via Fisherman's Cave",
+     "how": "Land"
+    },
+    {
+     "name": "Kusamura Jungle",
+     "page": "Kusamura Jungle",
+     "at": [
+      {
+       "x": 3,
+       "y": 116,
+       "pick": false
+      }
+     ],
+     "what": "via Coal Mine",
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Zirakinbar"
+  },
+  {
+   "name": "Murky Cave",
+   "land": "Irilion",
+   "full": "Murky Cave",
+   "about": "Murky Cave found at [55,58] in South Zirakgunda is an internal cave with a load of harvestables scattered throughout it",
+   "notes": [],
+   "pic": null,
+   "photo": "Zirakinbar.png",
+   "npcs": [],
+   "harvest": [
+    {
+     "name": "Cotton",
+     "page": "Cotton"
+    },
+    {
+     "name": "Mugwort",
+     "page": "Mugwort"
+    },
+    {
+     "name": "Poison Ivy",
+     "page": "Poison Ivy"
+    },
+    {
+     "name": "Swamp Candles",
+     "page": "Swamp Candles"
+    },
+    {
+     "name": "Toadstool",
+     "page": "Toadstool"
+    },
+    {
+     "name": "Wormwood",
+     "page": "Wormwood"
+    }
+   ],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [
+    {
+     "name": "South Zirakgunda",
+     "page": "South Zirakgunda",
+     "at": [
+      {
+       "x": 322,
+       "y": 197,
+       "pick": false
+      }
+     ],
+     "how": "Land"
+    }
+   ],
+   "short": null,
+   "inside_of": "Zirakinbar"
+  },
+  {
+   "name": "Chrysanthemum",
+   "land": "Irilion",
+   "full": "Chrysanthemum",
+   "about": "",
+   "notes": [],
+   "pic": null,
+   "photo": null,
+   "npcs": [],
+   "harvest": [],
+   "creatures": [],
+   "specials": [],
+   "inside": [],
+   "exits": [],
+   "short": null,
+   "inside_of": null
   }
  ]
 }
