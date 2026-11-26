@@ -1,5 +1,5 @@
 {
- "_comment": "Placeholder until el_aliases.py runs in the workflow.",
+ "_comment": "Wiki item names to the game's own spelling, worked out by el_aliases.py from Mercator's recipes. Keyed in lower case.",
  "aliases": {
   "bone powder": "Bones Powder",
   "dandelions": "Dandelion",
