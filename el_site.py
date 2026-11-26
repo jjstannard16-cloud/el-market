@@ -1539,6 +1539,11 @@ HTML = r"""<!doctype html>
   /* The handful of facts that decide whether you can go in at all:
      level range, how many people, how long, how often. */
   .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
+  /* One past invasion: its facts and then what was said, with air
+     above so a run of them does not read as one long list. */
+  .sess { margin-top: 20px; padding-top: 16px;
+          border-top: 1px solid var(--line-2); }
+  .sess:first-of-type { border-top: 0; }
   .facts .fact { font-size: var(--t-xs); border: 1px solid var(--line-2);
                  border-radius: 3px; padding: 3px 9px; color: var(--muted);
                  background: var(--panel); }
@@ -3507,7 +3512,14 @@ function renderInvasions(view, count, q) {
     || JSON.stringify([s.mods, s.maps, s.said.map(l => l.said)])
          .toLowerCase().includes(q));
   const t = DATA.eventTotals || {};
-  const read = DATA.readAt || (DATA.eventLog || [])[0]?.at || "";
+  /* Mercator publishes a live count of invaded monsters with the game
+     clock, and that is the only number anywhere that answers "how many
+     are left". It is read when the site is built, and the browser is
+     not allowed to ask Mercator for a fresher one - the feed sends no
+     allow-origin header - so what the page can honestly offer is the
+     last reading and the minute it was taken. */
+  const clock = DATA.clock || {};
+  const read = (clock.at || "").slice(0, 16).replace("T", " ");
   count.textContent = `${fmt(t.modInvasions || 0)} run by a moderator`;
   if (!all.length) {
     view.innerHTML = eventPicker() + `<div class="empty">${
@@ -3517,8 +3529,8 @@ function renderInvasions(view, count, q) {
     return;
   }
   const last = all[0];
-  const minsSince = read && last
-    ? Math.round((new Date(read + "Z") - new Date(last.to + "Z")) / 60000)
+  const minsSince = clock.at && last
+    ? Math.round((new Date(clock.at) - new Date(last.to + "Z")) / 60000)
     : null;
   const fresh = minsSince != null && minsSince >= 0 && minsSince < 90;
   view.innerHTML = eventPicker() + `
@@ -3528,8 +3540,24 @@ function renderInvasions(view, count, q) {
       ${fmt(t.modInvasions || 0)} of them since the broadcasts begin.
       The scheduled ones GIWS calls are counted separately, on the
       other boards.</div>
+    <h2 class="group">Invaded monsters left <span class="count">when we
+      last looked</span></h2>
+    <div class="facts">
+      <span class="fact"><b class="${clock.monsters ? "brass" : ""}">${
+        clock.monsters == null ? "not known" : fmt(clock.monsters)}</b>${
+        clock.monsters == null ? "" : " left"}</span>
+      <span class="fact">read at ${esc(read || "?")} UTC</span>
+    </div>
+    <div class="caveat">The game keeps this count itself and Mercator
+      passes it on; it is read each time the site is rebuilt, about
+      once an hour. Zero means the last invasion is finished, not that
+      none is running - a count taken an hour ago cannot say what is
+      happening now, and the page will not pretend otherwise.
+      ${clock.warning ? `The game's last word on it:
+        <i>${esc(clock.warning)}</i>` : ""}</div>
     <h2 class="group">${fresh ? "Going on now, or just finished"
-      : "The last one"}<span class="count">${esc(last.from)}</span></h2>
+      : "The last one a moderator ran"} <span class="count">${
+      esc(last.from.replace("T", " "))}</span></h2>
     <div class="facts">
       ${last.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
         .join("")}
@@ -3541,22 +3569,35 @@ function renderInvasions(view, count, q) {
     ${saidTable(last)}
     <div class="caveat">The feed was last read at ${esc(read || "?")} UTC.
       ${minsSince != null && minsSince >= 0
-        ? `That is ${minsSince < 1 ? "the same minute as"
-           : fmt(minsSince) + " minutes after"} the last broadcast above.`
+        ? `That is ${gapWords(minsSince)} after the last broadcast
+           above.`
         : ""}
       Anything a moderator has said since then is not here yet, and the
       count of monsters left is only ever as recent as the last time one
       of them posted it.</div>
     ${all.length < 2 ? "" : `<h2 class="group">Before that</h2>
       ${all.slice(1, 40).map(s => `
-        <div class="facts"><span class="fact">${esc(s.from)}</span>
+        <div class="sess">
+        <div class="facts"><span class="fact">${
+          esc(s.from.replace("T", " "))}</span>
           ${s.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
             .join("")}
           ${s.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
           ${s.left ? `<span class="fact">${fmt(s.left.n)} left</span>` : ""}
-        </div>${saidTable(s)}`).join("")}`}`;
+        </div>${saidTable(s)}</div>`).join("")}`}`;
   wirePlayerLinks();
   wireEventPicker(view);
+}
+
+// "40 minutes", "3 hours", "4 days" - a gap in words, because 5,452
+// minutes is a number nobody converts in their head.
+function gapWords(mins) {
+  if (mins < 1) return "less than a minute";
+  if (mins < 90) return `${fmt(mins)} minute${mins === 1 ? "" : "s"}`;
+  const hours = Math.round(mins / 60);
+  if (hours < 36) return `${hours} hour${hours === 1 ? "" : "s"}`;
+  const days = Math.round(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"}`;
 }
 
 function saidTable(s) {

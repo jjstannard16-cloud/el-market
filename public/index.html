@@ -319,6 +319,11 @@
   /* The handful of facts that decide whether you can go in at all:
      level range, how many people, how long, how often. */
   .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
+  /* One past invasion: its facts and then what was said, with air
+     above so a run of them does not read as one long list. */
+  .sess { margin-top: 20px; padding-top: 16px;
+          border-top: 1px solid var(--line-2); }
+  .sess:first-of-type { border-top: 0; }
   .facts .fact { font-size: var(--t-xs); border: 1px solid var(--line-2);
                  border-radius: 3px; padding: 3px 9px; color: var(--muted);
                  background: var(--panel); }
@@ -1357,7 +1362,8 @@ function render() {
   if (tab === "online") return renderOnline(view, count, q);
   if (tab === "guilds") return focusGuild
     ? renderOneGuild(view, count, q) : renderGuilds(view, count);
-  if (tab === "events") return renderEvents(view, count, q);
+  if (tab === "events") return eboard === "_inv"
+    ? renderInvasions(view, count, q) : renderEvents(view, count, q);
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
@@ -2275,6 +2281,115 @@ function renderOneGuild(view, count, q) {
    are found by players; invasions happen to places. The same column
    carries both, because that is how the broadcasts are written.       */
 
+/* GIWS runs the scheduled invasions on a timer and they are the same
+   caves every week. The ones players drop everything for are the ones
+   a moderator starts by hand, and the only way to know one happened is
+   that a moderator said so. So this is their broadcasts, grouped, with
+   the time we last looked said plainly - nobody can see further back
+   than the last read, and a stale number is worth more than none. */
+function renderInvasions(view, count, q) {
+  const all = (DATA.modInvasions || []).filter(s => !q
+    || JSON.stringify([s.mods, s.maps, s.said.map(l => l.said)])
+         .toLowerCase().includes(q));
+  const t = DATA.eventTotals || {};
+  /* Mercator publishes a live count of invaded monsters with the game
+     clock, and that is the only number anywhere that answers "how many
+     are left". It is read when the site is built, and the browser is
+     not allowed to ask Mercator for a fresher one - the feed sends no
+     allow-origin header - so what the page can honestly offer is the
+     last reading and the minute it was taken. */
+  const clock = DATA.clock || {};
+  const read = (clock.at || "").slice(0, 16).replace("T", " ");
+  count.textContent = `${fmt(t.modInvasions || 0)} run by a moderator`;
+  if (!all.length) {
+    view.innerHTML = eventPicker() + `<div class="empty">${
+      (DATA.modInvasions || []).length ? "Nothing matches that."
+      : "No moderator invasion has been broadcast yet."}</div>`;
+    wireEventPicker(view);
+    return;
+  }
+  const last = all[0];
+  const minsSince = clock.at && last
+    ? Math.round((new Date(clock.at) - new Date(last.to + "Z")) / 60000)
+    : null;
+  const fresh = minsSince != null && minsSince >= 0 && minsSince < 90;
+  view.innerHTML = eventPicker() + `
+    <div class="grouphint">A moderator runs these by hand and announces
+      them in their own words, so this is those words, grouped into one
+      invasion wherever there is no two-hour gap between broadcasts.
+      ${fmt(t.modInvasions || 0)} of them since the broadcasts begin.
+      The scheduled ones GIWS calls are counted separately, on the
+      other boards.</div>
+    <h2 class="group">Invaded monsters left <span class="count">when we
+      last looked</span></h2>
+    <div class="facts">
+      <span class="fact"><b class="${clock.monsters ? "brass" : ""}">${
+        clock.monsters == null ? "not known" : fmt(clock.monsters)}</b>${
+        clock.monsters == null ? "" : " left"}</span>
+      <span class="fact">read at ${esc(read || "?")} UTC</span>
+    </div>
+    <div class="caveat">The game keeps this count itself and Mercator
+      passes it on; it is read each time the site is rebuilt, about
+      once an hour. Zero means the last invasion is finished, not that
+      none is running - a count taken an hour ago cannot say what is
+      happening now, and the page will not pretend otherwise.
+      ${clock.warning ? `The game's last word on it:
+        <i>${esc(clock.warning)}</i>` : ""}</div>
+    <h2 class="group">${fresh ? "Going on now, or just finished"
+      : "The last one a moderator ran"} <span class="count">${
+      esc(last.from.replace("T", " "))}</span></h2>
+    <div class="facts">
+      ${last.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
+        .join("")}
+      ${last.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
+      ${last.left ? `<span class="fact"><b class="brass">${
+        fmt(last.left.n)}</b> monsters left at ${
+        esc(last.left.at.slice(11))}</span>` : ""}
+    </div>
+    ${saidTable(last)}
+    <div class="caveat">The feed was last read at ${esc(read || "?")} UTC.
+      ${minsSince != null && minsSince >= 0
+        ? `That is ${gapWords(minsSince)} after the last broadcast
+           above.`
+        : ""}
+      Anything a moderator has said since then is not here yet, and the
+      count of monsters left is only ever as recent as the last time one
+      of them posted it.</div>
+    ${all.length < 2 ? "" : `<h2 class="group">Before that</h2>
+      ${all.slice(1, 40).map(s => `
+        <div class="sess">
+        <div class="facts"><span class="fact">${
+          esc(s.from.replace("T", " "))}</span>
+          ${s.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
+            .join("")}
+          ${s.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
+          ${s.left ? `<span class="fact">${fmt(s.left.n)} left</span>` : ""}
+        </div>${saidTable(s)}</div>`).join("")}`}`;
+  wirePlayerLinks();
+  wireEventPicker(view);
+}
+
+// "40 minutes", "3 hours", "4 days" - a gap in words, because 5,452
+// minutes is a number nobody converts in their head.
+function gapWords(mins) {
+  if (mins < 1) return "less than a minute";
+  if (mins < 90) return `${fmt(mins)} minute${mins === 1 ? "" : "s"}`;
+  const hours = Math.round(mins / 60);
+  if (hours < 36) return `${hours} hour${hours === 1 ? "" : "s"}`;
+  const days = Math.round(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"}`;
+}
+
+function saidTable(s) {
+  return `<div class="scroller"><table class="daylog"><tbody>${
+    s.said.map(l => `<tr>
+      <td class="sm nowrap">${esc(l.at.replace("T", " "))}</td>
+      <td class="sm nowrap">${playerLink(l.who || "")}</td>
+      <td class="sm">${l.left != null
+        ? `<b class="brass">${fmt(l.left)} left.</b> ` : ""}${esc(l.said)}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+}
+
 function renderEvents(view, count, q) {
   const t = DATA.eventTotals;
   const all = DATA.finders || [];
@@ -2335,9 +2450,7 @@ function renderEvents(view, count, q) {
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 
-  const picker = `<div class="pills">${Object.entries(BOARDS).map(
-    ([key, b]) => `<button class="pill${eboard === key ? " on" : ""}"
-      data-board="${key}">${esc(b.label)}</button>`).join("")}</div>`;
+  const picker = eventPicker();
 
   const finders = !ranked.length ? "" : `
     ${picker}
@@ -2404,6 +2517,23 @@ function renderEvents(view, count, q) {
   wirePlayerLinks();
   const more = document.getElementById("morefinders");
   if (more) more.onclick = () => { findersShown += 200; render(); };
+  wireEventPicker(view);
+}
+
+/* The boards and the invasions share one row of pills, so that both
+   halves of this tab are reachable from either. */
+function eventPicker() {
+  const labels = { found: "Most found", pears: "Most pears",
+                   jokers: "Most jokers", gold: "Most generous",
+                   said: "Most broadcasts" };
+  return `<div class="pills">${Object.entries(labels).map(
+    ([key, label]) => `<button class="pill${eboard === key ? " on" : ""}"
+      data-board="${key}">${esc(label)}</button>`).join("")
+    }<button class="pill${eboard === "_inv" ? " on" : ""}"
+      data-board="_inv">Invasions</button></div>`;
+}
+
+function wireEventPicker(view) {
   view.querySelectorAll("[data-board]").forEach(b => b.onclick = () => {
     eboard = b.dataset.board; findersShown = 25; render();
   });
