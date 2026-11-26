@@ -55,42 +55,68 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import json
+import sqlite3
 
 import requests
 
 BASE = "https://mercator.holy-eternalland.de"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
+# Our recipes come from the wiki. Mercator keeps its own set, read from
+# somewhere else, so the two disagreeing is the cheapest accuracy check
+# there is: one of them is wrong and the row says which to go and look
+# at. 462 of ours against 414 of theirs.
+theirs = requests.get(f"{BASE}/api/v1/recipes", headers=UA,
+                      timeout=60).json()["recipes"]
+by_name = {}
+for r in theirs:
+    by_name.setdefault(r["itemName"].lower(), r)
 
-def get(path, **kw):
-    r = requests.get(BASE + path, headers=UA, timeout=40, **kw)
-    r.raise_for_status()
-    return r.json()
+con = sqlite3.connect("el_bots.db")
+con.row_factory = sqlite3.Row
+ours = {r["item"].lower(): dict(r) for r in con.execute("SELECT * FROM recipe")}
+parts = {}
+for r in con.execute("SELECT * FROM recipe_ingredient"):
+    parts.setdefault(r["item"].lower(), {})[r["ingredient"].lower()] = r["n"]
 
+both = sorted(set(ours) & set(by_name))
+print(f"{len(ours)} ours, {len(by_name)} theirs, {len(both)} in both")
+print(f"only ours: {len(set(ours) - set(by_name))}")
+print(f"only theirs: {sorted(set(by_name) - set(ours))[:20]}")
 
-print("===== /api/analytics/summary, in full =====")
-print(json.dumps(get("/api/analytics/summary"), indent=1)[:6000])
+def same(a, b):
+    return (a or 0) == (b or 0)
 
-print("\n===== /api/marketsearch - a second set of bot prices? =====")
-body = get("/api/marketsearch", params={"q": "leather", "per_page": 10})
-print(json.dumps(body, indent=1)[:2500])
+off = {"level": [], "exp": [], "food": [], "makes": [], "skill": [],
+       "knowledge": [], "ingredients": []}
+for name in both:
+    us, them = ours[name], by_name[name]
+    if not same(us["level"], them.get("skillLevel")):
+        off["level"].append(f"{us['item']}: {us['level']} vs {them.get('skillLevel')}")
+    exp_theirs = sum((them.get("exps") or {}).values())
+    if not same(us["exp"], exp_theirs):
+        off["exp"].append(f"{us['item']}: {us['exp']} vs {exp_theirs}")
+    if not same(us["food"], them.get("food")):
+        off["food"].append(f"{us['item']}: {us['food']} vs {them.get('food')}")
+    if not same(us["makes"], them.get("outputQuantity")):
+        off["makes"].append(f"{us['item']}: {us['makes']} vs {them.get('outputQuantity')}")
+    if (us["skill"] or "").lower() != (them.get("skillName") or "").lower():
+        off["skill"].append(f"{us['item']}: {us['skill']} vs {them.get('skillName')}")
+    ours_in = parts.get(name, {})
+    theirs_in = {i["itemName"].lower(): i["quantity"]
+                 for i in them.get("ingredients") or []}
+    if ours_in != theirs_in:
+        miss = set(theirs_in) - set(ours_in)
+        extra = set(ours_in) - set(theirs_in)
+        diff = {k: (ours_in[k], theirs_in[k]) for k in set(ours_in) & set(theirs_in)
+                if ours_in[k] != theirs_in[k]}
+        off["ingredients"].append(
+            f"{us['item']}: " + ", ".join(filter(None, [
+                f"we lack {sorted(miss)}" if miss else "",
+                f"we have extra {sorted(extra)}" if extra else "",
+                f"amounts {diff}" if diff else ""])))
 
-print("\n===== /api/v1/recipes - how many, and what shape =====")
-body = get("/api/v1/recipes")
-print("keys:", list(body))
-print("total:", body.get("total"))
-rs = body.get("recipes") or []
-print(json.dumps(rs[0], indent=1)[:900] if rs else "none")
-multi = {}
-for r in rs:
-    multi.setdefault(r.get("itemName"), []).append(r.get("id"))
-many = {k: v for k, v in multi.items() if len(v) > 1}
-print(f"{len(rs)} recipes for {len(multi)} items; "
-      f"{len(many)} items have more than one")
-print("   e.g.", list(many)[:8])
-
-print("\n===== /api/v1/recipes/calculate =====")
-print(json.dumps(get("/api/v1/recipes/calculate",
-                     params={"item": "Steel Long Sword", "amount": 1,
-                             "recursive": "true"}), indent=1)[:2500])
+for key, rows in off.items():
+    print(f"\n--- {key}: {len(rows)} disagree ---")
+    for line in rows[:25]:
+        print("   " + line)
