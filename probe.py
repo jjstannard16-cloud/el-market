@@ -77,7 +77,8 @@ con.row_factory = sqlite3.Row
 ours = {r["item"].lower(): dict(r) for r in con.execute("SELECT * FROM recipe")}
 parts = {}
 for r in con.execute("SELECT * FROM recipe_ingredient"):
-    parts.setdefault(r["item"].lower(), {})[r["ingredient"].lower()] = r["n"]
+    parts.setdefault(r["item"].lower(), {})[r["ingredient"].lower()] = \
+        int(r["amount"])
 
 both = sorted(set(ours) & set(by_name))
 print(f"{len(ours)} ours, {len(by_name)} theirs, {len(both)} in both")
