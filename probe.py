@@ -56,41 +56,56 @@ can be checked against the old numbers before it lands.
 """
 
 import json
-import re
 
 import requests
 
-API = "https://el-wiki.holy-eternalland.de/api.php"
+BASE = "https://mercator.holy-eternalland.de"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 
+# Mercator documents 37 endpoints at /api. These are the ones we do not
+# read and might want to. The guild one matters most: guild.txt is kept
+# by hand because nothing was thought to publish membership, and an
+# earlier look at this very path got a 404.
+TRY = [
+    "/api/v1/players/online",
+    "/api/v1/items?q=leather",
+    "/api/v1/prices?q=leather",
+    "/api/v1/recipes?q=leather%20helm",
+    "/api/analytics/summary",
+    "/analytics/export/invasions?format=json&limit=5",
+    "/analytics/export/jokers?format=json&limit=3",
+    "/botmanagement/elinfo.json",
+    "/api/v1/trade/history",
+    "/api/v1/health",
+]
 
-def api(**params):
-    params.setdefault("format", "json")
-    params.setdefault("formatversion", 2)
-    r = requests.get(API, params=params, headers=UA, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def page_text(title):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    for pg in body.get("query", {}).get("pages", []):
-        if pg.get("missing"):
-            return None
-        revs = pg.get("revisions") or [{}]
-        return (revs[0].get("slots", {}).get("main", {}).get("content")
-                or revs[0].get("content") or "")
-    return None
-
-
-# Maps our reader found no harvestables on. Some are temples and sewers
-# with none to find; the rest are laid out in a way we do not read.
-for name in ("Desert Pines", "Magic School", "Gargoyles Cave",
-             "Nordcarn", "Portland"):
-    text = page_text(name) or ""
+for path in TRY:
     print("=" * 70)
-    print(name, "  headings:", " | ".join(HEADING.findall(text)))
-    for m in re.finditer(r"^=+\s*(.*[Hh]arvest.*?)\s*=+\s*$", text, re.M):
-        print(text[m.start():m.start() + 700])
+    print(path)
+    try:
+        r = requests.get(BASE + path, headers=UA, timeout=30)
+    except Exception as e:
+        print("   failed:", e)
+        continue
+    print(f"   {r.status_code}  {r.headers.get('content-type','')}  "
+          f"{len(r.content)} bytes")
+    if r.status_code != 200:
+        print("   " + r.text[:200].replace("\n", " "))
+        continue
+    try:
+        body = r.json()
+    except Exception:
+        print("   not json:", r.text[:200])
+        continue
+    if isinstance(body, dict):
+        print("   keys:", list(body)[:14])
+        for k in list(body)[:14]:
+            v = body[k]
+            if isinstance(v, list) and v:
+                print(f"   {k}[0]:", json.dumps(v[0])[:400])
+            elif not isinstance(v, (list, dict)):
+                print(f"   {k}: {json.dumps(v)[:120]}")
+    elif isinstance(body, list):
+        print(f"   list of {len(body)}")
+        if body:
+            print("   [0]:", json.dumps(body[0])[:400])
