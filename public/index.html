@@ -2423,12 +2423,9 @@ function renderInvasions(view, count, q) {
     : null;
   const fresh = minsSince != null && minsSince >= 0 && minsSince < 90;
   view.innerHTML = eventPicker() + `
-    <div class="grouphint">A moderator runs these by hand and announces
-      them in their own words, so this is those words, grouped into one
-      invasion wherever there is no two-hour gap between broadcasts.
-      ${fmt(t.modInvasions || 0)} of them since the broadcasts begin.
-      The scheduled ones GIWS calls are counted separately, on the
-      other boards.</div>
+    <div class="grouphint">${fmt(t.modInvasions || 0)} invasions a
+      moderator started by hand, in their own words. The scheduled ones
+      GIWS calls are on the other boards.</div>
     <div class="invstate${clock.monsters ? " up" : ""}">
       <svg class="moon"><use href="#i-moon"/></svg>
       <div>
@@ -2442,28 +2439,15 @@ function renderInvasions(view, count, q) {
           : "the game did not say"}, at ${esc(read || "?")} UTC</div>
       </div>
     </div>
-    <div class="caveat">The game keeps this count itself and Mercator
-      passes it on; it is read each time the site is rebuilt, about
-      once an hour, so it is a reading rather than a running total:
-      what it says is what was true then. A count taken an hour ago
-      cannot tell you what is happening now, and the page will not
-      pretend otherwise.
-      ${clock.warning ? `The game's last word on it:
-        <i>${esc(clock.warning)}</i>` : ""}</div>
     <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
       <span>${fresh ? "Going on now, or just finished"
         : "The last one a moderator ran"}</span>
       <span class="count">${esc(last.from.replace("T", " "))}</span></h2>
     ${invFacts(last)}
     ${saidTable(last)}
-    <div class="caveat">The feed was last read at ${esc(read || "?")} UTC.
-      ${minsSince != null && minsSince >= 0
-        ? `That is ${gapWords(minsSince)} after the last broadcast
-           above.`
-        : ""}
-      Anything a moderator has said since then is not here yet, and the
-      count of monsters left is only ever as recent as the last time one
-      of them posted it.</div>
+    ${minsSince != null && minsSince >= 0
+      ? `<div class="caveat">That was ${gapWords(minsSince)} before we
+         last looked.</div>` : ""}
     ${all.length < 2 ? "" : `<h2 class="group">Before that</h2>
       ${all.slice(1, 40).map(s => `
         <div class="sess">${invFacts(s, true)}${saidTable(s)}</div>`)
