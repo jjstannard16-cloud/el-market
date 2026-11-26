@@ -346,6 +346,9 @@
             border-radius: 3px; display: block; }
   .mapside { flex: 1 1 320px; min-width: 0; }
   .mapabout { max-width: 62ch; margin-bottom: 14px; }
+  .mapnotes { max-width: 62ch; margin: 0 0 14px; padding-left: 18px;
+              font-size: var(--t-sm); color: var(--muted); }
+  .mapnotes li { margin-bottom: 4px; }
   .mapt td, .mapt th { padding: 6px 12px 6px 0; }
   .mapt .nm img, .mapt .nm .noimg { width: 26px; height: 26px; }
   /* A coordinate is read as a pair of numbers, so it is set as one. */
@@ -2198,8 +2201,8 @@ function walkCell(h) {
   const bits = [];
   if (h.near) bits.push(say(h.near, null));
   if (h.off) bits.push(say(h.off, h.off.map));
-  return bits.join("<br>")
-    || `<span class="sm muted">not worked out</span>`;
+  // The wiki works this out by hand and has not got to every row.
+  return bits.join("<br>") || `<span class="sm muted">\u2013</span>`;
 }
 
 function renderOneMap(view, count) {
@@ -2317,6 +2320,8 @@ function renderOneMap(view, count) {
         esc(m.name)}">` : ""}
       <div class="mapside">
         ${m.about ? `<div class="mapabout">${esc(m.about)}</div>` : ""}
+        ${(m.notes || []).length ? `<ul class="mapnotes">${m.notes.map(n =>
+          `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
         <div class="facts">
           ${(m.storage || []).map(s =>
             `<span class="fact"><svg class="ic"><use href="#i-chest"/></svg>

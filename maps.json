@@ -6,6 +6,7 @@
    "land": "Seridia",
    "full": "Abandoned Temple",
    "about": "You can't return from where you come if you enter this place. You have to go through the whole temple and the female orcs within before reaching the exit.",
+   "notes": [],
    "pic": null,
    "photo": "Valley of the Dwarves.png",
    "npcs": [
@@ -59,6 +60,7 @@
    "land": "Seridia",
    "full": "Aluwen Temple",
    "about": "In Aluwen Temple you will find Noria, the High priest of Aluwen, the Goddess of Defense. There are two entrances to this temple, one in Desert Pines the other in White Stone.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -88,6 +90,7 @@
    "land": "Seridia",
    "full": "Battle Hall",
    "about": "In this place you will find Ilie, the manager of Instances. In the past, Battle Hall was used as a way to enter several PK maps, with exits to Kilaran Field, Tahraji Desert and Ruins of Tirnym, this last map is not PK anymore. There was also a PK area inside the Battle Hall but now its gone. The exit to Tahraji Desert was also removed.",
+   "notes": [],
    "pic": null,
    "photo": "Morcraven Marsh.png",
    "npcs": [
@@ -147,6 +150,7 @@
    "land": "Seridia",
    "full": "Carmien Manor",
    "about": "Carmien Manor consists of an entrance room with dining room and NPC. To access lower levels you use a non-hidden trap door. This leads to a serpentine set of hallways with cells, spiked pits and other jail features inhabited by trolls. This is connected to an underground cavern with armed orcs, large spiders, fluffy rabbits, and a sloping hallway with interesting stalagmites worth examining. The latter two creatures make it very popular with Fluffy Rabbit trainers for they can mana drain the spiders to heal themselves. The exit leads to an anteroom useful for healing before exiting outside. It exits to a locked door in Carmien Village, close to Nordcarn.",
+   "notes": [],
    "pic": "map_carmien_manor_0512px.png",
    "photo": "Southern Kilaran.png",
    "npcs": [
@@ -332,6 +336,7 @@
    "land": "Seridia",
    "full": "Coal Cave",
    "about": "As the name suggests, this place is one of the better places for the young traveller to acquire this useful mineral. <!--",
+   "notes": [],
    "pic": null,
    "photo": "Desert Pines.png",
    "npcs": [],
@@ -391,6 +396,7 @@
    "land": "Seridia",
    "full": "Crystal Caverns",
    "about": "This delightful cavern has much to offer the young explorer. Ample supplies of various ores and minerals makes this a logical first cave for our new explorers. The creatures here are non-aggresssive, and may even be a source of thread and gems for those brave enough.",
+   "notes": [],
    "pic": null,
    "photo": "Desert Pines.png",
    "npcs": [
@@ -627,6 +633,7 @@
    "land": "Seridia",
    "full": "Desert Pines",
    "about": "Desert Pines has luxurious heat and nearly no humidity in the south. The Evergreen Woods on the northern side of this territory are inhabited by normal forest creatures: a Bear, Deers, Foxes, Racoons, Wolves, Brown Rabbits and snakes of Green, Red and Brown variety as well as some fantasy creatures like Wood Sprites and Brownies. To the south, walled by mountains which are littered with caves, exists the Kamara Desert. Cactus and Quartz are exposed in the heat, but watch out for the snakes that prefer this climate. Outside the storage in Kamara Desert are a large caravan and many trade bots. This is the second largest trade area in EL. Many fighters test their strength in the PK arenas. Others just harvest in Crystal Caverns or the Coal Cave or visit the alchemy school in the Desert Tropics in the southwest.",
+   "notes": [],
    "pic": "map_desert_pines_0512px.png",
    "photo": "Desert Pines.png",
    "npcs": [
@@ -1846,6 +1853,7 @@
    "land": "Seridia",
    "full": "Diamond Cave",
    "about": "Often used because of the short walk to Nordcarn's storage. <!--",
+   "notes": [],
    "pic": "map_diamond_cave_0512px.png",
    "photo": "White Stone.png",
    "npcs": [],
@@ -1947,6 +1955,7 @@
    "land": "Seridia",
    "full": "Eastern Cave",
    "about": "This cave connects Portland and White Stone. It is a place where many players sit and harvest sapphires to make water essences. As such it is also known as \"Sapphire Cave\". <!--",
+   "notes": [],
    "pic": null,
    "photo": "Portland.png",
    "npcs": [],
@@ -2104,6 +2113,7 @@
    "land": "Seridia",
    "full": "Elandria's Alchemy Temple",
    "about": "In Elandria's Alchemy Temple you will find Romira, the High priestess of Elandria, the Goddess of Alchemy. The entrance to this temple is in Evergreen Woods, Desert Pines.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -2133,6 +2143,7 @@
    "land": "Seridia",
    "full": "Gargoyles Cave",
    "about": "",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -2198,6 +2209,7 @@
    "land": "Seridia",
    "full": "Glilin's Temple",
    "about": "In Glinin's Temple you will find the Baostas the Priest of Glilin, God of Craftmanship, Discipline and Skill.",
+   "notes": [],
    "pic": null,
    "photo": "Nordcarn.png",
    "npcs": [
@@ -2258,6 +2270,7 @@
    "land": "Seridia",
    "full": "Gold Mines",
    "about": "The gold mine upper level is the place where young adventurers come to fight goblins and harvest gold. It's also a place of danger since sometimes automatic invasions can spawn monsters that start in the lower levels, continue to the upper levels and then out into Valley of the Dwarves.",
+   "notes": [],
    "pic": "map_gold_mines_0512px.png",
    "photo": "Valley of the Dwarves.png",
    "npcs": [
@@ -2605,6 +2618,7 @@
    "land": "Seridia",
    "full": "Grubani Peninsula",
    "about": "This area holds many high level monsters and is the only source of Seridium Ore. It does not have a storage area, so you will need to cross to other lands to store/retrieve items. It was a PK map until 2005, but not anymore.",
+   "notes": [],
    "pic": "map_grubani_peninsula_0512px.png",
    "photo": "Grubani Peninsula.png",
    "npcs": [
@@ -3179,6 +3193,7 @@
    "land": "Seridia",
    "full": "Isla Prima",
    "about": "When you first awaken in the Eternal Lands, you find yourself on Isla Prima. Beginners often start by talking to the Tutorial NPC; he will try to show you around the Eternal Lands. There are various animals on Isla Prima but no monsters. It is also home of the Wraith, where you can get attributes, nexuses and perks. One of the most useful features of Isla Prima is the Beam. From every non-PK map, you can instantly teleport back to the Beam on Isla Prima by using the #beam&nbsp;me command. Time to storage (advanced players): 1:20 \"#beam me\" to VotD storage",
+   "notes": [],
    "pic": "map_islaprima_0512px.png",
    "photo": "Isla Prima.png",
    "npcs": [
@@ -3643,6 +3658,7 @@
    "land": "Seridia",
    "full": "Isla Prima Cave",
    "about": "Due to it's rat population, this cave in Isla Prima is also referred to as the \"[[Acronyms#I|IP]] rat cave\". You can't miss it walking from the Beam to the boat. <!--",
+   "notes": [],
    "pic": null,
    "photo": "Isla Prima.png",
    "npcs": [],
@@ -3701,6 +3717,7 @@
    "land": "Seridia",
    "full": "Isla Prima Spider Cave",
    "about": "A hidden cave in Isla Prima with several Small Spiders. This cave also have some Fruits and Quartz minerals to harvest. <!--",
+   "notes": [],
    "pic": null,
    "photo": "Isla Prima.png",
    "npcs": [],
@@ -3801,6 +3818,7 @@
    "land": "Seridia",
    "full": "Jayden's Temple",
    "about": "In Jayden's Temple you will find Iazurn the High Priest of Jayden, Goddess of Mixture, Reason and Patience.",
+   "notes": [],
    "pic": null,
    "photo": "Morcraven Marsh.png",
    "npcs": [
@@ -3861,6 +3879,7 @@
    "land": "Seridia",
    "full": "Kane's Ship",
    "about": "The interior of the Black Raven II, ferrying from Desert Pines to White Stone, its captain, Kane, sometimes require help to deal with a Rat infestation.",
+   "notes": [],
    "pic": null,
    "photo": "Desert Pines.png",
    "npcs": [
@@ -3924,7 +3943,13 @@
    "name": "Kilaran Field",
    "land": "Seridia",
    "full": "Kilaran Field",
-   "about": "* WARNING! This map is PK! You cannot use #beam me in this map - it is not true from ALL PK Maps. * This map is a \" No Drops \" map, when you die you will not lose items from your inventory, with the exception of Rostogol Stones, those will disappear as usual, so you might want to consider not bringing them with you. * This map is also multi-combat, so more than one monster/player can attack you at one time. * Players standing near Valley of the Dwarves entrance or walking through take magic damage like White Stone sewers (it is not radioactive/radon damage - that can be shielded complete by armor or potions).",
+   "about": "",
+   "notes": [
+    "WARNING! This map is PK! You cannot use #beam me in this map - it is not true from ALL PK Maps.",
+    "This map is a \" No Drops \" map, when you die you will not lose items from your inventory, with the exception of Rostogol Stones, those will disappear as usual, so you might want to consider not bringing them with you.",
+    "This map is also multi-combat, so more than one monster/player can attack you at one time.",
+    "Players standing near Valley of the Dwarves entrance or walking through take magic damage like White Stone sewers (it is not radioactive/radon damage - that can be shielded complete by armor or potions)."
+   ],
    "pic": "map_kilaran_field_0512px.png",
    "photo": "Kilaran Field.png",
    "npcs": [
@@ -4238,6 +4263,7 @@
    "land": "Seridia",
    "full": "LaForge's Temple",
    "about": "In LaForge's Temple you will find Diesel the High Priest of LaForge, God of Engineering, Collaboration, Production and Technology. The temple is in Western Kyr Woodlands, Arius, but something is needed to enter.",
+   "notes": [],
    "pic": null,
    "photo": "Arius.png",
    "npcs": [
@@ -4273,6 +4299,7 @@
    "land": "Seridia",
    "full": "Tarsengaard Magic School",
    "about": "",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -4504,6 +4531,7 @@
    "land": "Seridia",
    "full": "Magic School Garden",
    "about": "This multi-tier map winds all the way from tunnel entrance to beach/desert below.",
+   "notes": [],
    "pic": "map_magic_School_garden_0512px.png",
    "photo": "Tarsengaard.png",
    "npcs": [],
@@ -4753,6 +4781,7 @@
    "land": "Seridia",
    "full": "Magic School Sewers",
    "about": "The sewers of the Magic School is a dangerous PK area full of Goblins, it is also used as a shortcut to access some areas of the Magic School.",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -4838,6 +4867,7 @@
    "land": "Seridia",
    "full": "Many Quartzes Cave",
    "about": "The secret Cave in Ruins of Tirnym with many Quartzes. <!--",
+   "notes": [],
    "pic": null,
    "photo": "Ruins of Tirnym.png",
    "npcs": [],
@@ -4873,6 +4903,7 @@
    "land": "Seridia",
    "full": "Morcraven Marsh",
    "about": "If somebody had listened to Vesine and Edlera they'd know what to put here...",
+   "notes": [],
    "pic": "map_morcraven_marsh_0512px.png",
    "photo": "Morcraven Marsh.png",
    "npcs": [
@@ -5716,6 +5747,7 @@
    "land": "Seridia",
    "full": "Morcraven Marsh Caves",
    "about": "Players frequently come here to harvest the many ores available, but they need to be alert since invasions do start from here. Not a good place to be AFK.",
+   "notes": [],
    "pic": "map_morcraven_marsh_caves_0512px.png",
    "photo": "Morcraven Marsh.png",
    "npcs": [
@@ -5894,6 +5926,7 @@
    "land": "Seridia",
    "full": "Naralik",
    "about": "Naralik is a swamp filled with goblins, spiders and snakes. It is full of ancient statues telling the tale of a long lost civilization. It still has a lot of flowers to harvest from the old gardens. Mages often train magic by draining the mana from the large spiders and unleashing it in different ways. The flowers and the mining resources in the catacombs make many high level mixers call it their home.",
+   "notes": [],
    "pic": "map_naralik_0512px.png",
    "photo": "Naralik.png",
    "npcs": [
@@ -6422,6 +6455,7 @@
    "land": "Seridia",
    "full": "Naralik Catacombs",
    "about": "These old catacombs are filled with skeletons, spiders and a clan of armed and unarmed orcs, making this a dangerous place for new players. However, the rich resources of iron ore, emeralds and titanium ore bring many experienced players to harvest. But beware!! Mortos always keeps half an eye focused on Naralik Catacombs for a specific reason - and his followers visit it with high frequency.",
+   "notes": [],
    "pic": "map_naralik_catacombs_0512px.png",
    "photo": "Naralik.png",
    "npcs": [
@@ -6688,6 +6722,7 @@
    "land": "Seridia",
    "full": "Nightshade Clan's Hideout",
    "about": "The hideout of the Nightshade Clan, beneath the Ruins of Tirnym, consist in a group of rooms with several hidden escape routes. <!--",
+   "notes": [],
    "pic": null,
    "photo": "Ruins of Tirnym.png",
    "npcs": [],
@@ -6761,6 +6796,7 @@
    "land": "Seridia",
    "full": "Nordcarn",
    "about": "A busy city with city walls and a many connections to often visited sites makes this a map full of life. The city wall is an often used ranging point for aspiring rangers and the plentiful wild life lure young adventurers out to hunt rabbits, deer and wolves. One can also meet harvesters dragging their large packs from the White stone diamond and coal caves. Nordcarn has a huge collection of tradebots. Close to VOTD and just south of the city walls near the Storage Barn, the ground is full of tradebots doing business with wanton adventurers. There is no Ring of Nordcarn, no matter how often you ask a crafter. The portal will drop you at [100,132], north-west of the inner city mountains but within the city walls.",
+   "notes": [],
    "pic": "map_nordcarn_0512px.png",
    "photo": "Nordcarn.png",
    "npcs": [
@@ -7609,6 +7645,7 @@
    "land": "Seridia",
    "full": "North Cave",
    "about": "WARNING! This map is PK! This cave is by far the best location to harvest Turquoise and the only is Seridia (C1). <!--",
+   "notes": [],
    "pic": null,
    "photo": "Nordcarn.png",
    "npcs": [],
@@ -7724,6 +7761,7 @@
    "land": "Seridia",
    "full": "Ogre Room",
    "about": "A hidden abandoned room in White Stone with a Ogre and a Troll. <!--",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -7767,6 +7805,7 @@
    "land": "Seridia",
    "full": "Orc Cave",
    "about": "A hidden cave in Tarsengaard with a couple of Orcs.",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -7811,6 +7850,7 @@
    "land": "Seridia",
    "full": "Orvimon's Crypt",
    "about": "Orvimon's Crypt in Tarsengaard only have a Goblin, a Skeleton and 2 Trolls, its a good and safe place for Troll hunting.",
+   "notes": [],
    "pic": "map_orvimon_crypt_0512px.png",
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -7869,6 +7909,7 @@
    "land": "Seridia",
    "full": "Portland",
    "about": "This former White Stone City outpost is now virtually a independent state. The harbor is the main activity in Portland and connects the city to several parts of Seridia. Except for the port, titanium mining is the biggest industry in the city, titanium is a very lightweight and strong metal used extensively in armor and weapons. There are only 2 dangers in Portland, a lone Goblin called \"Bob the Gob\" and the GIWS Invasions that occasionally start in the Titanium Mines.",
+   "notes": [],
    "pic": "map_portland_0512px.png",
    "photo": "Portland.png",
    "npcs": [
@@ -8859,6 +8900,7 @@
    "land": "Seridia",
    "full": "Ruins of Tirnym",
    "about": "Ruins of Tirnym is one of the least frequently visited maps in Seridia. It is the realm of the most deadly monsters, the Chimerans. In a small ravine in the north you can find remains of a caravan. Other notable places are a small graveyard and some ruined buildings, as well as the mysterious magic school.",
+   "notes": [],
    "pic": "map_ruins_of_tirnym_0512px.png",
    "photo": "Ruins of Tirnym.png",
    "npcs": [
@@ -9120,6 +9162,7 @@
    "land": "Seridia",
    "full": "Secret Sapphire Cave",
    "about": "A hidden cavern in Magic School Garden with a few Sapphires to harvest.",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [],
@@ -9147,6 +9190,7 @@
    "land": "Seridia",
    "full": "Selain Temple",
    "about": "In Selain Temple you will find Sylpho, the High priest of Selain, the god of Summoning. The temple entrance is hidden somewhere in Tirnwood Vale.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -9178,6 +9222,7 @@
    "land": "Seridia",
    "full": "Seridia Docks",
    "about": "Seridia Docks, the last step on the way to Irilion (C2), Sarma can sell you a ticket to C2 for 100 gold coins, but the price may be higher if you're antisocial. The entrance to the docks is hidden.",
+   "notes": [],
    "pic": "map_seridia_docks_0512px.png",
    "photo": "White Stone.png",
    "npcs": [],
@@ -9211,6 +9256,7 @@
    "land": "Seridia",
    "full": "Seridia Portal Room",
    "about": "This map is only accessible by a spell or a secret. It allows quick travel to all main outdoor maps of Seridia by walking into the appropriate portal, each marked by a flag and a message when approaching the portal. Irilion has its own Portal Room.",
+   "notes": [],
    "pic": "map_seridia_portal_room_0512px.png",
    "photo": null,
    "npcs": [],
@@ -9298,6 +9344,7 @@
    "land": "Seridia",
    "full": "Seridia Underworld",
    "about": "This is the Underworld of Seridia (C1). You are teleported to this map if you die for whatever reasons in any map of Seridia. To reach the exit of this underworld, a player only need walk to the middle-north of the map. Exiting this underworld takes the player to approximately the #beam me up spot of IP. #Beam me up and other teleport actions are blocked in the underworld. For additional information about Underworlds check the Underworld page. <!--",
+   "notes": [],
    "pic": "map_seridia_underworld_0512px.png",
    "photo": null,
    "npcs": [],
@@ -9321,6 +9368,7 @@
    "land": "Seridia",
    "full": "Skill Academy Sewers",
    "about": "",
+   "notes": [],
    "pic": null,
    "photo": "Glacmor.png",
    "npcs": [],
@@ -9361,6 +9409,7 @@
    "land": "Seridia",
    "full": "Nordcarn South Cave",
    "about": "This cave, commonly known as \"ruby cave\", contains gargoyles, and all kinds of skeletons and goblins. This cave is a good source for amber, bones, iron ore and rubies. It used to have a thriving society, but is now mostly ruins, inhabited by monsters. Small creeks constrain movement, so bringing essences for the Teleport to Range Spell is extremely helpful.",
+   "notes": [],
    "pic": "map_nordcarn_south_cave_0512px.png",
    "photo": "Nordcarn.png",
    "npcs": [
@@ -9605,6 +9654,7 @@
    "land": "Seridia",
    "full": "Southern Kilaran",
    "about": "",
+   "notes": [],
    "pic": "map_south_kilaran_0512px.png",
    "photo": "Southern Kilaran.png",
    "npcs": [
@@ -9964,6 +10014,7 @@
    "land": "Seridia",
    "full": "Spider Cavern",
    "about": "A hidden cavern in Magic School Garden full of Spiders, and some precious Diamonds.",
+   "notes": [],
    "pic": null,
    "photo": "Tarsengaard.png",
    "npcs": [],
@@ -10020,6 +10071,7 @@
    "land": "Seridia",
    "full": "Tahraji Desert",
    "about": "The Ruins of Matajin are in the north, and Mortos Valley is in the south along with Tahraji Dragon Cave. There is an oasis near the middle of the map and a [[Summoning#Summoning Arenas|summoning arena]] offshore in the Ghealan Ocean. There is also a tent safe to rest in Mortos Valley. WARNING! This map is PK! You cannot use #beam me in this map - it is not true from ALL PK Maps. Rostogol Stones do not work here, either. However, it is a LEGACY map from back in the days when things did not require a cooldown period, so everything has a cooldown of 1. This is a major advantage, if you can find a secluded space to mix.",
+   "notes": [],
    "pic": "map_tahraji_desert_0512px.png",
    "photo": "Tahraji Desert.png",
    "npcs": [
@@ -10312,6 +10364,7 @@
    "land": "Seridia",
    "full": "Tahraji Dragon Cave",
    "about": "",
+   "notes": [],
    "pic": null,
    "photo": "Tahraji Desert.png",
    "npcs": [
@@ -10446,6 +10499,7 @@
    "land": "Seridia",
    "full": "Tarsengaard",
    "about": "",
+   "notes": [],
    "pic": "map_tarsengaard_0512px.png",
    "photo": "Tarsengaard.png",
    "npcs": [
@@ -11455,6 +11509,7 @@
    "land": "Seridia",
    "full": "Tirnwood Undergrounds",
    "about": "This now abandoned map was once very popular, it was here that we first seen Viorel, the Hazardous Material Storage Manager currently in Naralik. Now only a few Hobgoblins live here.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [
@@ -11620,6 +11675,7 @@
    "land": "Seridia",
    "full": "Tirnym Past",
    "about": "Visit the past of the once prosperous city of Tirnym.",
+   "notes": [],
    "pic": null,
    "photo": "Ruins of Tirnym.png",
    "npcs": [],
@@ -11988,6 +12044,7 @@
    "land": "Seridia",
    "full": "Titanium Mines",
    "about": "At the coordinates [89,143], you can find the entry to the two level Portland Titanium Mine. The upper level has 2 Skeletons . The lower level contains 2 Skeletons, 2 Armed Skeletons, a Large Spider with a sub section containing a Phantom Warrior and a Large Spider. It's a place of frequent invasions and thus is not a place to be away from the keyboard, long term.",
+   "notes": [],
    "pic": null,
    "photo": "Portland.png",
    "npcs": [
@@ -12063,6 +12120,7 @@
    "land": "Seridia",
    "full": "Unolas Temple",
    "about": "In Unolas Temple you will find Adrian the High Priest of Unolas, the entrance to this Temple is hidden in Vermor Castle.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [
@@ -12095,7 +12153,10 @@
    "name": "Valley of the Dwarves",
    "land": "Seridia",
    "full": "Mynadar, Valley of the Dwarves",
-   "about": "Valley of the Dwarves, also known as VOTD (see Acronyms), is a very popular place to access storage even though you can't manufacture close to storage. It is close to the Kilaran Field (KF) PK fighting grounds and has many low level monsters so you often find lots of people close to storage. VOTD storage is the fastest one can reach from Isla Prima so wins from events are paid here and people often trade and offer goods in local chat. For many, VOTD is home. It is so popular that trade bots are not allowed here - instead one has to go south to Nordcarn, east to Tarsengaard or take the boat to Desert Pines to find tradebots. One of the popular places is the flower shop where young adventurers sell lilacs they have picked to earn gold. * Entering from the Portals Room drops you in the settlement at [76,138] just outside of the General Store.",
+   "about": "Valley of the Dwarves, also known as VOTD (see Acronyms), is a very popular place to access storage even though you can't manufacture close to storage. It is close to the Kilaran Field (KF) PK fighting grounds and has many low level monsters so you often find lots of people close to storage. VOTD storage is the fastest one can reach from Isla Prima so wins from events are paid here and people often trade and offer goods in local chat. For many, VOTD is home. It is so popular that trade bots are not allowed here - instead one has to go south to Nordcarn, east to Tarsengaard or take the boat to Desert Pines to find tradebots. One of the popular places is the flower shop where young adventurers sell lilacs they have picked to earn gold.",
+   "notes": [
+    "Entering from the Portals Room drops you in the settlement at [76,138] just outside of the General Store."
+   ],
    "pic": "map_votd_0512px.png",
    "photo": "Valley of the Dwarves.png",
    "npcs": [
@@ -12757,6 +12818,7 @@
    "land": "Seridia",
    "full": "Vermor Castle",
    "about": "Vermor castle contains the secret room, where people will be sent that annoy Entropy. At least that's what it says when you enter it. More interesting might be the entrance to Unolas' temple.",
+   "notes": [],
    "pic": "map_vermor_castle_0512px.png",
    "photo": "White Stone.png",
    "npcs": [
@@ -12965,6 +13027,7 @@
    "land": "Seridia",
    "full": "White Stone",
    "about": "White Stone is the biggest map of Seridia. It is named after the White Stone City (WSC), which is located in the northwest of the map. Other settlements found in this area are Tirnwood Vale in the central part, Lakeside Village in the southeast, and Grahm's Village in the southwest. In the east, you can find the frightening Vermor Castle.",
+   "notes": [],
    "pic": "map_whitestone_0512px.png",
    "photo": "White Stone.png",
    "npcs": [
@@ -14377,6 +14440,7 @@
    "land": "Seridia",
    "full": "White Stone Castle and Sewers",
    "about": "This internal map contains the White Stone Castle and the city sewers as well as the schools of Portland and the Ruins of Tirnym.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [
@@ -14436,6 +14500,7 @@
    "land": "Seridia",
    "full": "White Stone City Palace",
    "about": "Home of Lord Luxin, the ruler of White Stone City and the annexed territories.",
+   "notes": [],
    "pic": "map_seridia_portal_room_0512px.png",
    "photo": "White Stone.png",
    "npcs": [
@@ -14524,6 +14589,7 @@
    "land": "Seridia",
    "full": "White Stone City Sewers",
    "about": "Beware; the sewage is poisonous. It takes 1 or 5 material points for each step you take, depending on how deep the sewage is. Bring items to heal yourself and maybe a Fast Regeneration Cape with food, too.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [
@@ -14611,6 +14677,7 @@
    "land": "Seridia",
    "full": "White Stone Temples",
    "about": "This map contains the temples and priests of Aluwen, Selain and Unolas.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -14655,6 +14722,7 @@
    "land": "Seridia",
    "full": "Zarin's Temple",
    "about": "In Zarin's Temple you will find Durnam, the High priest of Zarin, the Goddess of Crafting. The entrance to this temple is hidden in Tarsengaard.",
+   "notes": [],
    "pic": null,
    "photo": "White Stone.png",
    "npcs": [],
@@ -14684,6 +14752,7 @@
    "land": "Irilion",
    "full": "Aeth Aelfan",
    "about": "Aeth Aelfan is the Elven homeland of Draia and contains a beautiful town and fortress. Along with many riches, this map contains many dangers. The northwest area of the map is PK and has giants. The rest of the map has hobgoblins, so this is not a map for low-levels! Also, the Black Dragon lives in a secret cave on this map.",
+   "notes": [],
    "pic": null,
    "photo": "Aeth Aelfan.png",
    "npcs": [
@@ -15632,7 +15701,10 @@
    "name": "Arius",
    "land": "Irilion",
    "full": "Arius",
-   "about": "Arius is a beautiful island in the southeast corner of Irilion, connected by boat to Irsis and Irinveron and by airship to Willowvine Forest. Arius is very green with abundant plant life, good for harvesting almost every kind of flower. It is the best place to make RVM. Arius City occupies the northwest corner of the island. Arius Magic School is in the north part of the city. Just north and outside of the main city is storage. To the east of the city are the Limestone mountains, connected to the magic school by tunnels and to the countryside by a cave. In the mountains, you find gypsum and turquoise mines. The labyrinth of tunnels and passageways in the mountains can be confusing, but with some exploring, you can learn your way around. * Portal room exit point is in the Magic School Garden at [89,299].",
+   "about": "Arius is a beautiful island in the southeast corner of Irilion, connected by boat to Irsis and Irinveron and by airship to Willowvine Forest. Arius is very green with abundant plant life, good for harvesting almost every kind of flower. It is the best place to make RVM. Arius City occupies the northwest corner of the island. Arius Magic School is in the north part of the city. Just north and outside of the main city is storage. To the east of the city are the Limestone mountains, connected to the magic school by tunnels and to the countryside by a cave. In the mountains, you find gypsum and turquoise mines. The labyrinth of tunnels and passageways in the mountains can be confusing, but with some exploring, you can learn your way around.",
+   "notes": [
+    "Portal room exit point is in the Magic School Garden at [89,299]."
+   ],
    "pic": "map_arius_0512px.png",
    "photo": "Arius.png",
    "npcs": [
@@ -16983,6 +17055,7 @@
    "land": "Irilion",
    "full": "Bethel",
    "about": "The teleport ring drops you right in the middle of the map at [100,99], west of the ruined town of Betha.",
+   "notes": [],
    "pic": "map_bethel_0512px.png",
    "photo": "Bethel.png",
    "npcs": [
@@ -17454,6 +17527,7 @@
    "land": "Irilion",
    "full": "Egratia Point",
    "about": "Egratia Point is where fighters will come to battle Cyclops to sharpen their skills. <!--",
+   "notes": [],
    "pic": "map_egratia_point_0512px.png",
    "photo": "Egratia Point.png",
    "npcs": [],
@@ -17596,6 +17670,7 @@
    "land": "Irilion",
    "full": "Emerald Valley Trade Route",
    "about": "",
+   "notes": [],
    "pic": "map_emerald_valley_trade_route_0512px.png",
    "photo": "Emerald Valley Trade Route.png",
    "npcs": [
@@ -18682,6 +18757,7 @@
    "land": "Irilion",
    "full": "Glacmor",
    "about": "According to Enora, this map does not inflict cold damage because a blessing was put on it by Galienne, the goddess of tailoring. The Waveneck Caves in the northwest corner contain Sulphur, Turquoise, Cinnabar, Blue Quartz, Rubies, Iron Ore and Ogre Toes.",
+   "notes": [],
    "pic": "map_glacmor_0512px.png",
    "photo": "Glacmor.png",
    "npcs": [
@@ -19456,6 +19532,7 @@
    "land": "Irilion",
    "full": "Hulda",
    "about": "Beware: PK Map! This is a bare and desolate place of great coldness. There is naught here to interest a harvester and extreme danger from fierce beasts. But if you enjoy arctic landscapes, it might profit you to roam through it. <!--",
+   "notes": [],
    "pic": "map_hulda_0512px.png",
    "photo": "Hulda.png",
    "npcs": [],
@@ -19515,6 +19592,7 @@
    "land": "Irilion",
    "full": "Hurquin",
    "about": "Hurquin is a small island off the coast of Irilion (C2). It is the homeland of the Gnomes.",
+   "notes": [],
    "pic": "map_hurquin_0512px.png",
    "photo": "Hurquin.png",
    "npcs": [
@@ -19896,7 +19974,13 @@
    "name": "Idaloran",
    "land": "Irilion",
    "full": "Idaloran",
-   "about": "Idaloran is probably the most important map in Irilion (C2), as it connects with 9 other maps and has many things to offer in terms of resources and commerce. Idaloran is very large and there are teleportals available to help you when walking: Teleportals * Teleport SW [134,86] (to NE) * Teleport NE [616,444] (to SW) * Teleport SE [597,41] (to NW) * Teleport NW [285,521] (to SE) Idaloran City occupies a large part of the map, in the center. The city is surrounded by stone walls and entrances are under archways. There are paths along the top of some of the city walls. Three waterways converge in the city. Other major geographical areas of Idaloran include Seedan Island (North Central), Nymorq Wood (Far North), North Crimshin Forest (Northwest), Jahir Beach (Far Northwest), Idaloran Cemetery (Central West), Crimshin Port (Far West), Southern Crimshin Forest (Far Southwest and South), South",
+   "about": "Idaloran is probably the most important map in Irilion (C2), as it connects with 9 other maps and has many things to offer in terms of resources and commerce. Idaloran is very large and there are teleportals available to help you when walking: Teleportals Idaloran City occupies a large part of the map, in the center. The city is surrounded by stone walls and entrances are under archways. There are paths along the top of some of the city walls. Three waterways converge in the city. Other major geographical areas of Idaloran include Seedan Island (North Central), Nymorq Wood (Far North), North Crimshin Forest (Northwest), Jahir Beach (Far Northwest), Idaloran Cemetery (Central West), Crimshin Port (Far West), Southern Crimshin Forest (Far Southwest and South), Southeastern Crimshin Forest (Southeast), and finally Red Wind Desert, which occupies a large part of the Eastern Central part of t",
+   "notes": [
+    "Teleport SW [134,86] (to NE)",
+    "Teleport NE [616,444] (to SW)",
+    "Teleport SE [597,41] (to NW)",
+    "Teleport NW [285,521] (to SE)"
+   ],
    "pic": "map_idaloran_0512px.png",
    "photo": "Idaloran.png",
    "npcs": [
@@ -21104,6 +21188,7 @@
    "land": "Irilion",
    "full": "Imbroglio Islands",
    "about": "The Imbroglio Islands are a chain of islands (Galio, Llo, Brio, Tio, Moglo, Sladoth) connected via caves and mazes with many PK areas. It is a snow bound land with limited visibility and dangerous monsters. Many come seeking fortune harvesting Hydrogenium Ore. <!--",
+   "notes": [],
    "pic": "map_imbroglio_islands_0512px.png",
    "photo": "Imbroglio Islands.png",
    "npcs": [],
@@ -21365,6 +21450,7 @@
    "land": "Irilion",
    "full": "Irilion Docks",
    "about": "Welcome to Irilion, hope you enjoyed the ride on the flying dragon boat thingy.",
+   "notes": [],
    "pic": "map_irilion_docks_0512px.png",
    "photo": "Port Anitora.png",
    "npcs": [],
@@ -21437,6 +21523,7 @@
    "land": "Irilion",
    "full": "Irilion Portal Room",
    "about": "This map is only accessible by a spell or a secret. It allows quick travel to all main outdoor maps of Irilion by walking into the appropriate portal, each marked by a flag and a message when approaching the portal. Seridia has its own Portal Room.",
+   "notes": [],
    "pic": "map_irilion_portal_room_0512px.png",
    "photo": null,
    "npcs": [],
@@ -21534,6 +21621,7 @@
    "land": "Irilion",
    "full": "Irilion Underworld",
    "about": "This is the Underworld of Irilion (C2). You are teleported to this map if you die for whatever reasons in any map of Irilion. Reaching the exit of this underworld is more complex than Seridia's underworld, where the player may have to use some map objects in order to escape. Additionally, while the exit is located middle-south, the player cannot walk directly south to reach it. Exiting this underworld takes the player to Idaloran cemetery not far from the boats. #Beam me up and other teleport actions are blocked in the underworld. For additional information about Underworlds check the Underworld page. <!--",
+   "notes": [],
    "pic": "map_irilion_underworld_0512px.png",
    "photo": null,
    "npcs": [],
@@ -21557,6 +21645,7 @@
    "land": "Irilion",
    "full": "Irinveron",
    "about": "Irinveron is a cold, snow covered map. Be sure to wear warm clothing to protect yourself from losing health points due to the cold.",
+   "notes": [],
    "pic": "map_irinveron_0512px.png",
    "photo": "Irinveron.png",
    "npcs": [
@@ -22281,7 +22370,12 @@
    "name": "Irsis",
    "land": "Irilion",
    "full": "Irsis",
-   "about": "Points of Interest: * Irsis City * Larimone Ocean * Port Irsis * Thasendel Woods * Wysfell Shore",
+   "about": "Points of Interest:",
+   "notes": [
+    "Larimone Ocean",
+    "Thasendel Woods",
+    "Wysfell Shore"
+   ],
    "pic": "map_irsis_0512px.png",
    "photo": "Irsis.png",
    "npcs": [
@@ -22883,6 +22977,7 @@
    "land": "Irilion",
    "full": "Iscalrith",
    "about": "While at first glance this seems a lovely and peaceful land, the cold awaits the unwary and strange beasts wander the forests. For those who enjoy mazes, the cave system presents a few unique challenges. Using the Teleport to Range Spell is a useful and reliable shortcut for these caves, plus is good magic training as well. Note: This land does cause light cold damage so you may need to adjust your armor or wear a different cloak to not take damage. Note 2: Throughout the game trade bots, NPCs, books and rings refer to this map as 'Iscarlith'.",
+   "notes": [],
    "pic": "map_iscalrith_0512px.png",
    "photo": "Iscalrith.png",
    "npcs": [
@@ -23235,6 +23330,7 @@
    "land": "Irilion",
    "full": "Iscalrith City",
    "about": "Iscalrith City is the name describing the complex in the south-west of Iscalrith. Separated from the main map by water, it interlaces that area with parts of Iscalrith Insides and Iscalrith Dungeon to form consistent overlaps and an exciting ice city.",
+   "notes": [],
    "pic": null,
    "photo": "Iscalrith.png",
    "npcs": [
@@ -23430,6 +23526,7 @@
    "land": "Irilion",
    "full": "Isle of the Forgotten",
    "about": "This is a cold map, if you don't want to freeze, better wear protective clothing or Armour and be advised that while outside areas are safe areas, caves and secret rooms may not be.",
+   "notes": [],
    "pic": "map_isle_of_the_forgotten_0512px.png",
    "photo": "Isle of the Forgotten.png",
    "npcs": [
@@ -23815,6 +23912,7 @@
    "land": "Irilion",
    "full": "Kusamura Jungle",
    "about": "",
+   "notes": [],
    "pic": "map_kusamura_0512px.png",
    "photo": "Kusamura Jungle.png",
    "npcs": [],
@@ -24144,6 +24242,7 @@
    "land": "Irilion",
    "full": "Melinis",
    "about": "What used to be a thriving city was laid to waste by a crystalline curse. Now its barren landscape is home to some foul and dangerous creatures. But don't let the desert bleakness fool you, this map is RICH with hidden beauty and secrets. The city is sealed off from the dangerous creatures outside, but you can pass through the wall by \"using\" the sword of the statues at either of the two gates.",
+   "notes": [],
    "pic": "map_melinis_0512px.png",
    "photo": "Melinis.png",
    "npcs": [
@@ -24571,6 +24670,7 @@
    "land": "Irilion",
    "full": "North Redmoon",
    "about": "Home of the Red Dragon, usually hiding in the volcano, that big chicken!",
+   "notes": [],
    "pic": "map_north_redmoon_0512px.png",
    "photo": "North Redmoon.png",
    "npcs": [
@@ -25291,6 +25391,7 @@
    "land": "Irilion",
    "full": "Palon Vertas",
    "about": "Palon Vertas is one of the five provinces of the Idal Empire, the fourth one in order of rank, and is ruled by a prefect. While not as important as Idaloran, Palon Vertas holds a central place in Irilion's geography in virtue of its position, and thanks to the abundance of resources it offers. In the mines you can collect coal, sulfur, gold ore, emeralds, cinnabar and amber (as well as obsidian in some future moment). The city of Salingen, in the middle of Palon Vertas, is known for the many flowers growing there. You can also take advantage of a storage facility, a flower shop and a general store. In the southeast corner you'll find the village of Treesoar and a tavern, while in the northwest corner there's the famous magic school. From Palon Vertas you can reach Bethel, Sedicolis, Thelinor, Zirakinbar, Kusamura Jungle and Idaloran. There's also a complex system of underground tunnels c",
+   "notes": [],
    "pic": null,
    "photo": "Palon Vertas.png",
    "npcs": [
@@ -26620,6 +26721,7 @@
    "land": "Irilion",
    "full": "Port Anitora",
    "about": "Welcome to Irilion, hope you enjoyed the ride on the flying dragon boat thingy.",
+   "notes": [],
    "pic": "map_port_anitora_0512px.png",
    "photo": "Port Anitora.png",
    "npcs": [
@@ -26760,6 +26862,7 @@
    "land": "Irilion",
    "full": "Sedicolis",
    "about": "",
+   "notes": [],
    "pic": "map_sedicolis_0512px.png",
    "photo": "Sedicolis.png",
    "npcs": [
@@ -27319,6 +27422,7 @@
    "land": "Irilion",
    "full": "South Redmoon",
    "about": "",
+   "notes": [],
    "pic": "map_south_redmoon_0512px.png",
    "photo": "South Redmoon.png",
    "npcs": [
@@ -27977,6 +28081,7 @@
    "land": "Irilion",
    "full": "Thelinor",
    "about": "Beware Thelinor, the map where giants, fluffies, and PK'ers abound. The majority of the map is PK, except within the city limits. Safe entry from Melinis is possible, and access to the outside storage NPC is safely possible from that direction. The tavern within the city, however, is PK.",
+   "notes": [],
    "pic": "map_thelinor_0512px.png",
    "photo": "Thelinor.png",
    "npcs": [
@@ -28437,7 +28542,11 @@
    "name": "Trassian",
    "land": "Irilion",
    "full": "Trassian",
-   "about": "Trassian is really two maps: * Trassian, a L-shaped map which consists of a number of buildings and igloos (2 large and 2 small). It is mostly unoccupied except for the Tavern. It contains 2 working fire pits with wood logs next to it. This is very useful for the snow leopards and polar bears will provide much meat to cook. It has a Blue Quartz mine and several secret mines. * Dra Syn, a closed Draegoni city, accessible only via Wizard Passage (this requires a quest) or several secret, back doors known only to Draegoni. Dra Syn is built both above and below ground requiring a convoluted path to get anywhere. The ability to perform Teleport to Range Spell will help in some cases to shorten your trip. Deepstone Caverns is one part of Dra Syn, Saret's Cave is another part.",
+   "about": "Trassian is really two maps:",
+   "notes": [
+    "Trassian, a L-shaped map which consists of a number of buildings and igloos (2 large and 2 small). It is mostly unoccupied except for the Tavern. It contains 2 working fire pits with wood logs next to it. This is very useful for the snow leopards and polar bears will provide much meat to cook. It has a Blue Quartz mine and several secret mines.",
+    "Dra Syn, a closed Draegoni city, accessible only via Wizard Passage (this requires a quest) or several secret, back doors known only to Draegoni. Dra Syn is built both above and below ground requiring a convoluted path to get anywhere. The ability to perform Teleport to Range Spell will help in some cases to shorten your trip. Deepstone Caverns is one part of Dra Syn, Saret's Cave is another part."
+   ],
    "pic": "map_trassian_0512px.png",
    "photo": "Trassian.png",
    "npcs": [
@@ -28910,6 +29019,7 @@
    "land": "Irilion",
    "full": "Willowvine Forest",
    "about": "The Willowvine Forest is inhabited by several dangerous monsters. However, the local residents have built some fences and treehouses to keep travelers safe from these dangers. The treehouses can be reached by numerous teleportals located near the entrances to the map.",
+   "notes": [],
    "pic": "map_willowvine_forest_0512px.png",
    "photo": "Willowvine Forest.png",
    "npcs": [
@@ -29470,7 +29580,10 @@
    "name": "Zirakinbar",
    "land": "Irilion",
    "full": "Zirakinbar",
-   "about": "* Beware!! Hobgoblins dwell in this place! Also contains Gargoyles that roam at night (3:30 - 0:30).",
+   "about": "",
+   "notes": [
+    "Beware!! Hobgoblins dwell in this place! Also contains Gargoyles that roam at night (3:30 - 0:30)."
+   ],
    "pic": "map_zirakinbar_0512px.png",
    "photo": "Zirakinbar.png",
    "npcs": [
