@@ -165,6 +165,100 @@ def thing(line):
     return one
 
 
+CELLATTR = re.compile(r'''^\s*[A-Za-z-]+\s*=\s*"[^"]*"
+     (?:\s+[A-Za-z-]+\s*=\s*"[^"]*")*\s*\|(?!\|)''', re.X)
+
+
+def table_rows(table):
+    """A wikitable as its header names and its rows of cells."""
+    head = [plain(CELLATTR.sub("", line[1:])).strip()
+            for line in table.splitlines() if line.startswith("!")]
+    rows = []
+    for chunk in re.split(r"^\|-.*$", table, flags=re.M)[1:]:
+        cells = [CELLATTR.sub("", line[1:])
+                 for line in chunk.splitlines()
+                 if line.startswith("|") and not line.startswith("|}")]
+        if any(c.strip() for c in cells):
+            rows.append(cells)
+    return head, rows
+
+
+def nearest(cell):
+    """
+    "[289,181] (0:50)" or "[187,329] (01:05) [[VotD]] storage" - the
+    closest spot to a storage, how long it takes to walk there, and
+    which map's storage it is when that is not this one.
+    """
+    at = spots(cell)
+    if not at:
+        return None
+    clock = CLOCK.search(plain(cell))
+    link = LINK.search(cell)
+    one = {"x": at[0]["x"], "y": at[0]["y"]}
+    if clock:
+        one["walk"] = clock.group(1)
+    if link:
+        one["map"] = (link.group(1) or "").strip()
+    return one
+
+
+def read_harvest(body):
+    """
+    What harvests on a map. Half the pages write it as a list and half
+    as a table, and the table carries more: as well as every spot, it
+    gives the one closest to this map's storage and the one closest to
+    a storage on another map, with how long the walk takes. That is
+    the only walking time anywhere on the wiki, and it is also what
+    the bare 00:20 at the end of a list line means.
+    """
+    out = []
+    for table in TABLE.findall(body):
+        head, rows = table_rows(table)
+        where = {}
+        for i, h in enumerate(head):
+            low = h.lower()
+            if "harvest" in low and "name" not in where:
+                where["name"] = i
+            elif "coordinate" in low or low == "location":
+                where["at"] = i
+            elif "closest on" in low:
+                where["near"] = i
+            elif "closest off" in low:
+                where["off"] = i
+        if "name" not in where:
+            continue
+        for cells in rows:
+            cell = lambda k: (cells[where[k]]
+                              if k in where and where[k] < len(cells) else "")
+            one = thing(cell("name"))
+            if not one:
+                continue
+            got = spots(cell("at"))
+            if got:
+                one["at"] = got
+            near, off = nearest(cell("near")), nearest(cell("off"))
+            if near:
+                one["near"] = near
+            if off:
+                one["off"] = off
+            one.pop("what", None)
+            out.append(one)
+    if out:
+        return out
+    for line in bullets(body):
+        one = thing(line)
+        if not one:
+            continue
+        # On a list page the trailing clock is the walk from this map's
+        # storage, so it is filed where the table would have put it.
+        if one.get("clock") and one.get("at"):
+            pick = next((p for p in one["at"] if p["pick"]), one["at"][0])
+            one["near"] = {"x": pick["x"], "y": pick["y"],
+                           "walk": one["clock"]}
+        out.append(one)
+    return out
+
+
 def read_exits(body):
     """
     The exits table, which is one table per means of travel. The header
@@ -221,8 +315,8 @@ def read_map(s, title, land):
         "npcs": [], "harvest": [], "creatures": [], "specials": [],
         "inside": [], "exits": read_exits(section_named(parts, "exits")),
     }
+    one["harvest"] = read_harvest(section_named(parts, "harvestable"))
     for key, words in (("npcs", ("npc", "stores")),
-                       ("harvest", ("harvestable",)),
                        ("creatures", ("creature",)),
                        ("specials", ("special",)),
                        ("inside", ("internal",))):
