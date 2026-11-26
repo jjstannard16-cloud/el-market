@@ -337,6 +337,7 @@ def read_map(s, title, land):
     # tagline on a third (White Stone says "Home of Raven"). It is
     # sorted out by the caller, which knows every map's name.
     one["hint"] = one.pop("short")
+    one["hint_found"] = bool(head)
     # The same exit is sometimes listed twice, once with the tile and
     # once without.
     seen, keep = set(), []
@@ -369,27 +370,55 @@ def main():
                        cmtitle=f"Category:{cat}", cmlimit=500)
             for m in body.get("query", {}).get("categorymembers", []):
                 wanted.append((m["title"], land))
-    print(f"{len(wanted)} map pages")
+    print(f"{len(wanted)} maps in the categories")
 
     # The continent overview pages are in the category but are not maps.
     wanted = [(t, land) for t, land in wanted if t not in LANDS.values()]
 
-    maps, thin = [], []
-    for title, land in wanted:
-        one = read_map(s, title, land)
-        if not one:
-            thin.append(f"{title}: no page")
-            continue
-        maps.append(one)
-        if not any(one[k] for k in ("npcs", "harvest", "creatures", "exits")):
-            thin.append(f"{title}: nothing read")
-        time.sleep(PAUSE)
+    # The two categories are not the whole world. Eighty more maps have
+    # a page and are named only from another map's Exits or Internal
+    # Maps - every cave, mine and temple you can walk into. So the
+    # links are followed: whatever a map leads to is a map too, as long
+    # as the page it lands on carries the header every map page has.
+    # Three rounds reaches a cave inside a cave inside a map.
+    maps, thin, seen = [], [], set()
+    queue, trusted = list(wanted), {t for t, _ in wanted}
+    for pass_no in range(3):
+        found_now = []
+        for title, land in queue:
+            if title in seen:
+                continue
+            seen.add(title)
+            one = read_map(s, title, land)
+            time.sleep(PAUSE)
+            if not one:
+                if title in trusted:
+                    thin.append(f"{title}: no page")
+                continue
+            # A page reached by a link is only a map if it says it is.
+            # An exits table names the odd NPC by mistake, and an NPC
+            # has no header on their page.
+            if title not in trusted and not one.get("hint_found"):
+                continue
+            maps.append(one)
+            if title in trusted and not any(
+                    one[k] for k in ("npcs", "harvest", "creatures", "exits")):
+                thin.append(f"{title}: nothing read")
+            for x in one.get("inside", []) + one.get("exits", []):
+                name = (x.get("page") or x.get("name") or "").strip()
+                if name and name not in seen:
+                    found_now.append((name, land))
+        if not found_now:
+            break
+        print(f"  round {pass_no + 2}: {len(found_now)} more to look at")
+        queue = found_now
 
     # Now every map's name is known, the header hint can be read: a
     # map's name means this one sits inside that one, something short
     # is what players call it, and the rest is a tagline nobody needs.
     names = {m["name"].lower() for m in maps}
     for m in maps:
+        m.pop("hint_found", None)
         hint, m["short"], m["inside_of"] = m.pop("hint"), None, None
         if not hint:
             continue
