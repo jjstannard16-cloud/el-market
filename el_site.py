@@ -1539,6 +1539,44 @@ HTML = r"""<!doctype html>
   /* The handful of facts that decide whether you can go in at all:
      level range, how many people, how long, how often. */
   .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 10px; }
+  /* The invasion board. Everywhere else on this site is brass on
+     near-black and deliberately calm; this is the one page where
+     something is on fire, so it gets the rust the special days use for
+     a bad day, and nothing else does. */
+  .invstate { display: flex; align-items: center; gap: 18px;
+              border: 1px solid var(--line-2); border-left: 3px solid
+              var(--line-2); border-radius: 4px; padding: 16px 20px;
+              background: var(--panel); margin: 2px 0 14px; }
+  /* Solid, not outlined: a crescent drawn in 1.6px strokes at 40px
+     reads as a scribble. The small ones in the chips keep the outline
+     the rest of the icons use. */
+  .invstate .moon { width: 40px; height: 40px; flex: none;
+                    color: var(--muted); fill: currentColor;
+                    stroke: none; }
+  .invstate .big { font-family: var(--display); font-size: 30px;
+                   line-height: 1; font-variant-numeric: tabular-nums; }
+  .invstate .says { color: var(--muted); font-size: var(--t-sm);
+                    margin-top: 5px; }
+  .invstate.up { border-left-color: var(--rust); }
+  .invstate.up .moon { color: var(--rust); }
+  .invstate.up .big { color: var(--rust); }
+  /* A chip with a picture in it: a map pin, a clock, a megaphone. */
+  .fact .ic { width: 12px; height: 12px; margin-right: 5px;
+              vertical-align: -1px; opacity: .75; }
+  /* What a moderator actually said, set apart from the clerical
+     columns beside it so the page reads as a transcript. */
+  .said .what { color: var(--ink); }
+  .said tr td:first-child { width: 130px; }
+  .said tr td:nth-child(2) { width: 110px; }
+  /* On a phone those two columns leave the broadcast itself three
+     words wide, so the time and the name give their width back. */
+  @media (max-width: 620px) {
+    .said tr td:first-child, .said tr td:nth-child(2) { width: auto; }
+    .said tr td:first-child { white-space: normal; }
+    .invstate { gap: 12px; padding: 14px; }
+    .invstate .moon { width: 30px; height: 30px; }
+    .invstate .big { font-size: 24px; }
+  }
   /* One past invasion: its facts and then what was said, with air
      above so a run of them does not read as one long list. */
   .sess { margin-top: 20px; padding-top: 16px;
@@ -1905,6 +1943,15 @@ HTML = r"""<!doctype html>
   <symbol id="i-events" viewBox="0 0 24 24">
     <path d="M4 9.5v5h3.5l6 4.5v-14l-6 4.5z"/>
     <path d="M17 9.2a4 4 0 010 5.6M19.6 6.6a8 8 0 010 10.8"/></symbol>
+  <!-- "The moon is turning red" is how a moderator says an invasion is
+       coming, in those words, every time. It is the one image this
+       game already has for the thing, so the board is built on it. -->
+  <symbol id="i-moon" viewBox="0 0 24 24">
+    <path d="M20 14.6A8.6 8.6 0 019.4 4 8.6 8.6 0 1020 14.6z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24">
+    <path d="M12 21.5c4.2-5 6.3-8.4 6.3-11.3a6.3 6.3 0 10-12.6 0c0 2.9
+             2.1 6.3 6.3 11.3z"/>
+    <circle cx="12" cy="10" r="2.3"/></symbol>
   <symbol id="i-guilds" viewBox="0 0 24 24">
     <path d="M12 3l8 3v6c0 4.4-3.3 8.2-8 9.4C7.3 20.2 4 16.4 4 12V6z"/></symbol>
   <symbol id="i-online" viewBox="0 0 24 24">
@@ -3540,32 +3587,32 @@ function renderInvasions(view, count, q) {
       ${fmt(t.modInvasions || 0)} of them since the broadcasts begin.
       The scheduled ones GIWS calls are counted separately, on the
       other boards.</div>
-    <h2 class="group">Invaded monsters left <span class="count">when we
-      last looked</span></h2>
-    <div class="facts">
-      <span class="fact"><b class="${clock.monsters ? "brass" : ""}">${
-        clock.monsters == null ? "not known" : fmt(clock.monsters)}</b>${
-        clock.monsters == null ? "" : " left"}</span>
-      <span class="fact">read at ${esc(read || "?")} UTC</span>
+    <div class="invstate${clock.monsters ? " up" : ""}">
+      <svg class="moon"><use href="#i-moon"/></svg>
+      <div>
+        <div class="big">${clock.monsters == null ? "Not known"
+          : clock.monsters ? `${fmt(clock.monsters)} still up`
+          : "All quiet"}</div>
+        <div class="says">${clock.monsters
+          ? "invaded monsters were alive when we last looked"
+          : clock.monsters === 0
+          ? "nothing invaded was alive when we last looked"
+          : "the game did not say"}, at ${esc(read || "?")} UTC</div>
+      </div>
     </div>
     <div class="caveat">The game keeps this count itself and Mercator
       passes it on; it is read each time the site is rebuilt, about
-      once an hour. Zero means the last invasion is finished, not that
-      none is running - a count taken an hour ago cannot say what is
-      happening now, and the page will not pretend otherwise.
+      once an hour, so it is a reading rather than a running total:
+      what it says is what was true then. A count taken an hour ago
+      cannot tell you what is happening now, and the page will not
+      pretend otherwise.
       ${clock.warning ? `The game's last word on it:
         <i>${esc(clock.warning)}</i>` : ""}</div>
-    <h2 class="group">${fresh ? "Going on now, or just finished"
-      : "The last one a moderator ran"} <span class="count">${
-      esc(last.from.replace("T", " "))}</span></h2>
-    <div class="facts">
-      ${last.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
-        .join("")}
-      ${last.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
-      ${last.left ? `<span class="fact"><b class="brass">${
-        fmt(last.left.n)}</b> monsters left at ${
-        esc(last.left.at.slice(11))}</span>` : ""}
-    </div>
+    <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
+      <span>${fresh ? "Going on now, or just finished"
+        : "The last one a moderator ran"}</span>
+      <span class="count">${esc(last.from.replace("T", " "))}</span></h2>
+    ${invFacts(last)}
     ${saidTable(last)}
     <div class="caveat">The feed was last read at ${esc(read || "?")} UTC.
       ${minsSince != null && minsSince >= 0
@@ -3577,14 +3624,8 @@ function renderInvasions(view, count, q) {
       of them posted it.</div>
     ${all.length < 2 ? "" : `<h2 class="group">Before that</h2>
       ${all.slice(1, 40).map(s => `
-        <div class="sess">
-        <div class="facts"><span class="fact">${
-          esc(s.from.replace("T", " "))}</span>
-          ${s.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
-            .join("")}
-          ${s.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
-          ${s.left ? `<span class="fact">${fmt(s.left.n)} left</span>` : ""}
-        </div>${saidTable(s)}</div>`).join("")}`}`;
+        <div class="sess">${invFacts(s, true)}${saidTable(s)}</div>`)
+        .join("")}`}`;
   wirePlayerLinks();
   wireEventPicker(view);
 }
@@ -3600,12 +3641,28 @@ function gapWords(mins) {
   return `${days} day${days === 1 ? "" : "s"}`;
 }
 
+// Who ran it, where, and how many were still up: the three things
+// worth knowing before reading a word of what was said.
+function invFacts(s, withDate) {
+  return `<div class="facts">
+    ${withDate ? `<span class="fact"><svg class="ic"><use href="#i-clock"/>
+      </svg>${esc(s.from.replace("T", " "))}</span>` : ""}
+    ${s.mods.map(m => `<span class="fact"><svg class="ic">
+      <use href="#i-events"/></svg>${playerLink(m)}</span>`).join("")}
+    ${s.maps.map(m => `<span class="fact"><svg class="ic">
+      <use href="#i-pin"/></svg>${esc(m)}</span>`).join("")}
+    ${s.left ? `<span class="fact"><svg class="ic"><use href="#i-moon"/>
+      </svg><b class="brass">${fmt(s.left.n)}</b> left${withDate ? ""
+      : ` at ${esc(s.left.at.slice(11))}`}</span>` : ""}
+  </div>`;
+}
+
 function saidTable(s) {
-  return `<div class="scroller"><table class="daylog"><tbody>${
+  return `<div class="scroller"><table class="daylog said"><tbody>${
     s.said.map(l => `<tr>
       <td class="sm nowrap">${esc(l.at.replace("T", " "))}</td>
       <td class="sm nowrap">${playerLink(l.who || "")}</td>
-      <td class="sm">${l.left != null
+      <td class="sm what">${l.left != null
         ? `<b class="brass">${fmt(l.left)} left.</b> ` : ""}${esc(l.said)}</td>
       </tr>`).join("")}</tbody></table></div>`;
 }
