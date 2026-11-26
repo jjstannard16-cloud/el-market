@@ -55,36 +55,54 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import json
+import re
 
 import requests
 
+API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+HEADING = re.compile(r"^(=+)\s*(.+?)\s*=+\s*$", re.M)
 
-# Can the page read the live monster count itself, or must the build do
-# it? If Mercator sends an allow-origin header, the browser may call it
-# straight from el-hq.com and the number is as live as the page, with
-# no polling and no commit every ten minutes.
-for url in ("https://mercator.holy-eternalland.de/_elday/clock-data",
-            "https://mercator.holy-eternalland.de/api/announcements?limit=5"):
-    print("=" * 70)
-    print(url)
-    for method in ("OPTIONS", "GET"):
-        try:
-            r = requests.request(
-                method, url, timeout=25,
-                headers={**UA, "Origin": "https://el-hq.com",
-                         "Access-Control-Request-Method": "GET"})
-        except Exception as e:
-            print(f"   {method}: {e}")
-            continue
-        cors = {k: v for k, v in r.headers.items()
-                if k.lower().startswith("access-control")}
-        print(f"   {method} {r.status_code}  cors={cors or 'none'}")
-        if method == "GET":
-            print(f"   cache-control: {r.headers.get('cache-control')}")
-            try:
-                body = r.json()
-                print("   body:", json.dumps(body)[:600])
-            except Exception:
-                print("   body (text):", r.text[:300])
+
+def api(**params):
+    params.setdefault("format", "json")
+    params.setdefault("formatversion", 2)
+    r = requests.get(API, params=params, headers=UA, timeout=30)
+    r.raise_for_status()
+    return r.json()
+
+
+def page_text(title):
+    body = api(action="query", prop="revisions", titles=title,
+               rvprop="content", rvslots="main", redirects=1)
+    for pg in body.get("query", {}).get("pages", []):
+        if pg.get("missing"):
+            return None
+        revs = pg.get("revisions") or [{}]
+        return (revs[0].get("slots", {}).get("main", {}).get("content")
+                or revs[0].get("content") or "")
+    return None
+
+
+print("===== categories that might hold the maps =====")
+for cat in ("Maps", "Locations", "Places", "Seridia", "Irilion", "Towns",
+            "Caves", "Cities", "Map"):
+    body = api(action="query", list="categorymembers",
+               cmtitle=f"Category:{cat}", cmlimit=500)
+    members = [m["title"] for m in
+               body.get("query", {}).get("categorymembers", [])]
+    print(f"   Category:{cat}: {len(members)}")
+    if members:
+        print("      " + ", ".join(members[:60]))
+
+print("\n===== what a map page looks like =====")
+for title in ("White Stone", "Valley of the Dwarves", "Tarsengaard",
+              "Desert Pines", "Portland"):
+    text = page_text(title)
+    print(f"\n----- {title} -----")
+    if text is None:
+        print("   no such page")
+        continue
+    print(f"   {len(text)} bytes")
+    print("   headings: " + " | ".join(h[1] for h in HEADING.findall(text)))
+    print(text[:3500])
