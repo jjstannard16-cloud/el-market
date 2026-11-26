@@ -55,51 +55,8 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import re
+import subprocess
+import sys
 
-import requests
-
-API = "https://el-wiki.holy-eternalland.de/api.php"
-UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
-
-
-def api(**params):
-    params.setdefault("format", "json")
-    params.setdefault("formatversion", 2)
-    r = requests.get(API, params=params, headers=UA, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def page_text(title):
-    body = api(action="query", prop="revisions", titles=title,
-               rvprop="content", rvslots="main", redirects=1)
-    for pg in body.get("query", {}).get("pages", []):
-        if pg.get("missing"):
-            return None
-        revs = pg.get("revisions") or [{}]
-        return (revs[0].get("slots", {}).get("main", {}).get("content")
-                or revs[0].get("content") or "")
-    return None
-
-
-print("===== the canonical map lists =====")
-for cat in ("Seridia maps", "Irilion maps", "Underworld", "Custom maps"):
-    body = api(action="query", list="categorymembers",
-               cmtitle=f"Category:{cat}", cmlimit=500)
-    members = [m["title"] for m in
-               body.get("query", {}).get("categorymembers", [])]
-    print(f"\n   Category:{cat}: {len(members)}")
-    print("      " + ", ".join(members))
-
-print("\n===== Maps/Getting Around - walking times? =====")
-for title in ("Maps/Getting Around", "Getting Around", "Travel"):
-    text = page_text(title)
-    if text:
-        print(f"\n----- {title} ({len(text)} bytes) -----")
-        print(text[:3000])
-
-print("\n===== one map, in full =====")
-text = page_text("Valley of the Dwarves") or ""
-print(text)
+subprocess.run([sys.executable, "el_maps.py", "--dump",
+                "--out", "/tmp/maps.json"], check=False)
