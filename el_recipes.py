@@ -47,6 +47,10 @@ SKILL_ALIASES = {
     "weapons": "Manufacturing", "weapon": "Manufacturing",
     "armour": "Manufacturing", "armor": "Manufacturing",
     "clothes": "Tailoring",
+    # The wiki's catch-all heading for molds, the alembic and the
+    # mortar and pestle. The game's encyclopedia gives every one of
+    # them a Manufacturing level, and Mercator reads them the same way.
+    "items": "Manufacturing", "item": "Manufacturing",
 }
 KNOWN_SKILLS = {"Potion", "Alchemy", "Crafting", "Engineering",
                 "Manufacturing", "Tailoring", "Summoning", "Magic",
@@ -216,6 +220,29 @@ def number(v):
         return None
 
 
+def item_name(title, said):
+    """
+    What a page's recipe is for.
+
+    The template carries its own item field and it is usually the page
+    title tidied up - "A/D Indicator" where the page has to be called
+    "A D Indicator". Sometimes it names something else entirely: the
+    page for the Red Dragon Helm of Life and Mana says item = Red
+    Dragon Helm, and since recipes are kept one to an item, it quietly
+    replaced the plain helm with a recipe calling for a Serpent Stone.
+    A Black Tunic went the same way and came out needing two of
+    itself.
+
+    So the field is believed only where it is the same name written
+    differently. Otherwise the page title wins: a page knows what it
+    is about.
+    """
+    if not said:
+        return title
+    flat = lambda s: re.sub(r"[^a-z0-9]", "", s.lower())
+    return said if flat(said) == flat(title) else title
+
+
 def parse_page(title, text):
     body = find_template(text, "ManuInfo")
     if body is None:
@@ -252,7 +279,7 @@ def parse_page(title, text):
         vendor = number(m.group(1)) if m else None
 
     return {
-        "item": fields.get("item") or title,
+        "item": item_name(title, fields.get("item")),
         "skill": fields.get("skill") or None,
         "level": number(fields.get("lvl")),
         "exp": number(fields.get("exp")),
