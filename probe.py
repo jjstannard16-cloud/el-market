@@ -61,7 +61,7 @@ import requests
 
 API = "https://el-wiki.holy-eternalland.de/api.php"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
-HEADING = re.compile(r"^(=+)\s*(.+?)\s*=+\s*$", re.M)
+HEADING = re.compile(r"^=+\s*(.+?)\s*=+\s*$", re.M)
 
 
 def api(**params):
@@ -84,25 +84,22 @@ def page_text(title):
     return None
 
 
-print("===== categories that might hold the maps =====")
-for cat in ("Maps", "Locations", "Places", "Seridia", "Irilion", "Towns",
-            "Caves", "Cities", "Map"):
+print("===== the canonical map lists =====")
+for cat in ("Seridia maps", "Irilion maps", "Underworld", "Custom maps"):
     body = api(action="query", list="categorymembers",
                cmtitle=f"Category:{cat}", cmlimit=500)
     members = [m["title"] for m in
                body.get("query", {}).get("categorymembers", [])]
-    print(f"   Category:{cat}: {len(members)}")
-    if members:
-        print("      " + ", ".join(members[:60]))
+    print(f"\n   Category:{cat}: {len(members)}")
+    print("      " + ", ".join(members))
 
-print("\n===== what a map page looks like =====")
-for title in ("White Stone", "Valley of the Dwarves", "Tarsengaard",
-              "Desert Pines", "Portland"):
+print("\n===== Maps/Getting Around - walking times? =====")
+for title in ("Maps/Getting Around", "Getting Around", "Travel"):
     text = page_text(title)
-    print(f"\n----- {title} -----")
-    if text is None:
-        print("   no such page")
-        continue
-    print(f"   {len(text)} bytes")
-    print("   headings: " + " | ".join(h[1] for h in HEADING.findall(text)))
-    print(text[:3500])
+    if text:
+        print(f"\n----- {title} ({len(text)} bytes) -----")
+        print(text[:3000])
+
+print("\n===== one map, in full =====")
+text = page_text("Valley of the Dwarves") or ""
+print(text)
