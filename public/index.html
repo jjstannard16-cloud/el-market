@@ -1080,6 +1080,9 @@ const SECTIONS = [
   { id: "craft", name: "Craft",
     what: "What a craft costs at today's prices, and what a level costs",
     n: () => `${DATA.meta.recipeCount} recipes` },
+  { id: "maps", name: "Maps",
+    what: "Every map: what harvests there, what hunts there, who stands where",
+    n: () => `${(DATA.maps || []).length} maps` },
   { id: "players", name: "Players",
     what: "Skill rankings with real levels, PK records and level-ups",
     n: () => `${DATA.meta.playerCount} players` },
@@ -1258,7 +1261,7 @@ function invasionBox() {
     ${last ? `<div class="lastone">
       <div class="sm muted">Last one a moderator ran</div>
       <div>${last.mods.map(playerLink).join(", ")}${last.maps.length
-        ? ` \u00b7 ${esc(last.maps.join(", "))}` : ""}</div>
+        ? ` \u00b7 ${last.maps.map(mapLink).join(", ")}` : ""}</div>
       <div class="sm muted">${ago != null && ago >= 0
         ? gapWords(ago) + " ago" : esc(last.from.replace("T", " "))}</div>
     </div>` : ""}
@@ -2748,7 +2751,7 @@ function invFacts(s, withDate) {
     ${s.mods.map(m => `<span class="fact"><svg class="ic">
       <use href="#i-events"/></svg>${playerLink(m)}</span>`).join("")}
     ${s.maps.map(m => `<span class="fact"><svg class="ic">
-      <use href="#i-pin"/></svg>${esc(m)}</span>`).join("")}
+      <use href="#i-pin"/></svg>${mapLink(m)}</span>`).join("")}
     ${s.left ? `<span class="fact"><svg class="ic"><use href="#i-moon"/>
       </svg><b class="brass">${fmt(s.left.n)}</b> left${withDate ? ""
       : ` at ${esc(s.left.at.slice(11))}`}</span>` : ""}
