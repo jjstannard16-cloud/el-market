@@ -144,9 +144,13 @@ def thing(line):
         return None
     name = (m.group(1) or "").strip()
     label = (m.group(2) or "").strip()
-    # The rest of the line with the name taken out, so "Storage - [43,124]"
-    # keeps the word Storage and loses the repetition.
-    rest = plain(line[m.end():]).strip(" -–:,")
+    # The rest of the line with the name taken out, so "Storage -
+    # [43,124]" keeps the word Storage and loses the repetition. The
+    # coordinates and the clock get columns of their own further down
+    # the page, so they come out of the sentence too.
+    rest = plain(line[m.end():])
+    rest = CLOCK.sub("", SPOT.sub("", rest))
+    rest = " ".join(rest.split()).strip(" -–:,")
     at = spots(line)
     clock = CLOCK.search(plain(line))
     one = {"name": label or name, "page": name}
