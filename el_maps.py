@@ -395,10 +395,15 @@ def main():
                 if title in trusted:
                     thin.append(f"{title}: no page")
                 continue
-            # A page reached by a link is only a map if it says it is.
-            # An exits table names the odd NPC by mistake, and an NPC
-            # has no header on their page.
-            if title not in trusted and not one.get("hint_found"):
+            # A page reached by a link is only a map if it looks like
+            # one. The header is not enough on its own: an exits table
+            # names the odd NPC or flower by mistake and some of those
+            # pages carry the same template. A map has something on it.
+            looks_right = one.get("hint_found") and (
+                one.get("pic") or any(one[k] for k in
+                ("npcs", "harvest", "creatures", "exits", "inside",
+                 "specials")))
+            if title not in trusted and not looks_right:
                 continue
             maps.append(one)
             if title in trusted and not any(

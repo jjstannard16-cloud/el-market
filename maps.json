@@ -30587,23 +30587,6 @@
    "inside_of": "Glacmor"
   },
   {
-   "name": "Clark",
-   "land": "Seridia",
-   "full": "Clark",
-   "about": "",
-   "notes": [],
-   "pic": null,
-   "photo": "Clark.png",
-   "npcs": [],
-   "harvest": [],
-   "creatures": [],
-   "specials": [],
-   "inside": [],
-   "exits": [],
-   "short": null,
-   "inside_of": null
-  },
-  {
    "name": "White Stone City Castle",
    "land": "Seridia",
    "full": "White Stone City Palace",
@@ -38715,23 +38698,6 @@
    ],
    "short": null,
    "inside_of": "Zirakinbar"
-  },
-  {
-   "name": "Chrysanthemum",
-   "land": "Irilion",
-   "full": "Chrysanthemum",
-   "about": "",
-   "notes": [],
-   "pic": null,
-   "photo": null,
-   "npcs": [],
-   "harvest": [],
-   "creatures": [],
-   "specials": [],
-   "inside": [],
-   "exits": [],
-   "short": null,
-   "inside_of": null
   }
  ]
 }

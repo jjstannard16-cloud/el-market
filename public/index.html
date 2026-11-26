@@ -333,6 +333,16 @@
             object-fit: cover; border-radius: 2px; margin-bottom: 5px;
             background: var(--ground); display: block; }
   .mapcard .mapname { font-family: var(--display); font-size: 16px; }
+  .insidegrid { display: grid; gap: 18px 30px; margin-bottom: 8px;
+                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .insidecol h3 { font-family: var(--display); font-weight: 500;
+                  font-size: 15px; margin: 0 0 4px;
+                  padding-bottom: 4px;
+                  border-bottom: 1px solid var(--line); }
+  .insideone { display: flex; justify-content: space-between; gap: 10px;
+               padding: 4px 0; text-decoration: none; color: var(--ink);
+               font-size: var(--t-sm); border-bottom: 1px solid var(--line); }
+  .insideone:hover { color: var(--brass); }
   .maphead { display: flex; align-items: baseline; gap: 14px;
              flex-wrap: wrap; margin: 2px 0 16px; }
   .maphead h2 { font-family: var(--display); font-weight: 600;
@@ -2215,10 +2225,32 @@ function renderMaps(view, count, q) {
   view.innerHTML = pills
     + block("Seridia", byLand("Seridia"))
     + block("Irilion", byLand("Irilion"))
-    + (inside.length ? `<h2 class="group">Caves, buildings and the
-        underworld<span class="count">${inside.length}</span></h2>
-       <div class="mapgrid">${inside.map(card).join("")}</div>` : "");
+    + insideBlock(inside);
   wireLand(view);
+}
+
+/* A hundred and twenty caves, mines, temples and sewers. Most have no
+   drawing, so as cards they are a wall of empty tiles; grouped under
+   the map you walk in from, they are a list you can actually use. */
+function insideBlock(inside) {
+  if (!inside.length) return "";
+  const byParent = new Map();
+  inside.forEach(m => {
+    const key = m.inside_of || "Somewhere else";
+    if (!byParent.has(key)) byParent.set(key, []);
+    byParent.get(key).push(m);
+  });
+  return `<h2 class="group">Caves, buildings and the underworld
+      <span class="count">${inside.length}</span></h2>
+    <div class="insidegrid">${[...byParent.entries()].map(([parent, rows]) => `
+      <div class="insidecol">
+        <h3>${mapLink(parent)}</h3>
+        ${rows.map(m => `<a class="insideone" href="#maps/${
+          encodeURIComponent(m.name)}">${esc(m.name)}${
+          (m.creatures || []).length ? `<span class="sm muted">${
+            m.creatures.length} creature${
+            m.creatures.length === 1 ? "" : "s"}</span>` : ""}</a>`).join("")}
+      </div>`).join("")}</div>`;
 }
 
 function wireLand(view) {
