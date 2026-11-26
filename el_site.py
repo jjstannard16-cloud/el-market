@@ -51,6 +51,27 @@ CONTINENTS = {
 }
 MAP_TO_CONTINENT = {m: c for c, maps in CONTINENTS.items() for m in maps}
 
+# What a moderator types when they are announcing an invasion in a
+# hurry. Nobody writes "Grubani Peninsula" at three in the morning.
+# Wrong guesses are cheap here because the broadcast is always shown
+# underneath in the moderator's own words.
+MAP_SHORT = {
+    "ip": "Isla Prima", "ws": "White Stone", "dp": "Desert Pines",
+    "votd": "Valley of the Dwarves", "votd main": "Valley of the Dwarves",
+    "tg": "Tarsengaard", "nc": "Nordcarn", "mm": "Morcraven Marsh",
+    "gp": "Grubani Peninsula", "td": "Tahraji Desert",
+    "kf": "Kilaran Field", "skf": "Kilaran Field", "nkf": "North Kilaran",
+    "rot": "Ruins of Tirnym", "cc": "Crystal Cavern",
+    "mel": "Melinis", "pv": "Palon Vertas", "isca": "Iscarlith",
+    "zi": "Zirakinbar", "zira": "Zirakinbar", "irin": "Irinveron",
+    "sedi": "Sedicolis", "ida": "Idaloran", "hur": "Hurquin",
+    "wv": "Willowvine Forest", "ev": "Emerald Valley",
+    "evtr": "Emerald Valley", "ku": "Kusamura", "ep": "Egratia Point",
+    "ii": "Imbroglio Islands", "aa": "Aeth Aelfan",
+    "iotf": "Isle of the Forgotten", "nrm": "North Redmoon",
+    "srm": "South Redmoon",
+}
+
 
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
@@ -271,7 +292,9 @@ def load(db_path):
                            "last": (r["last"] or "")[:10]})
         for r in con.execute("""
                 SELECT who name, COUNT(*) n, MIN(at) first, MAX(at) last
-                FROM event_log WHERE what = 'message' AND who IS NOT NULL
+                FROM event_log
+                WHERE what IN ('message', 'mod invasion', 'invaders left')
+                  AND who IS NOT NULL
                 GROUP BY LOWER(who) ORDER BY n DESC, LOWER(who)"""):
             speakers.append({"name": r["name"], "n": r["n"],
                              "first": (r["first"] or "")[:10],
@@ -321,6 +344,77 @@ def load(db_path):
             invasions.append({"place": names.get(key, key), "n": n,
                               "warnings": warn.get(key, 0),
                               "last": (last_of.get(key) or "")[:10]})
+        # The invasions players turn out for are not these. GIWS runs
+        # the scheduled ones - the caves, the two dragons - on a timer;
+        # a moderator runs the ones worth money, by hand, announced in
+        # their own words. Those broadcasts are grouped here into one
+        # invasion apiece: a run of them with no two-hour gap inside it.
+        mod_runs = []
+        words = sorted(MAP_TO_CONTINENT, key=len, reverse=True)
+        map_names = {w: w.title() for w in words}
+        map_names.update({k: v for k, v in MAP_SHORT.items()})
+
+        def maps_in(text):
+            """Every map a broadcast names, full names and shorthand."""
+            low = " " + re.sub(r"[^a-z0-9 ]", " ", text.lower()) + " "
+            found = []
+            for word in words:
+                if f" {word} " in low:
+                    real = word.title()
+                    if real not in found:
+                        found.append(real)
+            if not found:
+                for short, real in MAP_SHORT.items():
+                    if f" {short} " in low and real not in found:
+                        found.append(real)
+            return found
+
+        run = []
+        for r in con.execute("""SELECT what, who, amount, message, at
+                                FROM event_log
+                                WHERE what IN ('mod invasion', 'invaders left')
+                                  AND at IS NOT NULL ORDER BY at"""):
+            try:
+                at = datetime.fromisoformat(r["at"])
+            except (TypeError, ValueError):
+                continue
+            if run and (at - run[-1][0]).total_seconds() > 2 * 3600:
+                mod_runs.append(run)
+                run = []
+            run.append((at, dict(r)))
+        if run:
+            mod_runs.append(run)
+
+        # Only the recent ones carry their broadcasts: the whole history
+        # is three thousand invasions and nobody scrolls that far.
+        mod_invasions = []
+        for one in mod_runs[-80:][::-1]:
+            lines, who, places, left = [], [], [], None
+            for at, r in one:
+                text = re.sub(r"^(?:#Message from\s+)?[\w\-]{2,20}:\s*", "",
+                              r["message"]).strip()
+                lines.append({"who": r["who"], "at": r["at"][:16],
+                              "said": text[:220],
+                              "left": r["amount"]
+                              if r["what"] == "invaders left" else None})
+                if r["who"] and r["who"] not in who:
+                    who.append(r["who"])
+                for m in maps_in(r["message"]):
+                    if m not in places:
+                        places.append(m)
+                if r["what"] == "invaders left":
+                    left = {"n": r["amount"], "at": r["at"][:16]}
+            mod_invasions.append({
+                "from": one[0][1]["at"][:16], "to": one[-1][1]["at"][:16],
+                "mods": who, "maps": places, "left": left,
+                "said": lines})
+        mod_total = len(mod_runs)
+        mod_by = {}
+        for one in mod_runs:
+            for _, r in one:
+                if r["who"]:
+                    mod_by[r["who"]] = mod_by.get(r["who"], 0) + 1
+
         # The game announces the end of every invasion, so that count is
         # the real one. Ours is lower because some invasions' warnings
         # are among the broadcasts we cannot read.
@@ -343,6 +437,9 @@ def load(db_path):
         gold = con.execute("""SELECT SUM(amount) FROM event_log
                               WHERE what='donation'""").fetchone()[0]
         event_totals = {"kinds": kinds, "read": read, "all": total,
+                        "modInvasions": mod_total,
+                        "modsRunning": sorted(mod_by.items(),
+                                              key=lambda kv: -kv[1])[:12],
                         "invasions": invasion_total,
                         "invasionsEnded": invasion_ended,
                         "since": (since or "")[:4], "finders": len(finders),
@@ -1083,6 +1180,7 @@ def load(db_path):
         "finders": finders,
         "donors": donors,
         "speakers": speakers,
+        "modInvasions": mod_invasions,
         "invasions": invasions,
         "eventLog": event_log,
         "eventTotals": event_totals,
@@ -2479,7 +2577,8 @@ function render() {
   if (tab === "online") return renderOnline(view, count, q);
   if (tab === "guilds") return focusGuild
     ? renderOneGuild(view, count, q) : renderGuilds(view, count);
-  if (tab === "events") return renderEvents(view, count, q);
+  if (tab === "events") return eboard === "_inv"
+    ? renderInvasions(view, count, q) : renderEvents(view, count, q);
   if (tab === "quests" && focusQuest) return renderOneQuest(view, count);
   if (tab === "quests") return renderQuests(view, count, q);
   if (tab === "days")   return renderDays(view, count, q);
@@ -3397,6 +3496,79 @@ function renderOneGuild(view, count, q) {
    are found by players; invasions happen to places. The same column
    carries both, because that is how the broadcasts are written.       */
 
+/* GIWS runs the scheduled invasions on a timer and they are the same
+   caves every week. The ones players drop everything for are the ones
+   a moderator starts by hand, and the only way to know one happened is
+   that a moderator said so. So this is their broadcasts, grouped, with
+   the time we last looked said plainly - nobody can see further back
+   than the last read, and a stale number is worth more than none. */
+function renderInvasions(view, count, q) {
+  const all = (DATA.modInvasions || []).filter(s => !q
+    || JSON.stringify([s.mods, s.maps, s.said.map(l => l.said)])
+         .toLowerCase().includes(q));
+  const t = DATA.eventTotals || {};
+  const read = DATA.readAt || (DATA.eventLog || [])[0]?.at || "";
+  count.textContent = `${fmt(t.modInvasions || 0)} run by a moderator`;
+  if (!all.length) {
+    view.innerHTML = eventPicker() + `<div class="empty">${
+      (DATA.modInvasions || []).length ? "Nothing matches that."
+      : "No moderator invasion has been broadcast yet."}</div>`;
+    wireEventPicker(view);
+    return;
+  }
+  const last = all[0];
+  const minsSince = read && last
+    ? Math.round((new Date(read + "Z") - new Date(last.to + "Z")) / 60000)
+    : null;
+  const fresh = minsSince != null && minsSince >= 0 && minsSince < 90;
+  view.innerHTML = eventPicker() + `
+    <div class="grouphint">A moderator runs these by hand and announces
+      them in their own words, so this is those words, grouped into one
+      invasion wherever there is no two-hour gap between broadcasts.
+      ${fmt(t.modInvasions || 0)} of them since the broadcasts begin.
+      The scheduled ones GIWS calls are counted separately, on the
+      other boards.</div>
+    <h2 class="group">${fresh ? "Going on now, or just finished"
+      : "The last one"}<span class="count">${esc(last.from)}</span></h2>
+    <div class="facts">
+      ${last.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
+        .join("")}
+      ${last.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
+      ${last.left ? `<span class="fact"><b class="brass">${
+        fmt(last.left.n)}</b> monsters left at ${
+        esc(last.left.at.slice(11))}</span>` : ""}
+    </div>
+    ${saidTable(last)}
+    <div class="caveat">The feed was last read at ${esc(read || "?")} UTC.
+      ${minsSince != null && minsSince >= 0
+        ? `That is ${minsSince < 1 ? "the same minute as"
+           : fmt(minsSince) + " minutes after"} the last broadcast above.`
+        : ""}
+      Anything a moderator has said since then is not here yet, and the
+      count of monsters left is only ever as recent as the last time one
+      of them posted it.</div>
+    ${all.length < 2 ? "" : `<h2 class="group">Before that</h2>
+      ${all.slice(1, 40).map(s => `
+        <div class="facts"><span class="fact">${esc(s.from)}</span>
+          ${s.mods.map(m => `<span class="fact">${playerLink(m)}</span>`)
+            .join("")}
+          ${s.maps.map(m => `<span class="fact">${esc(m)}</span>`).join("")}
+          ${s.left ? `<span class="fact">${fmt(s.left.n)} left</span>` : ""}
+        </div>${saidTable(s)}`).join("")}`}`;
+  wirePlayerLinks();
+  wireEventPicker(view);
+}
+
+function saidTable(s) {
+  return `<div class="scroller"><table class="daylog"><tbody>${
+    s.said.map(l => `<tr>
+      <td class="sm nowrap">${esc(l.at.replace("T", " "))}</td>
+      <td class="sm nowrap">${playerLink(l.who || "")}</td>
+      <td class="sm">${l.left != null
+        ? `<b class="brass">${fmt(l.left)} left.</b> ` : ""}${esc(l.said)}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+}
+
 function renderEvents(view, count, q) {
   const t = DATA.eventTotals;
   const all = DATA.finders || [];
@@ -3457,9 +3629,7 @@ function renderEvents(view, count, q) {
       ${fmt(t.all - t.read)} broadcasts are worded in ways we cannot read
       yet and are left out of the counts.</div>`;
 
-  const picker = `<div class="pills">${Object.entries(BOARDS).map(
-    ([key, b]) => `<button class="pill${eboard === key ? " on" : ""}"
-      data-board="${key}">${esc(b.label)}</button>`).join("")}</div>`;
+  const picker = eventPicker();
 
   const finders = !ranked.length ? "" : `
     ${picker}
@@ -3526,6 +3696,23 @@ function renderEvents(view, count, q) {
   wirePlayerLinks();
   const more = document.getElementById("morefinders");
   if (more) more.onclick = () => { findersShown += 200; render(); };
+  wireEventPicker(view);
+}
+
+/* The boards and the invasions share one row of pills, so that both
+   halves of this tab are reachable from either. */
+function eventPicker() {
+  const labels = { found: "Most found", pears: "Most pears",
+                   jokers: "Most jokers", gold: "Most generous",
+                   said: "Most broadcasts" };
+  return `<div class="pills">${Object.entries(labels).map(
+    ([key, label]) => `<button class="pill${eboard === key ? " on" : ""}"
+      data-board="${key}">${esc(label)}</button>`).join("")
+    }<button class="pill${eboard === "_inv" ? " on" : ""}"
+      data-board="_inv">Invasions</button></div>`;
+}
+
+function wireEventPicker(view) {
   view.querySelectorAll("[data-board]").forEach(b => b.onclick = () => {
     eboard = b.dataset.board; findersShown = 25; render();
   });

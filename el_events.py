@@ -100,7 +100,43 @@ PULLED = re.compile(r"^GIWS:\s*An?\s+(?P<mob>[\w' ]+?)\s+was pulled out of .*?\b
 TREASURE = re.compile(r"^A treasure has been found(?:\s+in\s+(?P<map>[\w' ]+?))?\s*[!.]*\s*$",
                       re.I)
 # "radu: There is a new treasure..." - a named person broadcasting.
-SPEAKER = re.compile(r"^(?P<who>[A-Za-z][\w\-]{1,19}):\s+\S")
+# Since October the game has prefixed them, so both shapes are read:
+#   CherUT: The moon is turning red, MM invasion in ~5 minutes
+#   #Message from CherUT: The moon is turning red, MM invasion in ~5 min
+# The prefixed ones were being filed as an unattributed "message",
+# which dropped the moderator's name and the invasion with it.
+SPEAKER = re.compile(r"^(?:#Message from\s+)?(?P<who>[A-Za-z][\w\-]{1,19})"
+                     r":\s+\S")
+
+# The Global Invasion Warning System runs the scheduled invasions - the
+# caves, the two dragons - and they come round like clockwork. The ones
+# players turn up for are the ones a moderator runs by hand, announced
+# in their own words with no template at all:
+#
+#   Wizzy: C2 invasion in 15mins, no caps!
+#   Acelon: Invasion is coming. Safe maps are: VotD, Nordcarn, Bethel...
+#   Thyralax: second wave is arriving in bethel now!
+#   Wizzy: There are 47 invaded monsters left.
+#
+# The last of those is the only count anybody gets while an invasion is
+# running, so it is pulled out with its number.
+INVADERS_LEFT = re.compile(
+    r"\bthere\s+(?:are|is)\s+(?P<n>[\d,]+)\s+invaded\s+monsters?\s+left",
+    re.I)
+# Deliberately narrow. "Wave" on its own catches a moderator talking
+# about anything else, so it has to sit next to an invasion word.
+MOD_INVASION = re.compile(
+    # Typed in a hurry and often misspelt - "invsion", "invaision" -
+    # so the word is matched loosely rather than exactly.
+    r"\binv[a-z]{0,3}sion\b|\binvaded\b|\binvaders\b"
+    r"|\bmonsters?\s+(?:will|are|have|left|spawn)"
+    # "New Bethel wave" puts the map in the middle of the phrase.
+    r"|\b(?:first|second|third|next|last|hard|final|new)"
+    r"\s+(?:\w+\s+)?wave\b"
+    r"|\bwave\s+(?:invasion|in\b|is\b|arriv)"
+    # The game's own idiom for one starting, used on its own as often
+    # as not: "red moon rising over Irsis - imminent".
+    r"|\bmoon is turning red\b|\bred moon (?:is )?rising\b", re.I)
 
 # "Game Date: 14-07-0089 Game time: 0:08"
 GAMETIME = re.compile(
@@ -174,11 +210,16 @@ def parse_message(kind, text):
             # the town look like two different invasions.
             m = INSIDE.search(text) or INVADE.search(text)
             return "invasion", (m.group("map").strip() if m else None), None
-        if text.lstrip().startswith("#Message from"):
-            return "message", None, None
         sp = SPEAKER.match(text)
         if sp and not text.startswith("GIWS"):
-            return "message", sp.group("who"), None
+            who = sp.group("who")
+            left = INVADERS_LEFT.search(text)
+            if left:
+                return "invaders left", who, \
+                       int(left.group("n").replace(",", ""))
+            if MOD_INVASION.search(text):
+                return "mod invasion", who, None
+            return "message", who, None
     return None, None, None
 
 

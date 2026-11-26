@@ -55,8 +55,36 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import subprocess
-import sys
+import json
 
-subprocess.run([sys.executable, "el_dailies.py", "--dump",
-                "--out", "/tmp/dailies.json"], check=False)
+import requests
+
+UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+
+# Can the page read the live monster count itself, or must the build do
+# it? If Mercator sends an allow-origin header, the browser may call it
+# straight from el-hq.com and the number is as live as the page, with
+# no polling and no commit every ten minutes.
+for url in ("https://mercator.holy-eternalland.de/_elday/clock-data",
+            "https://mercator.holy-eternalland.de/api/announcements?limit=5"):
+    print("=" * 70)
+    print(url)
+    for method in ("OPTIONS", "GET"):
+        try:
+            r = requests.request(
+                method, url, timeout=25,
+                headers={**UA, "Origin": "https://el-hq.com",
+                         "Access-Control-Request-Method": "GET"})
+        except Exception as e:
+            print(f"   {method}: {e}")
+            continue
+        cors = {k: v for k, v in r.headers.items()
+                if k.lower().startswith("access-control")}
+        print(f"   {method} {r.status_code}  cors={cors or 'none'}")
+        if method == "GET":
+            print(f"   cache-control: {r.headers.get('cache-control')}")
+            try:
+                body = r.json()
+                print("   body:", json.dumps(body)[:600])
+            except Exception:
+                print("   body (text):", r.text[:300])
