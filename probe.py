@@ -62,50 +62,35 @@ import requests
 BASE = "https://mercator.holy-eternalland.de"
 UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
 
-# Mercator documents 37 endpoints at /api. These are the ones we do not
-# read and might want to. The guild one matters most: guild.txt is kept
-# by hand because nothing was thought to publish membership, and an
-# earlier look at this very path got a 404.
-TRY = [
-    "/api/v1/players/online",
-    "/api/v1/items?q=leather",
-    "/api/v1/prices?q=leather",
-    "/api/v1/recipes?q=leather%20helm",
-    "/api/analytics/summary",
-    "/analytics/export/invasions?format=json&limit=5",
-    "/analytics/export/jokers?format=json&limit=3",
-    "/botmanagement/elinfo.json",
-    "/api/v1/trade/history",
-    "/api/v1/health",
-]
 
-for path in TRY:
-    print("=" * 70)
-    print(path)
-    try:
-        r = requests.get(BASE + path, headers=UA, timeout=30)
-    except Exception as e:
-        print("   failed:", e)
-        continue
-    print(f"   {r.status_code}  {r.headers.get('content-type','')}  "
-          f"{len(r.content)} bytes")
-    if r.status_code != 200:
-        print("   " + r.text[:200].replace("\n", " "))
-        continue
-    try:
-        body = r.json()
-    except Exception:
-        print("   not json:", r.text[:200])
-        continue
-    if isinstance(body, dict):
-        print("   keys:", list(body)[:14])
-        for k in list(body)[:14]:
-            v = body[k]
-            if isinstance(v, list) and v:
-                print(f"   {k}[0]:", json.dumps(v[0])[:400])
-            elif not isinstance(v, (list, dict)):
-                print(f"   {k}: {json.dumps(v)[:120]}")
-    elif isinstance(body, list):
-        print(f"   list of {len(body)}")
-        if body:
-            print("   [0]:", json.dumps(body[0])[:400])
+def get(path, **kw):
+    r = requests.get(BASE + path, headers=UA, timeout=40, **kw)
+    r.raise_for_status()
+    return r.json()
+
+
+print("===== /api/analytics/summary, in full =====")
+print(json.dumps(get("/api/analytics/summary"), indent=1)[:6000])
+
+print("\n===== /api/marketsearch - a second set of bot prices? =====")
+body = get("/api/marketsearch", params={"q": "leather", "per_page": 10})
+print(json.dumps(body, indent=1)[:2500])
+
+print("\n===== /api/v1/recipes - how many, and what shape =====")
+body = get("/api/v1/recipes")
+print("keys:", list(body))
+print("total:", body.get("total"))
+rs = body.get("recipes") or []
+print(json.dumps(rs[0], indent=1)[:900] if rs else "none")
+multi = {}
+for r in rs:
+    multi.setdefault(r.get("itemName"), []).append(r.get("id"))
+many = {k: v for k, v in multi.items() if len(v) > 1}
+print(f"{len(rs)} recipes for {len(multi)} items; "
+      f"{len(many)} items have more than one")
+print("   e.g.", list(many)[:8])
+
+print("\n===== /api/v1/recipes/calculate =====")
+print(json.dumps(get("/api/v1/recipes/calculate",
+                     params={"item": "Steel Long Sword", "amount": 1,
+                             "recursive": "true"}), indent=1)[:2500])
