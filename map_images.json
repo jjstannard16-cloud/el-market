@@ -1,4 +1,323 @@
 {
  "_comment": "Map drawings mirrored from the EL wiki by el_map_images.py.",
- "maps": {}
+ "maps": {
+  "Arius": {
+   "file": "arius.jpg",
+   "from": "map_arius_0512px.png",
+   "thumb": "arius-sm.jpg",
+   "v": 1
+  },
+  "Bethel": {
+   "file": "bethel.jpg",
+   "from": "map_bethel_0512px.png",
+   "thumb": "bethel-sm.jpg",
+   "v": 1
+  },
+  "Carmien Manor": {
+   "file": "carmien-manor.jpg",
+   "from": "map_carmien_manor_0512px.png",
+   "thumb": "carmien-manor-sm.jpg",
+   "v": 1
+  },
+  "Desert Pines": {
+   "file": "desert-pines.jpg",
+   "from": "map_desert_pines_0512px.png",
+   "thumb": "desert-pines-sm.jpg",
+   "v": 1
+  },
+  "Diamond Cave": {
+   "file": "diamond-cave.jpg",
+   "from": "map_diamond_cave_0512px.png",
+   "thumb": "diamond-cave-sm.jpg",
+   "v": 1
+  },
+  "Egratia Point": {
+   "file": "egratia-point.jpg",
+   "from": "map_egratia_point_0512px.png",
+   "thumb": "egratia-point-sm.jpg",
+   "v": 1
+  },
+  "Emerald Valley Trade Route": {
+   "file": "emerald-valley-trade-route.jpg",
+   "from": "map_emerald_valley_trade_route_0512px.png",
+   "thumb": "emerald-valley-trade-route-sm.jpg",
+   "v": 1
+  },
+  "Glacmor": {
+   "file": "glacmor.jpg",
+   "from": "map_glacmor_0512px.png",
+   "thumb": "glacmor-sm.jpg",
+   "v": 1
+  },
+  "Gold Mines": {
+   "file": "gold-mines.jpg",
+   "from": "map_gold_mines_0512px.png",
+   "thumb": "gold-mines-sm.jpg",
+   "v": 1
+  },
+  "Grubani Peninsula": {
+   "file": "grubani-peninsula.jpg",
+   "from": "map_grubani_peninsula_0512px.png",
+   "thumb": "grubani-peninsula-sm.jpg",
+   "v": 1
+  },
+  "Hulda": {
+   "file": "hulda.jpg",
+   "from": "map_hulda_0512px.png",
+   "thumb": "hulda-sm.jpg",
+   "v": 1
+  },
+  "Hurquin": {
+   "file": "hurquin.jpg",
+   "from": "map_hurquin_0512px.png",
+   "thumb": "hurquin-sm.jpg",
+   "v": 1
+  },
+  "Idaloran": {
+   "file": "idaloran.jpg",
+   "from": "map_idaloran_0512px.png",
+   "thumb": "idaloran-sm.jpg",
+   "v": 1
+  },
+  "Imbroglio Islands": {
+   "file": "imbroglio-islands.jpg",
+   "from": "map_imbroglio_islands_0512px.png",
+   "thumb": "imbroglio-islands-sm.jpg",
+   "v": 1
+  },
+  "Irilion Docks": {
+   "file": "irilion-docks.jpg",
+   "from": "map_irilion_docks_0512px.png",
+   "thumb": "irilion-docks-sm.jpg",
+   "v": 1
+  },
+  "Irilion Portal Room": {
+   "file": "irilion-portal-room.jpg",
+   "from": "map_irilion_portal_room_0512px.png",
+   "thumb": "irilion-portal-room-sm.jpg",
+   "v": 1
+  },
+  "Irilion Underworld": {
+   "file": "irilion-underworld.jpg",
+   "from": "map_irilion_underworld_0512px.png",
+   "thumb": "irilion-underworld-sm.jpg",
+   "v": 1
+  },
+  "Irinveron": {
+   "file": "irinveron.jpg",
+   "from": "map_irinveron_0512px.png",
+   "thumb": "irinveron-sm.jpg",
+   "v": 1
+  },
+  "Irsis": {
+   "file": "irsis.jpg",
+   "from": "map_irsis_0512px.png",
+   "thumb": "irsis-sm.jpg",
+   "v": 1
+  },
+  "Iscalrith": {
+   "file": "iscalrith.jpg",
+   "from": "map_iscalrith_0512px.png",
+   "thumb": "iscalrith-sm.jpg",
+   "v": 1
+  },
+  "Isla Prima": {
+   "file": "isla-prima.jpg",
+   "from": "map_islaprima_0512px.png",
+   "thumb": "isla-prima-sm.jpg",
+   "v": 1
+  },
+  "Isle of the Forgotten": {
+   "file": "isle-of-the-forgotten.jpg",
+   "from": "map_isle_of_the_forgotten_0512px.png",
+   "thumb": "isle-of-the-forgotten-sm.jpg",
+   "v": 1
+  },
+  "Kilaran Field": {
+   "file": "kilaran-field.jpg",
+   "from": "map_kilaran_field_0512px.png",
+   "thumb": "kilaran-field-sm.jpg",
+   "v": 1
+  },
+  "Kusamura Jungle": {
+   "file": "kusamura-jungle.jpg",
+   "from": "map_kusamura_0512px.png",
+   "thumb": "kusamura-jungle-sm.jpg",
+   "v": 1
+  },
+  "Magic School Garden": {
+   "file": "magic-school-garden.jpg",
+   "from": "map_magic_School_garden_0512px.png",
+   "thumb": "magic-school-garden-sm.jpg",
+   "v": 1
+  },
+  "Melinis": {
+   "file": "melinis.jpg",
+   "from": "map_melinis_0512px.png",
+   "thumb": "melinis-sm.jpg",
+   "v": 1
+  },
+  "Morcraven Marsh": {
+   "file": "morcraven-marsh.jpg",
+   "from": "map_morcraven_marsh_0512px.png",
+   "thumb": "morcraven-marsh-sm.jpg",
+   "v": 1
+  },
+  "Morcraven Marsh Caves": {
+   "file": "morcraven-marsh-caves.jpg",
+   "from": "map_morcraven_marsh_caves_0512px.png",
+   "thumb": "morcraven-marsh-caves-sm.jpg",
+   "v": 1
+  },
+  "Naralik": {
+   "file": "naralik.jpg",
+   "from": "map_naralik_0512px.png",
+   "thumb": "naralik-sm.jpg",
+   "v": 1
+  },
+  "Naralik Catacombs": {
+   "file": "naralik-catacombs.jpg",
+   "from": "map_naralik_catacombs_0512px.png",
+   "thumb": "naralik-catacombs-sm.jpg",
+   "v": 1
+  },
+  "Nordcarn": {
+   "file": "nordcarn.jpg",
+   "from": "map_nordcarn_0512px.png",
+   "thumb": "nordcarn-sm.jpg",
+   "v": 1
+  },
+  "North Redmoon": {
+   "file": "north-redmoon.jpg",
+   "from": "map_north_redmoon_0512px.png",
+   "thumb": "north-redmoon-sm.jpg",
+   "v": 1
+  },
+  "Orvimon's Crypt": {
+   "file": "orvimon-s-crypt.jpg",
+   "from": "map_orvimon_crypt_0512px.png",
+   "thumb": "orvimon-s-crypt-sm.jpg",
+   "v": 1
+  },
+  "Port Anitora": {
+   "file": "port-anitora.jpg",
+   "from": "map_port_anitora_0512px.png",
+   "thumb": "port-anitora-sm.jpg",
+   "v": 1
+  },
+  "Portland": {
+   "file": "portland.jpg",
+   "from": "map_portland_0512px.png",
+   "thumb": "portland-sm.jpg",
+   "v": 1
+  },
+  "Ruins of Tirnym": {
+   "file": "ruins-of-tirnym.jpg",
+   "from": "map_ruins_of_tirnym_0512px.png",
+   "thumb": "ruins-of-tirnym-sm.jpg",
+   "v": 1
+  },
+  "Sedicolis": {
+   "file": "sedicolis.jpg",
+   "from": "map_sedicolis_0512px.png",
+   "thumb": "sedicolis-sm.jpg",
+   "v": 1
+  },
+  "Seridia Docks": {
+   "file": "seridia-docks.jpg",
+   "from": "map_seridia_docks_0512px.png",
+   "thumb": "seridia-docks-sm.jpg",
+   "v": 1
+  },
+  "Seridia Portal Room": {
+   "file": "seridia-portal-room.jpg",
+   "from": "map_seridia_portal_room_0512px.png",
+   "thumb": "seridia-portal-room-sm.jpg",
+   "v": 1
+  },
+  "Seridia Underworld": {
+   "file": "seridia-underworld.jpg",
+   "from": "map_seridia_underworld_0512px.png",
+   "thumb": "seridia-underworld-sm.jpg",
+   "v": 1
+  },
+  "South Cave": {
+   "file": "south-cave.jpg",
+   "from": "map_nordcarn_south_cave_0512px.png",
+   "thumb": "south-cave-sm.jpg",
+   "v": 1
+  },
+  "South Redmoon": {
+   "file": "south-redmoon.jpg",
+   "from": "map_south_redmoon_0512px.png",
+   "thumb": "south-redmoon-sm.jpg",
+   "v": 1
+  },
+  "Southern Kilaran": {
+   "file": "southern-kilaran.jpg",
+   "from": "map_south_kilaran_0512px.png",
+   "thumb": "southern-kilaran-sm.jpg",
+   "v": 1
+  },
+  "Tahraji Desert": {
+   "file": "tahraji-desert.jpg",
+   "from": "map_tahraji_desert_0512px.png",
+   "thumb": "tahraji-desert-sm.jpg",
+   "v": 1
+  },
+  "Tarsengaard": {
+   "file": "tarsengaard.jpg",
+   "from": "map_tarsengaard_0512px.png",
+   "thumb": "tarsengaard-sm.jpg",
+   "v": 1
+  },
+  "Thelinor": {
+   "file": "thelinor.jpg",
+   "from": "map_thelinor_0512px.png",
+   "thumb": "thelinor-sm.jpg",
+   "v": 1
+  },
+  "Trassian": {
+   "file": "trassian.jpg",
+   "from": "map_trassian_0512px.png",
+   "thumb": "trassian-sm.jpg",
+   "v": 1
+  },
+  "Valley of the Dwarves": {
+   "file": "valley-of-the-dwarves.jpg",
+   "from": "map_votd_0512px.png",
+   "thumb": "valley-of-the-dwarves-sm.jpg",
+   "v": 1
+  },
+  "Vermor Castle": {
+   "file": "vermor-castle.jpg",
+   "from": "map_vermor_castle_0512px.png",
+   "thumb": "vermor-castle-sm.jpg",
+   "v": 1
+  },
+  "White Stone": {
+   "file": "white-stone.jpg",
+   "from": "map_whitestone_0512px.png",
+   "thumb": "white-stone-sm.jpg",
+   "v": 1
+  },
+  "White Stone City Palace": {
+   "file": "white-stone-city-palace.jpg",
+   "from": "map_seridia_portal_room_0512px.png",
+   "thumb": "white-stone-city-palace-sm.jpg",
+   "v": 1
+  },
+  "Willowvine Forest": {
+   "file": "willowvine-forest.jpg",
+   "from": "map_willowvine_forest_0512px.png",
+   "thumb": "willowvine-forest-sm.jpg",
+   "v": 1
+  },
+  "Zirakinbar": {
+   "file": "zirakinbar.jpg",
+   "from": "map_zirakinbar_0512px.png",
+   "thumb": "zirakinbar-sm.jpg",
+   "v": 1
+  }
+ }
 }
