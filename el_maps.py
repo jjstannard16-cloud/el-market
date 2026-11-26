@@ -226,10 +226,22 @@ def read_map(s, title, land):
             got = thing(line)
             if got:
                 one[key].append(got)
-    # A short name of "Seridia maps" is the category leaking into the
-    # template, not a name anybody uses.
-    if one["short"] and one["short"].lower().endswith("maps"):
-        one["short"] = None
+    # The header's second field is whatever the page's author put
+    # there: an acronym on one page (VotD), the map it sits inside on
+    # another (Abandoned Temple says "Valley of the Dwarves"), and a
+    # tagline on a third (White Stone says "Home of Raven"). It is
+    # sorted out by the caller, which knows every map's name.
+    one["hint"] = one.pop("short")
+    # The same exit is sometimes listed twice, once with the tile and
+    # once without.
+    seen, keep = set(), []
+    for x in sorted(one["exits"], key=lambda e: not e.get("at")):
+        key = (x["name"], x["how"])
+        if key in seen:
+            continue
+        seen.add(key)
+        keep.append(x)
+    one["exits"] = keep
     return one
 
 
@@ -254,6 +266,9 @@ def main():
                 wanted.append((m["title"], land))
     print(f"{len(wanted)} map pages")
 
+    # The continent overview pages are in the category but are not maps.
+    wanted = [(t, land) for t, land in wanted if t not in LANDS.values()]
+
     maps, thin = [], []
     for title, land in wanted:
         one = read_map(s, title, land)
@@ -265,6 +280,19 @@ def main():
             thin.append(f"{title}: nothing read")
         time.sleep(PAUSE)
 
+    # Now every map's name is known, the header hint can be read: a
+    # map's name means this one sits inside that one, something short
+    # is what players call it, and the rest is a tagline nobody needs.
+    names = {m["name"].lower() for m in maps}
+    for m in maps:
+        hint, m["short"], m["inside_of"] = m.pop("hint"), None, None
+        if not hint:
+            continue
+        if hint.lower() in names and hint.lower() != m["name"].lower():
+            m["inside_of"] = hint
+        elif len(hint) <= 6 and " " not in hint:
+            m["short"] = hint
+
     json.dump({"_comment": "What is on each map and what it leads to, from "
                            "the EL wiki's map pages, by el_maps.py.",
                "maps": maps},
@@ -275,7 +303,8 @@ def main():
     print(f"{len(maps)} maps: {tally('npcs')} NPCs, "
           f"{tally('harvest')} harvestable spots, {tally('creatures')} "
           f"creature sightings, {tally('exits')} exits, "
-          f"{sum(1 for m in maps if m['pic'])} with a map picture")
+          f"{sum(1 for m in maps if m['pic'])} with a map picture, "
+          f"{sum(1 for m in maps if m['inside_of'])} inside another map")
     if a.dump:
         for m in maps:
             print(f"\n--- {m['name']} ({m['land']}) "
