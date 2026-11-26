@@ -55,8 +55,37 @@ drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.
 """
 
-import subprocess
-import sys
+import re
 
-subprocess.run([sys.executable, "el_aliases.py", "--dump",
-                "--out", "/tmp/item_aliases.json"], check=False)
+import requests
+
+API = "https://el-wiki.holy-eternalland.de/api.php"
+UA = {"User-Agent": "EL-HQ/0.1 (Eternal Lands community site; stann in-game)"}
+
+
+def page_text(title):
+    r = requests.get(API, params={"action": "query", "prop": "revisions",
+                                  "titles": title, "rvprop": "content",
+                                  "rvslots": "main", "format": "json",
+                                  "formatversion": 2, "redirects": 1},
+                     headers=UA, timeout=30)
+    r.raise_for_status()
+    for pg in r.json().get("query", {}).get("pages", []):
+        if pg.get("missing"):
+            return None
+        revs = pg.get("revisions") or [{}]
+        return (revs[0].get("slots", {}).get("main", {}).get("content")
+                or revs[0].get("content") or "")
+    return None
+
+
+# Our reader takes the first ManuInfo on a page. If a page carries more
+# than one - the plain item and its enhanced versions - the wrong one
+# wins, which is how a Red Dragon Helm came to need a Serpent Stone.
+for title in ("Red Dragon Helm", "Black Tunic", "Vial Mold"):
+    text = page_text(title) or ""
+    found = [m.start() for m in re.finditer(r"\{\{\s*ManuInfo\s*[|}]",
+                                           text, re.I)]
+    print("=" * 70)
+    print(f"{title}: {len(found)} ManuInfo templates, {len(text)} bytes")
+    print(text[:3000])
