@@ -76,6 +76,7 @@ MAP_SHORT = {
 SPECIAL_DAYS_FILE = "specialdays.json"
 QUESTS_FILE = "quests.json"
 DAILIES_FILE = "dailies.json"
+ALIASES_FILE = "item_aliases.json"
 MAPS_FILE = "maps.json"
 MAP_IMAGES_FILE = "map_images.json"
 GODS_FILE = "gods.json"
@@ -911,6 +912,14 @@ def load(db_path):
                   f"tasks, {named} matched to an item or creature, "
                   f"{priced_tasks} priced at today's bots")
 
+    # What the wiki calls a thing against what the game calls it, so a
+    # recipe's ingredients can be found in the bots' own item list.
+    aliases = {}
+    if os.path.exists(ALIASES_FILE):
+        with open(ALIASES_FILE, encoding="utf-8") as f:
+            aliases = json.load(f).get("aliases", {})
+        print(f"  {len(aliases)} item names mapped to the game's spelling")
+
     npc_pics = {}
     if os.path.exists(NPC_IMG_FILE):
         with open(NPC_IMG_FILE, encoding="utf-8") as f:
@@ -1269,6 +1278,7 @@ def load(db_path):
         "creatures": creatures,
         "instances": instances,
         "maps": maps,
+        "aliases": aliases,
         "npcPics": npc_pics,
         "achPlayers": ach_players,
         "achKinds": ach_kinds,
@@ -2282,12 +2292,32 @@ for (const it of DATA.items) {
 }
 const HARVEST = DATA.harvestables || {};
 
+/* The wiki tidies the game's spelling and the bots do not, so a recipe
+   asking for an "Arrow bolt head" met a bot selling an "Arrow/bolt
+   head" and matched nothing. Punctuation and spacing are ignored
+   first; where that is not enough - "Bone Powder" against the game's
+   "Bones Powder" - el_aliases.py works the pair out from Mercator's
+   recipes, which keep the game's own spelling. */
+const squash = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+const ALIAS = DATA.aliases || {};
+const BY_SQUASH = {};
+for (const k of Object.keys(PRICE)) BY_SQUASH[squash(k)] ??= k;
+for (const k of Object.keys(HARVEST)) BY_SQUASH[squash(k)] ??= k;
+
+function sameThing(name) {
+  const low = String(name || "").toLowerCase();
+  if (low in PRICE || low in HARVEST) return low;
+  const said = (ALIAS[low] || "").toLowerCase();
+  if (said && (said in PRICE || said in HARVEST)) return said;
+  return BY_SQUASH[squash(low)] || low;
+}
+
 function cost(r, mode) {
   let total = 0;
   const lines = [], missing = [], tools = [];
   let anyGathered = false, gate = 0;
   for (const g of r.ings) {
-    const k = g.n.toLowerCase();
+    const k = sameThing(g.n);
     const p = PRICE[k] || {};
     if (p.sell != null) {
       total += p.sell * g.a;

@@ -978,12 +978,32 @@ for (const it of DATA.items) {
 }
 const HARVEST = DATA.harvestables || {};
 
+/* The wiki tidies the game's spelling and the bots do not, so a recipe
+   asking for an "Arrow bolt head" met a bot selling an "Arrow/bolt
+   head" and matched nothing. Punctuation and spacing are ignored
+   first; where that is not enough - "Bone Powder" against the game's
+   "Bones Powder" - el_aliases.py works the pair out from Mercator's
+   recipes, which keep the game's own spelling. */
+const squash = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+const ALIAS = DATA.aliases || {};
+const BY_SQUASH = {};
+for (const k of Object.keys(PRICE)) BY_SQUASH[squash(k)] ??= k;
+for (const k of Object.keys(HARVEST)) BY_SQUASH[squash(k)] ??= k;
+
+function sameThing(name) {
+  const low = String(name || "").toLowerCase();
+  if (low in PRICE || low in HARVEST) return low;
+  const said = (ALIAS[low] || "").toLowerCase();
+  if (said && (said in PRICE || said in HARVEST)) return said;
+  return BY_SQUASH[squash(low)] || low;
+}
+
 function cost(r, mode) {
   let total = 0;
   const lines = [], missing = [], tools = [];
   let anyGathered = false, gate = 0;
   for (const g of r.ings) {
-    const k = g.n.toLowerCase();
+    const k = sameThing(g.n);
     const p = PRICE[k] || {};
     if (p.sell != null) {
       total += p.sell * g.a;

@@ -1,0 +1,9 @@
+{
+ "_comment": "Placeholder until el_aliases.py runs in the workflow.",
+ "aliases": {
+  "bone powder": "Bones Powder",
+  "dandelions": "Dandelion",
+  "racoon fur": "Raccoon fur",
+  "yarrow-wormwood-tulip extract": "Yarrow - Wormwood - Tulips Extract"
+ }
+}

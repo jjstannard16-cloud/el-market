@@ -42,6 +42,12 @@ jobs:
         run: python el_creatures.py
         continue-on-error: true
 
+      # Which wiki item name means which game item name. Runs after the
+      # recipes, which it reads, and before the site, which uses it.
+      - name: Work out the game's spelling
+        run: python el_aliases.py
+        continue-on-error: true
+
       # What is on each map and what it leads to, and the drawings.
       - name: Read the maps
         run: python el_maps.py
@@ -102,6 +108,7 @@ jobs:
           for attempt in 1 2 3 4 5; do
             git add el_bots.db gods.json creatures.json instances.json \
                     dailies.json maps.json map_images.json \
+                    item_aliases.json \
                     creature_images.json badges.json npc_images.json \
                     public/index.html \
                     public/data.js public/img
@@ -122,6 +129,7 @@ jobs:
             python el_creatures.py || true
             python el_instances.py || true
             python el_dailies.py || true
+            python el_aliases.py || true
             python el_maps.py || true
             python el_map_images.py || true
             python el_creature_images.py || true
