@@ -255,6 +255,26 @@ def load(db_path):
                                "was": r["was"], "now": r["now"],
                                "at": r["at"][:10]})
 
+    # Where a broadcast says the monsters are. Used by the invasion
+    # boards and, further down, by the live reading - which is the
+    # whole point of a count: 4,270 still up tells nobody where to go.
+    words = sorted(MAP_TO_CONTINENT, key=len, reverse=True)
+
+    def maps_in(text):
+        """Every map a broadcast names, full names and shorthand."""
+        low = " " + re.sub(r"[^a-z0-9 ]", " ", text.lower()) + " "
+        found = []
+        for word in words:
+            if f" {word} " in low:
+                real = word.title()
+                if real not in found:
+                    found.append(real)
+        if not found:
+            for short, real in MAP_SHORT.items():
+                if f" {short} " in low and real not in found:
+                    found.append(real)
+        return found
+
     # The things that happen to everyone: pears and jokers found,
     # invasions, treasure, donations. Aggregates only - 51,000 broadcasts
     # are not going into the page.
@@ -354,25 +374,6 @@ def load(db_path):
         # their own words. Those broadcasts are grouped here into one
         # invasion apiece: a run of them with no two-hour gap inside it.
         mod_runs = []
-        words = sorted(MAP_TO_CONTINENT, key=len, reverse=True)
-        map_names = {w: w.title() for w in words}
-        map_names.update({k: v for k, v in MAP_SHORT.items()})
-
-        def maps_in(text):
-            """Every map a broadcast names, full names and shorthand."""
-            low = " " + re.sub(r"[^a-z0-9 ]", " ", text.lower()) + " "
-            found = []
-            for word in words:
-                if f" {word} " in low:
-                    real = word.title()
-                    if real not in found:
-                        found.append(real)
-            if not found:
-                for short, real in MAP_SHORT.items():
-                    if f" {short} " in low and real not in found:
-                        found.append(real)
-            return found
-
         run = []
         for r in con.execute("""SELECT what, who, amount, message, at
                                 FROM event_log
@@ -1160,6 +1161,66 @@ def load(db_path):
                     since = prev["at"]
                 clock["warnSince"] = since
 
+            # A count on its own is no use. "4,270 still up" does not
+            # say where to go, and the warning beside it cannot say
+            # either: through Friday night the count climbed to 5,427
+            # while the warning still read "the invasion is over" - it
+            # is the scheduled system's text, and a moderator placing
+            # monsters by hand does not touch it.
+            #
+            # So the place comes from the only source that has it: the
+            # moderator's own broadcast. The count is walked back to
+            # the reading where it first rose above zero, and the
+            # broadcasts over that span are read for a map name. When
+            # none of them named one - a moderator can place monsters
+            # and say nothing - the page says so rather than guessing.
+            if c["monsters"]:
+                spell = [dict(c)]
+                floor = c["at"]
+                for prev in con.execute("""SELECT at, monsters FROM game_clock
+                                           WHERE at < ? ORDER BY at DESC
+                                           LIMIT 60""", (c["at"],)):
+                    floor = prev["at"]
+                    if not prev["monsters"]:
+                        break
+                    spell.append(dict(prev))
+                spell.reverse()
+                clock["upSince"] = spell[0]["at"]
+                clock["upFirst"] = spell[0]["monsters"]
+                clock["readings"] = [[r["at"][11:16], r["monsters"]]
+                                     for r in spell]
+                # Back to the last reading that saw nothing, less a
+                # quarter of an hour, because a moderator announces the
+                # place before the monsters are there to be counted.
+                try:
+                    look = (datetime.fromisoformat(floor)
+                            - timedelta(minutes=15)).isoformat()
+                except (TypeError, ValueError):
+                    look = floor
+                # Named apart from the maps list this file already
+                # holds: "maps" here would quietly replace all 170 of
+                # them with the one this invasion is in.
+                up_maps, up_mods, up_said = [], [], []
+                if "event_log" in tables:
+                    for r in con.execute("""SELECT who, message, at
+                            FROM event_log
+                            WHERE what IN ('mod invasion', 'invaders left')
+                              AND at >= ? AND at <= ? ORDER BY at""",
+                                         (look, c["at"])):
+                        for one in maps_in(r["message"] or ""):
+                            if one not in up_maps:
+                                up_maps.append(one)
+                        if r["who"] and r["who"] not in up_mods:
+                            up_mods.append(r["who"])
+                        up_said.append({
+                            "who": r["who"], "at": (r["at"] or "")[:16],
+                            "said": re.sub(
+                                r"^(?:#Message from\s+)?[\w\-]{2,20}:\s*",
+                                "", r["message"] or "").strip()[:220]})
+                clock["where"] = up_maps
+                clock["upMods"] = up_mods
+                clock["upSaid"] = up_said[-4:]
+
     # The in-game calendar, and what today's day actually does.
     today, recent_days = None, []
     if "game_day" in tables:
@@ -1700,6 +1761,16 @@ HTML = r"""<!doctype html>
   .invstate.up { border-left-color: var(--rust); }
   .invstate.up .moon { color: var(--rust); }
   .invstate.up .big { color: var(--rust); }
+  /* The place, which is the part people act on. Set below the count
+     and above everything else, because a number without a map is a
+     fact nobody can use. */
+  .where { margin-top: 7px; font-size: 15px; color: var(--ink); }
+  .where a { font-weight: 500; }
+  .wheresaid { margin-top: 6px; font-size: 13px; color: var(--muted); }
+  /* No quote marks added: a moderator writing >wave 2 bethel - "soon"<
+     already has a pair, and two sets read as a typo. */
+  .wheresaid .qq { color: var(--ink); }
+  .invstate .where { font-size: 18px; }
   /* A chip with a picture in it: a map pin, a clock, a megaphone. */
   .fact .ic { width: 12px; height: 12px; margin-right: 5px;
               vertical-align: -1px; opacity: .75; }
@@ -2599,10 +2670,11 @@ function invasionBox() {
     <h3><svg class="ic"><use href="#i-moon"/></svg>Invasion</h3>
     <div class="state">${clock.monsters == null ? "Not known"
       : clock.monsters ? `${fmt(clock.monsters)} still up` : "All quiet"}</div>
-    <div class="sm muted">${clock.monsters == null
+    ${whereNow(clock)}
+    <div class="sm muted" style="margin-top:7px">${clock.monsters == null
       ? "the game did not say"
       : `when we last looked<br>${esc(read)} UTC`}</div>
-    ${last ? `<div class="lastone">
+    ${last && !clock.monsters ? `<div class="lastone">
       <div class="sm muted">Last one a moderator ran</div>
       <div>${last.mods.map(playerLink).join(", ")}${last.maps.length
         ? ` \u00b7 ${last.maps.map(mapLink).join(", ")}` : ""}</div>
@@ -4111,6 +4183,7 @@ function renderInvasions(view, count, q) {
           : clock.monsters === 0
           ? "nothing invaded was alive when we last looked"
           : "the game did not say"}, at ${esc(read || "?")} UTC</div>
+        ${whereNow(clock)}
       </div>
     </div>
     <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
@@ -4128,6 +4201,35 @@ function renderInvasions(view, count, q) {
         .join("")}`}`;
   wirePlayerLinks();
   wireEventPicker(view);
+}
+
+/* Where. A count on its own is a fact nobody can act on: "4,270 still
+   up" sends no one anywhere. The game publishes the number and never
+   the place, and the warning beside it belongs to the scheduled system
+   - through Friday night it read "the invasion is over" while the
+   count climbed past five thousand. So the place comes from whatever
+   the moderator broadcast while the count has been up, and when none
+   of them named a map the page says so. A guessed map is a ten-minute
+   walk to an empty field. */
+function whereNow(clock) {
+  if (!clock.monsters) return "";
+  const where = clock.where || [];
+  const said = (clock.upSaid || []).slice(-1)[0];
+  const mins = clock.upSince
+    ? Math.round((Date.now() - Date.parse(clock.upSince)) / 60000) : null;
+  // "at 5,427" beside a time reads as another clock, so the count is
+  // said as a count.
+  const run = mins != null && mins >= 0
+    ? `first seen ${gapWords(mins)} ago${
+        clock.upFirst && clock.upFirst !== clock.monsters
+          ? `, ${fmt(clock.upFirst)} of them` : ""}` : "";
+  return `<div class="where">${where.length
+      ? `in ${where.map(mapLink).join(", ")}`
+      : `<span class="muted">nobody broadcast where</span>`}</div>
+    ${run ? `<div class="sm muted">${esc(run)}</div>` : ""}
+    ${said ? `<div class="wheresaid">${playerLink(said.who || "")}
+      at ${esc(said.at.slice(11))} \u2014 <span class="qq">${
+      esc(said.said)}</span></div>` : ""}`;
 }
 
 // "40 minutes", "3 hours", "4 days" - a gap in words, because 5,452

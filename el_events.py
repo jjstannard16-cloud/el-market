@@ -123,20 +123,28 @@ SPEAKER = re.compile(r"^(?:#Message from\s+)?(?P<who>[A-Za-z][\w\-]{1,19})"
 INVADERS_LEFT = re.compile(
     r"\bthere\s+(?:are|is)\s+(?P<n>[\d,]+)\s+invaded\s+monsters?\s+left",
     re.I)
-# Deliberately narrow. "Wave" on its own catches a moderator talking
-# about anything else, so it has to sit next to an invasion word.
+# A moderator's working vocabulary. This was once a narrow pattern
+# built around the word "invasion", on the assumption that "wave" on
+# its own would catch a moderator talking about something else. Read
+# against all 6,668 broadcasts it had filed as ordinary chatter, that
+# assumption was wrong: every one of the 125 that said "wave" was an
+# invasion, and so were the ones saying uncap, reload, mobs, bosses
+# or spawned. A moderator broadcasts to the whole game, and when they
+# use these words they are placing monsters.
+#
+# "cap" is the one exception, because a PK contest sets an a/d limit
+# the same way an invasion does ("no alts, a/d < 40"), so it is only
+# read with its number beside it.
 MOD_INVASION = re.compile(
     # Typed in a hurry and often misspelt - "invsion", "invaision" -
     # so the word is matched loosely rather than exactly.
     r"\binv[a-z]{0,3}sion\b|\binvaded\b|\binvaders\b"
-    r"|\bmonsters?\s+(?:will|are|have|left|spawn)"
-    # "New Bethel wave" puts the map in the middle of the phrase.
-    r"|\b(?:first|second|third|next|last|hard|final|new)"
-    r"\s+(?:\w+\s+)?wave\b"
-    r"|\bwave\s+(?:invasion|in\b|is\b|arriv)"
+    r"|\bwaves?\b|\buncap|\breload|\bmobs?\b|\bmonsters?\b"
+    r"|\bspawn|\bbosse?s?\b"
+    r"|\bcap(?:ped|s)?\s*(?:at\s+)?\d|\d\s*(?:a\s*/\s*d\s*)?caps?\b"
     # The game's own idiom for one starting, used on its own as often
-    # as not: "red moon rising over Irsis - imminent".
-    r"|\bmoon is turning red\b|\bred moon (?:is )?rising\b", re.I)
+    # as not: "red moon whatsit irin shortly".
+    r"|\bred moon\b|\bmoon is turning red\b", re.I)
 
 # "Game Date: 14-07-0089 Game time: 0:08"
 GAMETIME = re.compile(
@@ -336,18 +344,17 @@ def reparse(con):
     already here, so this costs nothing and means a new pattern does not
     need a fresh download of 35,000 rows.
     """
-    rows = con.execute("SELECT kind, id, message FROM event_log").fetchall()
-    changed = 0
-    for kind, rid, msg in rows:
-        what, who, amount = parse_message(kind, msg)
-        cur = con.execute("""SELECT what, who, amount FROM event_log
-                             WHERE kind = ? AND id = ?""", (kind, rid)).fetchone()
-        if cur != (what, who, amount):
-            con.execute("""UPDATE event_log SET what = ?, who = ?, amount = ?
-                           WHERE kind = ? AND id = ?""",
-                        (what, who, amount, kind, rid))
-            changed += 1
+    rows = con.execute("""SELECT kind, id, message, what, who, amount
+                          FROM event_log""").fetchall()
+    writes = []
+    for kind, rid, msg, what, who, amount in rows:
+        got = parse_message(kind, msg)
+        if got != (what, who, amount):
+            writes.append((*got, kind, rid))
+    con.executemany("""UPDATE event_log SET what = ?, who = ?, amount = ?
+                       WHERE kind = ? AND id = ?""", writes)
     con.commit()
+    changed = len(writes)
     print(f"  re-read {len(rows)} broadcasts, {changed} changed")
 
 

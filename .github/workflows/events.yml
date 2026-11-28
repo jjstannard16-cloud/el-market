@@ -54,7 +54,7 @@ jobs:
             echo "push lost a race, redoing (attempt $i)"
             git reset -q --hard origin/main
             git fetch -q origin && git reset -q --hard origin/main
-            python el_events.py || true
+            python el_events.py --reparse || true
             python el_site.py --out public/index.html
             sleep $((RANDOM % 20 + 5))
           done

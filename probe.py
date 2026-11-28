@@ -50,6 +50,22 @@ Answers found so far, recorded so nobody goes looking twice:
   wait between visits and the time limit, in level order - which is not
   the order the nicknames suggest. el_instances.py reads it.
 
+  GIWS_Monsters does count a moderator's invasion, not only the
+  scheduled ones. It had never been caught above zero, so this was
+  open. On the evening of 27 November it read 0, then 5,427, 2,484,
+  4,736, 4,730, 4,270 over five hourly readings. Nothing GIWS ran that
+  evening; the only broadcast was "Raz: wave 2 bethel". So the count
+  is the whole game, and it stays on the board.
+
+  The warning field beside it does not. It is GIWS's own text, and it
+  sat on "the invasion is over, all the monsters are dead" through all
+  five of those readings. During a moderator's invasion the warning is
+  not stale by minutes, it is about a different invasion entirely, and
+  it can never say where the live one is. The place comes from the
+  moderator's broadcast or from nowhere, which is why el_site.py reads
+  the broadcasts over the span the count has been up and says "nobody
+  broadcast where" when they named no map.
+
 Asking now: nothing. The run below re-reads the creature pages with the
 drop fixes and prints what changed, creature by creature, so the fix
 can be checked against the old numbers before it lands.

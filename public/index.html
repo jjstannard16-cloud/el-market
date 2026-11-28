@@ -386,6 +386,16 @@
   .invstate.up { border-left-color: var(--rust); }
   .invstate.up .moon { color: var(--rust); }
   .invstate.up .big { color: var(--rust); }
+  /* The place, which is the part people act on. Set below the count
+     and above everything else, because a number without a map is a
+     fact nobody can use. */
+  .where { margin-top: 7px; font-size: 15px; color: var(--ink); }
+  .where a { font-weight: 500; }
+  .wheresaid { margin-top: 6px; font-size: 13px; color: var(--muted); }
+  /* No quote marks added: a moderator writing >wave 2 bethel - "soon"<
+     already has a pair, and two sets read as a typo. */
+  .wheresaid .qq { color: var(--ink); }
+  .invstate .where { font-size: 18px; }
   /* A chip with a picture in it: a map pin, a clock, a megaphone. */
   .fact .ic { width: 12px; height: 12px; margin-right: 5px;
               vertical-align: -1px; opacity: .75; }
@@ -1285,10 +1295,11 @@ function invasionBox() {
     <h3><svg class="ic"><use href="#i-moon"/></svg>Invasion</h3>
     <div class="state">${clock.monsters == null ? "Not known"
       : clock.monsters ? `${fmt(clock.monsters)} still up` : "All quiet"}</div>
-    <div class="sm muted">${clock.monsters == null
+    ${whereNow(clock)}
+    <div class="sm muted" style="margin-top:7px">${clock.monsters == null
       ? "the game did not say"
       : `when we last looked<br>${esc(read)} UTC`}</div>
-    ${last ? `<div class="lastone">
+    ${last && !clock.monsters ? `<div class="lastone">
       <div class="sm muted">Last one a moderator ran</div>
       <div>${last.mods.map(playerLink).join(", ")}${last.maps.length
         ? ` \u00b7 ${last.maps.map(mapLink).join(", ")}` : ""}</div>
@@ -2797,6 +2808,7 @@ function renderInvasions(view, count, q) {
           : clock.monsters === 0
           ? "nothing invaded was alive when we last looked"
           : "the game did not say"}, at ${esc(read || "?")} UTC</div>
+        ${whereNow(clock)}
       </div>
     </div>
     <h2 class="group withicon"><svg class="ic"><use href="#i-fight"/></svg>
@@ -2814,6 +2826,35 @@ function renderInvasions(view, count, q) {
         .join("")}`}`;
   wirePlayerLinks();
   wireEventPicker(view);
+}
+
+/* Where. A count on its own is a fact nobody can act on: "4,270 still
+   up" sends no one anywhere. The game publishes the number and never
+   the place, and the warning beside it belongs to the scheduled system
+   - through Friday night it read "the invasion is over" while the
+   count climbed past five thousand. So the place comes from whatever
+   the moderator broadcast while the count has been up, and when none
+   of them named a map the page says so. A guessed map is a ten-minute
+   walk to an empty field. */
+function whereNow(clock) {
+  if (!clock.monsters) return "";
+  const where = clock.where || [];
+  const said = (clock.upSaid || []).slice(-1)[0];
+  const mins = clock.upSince
+    ? Math.round((Date.now() - Date.parse(clock.upSince)) / 60000) : null;
+  // "at 5,427" beside a time reads as another clock, so the count is
+  // said as a count.
+  const run = mins != null && mins >= 0
+    ? `first seen ${gapWords(mins)} ago${
+        clock.upFirst && clock.upFirst !== clock.monsters
+          ? `, ${fmt(clock.upFirst)} of them` : ""}` : "";
+  return `<div class="where">${where.length
+      ? `in ${where.map(mapLink).join(", ")}`
+      : `<span class="muted">nobody broadcast where</span>`}</div>
+    ${run ? `<div class="sm muted">${esc(run)}</div>` : ""}
+    ${said ? `<div class="wheresaid">${playerLink(said.who || "")}
+      at ${esc(said.at.slice(11))} \u2014 <span class="qq">${
+      esc(said.said)}</span></div>` : ""}`;
 }
 
 // "40 minutes", "3 hours", "4 days" - a gap in words, because 5,452
